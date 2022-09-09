@@ -4,5 +4,6 @@ build:
 
 clean:
 	rm xcollects
+	cargo clean --manifest-path Other/Cargo.toml
 
 .PHONY: clean
