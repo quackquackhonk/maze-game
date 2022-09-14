@@ -25,10 +25,10 @@ struct Corner {
 impl ToString for Corner {
     fn to_string(&self) -> String {
         String::from(match (self.vertical, self.horizontal) {
-            (Vertical::UP, Horizontal::LEFT) => "\"┘\"",
-            (Vertical::UP, Horizontal::RIGHT) => "\"└\"",
-            (Vertical::DOWN, Horizontal::LEFT) => "\"┐\"",
-            (Vertical::DOWN, Horizontal::RIGHT) => "\"┌\"",
+            (Vertical::UP, Horizontal::LEFT) => "┘",
+            (Vertical::UP, Horizontal::RIGHT) => "└",
+            (Vertical::DOWN, Horizontal::LEFT) => "┐",
+            (Vertical::DOWN, Horizontal::RIGHT) => "┌",
         })
     }
 }
