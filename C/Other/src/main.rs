@@ -42,11 +42,8 @@ fn main() {
 
     //test.split_inclusive("}");
     let deserializer = serde_json::Deserializer::from_reader(io::stdin().lock());
-    let iterator = deserializer.into_iter::<Corner>();
+    let iterator = deserializer.into_iter::<Corner>().flatten().map(|c| c.to_string()).collect::<Vec<_>>();
 
-    println!("[");
-    for value in iterator {
-        println!("{},", value.unwrap().to_string());
-    }
-    println!("]")
+    let json = serde_json::to_string(&iterator);
+    println!("{}",json.unwrap());
 }
