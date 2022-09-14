@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::io;
+use std::{fmt::Display, io};
 
 use serde::{Deserialize, Serialize};
 
@@ -22,14 +22,19 @@ struct Corner {
     horizontal: Horizontal,
 }
 
-impl ToString for Corner {
-    fn to_string(&self) -> String {
-        String::from(match (self.vertical, self.horizontal) {
+impl Display for Corner {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match (self.vertical, self.horizontal) {
                 (Vertical::UP, Horizontal::LEFT) => "┘",
                 (Vertical::UP, Horizontal::RIGHT) => "└",
                 (Vertical::DOWN, Horizontal::LEFT) => "┐",
                 (Vertical::DOWN, Horizontal::RIGHT) => "┌",
-        })
+            }
+        )?;
+        Ok(())
     }
 }
 
