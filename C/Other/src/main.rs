@@ -25,25 +25,22 @@ struct Corner {
 impl ToString for Corner {
     fn to_string(&self) -> String {
         String::from(match (self.vertical, self.horizontal) {
-            (Vertical::UP, Horizontal::LEFT) => "┘",
-            (Vertical::UP, Horizontal::RIGHT) => "└",
-            (Vertical::DOWN, Horizontal::LEFT) => "┐",
-            (Vertical::DOWN, Horizontal::RIGHT) => "┌",
+                (Vertical::UP, Horizontal::LEFT) => "┘",
+                (Vertical::UP, Horizontal::RIGHT) => "└",
+                (Vertical::DOWN, Horizontal::LEFT) => "┐",
+                (Vertical::DOWN, Horizontal::RIGHT) => "┌",
         })
     }
 }
 
 fn main() {
-    //let mut buf = String::new();
-    //let file_size = io::stdin().read_to_string(&mut buf).unwrap();
-
-    //println!("{buf}")
-    //let test = r#"{"vertical" : "UP", "horizontal" : "LEFT" }{"vertical" : "DOWN", "horizontal" : "RIGHT" }"#;
-
-    //test.split_inclusive("}");
     let deserializer = serde_json::Deserializer::from_reader(io::stdin().lock());
-    let iterator = deserializer.into_iter::<Corner>().flatten().map(|c| c.to_string()).collect::<Vec<_>>();
+    let iterator = deserializer
+        .into_iter::<Corner>()
+        .flatten()
+        .map(|c| c.to_string())
+        .collect::<Vec<_>>();
 
     let json = serde_json::to_string(&iterator);
-    println!("{}",json.unwrap());
+    println!("{}", json.unwrap());
 }
