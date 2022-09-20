@@ -1,0 +1,10 @@
+{ "vertical" : "UP", "horizontal" : "RIGHT" }
+
+{ "horizontal" : "LEFT" , "vertical" : "UP" }
+
+
+{ "vertical" : "DOWN", "horizontal" : "LEFT" }
+
+
+
+{ "horizontal" : "RIGHT", "vertical" : "DOWN" }

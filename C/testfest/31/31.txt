@@ -1,0 +1,9 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/C/xjson)
+(testing /course/cs4500f22/ta/github/C/31/Tests/0-in.json /course/cs4500f22/ta/github/C/31/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/C/31/Tests/1-in.json /course/cs4500f22/ta/github/C/31/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/C/31/Tests/2-in.json /course/cs4500f22/ta/github/C/31/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/C/31/Tests/3-in.json /course/cs4500f22/ta/github/C/31/Tests/3-out.json)
+(testing /course/cs4500f22/ta/github/C/31/Tests/4-in.json /course/cs4500f22/ta/github/C/31/Tests/4-out.json)
+((/course/cs4500f22/ta/github/C/31/Tests/0-in.json /course/cs4500f22/ta/github/C/31/Tests/0-out.json) (/course/cs4500f22/ta/github/C/31/Tests/1-in.json /course/cs4500f22/ta/github/C/31/Tests/1-out.json) (/course/cs4500f22/ta/github/C/31/Tests/2-in.json /course/cs4500f22/ta/github/C/31/Tests/2-out.json) (/course/cs4500f22/ta/github/C/31/Tests/3-in.json /course/cs4500f22/ta/github/C/31/Tests/3-out.json) (/course/cs4500f22/ta/github/C/31/Tests/4-in.json /course/cs4500f22/ta/github/C/31/Tests/4-out.json))
+((passed 5) (total 5) (partial-score 5))
+
