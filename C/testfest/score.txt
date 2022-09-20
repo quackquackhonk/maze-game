@@ -1,1 +1,4 @@
-25
+0 pts: The deliverable does not exist in the expected location
+20 pts: 3 valid tests
+10 pts bonus (maximum 10)
+Total: 30 out of 45 pts
