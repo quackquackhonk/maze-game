@@ -27,7 +27,7 @@ impl eframe::App for Game {
         // mouse input
         let pos = ctx.input().pointer.press_origin();
         if let Some(mouse_pos) = pos {
-            println!("{:?}", mouse_pos);
+            println!("[{}, {}]", mouse_pos.x, mouse_pos.y);
             frame.close();
         }
     }
