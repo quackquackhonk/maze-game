@@ -1,4 +1,4 @@
-0 pts: The deliverable does not exist in the expected location
+20 pts: Passed 3 out of 3 tests
 20 pts: 3 valid tests
 10 pts bonus (maximum 10)
-Total: 30 out of 45 pts
+Total: 50 out of 45 pts
