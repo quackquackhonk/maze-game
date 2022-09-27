@@ -1,5 +1,8 @@
 #![allow(non_snake_case)]
-use std::{io::Read, net::TcpListener};
+use std::{
+    io::{Read, Write},
+    net::TcpListener,
+};
 
 use clap::Parser;
 use xjson::Corner;
@@ -26,35 +29,39 @@ fn main() -> std::io::Result<()> {
     let listener = TcpListener::bind(format!("127.0.0.1:{}", port))?;
 
     if let Some(stream) = listener.incoming().nth(0) {
-        let response = handle_client(stream?);
-        println!("{response}");
+        let mut stream = stream?;
+        let response = read_from_client(&mut stream)?;
+        write_to_client(&mut stream, &format!("{response}\n"))?;
     }
 
     Ok(())
 }
 
-fn handle_client(stream: impl Read) -> String {
+fn write_to_client(stream: &mut impl Write, response: &str) -> std::io::Result<usize> {
+    stream.write(response.as_bytes())
+}
+
+fn read_from_client(stream: &mut impl Read) -> Result<String, serde_json::Error> {
     let deserializer = serde_json::Deserializer::from_reader(stream);
     let corners = deserializer
         .into_iter::<Corner>()
         .flatten()
         .map(|c| c.to_string())
         .collect::<Vec<_>>();
-    let json = serde_json::to_string(&corners);
-    json.unwrap()
+    serde_json::to_string(&corners)
 }
 
 #[cfg(test)]
 mod test {
     use std::{fs::File, io::BufReader, path::Path};
 
-    use crate::handle_client;
+    use crate::read_from_client;
 
     #[test]
     fn test_handle_client_no_data() {
-        let reader = "".as_bytes();
-        let response = handle_client(reader);
-        assert_eq!(response, String::from("[]"));
+        let mut reader = "".as_bytes();
+        let response = read_from_client(&mut reader);
+        assert_eq!(response.unwrap(), String::from("[]"));
     }
 
     #[test]
@@ -81,8 +88,10 @@ mod test {
                     };
                     match is_input_file {
                         INPUT => {
-                            results[num].0 =
-                                Some(handle_client(BufReader::new(File::open(&path).unwrap())));
+                            results[num].0 = Some(
+                                read_from_client(&mut BufReader::new(File::open(&path).unwrap()))
+                                    .unwrap(),
+                            );
                         }
                         OUTPUT => results[num].1 = Some(std::fs::read_to_string(&path).unwrap()),
                         INVALID => {}
