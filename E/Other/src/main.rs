@@ -17,7 +17,7 @@ struct Args {
 
 fn is_port(s: &str) -> Result<usize, String> {
     let port_number: usize = s.parse().map_err(|e| format!("{}", e))?;
-    if port_number < 10000 || port_number > 60000 {
+    if !(10000..=60000).contains(&port_number) {
         return Err("Port Number must be between 10000 and 60000 inclusive".to_string());
     }
     Ok(port_number)
