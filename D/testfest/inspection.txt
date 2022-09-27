@@ -1,0 +1,21 @@
+Pair: tankalav-lsoto
+Commit: ad80094ea13858236ac8713f021cbdf5bcf1f53b
+Self-eval: 
+Score: 30/40
+Grader: Somtoo Chukwurah
+
+<free text>
+Commit URL: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/tree/ad80094ea13858236ac8713f021cbdf5bcf1f53b
+
+- 30/30 points
+  - 2x 5 per correct image [10/10]
+  - 2x 5 for closing on mouse click inside the canvas (release resources!) [10/10]
+  - 2x 5 for printing an array of two positive integers to console from where you launched  [10/10]
+  
+  
+   0 points
+  - The problem statement states three tasks:
+    	- read all pieces of an arbitrarily long series of JSON values
+    	- turn the complete series of JSON values into a drawing and display it
+    	- "catch" and print the coordinate of the first mouse click
+  - All points if they factor out _two_ of these tasks into separate functions. 
