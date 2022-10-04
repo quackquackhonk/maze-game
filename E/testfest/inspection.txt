@@ -1,0 +1,14 @@
+Pair: tankalav-lsoto
+Commit: 9d32fa2ae0122f59db94763c413962e6dbc171b0
+Self-eval: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/85779492060159780fae0939446f3fafcf53f79e/E/self-E.md
+Score: 20/30
+Grader: Connie Tang
+
+Self-eval:
+10/10: accurate self-eval
+
+Programming:
+0/10: dealing with tcp part as a separate function/method -- tcp part not factored out of main
+10/10: found re-used functionality for C
+
+Commit URL: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/tree/9d32fa2ae0122f59db94763c413962e6dbc171b0

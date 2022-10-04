@@ -1,0 +1,3 @@
+cargo build --release --manifest-path Other/Cargo.toml
+    Finished release [optimized] target(s) in 0.23s
+cp Other/target/release/xtcp .

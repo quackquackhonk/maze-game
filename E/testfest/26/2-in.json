@@ -1,0 +1,47 @@
+ { 
+
+				"horizontal" 
+ : 					     "LEFT"		,  
+
+
+
+	      "vertical" 
+			: "DOWN"			 	 
+
+	   }     { 
+
+      "vertical" : 
+	                  "DOWN", 
+ 
+				  "horizontal"  
+
+	: "RIGHT" 
+
+
+
+			                 }   				 { 
+
+							"vertical" 
+						: "UP"			 , 
+
+
+
+					"horizontal" 
+: 					     "RIGHT"		
+
+						}
+							
+							
+							{ 
+
+				"vertical" 
+														: "UP"			 , 
+
+
+
+					"horizontal" 
+: 					     	"RIGHT"		
+
+						}
+
+

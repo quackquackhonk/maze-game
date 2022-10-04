@@ -1,0 +1,11 @@
+Delivery
+5/5 pts: self-E.md
+5/5 pts: Deliverable exists with the right permissions
+5/5 pts: Delivery of test files
+Functionality
+15/15 pts: Passed 3 out of 3 tests
+15/15 pts: 3 valid tests
+0/10 bonus pts (other teams failing your tests)
+Inspection
+20/30 pts: See inspection.txt
+Total: 65/75 pts
