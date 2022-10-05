@@ -7,6 +7,6 @@ edition = "2021"
 
 [lib]
 name = "Common"
-path = "Board.rs"
+path = "board.rs"
 
 [dependencies]
