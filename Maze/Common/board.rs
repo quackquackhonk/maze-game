@@ -165,7 +165,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     }
 
     /// Returns a Vector of Positions representing all cells directly reachable from `start`
-    fn reachable_from_position(&self, start: Position) -> Vec<Position> {
+    fn reachable_neighbors(&self, start: Position) -> Vec<Position> {
         use CompassDirection::*;
         let mut neighbors = Vec::new();
         // north neighbor
@@ -649,11 +649,11 @@ mod Tests {
         // ┴├┬
         // extra = ┼
         let b = Board::<3>::default();
-        assert_eq!(b.reachable_from_position((0, 0)), Vec::new());
-        assert_eq!(b.reachable_from_position((2, 2)), vec![(1, 2)]);
-        assert_eq!(b.reachable_from_position((0, 1)), vec![(1, 1), (0, 2)]);
-        assert_eq!(b.reachable_from_position((1, 2)), vec![(1, 1), (2, 2)]);
-        assert_eq!(b.reachable_from_position((0, 2)), vec![(0, 1)]);
+        assert_eq!(b.reachable_neighbors((0, 0)), Vec::new());
+        assert_eq!(b.reachable_neighbors((2, 2)), vec![(1, 2)]);
+        assert_eq!(b.reachable_neighbors((0, 1)), vec![(1, 1), (0, 2)]);
+        assert_eq!(b.reachable_neighbors((1, 2)), vec![(1, 1), (2, 2)]);
+        assert_eq!(b.reachable_neighbors((0, 2)), vec![(0, 1)]);
     }
 
     #[test]
