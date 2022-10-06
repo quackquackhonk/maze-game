@@ -158,10 +158,10 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
 
     /// Can you go from `from` to `to` in the given `dir`?
     fn connected_positions(&self, from: Position, to: Position, dir: CompassDirection) -> bool {
-        self.grid[from.0][from.1]
+        self.grid[from.1][from.0]
             .as_ref()
             .unwrap()
-            .connected(self.grid[to.0][to.1].as_ref().unwrap(), dir)
+            .connected(self.grid[to.1][to.0].as_ref().unwrap(), dir)
     }
 
     /// Returns a Vector of Positions representing all cells directly reachable from `start`
@@ -659,10 +659,13 @@ mod Tests {
         // extra = ┼
         let b = Board::<3>::default();
         assert_eq!(b.reachable_from_position((0, 0)), Vec::new());
-        assert_eq!(b.reachable_from_position((2, 2)), vec![(2, 1)]);
-        assert_eq!(b.reachable_from_position((1, 0)), vec![(1, 1), (2, 0)]);
-        assert_eq!(b.reachable_from_position((2, 0)), vec![(1, 0), (2, 1)]);
-        assert_eq!(b.reachable_from_position((2, 1)), vec![(2, 0), (2, 2)]);
+        assert_eq!(b.reachable_from_position((2, 2)), vec![(1, 2)]);
+        assert_eq!(b.reachable_from_position((0, 1)), vec![(1, 1), (0, 2)]);
+        assert_eq!(
+            b.reachable_from_position((1, 2)),
+            vec![(1, 1), (0, 2), (2, 2)]
+        );
+        assert_eq!(b.reachable_from_position((0, 2)), vec![(0, 1), (1, 2)]);
     }
 
     #[test]
