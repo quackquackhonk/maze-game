@@ -30,7 +30,7 @@ type BoardError = String;
 type BoardResult<T> = Result<T, BoardError>;
 
 /// Describes the gems a tile can have
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Gem {
     Amethyst,
     Garnet,
@@ -602,6 +602,8 @@ mod Tests {
 
     #[test]
     pub fn test_connected() {
+        use Gem::*;
+        let gems = (Amethyst, Garnet);
         assert!(Crossroads.connected(Crossroads, North));
         assert!(Crossroads.connected(Crossroads, South));
         assert!(Crossroads.connected(Crossroads, East));
@@ -622,6 +624,30 @@ mod Tests {
         assert!(Corner(East).connected(Corner(North), South));
         assert!(Corner(East).connected(Path(Horizontal), East));
         assert!(!Corner(East).connected(Fork(East), West));
+
+        // some tests for the Tile wrapper for connected
+        assert!(Tile {
+            connector: Crossroads,
+            gems
+        }
+        .connected(
+            &Tile {
+                connector: Crossroads,
+                gems
+            },
+            North
+        ));
+        assert!(Tile {
+            connector: Path(Horizontal),
+            gems
+        }
+        .connected(
+            &Tile {
+                connector: Path(Horizontal),
+                gems
+            },
+            West
+        ));
     }
 
     #[test]
