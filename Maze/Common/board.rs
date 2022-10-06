@@ -235,7 +235,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     /// Default Board<3> is:  
     /// ─│└  
     /// ┌┐┘  
-    /// ├┴┬  
+    /// ┴├┬  
     /// extra = ┼
     fn default() -> Self {
         use CompassDirection::*;
@@ -655,17 +655,14 @@ mod Tests {
         // Default Board<3> is:
         // ─│└
         // ┌┐┘
-        // ├┴┬
+        // ┴├┬
         // extra = ┼
         let b = Board::<3>::default();
         assert_eq!(b.reachable_from_position((0, 0)), Vec::new());
         assert_eq!(b.reachable_from_position((2, 2)), vec![(1, 2)]);
         assert_eq!(b.reachable_from_position((0, 1)), vec![(1, 1), (0, 2)]);
-        assert_eq!(
-            b.reachable_from_position((1, 2)),
-            vec![(1, 1), (0, 2), (2, 2)]
-        );
-        assert_eq!(b.reachable_from_position((0, 2)), vec![(0, 1), (1, 2)]);
+        assert_eq!(b.reachable_from_position((1, 2)), vec![(1, 1), (2, 2)]);
+        assert_eq!(b.reachable_from_position((0, 2)), vec![(0, 1)]);
     }
 
     #[test]
