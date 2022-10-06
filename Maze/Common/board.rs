@@ -670,12 +670,15 @@ mod Tests {
         // Default Board\<3> is:
         // ─│└
         // ┌┐┘
-        // ├┴┬
+        // ┴├┬
         // extra = ┼
         let b = Board::<3>::default();
         assert!(b.reachable((10, 10)).is_err());
-        let from_2_2 = b.reachable((2, 2)).unwrap();
-        dbg!(from_2_2);
-        assert!(false);
+        let from_0_0 = b.reachable((0, 0));
+        assert!(from_0_0.is_ok());
+        assert!(from_0_0.unwrap().is_empty());
+        let from_2_2 = b.reachable((2, 2));
+        assert!(from_2_2.is_ok());
+        assert!(!from_2_2.unwrap().is_empty());
     }
 }
