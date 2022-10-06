@@ -552,6 +552,79 @@ mod Tests {
     }
 
     #[test]
+    pub fn test_connected_to() {
+        assert!(Crossroads.connected_to(North));
+        assert!(Crossroads.connected_to(South));
+        assert!(Crossroads.connected_to(East));
+        assert!(Crossroads.connected_to(West));
+
+        assert!(Path(Vertical).connected_to(North));
+        assert!(Path(Vertical).connected_to(South));
+        assert!(!Path(Vertical).connected_to(East));
+        assert!(Path(Horizontal).connected_to(East));
+        assert!(Path(Horizontal).connected_to(West));
+        assert!(!Path(Horizontal).connected_to(North));
+
+        assert!(Fork(North).connected_to(North));
+        assert!(Fork(North).connected_to(East));
+        assert!(Fork(North).connected_to(West));
+        assert!(!Fork(North).connected_to(South));
+        assert!(!Fork(South).connected_to(North));
+        assert!(Fork(South).connected_to(East));
+        assert!(Fork(South).connected_to(West));
+        assert!(Fork(South).connected_to(South));
+        assert!(Fork(East).connected_to(East));
+        assert!(Fork(East).connected_to(North));
+        assert!(Fork(East).connected_to(South));
+        assert!(!Fork(East).connected_to(West));
+        assert!(!Fork(West).connected_to(East));
+        assert!(Fork(West).connected_to(North));
+        assert!(Fork(West).connected_to(South));
+        assert!(Fork(West).connected_to(West));
+
+        assert!(Corner(North).connected_to(North));
+        assert!(Corner(North).connected_to(East));
+        assert!(!Corner(North).connected_to(South));
+        assert!(!Corner(North).connected_to(West));
+        assert!(!Corner(East).connected_to(North));
+        assert!(Corner(East).connected_to(East));
+        assert!(Corner(East).connected_to(South));
+        assert!(!Corner(East).connected_to(West));
+        assert!(!Corner(South).connected_to(North));
+        assert!(!Corner(South).connected_to(East));
+        assert!(Corner(South).connected_to(South));
+        assert!(Corner(South).connected_to(West));
+        assert!(Corner(West).connected_to(North));
+        assert!(!Corner(West).connected_to(East));
+        assert!(!Corner(West).connected_to(South));
+        assert!(Corner(West).connected_to(West));
+    }
+
+    #[test]
+    pub fn test_connected() {
+        assert!(Crossroads.connected(Crossroads, North));
+        assert!(Crossroads.connected(Crossroads, South));
+        assert!(Crossroads.connected(Crossroads, East));
+        assert!(Crossroads.connected(Crossroads, West));
+
+        assert!(!Path(Vertical).connected(Path(Horizontal), North));
+        assert!(Path(Vertical).connected(Path(Vertical), North));
+        assert!(!Path(Vertical).connected(Path(Vertical), East));
+        assert!(Path(Horizontal).connected(Path(Horizontal), East));
+        assert!(!Path(Horizontal).connected(Path(Horizontal), North));
+
+        assert!(Fork(North).connected(Fork(South), North));
+        assert!(!Fork(North).connected(Fork(South), South));
+        assert!(Fork(North).connected(Path(Horizontal), East));
+        assert!(Fork(North).connected(Corner(East), West));
+
+        assert!(!Corner(East).connected(Crossroads, North));
+        assert!(Corner(East).connected(Corner(North), South));
+        assert!(Corner(East).connected(Path(Horizontal), East));
+        assert!(!Corner(East).connected(Fork(East), West));
+    }
+
+    #[test]
     pub fn test_reachable() {
         // Default Board\<3> is:
         // ─│└
