@@ -206,23 +206,14 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         let mut worklist = Vec::new();
         worklist.push(start);
         let mut reachable = Vec::new();
-        let mut visited: HashSet<Position> = HashSet::new();
+        let mut visited = HashSet::new();
         while let Some(curr) = worklist.pop() {
-            let neighbors = self.reachable_from_position(curr);
-            reachable.append(
-                &mut neighbors
-                    .iter()
-                    .cloned()
-                    .filter(|x| !visited.contains(x))
-                    .collect(),
-            );
-            worklist.append(
-                &mut neighbors
-                    .iter()
-                    .cloned()
-                    .filter(|x| !visited.contains(x))
-                    .collect(),
-            );
+            let neighbors = self.reachable_neighbors(curr);
+            let not_visited_neighbors = neighbors.into_iter().filter(|x| !visited.contains(x));
+            not_visited_neighbors.for_each(|n| {
+                reachable.push(n);
+                worklist.push(n)
+            });
             //    push x onto visited
             visited.insert(curr);
         }
