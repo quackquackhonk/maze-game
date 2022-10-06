@@ -278,7 +278,7 @@ impl Tile {
         self.connector = self.connector.rotate();
     }
 
-    /// Checks if `self` can connect to `other` in the given [`Common::CompassDirection`].
+    /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
     fn connected(&self, other: &Self, direction: CompassDirection) -> bool {
         self.connector.connected(other.connector, direction)
     }
@@ -299,7 +299,7 @@ impl ConnectorShape {
         }
     }
 
-    /// Can we go in this `direction` from this [`Common::ConnectorShape`], `self`?
+    /// Can we go in this `direction` from this [`ConnectorShape`], `self`?
     fn connected_to(&self, direction: CompassDirection) -> bool {
         use CompassDirection::*;
         use ConnectorShape::*;
@@ -320,7 +320,7 @@ impl ConnectorShape {
         )
     }
 
-    /// Checks if `self` can connect to `other` in the given [`Common::CompassDirection`].
+    /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
     pub fn connected(&self, other: Self, direction: CompassDirection) -> bool {
         self.connected_to(direction)
             && other.connected_to(direction.rotate_clockwise().rotate_clockwise())
