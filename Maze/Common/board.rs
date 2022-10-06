@@ -651,6 +651,21 @@ mod Tests {
     }
 
     #[test]
+    pub fn test_reachable_from_position() {
+        // Default Board<3> is:
+        // ─│└
+        // ┌┐┘
+        // ├┴┬
+        // extra = ┼
+        let b = Board::<3>::default();
+        assert_eq!(b.reachable_from_position((0, 0)), Vec::new());
+        assert_eq!(b.reachable_from_position((2, 2)), vec![(2, 1)]);
+        assert_eq!(b.reachable_from_position((1, 0)), vec![(1, 1), (2, 0)]);
+        assert_eq!(b.reachable_from_position((2, 0)), vec![(1, 0), (2, 1)]);
+        assert_eq!(b.reachable_from_position((2, 1)), vec![(2, 0), (2, 2)]);
+    }
+
+    #[test]
     pub fn test_reachable() {
         // Default Board\<3> is:
         // ─│└
