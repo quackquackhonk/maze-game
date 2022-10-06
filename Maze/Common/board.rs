@@ -1,7 +1,9 @@
-/// This type describes a single tile on a board
+/// This type describes the connection type of a tile
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ConnectorShape {
-    /// Path Can Only Be Horizontal Or Vertical
+    /// Path Can Only Be Horizontal Or Vertical  
+    /// ─ - Horizontal  
+    /// │ - Vertical
     Path(PathOrientation),
     /// Direction is dictated by what CompassDirection
     /// it turns right to.  
@@ -16,16 +18,19 @@ pub enum ConnectorShape {
     /// ├ - East  
     /// ┤ - West  
     Fork(CompassDirection),
-    /// Crossroads is the same in every direction
+    /// Crossroads is the same in every direction  
+    /// ┼
     Crossroads,
 }
 
+/// Describes the gems a tile can have
 #[derive(Debug)]
 pub enum Gem {
     Amethyst,
     Garnet,
 }
 
+/// Represents a single tile on a board
 #[derive(Debug)]
 pub struct Tile {
     connector: ConnectorShape,
@@ -39,7 +44,7 @@ pub enum PathOrientation {
     Vertical,
 }
 
-/// This enum describes the four orientations for [`ConnectorShape::Corner`] [`ConnectorShape::Fork`]
+/// This enum describes the four orientations for [`ConnectorShape::Corner`] and [`ConnectorShape::Fork`]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CompassDirection {
     North,
@@ -66,7 +71,23 @@ pub struct Slide {
     direction: CompassDirection,
 }
 
+impl Slide {
+    /// Attempts to create a slide command
+    ///
+    /// Fails if the index for the row/col is out of bounds
+    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide, String> {
+        if index > BOARD_SIZE / 2 {
+            Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
+        } else {
+            Ok(Slide { index, direction })
+        }
+    }
+}
+
 impl Board {
+    /// Slides the given Slide struct command leaving a `None` in the place of the dislodged tile
+    ///
+    /// Returns the current extra tile to be inserted in [`Board::insert`]
     pub fn slide(&mut self, Slide { index, direction }: Slide) -> Tile {
         use CompassDirection::*;
         match direction {
@@ -105,6 +126,10 @@ impl Board {
         }
     }
 
+    /// Inserts the given Tile into the open slot on the Board
+    ///
+    /// Does nothing if there is no open slot, i.e. the board has not been slided yet
+    /// using [`Board::slide`]
     pub fn insert(&mut self, tile: Tile) {
         for r in 0..self.grid.len() {
             for c in 0..self.grid[r].len() {
@@ -143,7 +168,16 @@ impl Default for Board {
     }
 }
 
+impl Tile {
+    /// Rotates the tile according to the symmetries of the underlying ConnectorShape
+    pub fn rotate(&mut self) {
+        self.connector = self.connector.rotate();
+    }
+}
+
 impl ConnectorShape {
+    /// Rotates the ConnectorShape according to the symmetries of the ConnectorShape
+    #[must_use]
     pub fn rotate(self: Self) -> Self {
         use ConnectorShape::*;
         use PathOrientation::*;
@@ -160,9 +194,10 @@ impl ConnectorShape {
 impl CompassDirection {
     /// Returns a rotated direction 90 degrees clockwise.
     /// ```
-    /// use Common::CompassDirection;
+    /// # use Common::CompassDirection;
     /// assert_eq!(CompassDirection::North.rotate_clockwise(), CompassDirection::East);
     /// ```
+    #[must_use]
     pub fn rotate_clockwise(self: Self) -> Self {
         use CompassDirection::*;
         match self {
@@ -179,7 +214,7 @@ mod Tests {
     use super::*;
 
     #[test]
-    pub fn test_compass_direction_rotate() {
+    pub fn compass_direction_rotate() {
         use CompassDirection::*;
         assert_eq!(North.rotate_clockwise(), East);
         assert_eq!(South.rotate_clockwise(), West);
@@ -188,7 +223,7 @@ mod Tests {
     }
 
     #[test]
-    pub fn tiletype_rotate() {
+    pub fn connector_rotate() {
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;
@@ -207,5 +242,25 @@ mod Tests {
             Corner(North).rotate().rotate().rotate().rotate(),
             Corner(North)
         );
+    }
+
+    #[test]
+    pub fn tile_rotate() {
+        use CompassDirection::*;
+        use ConnectorShape::*;
+        use Gem::*;
+        let mut tile = Tile {
+            connector: Fork(North),
+            gems: (Amethyst, Garnet),
+        };
+
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(East));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(South));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(West));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(North));
     }
 }
