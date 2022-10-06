@@ -62,6 +62,40 @@ pub enum CompassDirection {
 /// Type alias for Positions on the Board
 type Position = (usize, usize);
 
+trait Grid {
+    fn rotate_left(&mut self, index: usize);
+    fn rotate_right(&mut self, index: usize);
+    fn rotate_up(&mut self, index: usize);
+    fn rotate_down(&mut self, index: usize);
+}
+
+impl<T, const N: usize, const M: usize> Grid for [[T; N]; M] {
+    fn rotate_left(&mut self, index: usize) {
+        self[index].rotate_left(1)
+    }
+    fn rotate_right(&mut self, index: usize) {
+        self[index].rotate_right(1)
+    }
+    fn rotate_up(&mut self, col_num: usize) {
+        for row_index in 1..self.len() {
+            let (top_rows, bottom_rows) = self.split_at_mut(row_index);
+            std::mem::swap(
+                &mut top_rows[top_rows.len() - 1][col_num],
+                &mut bottom_rows[0][col_num],
+            );
+        }
+    }
+    fn rotate_down(&mut self, col_num: usize) {
+        for row_index in (0..(self.len() - 1)).rev() {
+            let (top_rows, bottom_rows) = self.split_at_mut(row_index + 1);
+            std::mem::swap(
+                &mut top_rows[top_rows.len() - 1][col_num],
+                &mut bottom_rows[0][col_num],
+            );
+        }
+    }
+}
+
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
 pub struct Board<const BOARD_SIZE: usize> {
@@ -104,38 +138,29 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
             North => {
                 let col_num = index * 2;
                 let tmp = self.grid[0][col_num].take();
-                for row_index in 1..self.grid.len() {
-                    let (top_rows, bottom_rows) = self.grid.split_at_mut(row_index);
-                    std::mem::swap(
-                        &mut top_rows[top_rows.len() - 1][col_num],
-                        &mut bottom_rows[0][col_num],
-                    );
-                }
+                self.grid.rotate_up(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             South => {
                 let col_num = index * 2;
                 let tmp = self.grid[self.grid.len() - 1][col_num].take();
-                for row_index in (0..(self.grid.len() - 1)).rev() {
-                    let (top_rows, bottom_rows) = self.grid.split_at_mut(row_index + 1);
-                    std::mem::swap(
-                        &mut top_rows[top_rows.len() - 1][col_num],
-                        &mut bottom_rows[0][col_num],
-                    );
-                }
+                self.grid.rotate_down(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             East => {
-                let row = &mut self.grid[index * 2];
-                row.rotate_right(1);
-                Ok(std::mem::replace(&mut self.extra, row[0].take().unwrap()))
-            }
-            West => {
-                let row = &mut self.grid[index * 2];
-                row.rotate_left(1);
+                self.grid.rotate_right(index * 2);
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    row[row.len() - 1].take().unwrap(),
+                    self.grid[index * 2][0].take().unwrap(),
+                ))
+            }
+            West => {
+                self.grid.rotate_left(index * 2);
+                Ok(std::mem::replace(
+                    &mut self.extra,
+                    self.grid[index * 2][self.grid[index * 2].len() - 1]
+                        .take()
+                        .unwrap(),
                 ))
             }
         }
