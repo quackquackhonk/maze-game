@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 /// This type describes the connection type of a tile
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ConnectorShape {
@@ -56,6 +58,9 @@ pub enum CompassDirection {
     East,
     West,
 }
+
+/// Type alias for Positions on the Board
+type Position = (usize, usize);
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
@@ -151,8 +156,78 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         }
     }
 
-    pub fn reachable(&self) {
-        todo!()
+    /// Can you go from `from` to `to` in the given `dir`?
+    fn connected_positions(&self, from: Position, to: Position, dir: CompassDirection) -> bool {
+        self.grid[from.0][from.1]
+            .as_ref()
+            .unwrap()
+            .connected(self.grid[to.0][to.1].as_ref().unwrap(), dir)
+    }
+
+    /// Returns a Vector of Positions representing all cells directly reachable from `start`
+    fn reachable_from_position(&self, start: Position) -> Vec<Position> {
+        use CompassDirection::*;
+        let mut neighbors = Vec::new();
+        // north neighbor
+        if start.1 > 0 && self.connected_positions(start, (start.0, start.1 - 1), North) {
+            neighbors.push((start.0, start.1 - 1));
+        }
+        // east neighbor
+        if start.0 < BOARD_SIZE - 1 && self.connected_positions(start, (start.0 + 1, start.1), East)
+        {
+            neighbors.push((start.0 + 1, start.1));
+        }
+        // south neighbor
+        if start.1 < BOARD_SIZE - 1
+            && self.connected_positions(start, (start.0, start.1 + 1), South)
+        {
+            neighbors.push((start.0, start.1 + 1));
+        }
+        // west neighbor
+        if start.0 > 0 && self.connected_positions(start, (start.0 - 1, start.1), West) {
+            neighbors.push((start.0 - 1, start.1));
+        }
+        neighbors
+    }
+
+    /// Returns a Vector of Positions representing all cells on the Board reachable from `start`
+    ///
+    /// # Errors
+    /// Returns an error if `start.0` > BOARD_SIZE or `start.1` > BOARD_SIZE or either `start.0` or
+    /// `start.1` are negative.
+    pub fn reachable(&self, start: Position) -> BoardResult<Vec<Position>> {
+        if start.0 >= BOARD_SIZE || start.1 >= BOARD_SIZE {
+            return Err("Out-of-bounds Position".to_string());
+        }
+
+        // push start onto worklist
+        // reachable = []
+        // visited = <>
+        let mut worklist = Vec::new();
+        worklist.push(start);
+        let mut reachable = Vec::new();
+        let mut visited: HashSet<Position> = HashSet::new();
+        while let Some(curr) = worklist.pop() {
+            let neighbors = self.reachable_from_position(curr);
+            reachable.append(
+                &mut neighbors
+                    .iter()
+                    .cloned()
+                    .filter(|x| !visited.contains(x))
+                    .collect(),
+            );
+            worklist.append(
+                &mut neighbors
+                    .iter()
+                    .cloned()
+                    .filter(|x| !visited.contains(x))
+                    .collect(),
+            );
+            //    push x onto visited
+            visited.insert(curr);
+        }
+
+        Ok(reachable)
     }
 }
 
@@ -202,6 +277,11 @@ impl Tile {
     pub fn rotate(&mut self) {
         self.connector = self.connector.rotate();
     }
+
+    /// Checks if `self` can connect to `other` in the given [`Common::CompassDirection`].
+    fn connected(&self, other: &Self, direction: CompassDirection) -> bool {
+        self.connector.connected(other.connector, direction)
+    }
 }
 
 impl ConnectorShape {
@@ -217,6 +297,33 @@ impl ConnectorShape {
             Fork(dir) => Fork(dir.rotate_clockwise()),
             Crossroads => Crossroads,
         }
+    }
+
+    /// Can we go in this `direction` from this [`Common::ConnectorShape`], `self`?
+    fn connected_to(&self, direction: CompassDirection) -> bool {
+        use CompassDirection::*;
+        use ConnectorShape::*;
+        use PathOrientation::*;
+        matches!(
+            (self, direction),
+            (Path(Vertical), North | South)
+                | (Path(Horizontal), East | West)
+                | (Corner(North), North | East)
+                | (Corner(South), South | West)
+                | (Corner(East), East | South)
+                | (Corner(West), West | North)
+                | (Fork(North), North | East | West)
+                | (Fork(South), South | East | West)
+                | (Fork(East), East | North | South)
+                | (Fork(West), West | North | South)
+                | (Crossroads, _)
+        )
+    }
+
+    /// Checks if `self` can connect to `other` in the given [`Common::CompassDirection`].
+    pub fn connected(&self, other: Self, direction: CompassDirection) -> bool {
+        self.connected_to(direction)
+            && other.connected_to(direction.rotate_clockwise().rotate_clockwise())
     }
 }
 
@@ -442,5 +549,19 @@ mod Tests {
 
         assert!(b.slide(Slide::new(0, South).unwrap()).is_ok());
         assert!(b.slide(Slide::new(0, South).unwrap()).is_err());
+    }
+
+    #[test]
+    pub fn test_reachable() {
+        // Default Board\<3> is:
+        // ─│└
+        // ┌┐┘
+        // ├┴┬
+        // extra = ┼
+        let b = Board::<3>::default();
+        assert!(b.reachable((10, 10)).is_err());
+        let from_2_2 = b.reachable((2, 2)).unwrap();
+        dbg!(from_2_2);
+        assert!(false);
     }
 }
