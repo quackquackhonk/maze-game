@@ -23,15 +23,19 @@ pub enum ConnectorShape {
     Crossroads,
 }
 
+type BoardError = String;
+
+type BoardResult<T> = Result<T, BoardError>;
+
 /// Describes the gems a tile can have
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Gem {
     Amethyst,
     Garnet,
 }
 
 /// Represents a single tile on a board
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Tile {
     connector: ConnectorShape,
     gems: (Gem, Gem),
@@ -53,17 +57,15 @@ pub enum CompassDirection {
     West,
 }
 
-const BOARD_SIZE: usize = 7;
-
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
-pub struct Board {
+pub struct Board<const BOARD_SIZE: usize> {
     grid: [[Option<Tile>; BOARD_SIZE]; BOARD_SIZE],
     extra: Tile,
 }
 
 /// Describes a slide motion
-pub struct Slide {
+pub struct Slide<const BOARD_SIZE: usize> {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
     index: usize,
@@ -71,11 +73,11 @@ pub struct Slide {
     direction: CompassDirection,
 }
 
-impl Slide {
+impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
     /// Attempts to create a slide command
     ///
     /// Fails if the index for the row/col is out of bounds
-    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide, String> {
+    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
         if index > BOARD_SIZE / 2 {
             Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
         } else {
@@ -84,44 +86,52 @@ impl Slide {
     }
 }
 
-impl Board {
+impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     /// Slides the given Slide struct command leaving a `None` in the place of the dislodged tile
     ///
     /// Returns the current extra tile to be inserted in [`Board::insert`]
-    pub fn slide(&mut self, Slide { index, direction }: Slide) -> Tile {
+    pub fn slide(&mut self, Slide { index, direction }: Slide<BOARD_SIZE>) -> BoardResult<Tile> {
         use CompassDirection::*;
+        if self.grid.iter().flatten().any(std::option::Option::is_none) {
+            return Err("Board cannot be slid twice before inserting a Tile!".to_string());
+        };
         match direction {
             North => {
                 let col_num = index * 2;
                 let tmp = self.grid[0][col_num].take();
-                for row_index in (0..(self.grid.len() - 1)).rev() {
+                for row_index in 1..self.grid.len() {
+                    let (top_rows, bottom_rows) = self.grid.split_at_mut(row_index);
                     std::mem::swap(
-                        &mut self.grid[row_index][col_num].as_ref(),
-                        &mut self.grid[row_index + 1][col_num].as_ref(),
+                        &mut top_rows[top_rows.len() - 1][col_num],
+                        &mut bottom_rows[0][col_num],
                     );
                 }
-                tmp.unwrap()
+                Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             South => {
                 let col_num = index * 2;
-                let tmp = self.grid[self.grid.len()][col_num].take();
-                for row_index in 1..self.grid.len() {
+                let tmp = self.grid[self.grid.len() - 1][col_num].take();
+                for row_index in (0..(self.grid.len() - 1)).rev() {
+                    let (top_rows, bottom_rows) = self.grid.split_at_mut(row_index + 1);
                     std::mem::swap(
-                        &mut self.grid[row_index][col_num].as_ref(),
-                        &mut self.grid[row_index - 1][col_num].as_ref(),
+                        &mut top_rows[top_rows.len() - 1][col_num],
+                        &mut bottom_rows[0][col_num],
                     );
                 }
-                tmp.unwrap()
+                Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             East => {
                 let row = &mut self.grid[index * 2];
                 row.rotate_right(1);
-                std::mem::replace(&mut self.extra, row[0].take().unwrap())
+                Ok(std::mem::replace(&mut self.extra, row[0].take().unwrap()))
             }
             West => {
                 let row = &mut self.grid[index * 2];
                 row.rotate_left(1);
-                std::mem::replace(&mut self.extra, row[row.len() - 1].take().unwrap())
+                Ok(std::mem::replace(
+                    &mut self.extra,
+                    row[row.len() - 1].take().unwrap(),
+                ))
             }
         }
     }
@@ -133,7 +143,7 @@ impl Board {
     pub fn insert(&mut self, tile: Tile) {
         for r in 0..self.grid.len() {
             for c in 0..self.grid[r].len() {
-                if let None = self.grid[r][c] {
+                if self.grid[r][c].is_none() {
                     self.grid[r][c] = Some(tile);
                     return;
                 }
@@ -146,18 +156,37 @@ impl Board {
     }
 }
 
-impl Default for Board {
+impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
+    /// Default Board<3> is:  
+    /// ─│└  
+    /// ┌┐┘  
+    /// ├┴┬  
+    /// extra = ┼
     fn default() -> Self {
+        use CompassDirection::*;
         use ConnectorShape::*;
         use Gem::*;
-        let grid = [[(); BOARD_SIZE]; BOARD_SIZE].map(|list| {
-            list.map(|_| {
-                Some(Tile {
-                    connector: Crossroads,
-                    gems: (Amethyst, Garnet),
-                })
-            })
-        });
+        use PathOrientation::*;
+        let mut grid = [[(); BOARD_SIZE]; BOARD_SIZE].map(|list| list.map(|_| None));
+        for (idx, cell) in grid.iter_mut().flatten().enumerate() {
+            *cell = Some(Tile {
+                connector: match idx % 11 {
+                    0 => Path(Horizontal),
+                    1 => Path(Vertical),
+                    2 => Corner(North),
+                    3 => Corner(East),
+                    4 => Corner(South),
+                    5 => Corner(West),
+                    6 => Fork(North),
+                    7 => Fork(East),
+                    8 => Fork(South),
+                    9 => Fork(West),
+                    10 => Crossroads,
+                    _ => unreachable!("usize % 11 is never > 10"),
+                },
+                gems: (Amethyst, Garnet),
+            });
+        }
         Self {
             grid,
             extra: Tile {
@@ -212,10 +241,12 @@ impl CompassDirection {
 #[cfg(test)]
 mod Tests {
     use super::*;
+    use CompassDirection::*;
+    use ConnectorShape::*;
+    use PathOrientation::*;
 
     #[test]
     pub fn compass_direction_rotate() {
-        use CompassDirection::*;
         assert_eq!(North.rotate_clockwise(), East);
         assert_eq!(South.rotate_clockwise(), West);
         assert_eq!(East.rotate_clockwise(), South);
@@ -224,9 +255,6 @@ mod Tests {
 
     #[test]
     pub fn connector_rotate() {
-        use CompassDirection::*;
-        use ConnectorShape::*;
-        use PathOrientation::*;
         assert_eq!(Crossroads.rotate(), Crossroads);
         assert_eq!(Crossroads.rotate().rotate(), Crossroads);
 
@@ -246,8 +274,6 @@ mod Tests {
 
     #[test]
     pub fn tile_rotate() {
-        use CompassDirection::*;
-        use ConnectorShape::*;
         use Gem::*;
         let mut tile = Tile {
             connector: Fork(North),
@@ -262,5 +288,159 @@ mod Tests {
         assert_eq!(tile.connector, Fork(West));
         tile.rotate();
         assert_eq!(tile.connector, Fork(North));
+    }
+
+    #[test]
+    pub fn test_slide_new() {
+        assert!(Slide::<1>::new(0, North).is_ok());
+        assert!(Slide::<1>::new(1, North).is_err());
+
+        assert!(Slide::<7>::new(0, South).is_ok());
+        assert!(Slide::<7>::new(2, East).is_ok());
+        assert!(Slide::<7>::new(4, West).is_err());
+    }
+
+    #[test]
+    pub fn test_slide() {
+        let mut b: Board<7> = Board::default();
+        assert!(b.grid.iter().flatten().all(std::option::Option::is_some));
+        assert!(b.slide(Slide::new(0, South).unwrap()).is_ok());
+        assert!(b.grid.iter().flatten().any(std::option::Option::is_none));
+        assert_eq!(
+            b.grid
+                .iter()
+                .flatten()
+                .fold(0, |sum, opt| { sum + if opt.is_none() { 1 } else { 0 } }),
+            1
+        );
+        assert!(b.grid[0][0].is_none());
+
+        let mut b: Board<7> = Board::default();
+        assert!(b.grid.iter().flatten().all(std::option::Option::is_some));
+        assert!(b.slide(Slide::new(0, North).unwrap()).is_ok());
+        assert!(b.grid.iter().flatten().any(std::option::Option::is_none));
+        assert_eq!(
+            b.grid
+                .iter()
+                .flatten()
+                .fold(0, |sum, opt| { sum + if opt.is_none() { 1 } else { 0 } }),
+            1
+        );
+        assert!(b.grid[b.grid.len() - 1][0].is_none());
+
+        let mut b: Board<7> = Board::default();
+        assert!(b.grid.iter().flatten().all(std::option::Option::is_some));
+        assert!(b.slide(Slide::new(0, East).unwrap()).is_ok());
+        assert!(b.grid.iter().flatten().any(std::option::Option::is_none));
+        assert_eq!(
+            b.grid
+                .iter()
+                .flatten()
+                .fold(0, |sum, opt| { sum + if opt.is_none() { 1 } else { 0 } }),
+            1
+        );
+        assert!(b.grid[0][0].is_none());
+
+        let mut b: Board<7> = Board::default();
+        assert!(b.grid.iter().flatten().all(std::option::Option::is_some));
+        assert!(b.slide(Slide::new(3, West).unwrap()).is_ok());
+        assert!(b.grid.iter().flatten().any(std::option::Option::is_none));
+        assert_eq!(
+            b.grid
+                .iter()
+                .flatten()
+                .fold(0, |sum, opt| { sum + if opt.is_none() { 1 } else { 0 } }),
+            1
+        );
+        assert!(b.grid[b.grid.len() - 1][b.grid.len() - 1].is_none());
+    }
+    #[test]
+    pub fn test_insert() {
+        // Initial Board state
+        // ─│└
+        // ┌┐┘
+        // ┴├┬
+        // extra = ┼
+        let mut b: Board<3> = Board::default();
+        dbg!(&b.grid);
+        assert_eq!(b.extra.connector, Crossroads);
+        assert!(b.grid[0][0].is_some());
+        let to_insert = b.slide(Slide::new(0, South).unwrap()).unwrap();
+        // Board after slide
+        //  │└
+        // ─┐┘
+        // ┌├┬
+        // extra = ┴, to_insert = ┼
+        assert_eq!(to_insert.connector, Crossroads);
+        dbg!(&b.grid);
+        assert_eq!(b.extra.connector, Fork(North));
+        assert!(b.grid[0][0].is_none());
+        b.insert(to_insert);
+        // Board after slide + insert
+        // ┼│└
+        // ─┐┘
+        // ┌├┬
+        // extra = ┴
+        assert_eq!(
+            b.grid[0][0],
+            Some(Tile {
+                connector: Crossroads,
+                gems: (Gem::Amethyst, Gem::Garnet)
+            })
+        );
+
+        let to_insert = b.slide(Slide::new(0, East).unwrap()).unwrap();
+        // Board after slide
+        //  ┼│
+        // ─┐┘
+        // ┌├┬
+        // extra = └, to_insert = ┴
+        assert_eq!(to_insert.connector, Fork(North));
+        assert_eq!(b.extra.connector, Corner(North));
+        assert!(b.grid[0][0].is_none());
+        b.insert(to_insert);
+        // Board after insert
+        // ┴┼│
+        // ─┐┘
+        // ┌├┬
+        // extra = └
+        assert_eq!(
+            b.grid[0][0],
+            Some(Tile {
+                connector: Fork(North),
+                gems: (Gem::Amethyst, Gem::Garnet)
+            })
+        );
+
+        // Board after slide + insert
+        // ┴┼│
+        // ─┐┘
+        // ┌├┬
+        // extra = └
+        let to_insert = b.slide(Slide::new(1, West).unwrap()).unwrap();
+        // Board after slide
+        // ┴┼│
+        // ─┐┘
+        // ├┬
+        // extra = ┌, to_insert = └
+        assert_eq!(to_insert.connector, Corner(North));
+        assert_eq!(b.extra.connector, Corner(East));
+        assert!(b.grid[2][2].is_none());
+        b.insert(to_insert);
+        // Board after slide + insert
+        // ┴┼│
+        // ─┐┘
+        // ├┬└
+        // extra = ┌
+        assert_eq!(
+            b.grid[2][2],
+            Some(Tile {
+                connector: Corner(North),
+                gems: (Gem::Amethyst, Gem::Garnet)
+            })
+        );
+
+        assert!(b.slide(Slide::new(0, South).unwrap()).is_ok());
+        assert!(b.slide(Slide::new(0, South).unwrap()).is_err());
     }
 }
