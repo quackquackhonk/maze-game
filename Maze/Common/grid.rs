@@ -22,7 +22,7 @@ impl<T, const N: usize, const M: usize> Grid<T, N, M> {
         for row_index in 1..self.len() {
             let (top_rows, bottom_rows) = self.split_at_mut(row_index);
             std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
+                &mut top_rows[row_index - 1][col_num],
                 &mut bottom_rows[0][col_num],
             );
         }
@@ -33,7 +33,7 @@ impl<T, const N: usize, const M: usize> Grid<T, N, M> {
         for row_index in (0..(self.len() - 1)).rev() {
             let (top_rows, bottom_rows) = self.split_at_mut(row_index + 1);
             std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
+                &mut top_rows[row_index][col_num],
                 &mut bottom_rows[0][col_num],
             );
         }
