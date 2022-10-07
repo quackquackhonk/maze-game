@@ -143,8 +143,8 @@ impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> 
 /// # Panics
 ///
 /// Same panic conditions as `Index`.
-impl<T, const N: usize, const M: usize> IndexMut<(usize, usize)> for Grid<T, N, M> {
-    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
+impl<T, const N: usize, const M: usize> IndexMut<Position> for Grid<T, N, M> {
+    fn index_mut(&mut self, index: Position) -> &mut Self::Output {
         &mut self.0[index.1][index.0]
     }
 }
