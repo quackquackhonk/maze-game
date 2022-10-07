@@ -17,28 +17,6 @@ pub struct Board<const BOARD_SIZE: usize> {
     extra: Tile,
 }
 
-/// Describes a slide motion
-pub struct Slide<const BOARD_SIZE: usize> {
-    /// The index of the row or column to be slid
-    /// Counts from 0 from left to right and top to bottom
-    index: usize,
-    /// The direction the row or column is sliding to
-    direction: CompassDirection,
-}
-
-impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
-    /// Attempts to create a slide command
-    ///
-    /// Fails if the index for the row/col is out of bounds
-    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
-        if index > BOARD_SIZE / 2 {
-            Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
-        } else {
-            Ok(Slide { index, direction })
-        }
-    }
-}
-
 impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     /// Slides the given Slide struct command leaving a `None` in the place of the dislodged tile
     ///
@@ -200,6 +178,28 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
                 connector: Crossroads,
                 gems: (Amethyst, Garnet),
             },
+        }
+    }
+}
+
+/// Describes a slide motion
+pub struct Slide<const BOARD_SIZE: usize> {
+    /// The index of the row or column to be slid
+    /// Counts from 0 from left to right and top to bottom
+    index: usize,
+    /// The direction the row or column is sliding to
+    direction: CompassDirection,
+}
+
+impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
+    /// Attempts to create a slide command
+    ///
+    /// Fails if the index for the row/col is out of bounds
+    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
+        if index > BOARD_SIZE / 2 {
+            Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
+        } else {
+            Ok(Slide { index, direction })
         }
     }
 }
