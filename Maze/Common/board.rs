@@ -3,92 +3,15 @@ use std::{
     ops::{Deref, DerefMut, Index, IndexMut},
 };
 
+use grid::*;
 use tile::*;
 mod gem;
 mod tile;
+pub mod grid;
 
 type BoardError = String;
 
 type BoardResult<T> = Result<T, BoardError>;
-
-/// Type alias for Positions on the Board
-type Position = (usize, usize);
-
-#[derive(Debug)]
-struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
-
-impl<T, const N: usize, const M: usize> From<[[T; N]; M]> for Grid<T, N, M> {
-    fn from(from: [[T; N]; M]) -> Self {
-        Grid(from)
-    }
-}
-
-impl<T, const N: usize, const M: usize> Deref for Grid<T, N, M> {
-    type Target = [[T; N]; M];
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
-    type Output = [T; N];
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.0[index]
-    }
-}
-impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.0[index]
-    }
-}
-
-impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> {
-    type Output = T;
-
-    fn index(&self, index: (usize, usize)) -> &Self::Output {
-        &self.0[index.1][index.0]
-    }
-}
-impl<T, const N: usize, const M: usize> IndexMut<(usize, usize)> for Grid<T, N, M> {
-    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
-        &mut self.0[index.1][index.0]
-    }
-}
-
-impl<T, const N: usize, const M: usize> Grid<T, N, M> {
-    fn rotate_left(&mut self, index: usize) {
-        self[index].rotate_left(1)
-    }
-    fn rotate_right(&mut self, index: usize) {
-        self[index].rotate_right(1)
-    }
-    fn rotate_up(&mut self, col_num: usize) {
-        for row_index in 1..self.len() {
-            let (top_rows, bottom_rows) = self.split_at_mut(row_index);
-            std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
-                &mut bottom_rows[0][col_num],
-            );
-        }
-    }
-    fn rotate_down(&mut self, col_num: usize) {
-        for row_index in (0..(self.len() - 1)).rev() {
-            let (top_rows, bottom_rows) = self.split_at_mut(row_index + 1);
-            std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
-                &mut bottom_rows[0][col_num],
-            );
-        }
-    }
-}
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
@@ -250,9 +173,9 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     /// ┴├┬  
     /// extra = ┼
     fn default() -> Self {
+        use gem::Gem::*;
         use CompassDirection::*;
         use ConnectorShape::*;
-        use Gem::*;
         use PathOrientation::*;
         let mut grid = [[(); BOARD_SIZE]; BOARD_SIZE].map(|list| list.map(|_| None));
         for (idx, cell) in grid.iter_mut().flatten().enumerate() {
@@ -275,7 +198,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
             });
         }
         Self {
-            grid: Grid(grid),
+            grid: Grid::from(grid),
             extra: Tile {
                 connector: Crossroads,
                 gems: (Amethyst, Garnet),
@@ -286,6 +209,8 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
 
 #[cfg(test)]
 mod Tests {
+mod BoardTests {
+    use crate::gem::Gem;
     use super::*;
     use CompassDirection::*;
     use ConnectorShape::*;
