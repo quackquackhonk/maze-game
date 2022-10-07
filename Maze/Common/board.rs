@@ -1,4 +1,7 @@
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    ops::{Deref, DerefMut, Index, IndexMut},
+};
 
 /// This type describes the connection type of a tile
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -62,14 +65,56 @@ pub enum CompassDirection {
 /// Type alias for Positions on the Board
 type Position = (usize, usize);
 
-trait Grid {
-    fn rotate_left(&mut self, index: usize);
-    fn rotate_right(&mut self, index: usize);
-    fn rotate_up(&mut self, index: usize);
-    fn rotate_down(&mut self, index: usize);
+#[derive(Debug)]
+struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
+
+impl<T, const N: usize, const M: usize> From<[[T; N]; M]> for Grid<T, N, M> {
+    fn from(from: [[T; N]; M]) -> Self {
+        Grid(from)
+    }
 }
 
-impl<T, const N: usize, const M: usize> Grid for [[T; N]; M] {
+impl<T, const N: usize, const M: usize> Deref for Grid<T, N, M> {
+    type Target = [[T; N]; M];
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
+    type Output = [T; N];
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
+    }
+}
+impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.0[index]
+    }
+}
+
+impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> {
+    type Output = T;
+
+    fn index(&self, index: (usize, usize)) -> &Self::Output {
+        &self.0[index.1][index.0]
+    }
+}
+impl<T, const N: usize, const M: usize> IndexMut<(usize, usize)> for Grid<T, N, M> {
+    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
+        &mut self.0[index.1][index.0]
+    }
+}
+
+impl<T, const N: usize, const M: usize> Grid<T, N, M> {
     fn rotate_left(&mut self, index: usize) {
         self[index].rotate_left(1)
     }
@@ -99,7 +144,7 @@ impl<T, const N: usize, const M: usize> Grid for [[T; N]; M] {
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
 pub struct Board<const BOARD_SIZE: usize> {
-    grid: [[Option<Tile>; BOARD_SIZE]; BOARD_SIZE],
+    grid: Grid<Option<Tile>, BOARD_SIZE, BOARD_SIZE>,
     extra: Tile,
 }
 
@@ -143,7 +188,8 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
             }
             South => {
                 let col_num = index * 2;
-                let tmp = self.grid[self.grid.len() - 1][col_num].take();
+                let row_num = self.grid.len() - 1;
+                let tmp = self.grid[row_num][col_num].take();
                 self.grid.rotate_down(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
@@ -156,11 +202,10 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
             }
             West => {
                 self.grid.rotate_left(index * 2);
+                let col_index = self.grid[index * 2].len() - 1;
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    self.grid[index * 2][self.grid[index * 2].len() - 1]
-                        .take()
-                        .unwrap(),
+                    self.grid[index * 2][col_index].take().unwrap(),
                 ))
             }
         }
@@ -279,7 +324,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
             });
         }
         Self {
-            grid,
+            grid: Grid(grid),
             extra: Tile {
                 connector: Crossroads,
                 gems: (Amethyst, Garnet),
