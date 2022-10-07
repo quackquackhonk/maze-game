@@ -5,7 +5,7 @@ SUBJECT: Referee Game State
 
 # Data
 We believe the Referee state should store:
- - The board (which stores its spare tile)
+ - The `Board` (which stores its spare `Tile`)
  - The list of active players
     - And their positions
  - The location of all players home and goals
