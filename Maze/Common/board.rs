@@ -1,173 +1,20 @@
-use std::{
-    collections::HashSet,
-    ops::{Deref, DerefMut, Index, IndexMut},
-};
+use grid::*;
+use std::collections::HashSet;
+use tile::*;
 
-/// This type describes the connection type of a tile
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ConnectorShape {
-    /// Path Can Only Be Horizontal Or Vertical  
-    /// ─ - Horizontal  
-    /// │ - Vertical
-    Path(PathOrientation),
-    /// Direction is dictated by what CompassDirection
-    /// it turns right to.  
-    /// ┐ - South  
-    /// └ - North  
-    /// ┌ - East  
-    /// ┘ - West  
-    Corner(CompassDirection),
-    /// Direction is dictated by the middle path  
-    /// ┬ - South  
-    /// ┴ - North  
-    /// ├ - East  
-    /// ┤ - West  
-    Fork(CompassDirection),
-    /// Crossroads is the same in every direction  
-    /// ┼
-    Crossroads,
-}
+pub mod gem;
+mod grid;
+pub mod tile;
 
 type BoardError = String;
 
 type BoardResult<T> = Result<T, BoardError>;
-
-/// Describes the gems a tile can have
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum Gem {
-    Amethyst,
-    Garnet,
-}
-
-/// Represents a single tile on a board
-#[derive(Debug, PartialEq, Eq)]
-pub struct Tile {
-    connector: ConnectorShape,
-    gems: (Gem, Gem),
-}
-
-/// This enum describes the two orientations for [`ConnectorShape::Path`]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PathOrientation {
-    Horizontal,
-    Vertical,
-}
-
-/// This enum describes the four orientations for [`ConnectorShape::Corner`] and [`ConnectorShape::Fork`]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum CompassDirection {
-    North,
-    South,
-    East,
-    West,
-}
-
-/// Type alias for Positions on the Board
-type Position = (usize, usize);
-
-#[derive(Debug)]
-struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
-
-impl<T, const N: usize, const M: usize> From<[[T; N]; M]> for Grid<T, N, M> {
-    fn from(from: [[T; N]; M]) -> Self {
-        Grid(from)
-    }
-}
-
-impl<T, const N: usize, const M: usize> Deref for Grid<T, N, M> {
-    type Target = [[T; N]; M];
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
-    type Output = [T; N];
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.0[index]
-    }
-}
-impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.0[index]
-    }
-}
-
-impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> {
-    type Output = T;
-
-    fn index(&self, index: (usize, usize)) -> &Self::Output {
-        &self.0[index.1][index.0]
-    }
-}
-impl<T, const N: usize, const M: usize> IndexMut<(usize, usize)> for Grid<T, N, M> {
-    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
-        &mut self.0[index.1][index.0]
-    }
-}
-
-impl<T, const N: usize, const M: usize> Grid<T, N, M> {
-    fn rotate_left(&mut self, index: usize) {
-        self[index].rotate_left(1)
-    }
-    fn rotate_right(&mut self, index: usize) {
-        self[index].rotate_right(1)
-    }
-    fn rotate_up(&mut self, col_num: usize) {
-        for row_index in 1..self.len() {
-            let (top_rows, bottom_rows) = self.split_at_mut(row_index);
-            std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
-                &mut bottom_rows[0][col_num],
-            );
-        }
-    }
-    fn rotate_down(&mut self, col_num: usize) {
-        for row_index in (0..(self.len() - 1)).rev() {
-            let (top_rows, bottom_rows) = self.split_at_mut(row_index + 1);
-            std::mem::swap(
-                &mut top_rows[top_rows.len() - 1][col_num],
-                &mut bottom_rows[0][col_num],
-            );
-        }
-    }
-}
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
 pub struct Board<const BOARD_SIZE: usize> {
     grid: Grid<Option<Tile>, BOARD_SIZE, BOARD_SIZE>,
     extra: Tile,
-}
-
-/// Describes a slide motion
-pub struct Slide<const BOARD_SIZE: usize> {
-    /// The index of the row or column to be slid
-    /// Counts from 0 from left to right and top to bottom
-    index: usize,
-    /// The direction the row or column is sliding to
-    direction: CompassDirection,
-}
-
-impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
-    /// Attempts to create a slide command
-    ///
-    /// Fails if the index for the row/col is out of bounds
-    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
-        if index > BOARD_SIZE / 2 {
-            Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
-        } else {
-            Ok(Slide { index, direction })
-        }
-    }
 }
 
 impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
@@ -301,9 +148,9 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     /// ┴├┬  
     /// extra = ┼
     fn default() -> Self {
+        use gem::Gem::*;
         use CompassDirection::*;
         use ConnectorShape::*;
-        use Gem::*;
         use PathOrientation::*;
         let mut grid = [[(); BOARD_SIZE]; BOARD_SIZE].map(|list| list.map(|_| None));
         for (idx, cell) in grid.iter_mut().flatten().enumerate() {
@@ -326,7 +173,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
             });
         }
         Self {
-            grid: Grid(grid),
+            grid: Grid::from(grid),
             extra: Tile {
                 connector: Crossroads,
                 gems: (Amethyst, Garnet),
@@ -335,130 +182,35 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     }
 }
 
-impl Tile {
-    /// Rotates the tile according to the symmetries of the underlying ConnectorShape
-    pub fn rotate(&mut self) {
-        self.connector = self.connector.rotate();
-    }
-
-    /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
-    fn connected(&self, other: &Self, direction: CompassDirection) -> bool {
-        self.connector.connected(other.connector, direction)
-    }
+/// Describes a slide motion
+pub struct Slide<const BOARD_SIZE: usize> {
+    /// The index of the row or column to be slid
+    /// Counts from 0 from left to right and top to bottom
+    index: usize,
+    /// The direction the row or column is sliding to
+    direction: CompassDirection,
 }
 
-impl ConnectorShape {
-    /// Rotates the ConnectorShape according to the symmetries of the ConnectorShape
-    #[must_use]
-    pub fn rotate(self: Self) -> Self {
-        use ConnectorShape::*;
-        use PathOrientation::*;
-        match self {
-            Path(Horizontal) => Path(Vertical),
-            Path(Vertical) => Path(Horizontal),
-            Corner(dir) => Corner(dir.rotate_clockwise()),
-            Fork(dir) => Fork(dir.rotate_clockwise()),
-            Crossroads => Crossroads,
-        }
-    }
-
-    /// Can we go in this `direction` from this [`ConnectorShape`], `self`?
-    fn connected_to(&self, direction: CompassDirection) -> bool {
-        use CompassDirection::*;
-        use ConnectorShape::*;
-        use PathOrientation::*;
-        matches!(
-            (self, direction),
-            (Path(Vertical), North | South)
-                | (Path(Horizontal), East | West)
-                | (Corner(North), North | East)
-                | (Corner(South), South | West)
-                | (Corner(East), East | South)
-                | (Corner(West), West | North)
-                | (Fork(North), North | East | West)
-                | (Fork(South), South | East | West)
-                | (Fork(East), East | North | South)
-                | (Fork(West), West | North | South)
-                | (Crossroads, _)
-        )
-    }
-
-    /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
-    pub fn connected(&self, other: Self, direction: CompassDirection) -> bool {
-        self.connected_to(direction)
-            && other.connected_to(direction.rotate_clockwise().rotate_clockwise())
-    }
-}
-
-impl CompassDirection {
-    /// Returns a rotated direction 90 degrees clockwise.
-    /// ```
-    /// # use Common::CompassDirection;
-    /// assert_eq!(CompassDirection::North.rotate_clockwise(), CompassDirection::East);
-    /// ```
-    #[must_use]
-    pub fn rotate_clockwise(self: Self) -> Self {
-        use CompassDirection::*;
-        match self {
-            North => East,
-            South => West,
-            East => South,
-            West => North,
+impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
+    /// Attempts to create a slide command
+    ///
+    /// Fails if the index for the row/col is out of bounds
+    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
+        if index > BOARD_SIZE / 2 {
+            Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
+        } else {
+            Ok(Slide { index, direction })
         }
     }
 }
 
 #[cfg(test)]
-mod Tests {
+mod BoardTests {
+    use crate::gem::Gem;
+
     use super::*;
     use CompassDirection::*;
     use ConnectorShape::*;
-    use PathOrientation::*;
-
-    #[test]
-    pub fn compass_direction_rotate() {
-        assert_eq!(North.rotate_clockwise(), East);
-        assert_eq!(South.rotate_clockwise(), West);
-        assert_eq!(East.rotate_clockwise(), South);
-        assert_eq!(West.rotate_clockwise(), North);
-    }
-
-    #[test]
-    pub fn connector_rotate() {
-        assert_eq!(Crossroads.rotate(), Crossroads);
-        assert_eq!(Crossroads.rotate().rotate(), Crossroads);
-
-        assert_eq!(Path(Vertical).rotate(), Path(Horizontal));
-        assert_eq!(Path(Vertical).rotate().rotate(), Path(Vertical));
-        assert_eq!(Path(Horizontal).rotate(), Path(Vertical));
-        assert_eq!(Path(Horizontal).rotate().rotate(), Path(Horizontal));
-
-        assert_eq!(Corner(North).rotate(), Corner(East));
-        assert_eq!(Corner(North).rotate().rotate(), Corner(South));
-        assert_eq!(Corner(North).rotate().rotate().rotate(), Corner(West));
-        assert_eq!(
-            Corner(North).rotate().rotate().rotate().rotate(),
-            Corner(North)
-        );
-    }
-
-    #[test]
-    pub fn tile_rotate() {
-        use Gem::*;
-        let mut tile = Tile {
-            connector: Fork(North),
-            gems: (Amethyst, Garnet),
-        };
-
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(East));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(South));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(West));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(North));
-    }
 
     #[test]
     pub fn test_slide_new() {
@@ -612,105 +364,6 @@ mod Tests {
 
         assert!(b.slide(Slide::new(0, South).unwrap()).is_ok());
         assert!(b.slide(Slide::new(0, South).unwrap()).is_err());
-    }
-
-    #[test]
-    pub fn test_connected_to() {
-        assert!(Crossroads.connected_to(North));
-        assert!(Crossroads.connected_to(South));
-        assert!(Crossroads.connected_to(East));
-        assert!(Crossroads.connected_to(West));
-
-        assert!(Path(Vertical).connected_to(North));
-        assert!(Path(Vertical).connected_to(South));
-        assert!(!Path(Vertical).connected_to(East));
-        assert!(Path(Horizontal).connected_to(East));
-        assert!(Path(Horizontal).connected_to(West));
-        assert!(!Path(Horizontal).connected_to(North));
-
-        assert!(Fork(North).connected_to(North));
-        assert!(Fork(North).connected_to(East));
-        assert!(Fork(North).connected_to(West));
-        assert!(!Fork(North).connected_to(South));
-        assert!(!Fork(South).connected_to(North));
-        assert!(Fork(South).connected_to(East));
-        assert!(Fork(South).connected_to(West));
-        assert!(Fork(South).connected_to(South));
-        assert!(Fork(East).connected_to(East));
-        assert!(Fork(East).connected_to(North));
-        assert!(Fork(East).connected_to(South));
-        assert!(!Fork(East).connected_to(West));
-        assert!(!Fork(West).connected_to(East));
-        assert!(Fork(West).connected_to(North));
-        assert!(Fork(West).connected_to(South));
-        assert!(Fork(West).connected_to(West));
-
-        assert!(Corner(North).connected_to(North));
-        assert!(Corner(North).connected_to(East));
-        assert!(!Corner(North).connected_to(South));
-        assert!(!Corner(North).connected_to(West));
-        assert!(!Corner(East).connected_to(North));
-        assert!(Corner(East).connected_to(East));
-        assert!(Corner(East).connected_to(South));
-        assert!(!Corner(East).connected_to(West));
-        assert!(!Corner(South).connected_to(North));
-        assert!(!Corner(South).connected_to(East));
-        assert!(Corner(South).connected_to(South));
-        assert!(Corner(South).connected_to(West));
-        assert!(Corner(West).connected_to(North));
-        assert!(!Corner(West).connected_to(East));
-        assert!(!Corner(West).connected_to(South));
-        assert!(Corner(West).connected_to(West));
-    }
-
-    #[test]
-    pub fn test_connected() {
-        use Gem::*;
-        let gems = (Amethyst, Garnet);
-        assert!(Crossroads.connected(Crossroads, North));
-        assert!(Crossroads.connected(Crossroads, South));
-        assert!(Crossroads.connected(Crossroads, East));
-        assert!(Crossroads.connected(Crossroads, West));
-
-        assert!(!Path(Vertical).connected(Path(Horizontal), North));
-        assert!(Path(Vertical).connected(Path(Vertical), North));
-        assert!(!Path(Vertical).connected(Path(Vertical), East));
-        assert!(Path(Horizontal).connected(Path(Horizontal), East));
-        assert!(!Path(Horizontal).connected(Path(Horizontal), North));
-
-        assert!(Fork(North).connected(Fork(South), North));
-        assert!(!Fork(North).connected(Fork(South), South));
-        assert!(Fork(North).connected(Path(Horizontal), East));
-        assert!(Fork(North).connected(Corner(East), West));
-
-        assert!(!Corner(East).connected(Crossroads, North));
-        assert!(Corner(East).connected(Corner(North), South));
-        assert!(Corner(East).connected(Path(Horizontal), East));
-        assert!(!Corner(East).connected(Fork(East), West));
-
-        // some tests for the Tile wrapper for connected
-        assert!(Tile {
-            connector: Crossroads,
-            gems
-        }
-        .connected(
-            &Tile {
-                connector: Crossroads,
-                gems
-            },
-            North
-        ));
-        assert!(Tile {
-            connector: Path(Horizontal),
-            gems
-        }
-        .connected(
-            &Tile {
-                connector: Path(Horizontal),
-                gems
-            },
-            West
-        ));
     }
 
     #[test]
