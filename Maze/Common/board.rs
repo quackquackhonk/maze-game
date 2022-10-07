@@ -1,13 +1,10 @@
-use std::{
-    collections::HashSet,
-    ops::{Deref, DerefMut, Index, IndexMut},
-};
-
 use grid::*;
+use std::collections::HashSet;
 use tile::*;
-mod gem;
-mod tile;
+
+pub mod gem;
 pub mod grid;
+pub mod tile;
 
 type BoardError = String;
 
@@ -208,58 +205,12 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
 }
 
 #[cfg(test)]
-mod Tests {
 mod BoardTests {
     use crate::gem::Gem;
+
     use super::*;
     use CompassDirection::*;
     use ConnectorShape::*;
-    use PathOrientation::*;
-
-    #[test]
-    pub fn compass_direction_rotate() {
-        assert_eq!(North.rotate_clockwise(), East);
-        assert_eq!(South.rotate_clockwise(), West);
-        assert_eq!(East.rotate_clockwise(), South);
-        assert_eq!(West.rotate_clockwise(), North);
-    }
-
-    #[test]
-    pub fn connector_rotate() {
-        assert_eq!(Crossroads.rotate(), Crossroads);
-        assert_eq!(Crossroads.rotate().rotate(), Crossroads);
-
-        assert_eq!(Path(Vertical).rotate(), Path(Horizontal));
-        assert_eq!(Path(Vertical).rotate().rotate(), Path(Vertical));
-        assert_eq!(Path(Horizontal).rotate(), Path(Vertical));
-        assert_eq!(Path(Horizontal).rotate().rotate(), Path(Horizontal));
-
-        assert_eq!(Corner(North).rotate(), Corner(East));
-        assert_eq!(Corner(North).rotate().rotate(), Corner(South));
-        assert_eq!(Corner(North).rotate().rotate().rotate(), Corner(West));
-        assert_eq!(
-            Corner(North).rotate().rotate().rotate().rotate(),
-            Corner(North)
-        );
-    }
-
-    #[test]
-    pub fn tile_rotate() {
-        use Gem::*;
-        let mut tile = Tile {
-            connector: Fork(North),
-            gems: (Amethyst, Garnet),
-        };
-
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(East));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(South));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(West));
-        tile.rotate();
-        assert_eq!(tile.connector, Fork(North));
-    }
 
     #[test]
     pub fn test_slide_new() {

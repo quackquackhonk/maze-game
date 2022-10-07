@@ -2,8 +2,8 @@ use crate::gem::Gem;
 /// Represents a single tile on a board
 #[derive(Debug, PartialEq, Eq)]
 pub struct Tile {
-    connector: ConnectorShape,
-    gems: (Gem, Gem),
+    pub connector: ConnectorShape,
+    pub gems: (Gem, Gem),
 }
 
 impl Tile {
@@ -37,7 +37,7 @@ pub enum CompassDirection {
 impl CompassDirection {
     /// Returns a rotated direction 90 degrees clockwise.
     /// ```
-    /// # use Common::CompassDirection;
+    /// # use Common::tile::CompassDirection;
     /// assert_eq!(CompassDirection::North.rotate_clockwise(), CompassDirection::East);
     /// ```
     #[must_use]
@@ -128,6 +128,50 @@ mod TileTests {
     use PathOrientation::*;
 
     #[test]
+    pub fn compass_direction_rotate() {
+        assert_eq!(North.rotate_clockwise(), East);
+        assert_eq!(South.rotate_clockwise(), West);
+        assert_eq!(East.rotate_clockwise(), South);
+        assert_eq!(West.rotate_clockwise(), North);
+    }
+
+    #[test]
+    pub fn connector_rotate() {
+        assert_eq!(Crossroads.rotate(), Crossroads);
+        assert_eq!(Crossroads.rotate().rotate(), Crossroads);
+
+        assert_eq!(Path(Vertical).rotate(), Path(Horizontal));
+        assert_eq!(Path(Vertical).rotate().rotate(), Path(Vertical));
+        assert_eq!(Path(Horizontal).rotate(), Path(Vertical));
+        assert_eq!(Path(Horizontal).rotate().rotate(), Path(Horizontal));
+
+        assert_eq!(Corner(North).rotate(), Corner(East));
+        assert_eq!(Corner(North).rotate().rotate(), Corner(South));
+        assert_eq!(Corner(North).rotate().rotate().rotate(), Corner(West));
+        assert_eq!(
+            Corner(North).rotate().rotate().rotate().rotate(),
+            Corner(North)
+        );
+    }
+
+    #[test]
+    pub fn tile_rotate() {
+        use Gem::*;
+        let mut tile = Tile {
+            connector: Fork(North),
+            gems: (Amethyst, Garnet),
+        };
+
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(East));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(South));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(West));
+        tile.rotate();
+        assert_eq!(tile.connector, Fork(North));
+    }
+    #[test]
     pub fn test_connected_to() {
         assert!(Crossroads.connected_to(North));
         assert!(Crossroads.connected_to(South));
@@ -178,7 +222,7 @@ mod TileTests {
 
     #[test]
     pub fn test_connected() {
-        let gems = (Amethyst, Garnet);
+        let gems = (Gem::Amethyst, Gem::Garnet);
         assert!(Crossroads.connected(Crossroads, North));
         assert!(Crossroads.connected(Crossroads, South));
         assert!(Crossroads.connected(Crossroads, East));
