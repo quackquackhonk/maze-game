@@ -33,7 +33,7 @@ impl<T, const N: usize, const M: usize> Grid<T, N, M> {
     }
 }
 
-/// [`std::ops::From`] implementation for a `Grid`.
+/// [`From`] implementation for a `Grid`.
 ///
 /// # Examples
 /// ```
@@ -62,6 +62,25 @@ impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
     }
 }
 
+/// Allows us to index a `Grid` as a slice.
+///
+/// # Examples
+///
+/// ```
+/// use Common::grid::Grid;
+/// let g = Grid::from([[(); 3]; 3]);
+/// assert_eq!(g[0], vec![(), (), ()]);
+/// ```
+///
+/// # Panics
+///
+/// Panics when `index` > N.
+///
+/// ```should_panic
+/// use Common::grid::Grid;
+/// let g = Grid::from([[(); 3]; 3]);
+/// assert_eq!(g[(4, 0)], ());
+/// ```
 impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
     type Output = [T; N];
 
@@ -69,12 +88,41 @@ impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
         &self.0[index]
     }
 }
+
+/// Allows us to mutably index a `Grid` as a slice.
+///
+/// # Panics
+///
+/// Same panic conditions as `Index`.
 impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.0[index]
     }
 }
 
+/// Allows us to index a `Grid` using a [`Common::grid::Position`].
+///
+/// # Examples
+///
+/// ```
+/// use Common::grid::Grid;
+/// let g = Grid::from([[(); 3]; 3]);
+/// assert_eq!(g[(0, 0)], ());
+/// assert_eq!(g[(1, 2)], ());
+/// ```
+///
+/// # Panics
+///
+/// Panics when the given index is out of range for the internal slice. Specifically, if any of the
+/// following conditions are true:
+/// - `index.0` > `M`
+/// - `index.1` > `N`
+///
+/// ```should_panic
+/// use Common::grid::Grid;
+/// let g = Grid::from([[(); 3]; 3]);
+/// assert_eq!(g[(4, 0)], ());
+/// ```
 impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> {
     type Output = T;
 
@@ -83,6 +131,11 @@ impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> 
     }
 }
 
+/// Allows us to mutably index a `Grid` using a [`Common::grid::Position`].
+///
+/// # Panics
+///
+/// Same panic conditions as `Index`.
 impl<T, const N: usize, const M: usize> IndexMut<(usize, usize)> for Grid<T, N, M> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
         &mut self.0[index.1][index.0]
