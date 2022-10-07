@@ -4,18 +4,12 @@ use std::{
 };
 
 use tile::*;
+mod gem;
 mod tile;
 
 type BoardError = String;
 
 type BoardResult<T> = Result<T, BoardError>;
-
-/// Describes the gems a tile can have
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum Gem {
-    Amethyst,
-    Garnet,
-}
 
 /// Type alias for Positions on the Board
 type Position = (usize, usize);
