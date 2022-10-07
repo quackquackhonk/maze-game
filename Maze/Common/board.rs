@@ -182,30 +182,31 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         match direction {
             North => {
                 let col_num = index * 2;
-                let tmp = self.grid[0][col_num].take();
+                let tmp = self.grid[(col_num, 0)].take();
                 self.grid.rotate_up(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             South => {
                 let col_num = index * 2;
                 let row_num = self.grid.len() - 1;
-                let tmp = self.grid[row_num][col_num].take();
+                let tmp = self.grid[(col_num, row_num)].take();
                 self.grid.rotate_down(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             East => {
-                self.grid.rotate_right(index * 2);
+                let row_num = index * 2;
+                self.grid.rotate_right(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    self.grid[index * 2][0].take().unwrap(),
+                    self.grid[(0, row_num)].take().unwrap(),
                 ))
             }
             West => {
-                self.grid.rotate_left(index * 2);
-                let col_index = self.grid[index * 2].len() - 1;
+                let row_num = index * 2;
+                self.grid.rotate_left(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    self.grid[index * 2][col_index].take().unwrap(),
+                    self.grid[(BOARD_SIZE - 1, row_num)].take().unwrap(),
                 ))
             }
         }
@@ -216,10 +217,11 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     /// Does nothing if there is no open slot, i.e. the board has not been slided yet
     /// using [`Board::slide`]
     pub fn insert(&mut self, tile: Tile) {
-        for r in 0..self.grid.len() {
-            for c in 0..self.grid[r].len() {
-                if self.grid[r][c].is_none() {
-                    self.grid[r][c] = Some(tile);
+        for y in 0..self.grid.len() {
+            for x in 0..self.grid[y].len() {
+                let idx = (x, y);
+                if self.grid[idx].is_none() {
+                    self.grid[idx] = Some(tile);
                     return;
                 }
             }
@@ -228,10 +230,10 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
 
     /// Can you go from `from` to `to` in the given `dir`?
     fn connected_positions(&self, from: Position, to: Position, dir: CompassDirection) -> bool {
-        self.grid[from.1][from.0]
+        self.grid[from]
             .as_ref()
             .unwrap()
-            .connected(self.grid[to.1][to.0].as_ref().unwrap(), dir)
+            .connected(self.grid[to].as_ref().unwrap(), dir)
     }
 
     /// Returns a Vector of Positions representing all cells directly reachable from `start`
