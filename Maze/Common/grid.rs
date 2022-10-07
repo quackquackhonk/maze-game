@@ -130,10 +130,10 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
-impl<T, const N: usize, const M: usize> Index<(usize, usize)> for Grid<T, N, M> {
+impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
     type Output = T;
 
-    fn index(&self, index: (usize, usize)) -> &Self::Output {
+    fn index(&self, index: Position) -> &Self::Output {
         &self.0[index.1][index.0]
     }
 }
