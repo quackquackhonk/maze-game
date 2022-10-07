@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use tile::*;
 
 pub mod gem;
-pub mod grid;
+mod grid;
 pub mod tile;
 
 type BoardError = String;
