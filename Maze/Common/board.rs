@@ -1,10 +1,7 @@
-use grid::*;
+use crate::grid::*;
+use crate::tile::*;
 use std::collections::HashSet;
-use tile::*;
-
-pub mod gem;
-mod grid;
-pub mod tile;
+use std::ops::Index;
 
 type BoardError = String;
 
@@ -35,7 +32,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
             }
             South => {
                 let col_num = index * 2;
-                let row_num = self.grid.len() - 1;
+                let row_num = BOARD_SIZE - 1;
                 let tmp = self.grid[(col_num, row_num)].take();
                 self.grid.rotate_down(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
@@ -141,6 +138,14 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     }
 }
 
+impl<const BOARD_SIZE: usize> Index<Position> for Board<BOARD_SIZE> {
+    type Output = Option<Tile>;
+
+    fn index(&self, index: Position) -> &Self::Output {
+        &self.grid[index]
+    }
+}
+
 impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     /// Default Board<3> is:  
     /// ─│└  
@@ -148,7 +153,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
     /// ┴├┬  
     /// extra = ┼
     fn default() -> Self {
-        use gem::Gem::*;
+        use crate::gem::Gem::*;
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;
@@ -183,12 +188,13 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
 }
 
 /// Describes a slide motion
+#[derive(Debug, Clone, Copy)]
 pub struct Slide<const BOARD_SIZE: usize> {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
-    index: usize,
+    pub(crate) index: usize,
     /// The direction the row or column is sliding to
-    direction: CompassDirection,
+    pub(crate) direction: CompassDirection,
 }
 
 impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
