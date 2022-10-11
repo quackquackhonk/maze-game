@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use self::board::Slide;
 
-mod board;
+pub mod board;
 pub mod gem;
 mod grid;
 pub mod tile;

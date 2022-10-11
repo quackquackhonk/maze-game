@@ -15,7 +15,7 @@ pub struct Board<const BOARD_SIZE: usize> {
 }
 
 impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
-    fn new(grid: impl Into<Grid<Option<Tile>, BOARD_SIZE, BOARD_SIZE>>, extra: Tile) -> Self {
+    pub fn new(grid: impl Into<Grid<Option<Tile>, BOARD_SIZE, BOARD_SIZE>>, extra: Tile) -> Self {
         Board {
             grid: grid.into(),
             extra,
@@ -128,20 +128,20 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         // visited = <>
         let mut worklist = Vec::new();
         worklist.push(start);
-        let mut reachable = Vec::new();
+        let mut reachable = HashSet::new();
         let mut visited = HashSet::new();
         while let Some(curr) = worklist.pop() {
             let neighbors = self.reachable_neighbors(curr);
             let not_visited_neighbors = neighbors.into_iter().filter(|x| !visited.contains(x));
             not_visited_neighbors.for_each(|n| {
-                reachable.push(n);
+                reachable.insert(n);
                 worklist.push(n)
             });
             //    push x onto visited
             visited.insert(curr);
         }
 
-        Ok(reachable)
+        Ok(reachable.into_iter().collect())
     }
 }
 
