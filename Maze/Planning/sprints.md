@@ -1,7 +1,7 @@
-TO: CEO Santa Claus
-FROM: Luis Soto and Sahana Tankala
-DATE: September 30th, 2022
-SUBJECT: Proposed Sprints
+TO: CEO Santa Claus  
+FROM: Luis Soto and Sahana Tankala  
+DATE: September 30th, 2022  
+SUBJECT: Proposed Sprints  
 
 # Sprint 1
 ## Deliverables

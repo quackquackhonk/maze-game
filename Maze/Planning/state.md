@@ -1,7 +1,7 @@
-TO: CEO Santa Claus
-FROM: Luis Soto and Sahana Tankala
-DATE: October 7th, 2022
-SUBJECT: Referee Game State
+TO: CEO Santa Claus  
+FROM: Luis Soto and Sahana Tankala  
+DATE: October 7th, 2022  
+SUBJECT: Referee Game State  
 
 # Data
 We believe the Referee state should store:
