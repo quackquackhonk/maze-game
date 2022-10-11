@@ -37,7 +37,7 @@ pub enum CompassDirection {
 impl CompassDirection {
     /// Returns a rotated direction 90 degrees clockwise.
     /// ```
-    /// # use Common::tile::CompassDirection;
+    /// # use common::tile::CompassDirection;
     /// assert_eq!(CompassDirection::North.rotate_clockwise(), CompassDirection::East);
     /// ```
     #[must_use]
@@ -159,7 +159,7 @@ mod TileTests {
         use Gem::*;
         let mut tile = Tile {
             connector: Fork(North),
-            gems: (Amethyst, Garnet),
+            gems: (amethyst, garnet),
         };
 
         tile.rotate();
@@ -222,7 +222,7 @@ mod TileTests {
 
     #[test]
     pub fn test_connected() {
-        let gems = (Gem::Amethyst, Gem::Garnet);
+        let gems = (Gem::amethyst, Gem::garnet);
         assert!(Crossroads.connected(Crossroads, North));
         assert!(Crossroads.connected(Crossroads, South));
         assert!(Crossroads.connected(Crossroads, East));
