@@ -32,20 +32,20 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         };
         match direction {
             North => {
-                let col_num = index * 2;
+                let col_num = index;
                 let tmp = self.grid[(col_num, 0)].take();
                 self.grid.rotate_up(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             South => {
-                let col_num = index * 2;
+                let col_num = index;
                 let row_num = BOARD_SIZE - 1;
                 let tmp = self.grid[(col_num, row_num)].take();
                 self.grid.rotate_down(col_num);
                 Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
             }
             East => {
-                let row_num = index * 2;
+                let row_num = index;
                 self.grid.rotate_right(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
@@ -53,7 +53,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
                 ))
             }
             West => {
-                let row_num = index * 2;
+                let row_num = index;
                 self.grid.rotate_left(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
@@ -212,7 +212,10 @@ impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
         if index > BOARD_SIZE / 2 {
             Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
         } else {
-            Ok(Slide { index, direction })
+            Ok(Slide {
+                index: index * 2,
+                direction,
+            })
         }
     }
 }
