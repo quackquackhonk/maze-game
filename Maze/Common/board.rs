@@ -15,6 +15,13 @@ pub struct Board<const BOARD_SIZE: usize> {
 }
 
 impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
+    fn new(grid: impl Into<Grid<Option<Tile>, BOARD_SIZE, BOARD_SIZE>>, extra: Tile) -> Self {
+        Board {
+            grid: grid.into(),
+            extra,
+        }
+    }
+
     /// Slides the given Slide struct command leaving a `None` in the place of the dislodged tile
     ///
     /// Returns the current extra tile to be inserted in [`Board::insert`]
@@ -174,14 +181,14 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
                     10 => Crossroads,
                     _ => unreachable!("usize % 11 is never > 10"),
                 },
-                gems: (Amethyst, Garnet),
+                gems: (amethyst, garnet),
             });
         }
         Self {
             grid: Grid::from(grid),
             extra: Tile {
                 connector: Crossroads,
-                gems: (Amethyst, Garnet),
+                gems: (amethyst, garnet),
             },
         }
     }
@@ -313,7 +320,7 @@ mod BoardTests {
             b.grid[0][0],
             Some(Tile {
                 connector: Crossroads,
-                gems: (Gem::Amethyst, Gem::Garnet)
+                gems: (Gem::amethyst, Gem::garnet)
             })
         );
 
@@ -336,7 +343,7 @@ mod BoardTests {
             b.grid[0][0],
             Some(Tile {
                 connector: Fork(North),
-                gems: (Gem::Amethyst, Gem::Garnet)
+                gems: (Gem::amethyst, Gem::garnet)
             })
         );
 
@@ -364,7 +371,7 @@ mod BoardTests {
             b.grid[2][2],
             Some(Tile {
                 connector: Corner(North),
-                gems: (Gem::Amethyst, Gem::Garnet)
+                gems: (Gem::amethyst, Gem::garnet)
             })
         );
 

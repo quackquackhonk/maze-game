@@ -10,3 +10,4 @@ name = "common"
 path = "state.rs"
 
 [dependencies]
+serde = { version = "1.0.145", features = ["derive"] }

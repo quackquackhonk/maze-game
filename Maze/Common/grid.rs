@@ -44,7 +44,7 @@ impl<T, const N: usize, const M: usize> Grid<T, N, M> {
 ///
 /// # Examples
 /// ```
-/// use Common::grid::Grid;
+/// use common::grid::Grid;
 /// let g = Grid::from([[(); 4]; 5]);
 /// assert_eq!(g.len(), 5);
 /// assert_eq!(g[0].len(), 4);
@@ -74,7 +74,7 @@ impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
 /// # Examples
 ///
 /// ```
-/// use Common::grid::Grid;
+/// use common::grid::Grid;
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[0], [(), (), ()]);
 /// ```
@@ -84,7 +84,7 @@ impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
 /// Panics when `index` > N.
 ///
 /// ```should_panic
-/// use Common::grid::Grid;
+/// use common::grid::Grid;
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
@@ -107,12 +107,12 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to index a `Grid` using a [`Common::grid::Position`].
+/// Allows us to index a `Grid` using a [`common::grid::Position`].
 ///
 /// # Examples
 ///
 /// ```
-/// use Common::grid::Grid;
+/// use common::grid::Grid;
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(0, 0)], ());
 /// assert_eq!(g[(1, 2)], ());
@@ -126,7 +126,7 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
 /// - `index.1` > `N`
 ///
 /// ```should_panic
-/// use Common::grid::Grid;
+/// use common::grid::Grid;
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
@@ -138,7 +138,7 @@ impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to mutably index a `Grid` using a [`Common::grid::Position`].
+/// Allows us to mutably index a `Grid` using a [`common::grid::Position`].
 ///
 /// # Panics
 ///
