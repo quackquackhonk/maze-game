@@ -1,0 +1,17 @@
+{
+    "connectors": [ ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                    ["│", "─", "┐", "└", "┌", "┘", "┬"] ],
+    "treasures": [[["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                  [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]]]
+}
+{ "row#": 0, "column#": 0}
