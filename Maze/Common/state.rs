@@ -61,19 +61,18 @@ impl State {
         }
     }
 
-    ///Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
+    /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
+    ///
+    /// Does nothing if we do not currently have a spare tile
     pub fn rotate_spare(&mut self, num_turns: i32) {
         if let Some(spare) = &mut self.spare {
             (0..num_turns).for_each(|_| spare.rotate());
         }
     }
 
-    /// makes a move
-    pub fn make_move(&mut self, slide: Slide<7>) {
-        let new_spare = self.board.slide(slide).ok();
+    fn slide_players(&mut self, slide: &Slide<BOARD_SIZE>) {
         use tile::CompassDirection::*;
-        self.board.insert(self.spare.take().unwrap());
-        match slide {
+        match *slide {
             Slide {
                 index: column,
                 direction: North,
@@ -131,7 +130,21 @@ impl State {
                     }
                 }),
         };
-        self.spare = new_spare;
+    }
+
+    /// Performs a slide action
+    pub fn slide(&mut self, slide: Slide<7>) {
+        self.spare = self.board.slide(slide).ok();
+        self.slide_players(&slide);
+    }
+
+    /// Inserts the tile that was slid off
+    ///
+    /// Does nothing if there is not a spare tile
+    pub fn insert(&mut self) {
+        if let Some(spare) = self.spare.take() {
+            self.board.insert(spare);
+        }
     }
 
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
