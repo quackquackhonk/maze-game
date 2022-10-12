@@ -3,6 +3,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 /// Type alias for Positions on the Board
 pub type Position = (usize, usize);
 
+/// Represents a wrapper type for a 2D array with added functionality
 #[derive(Debug)]
 pub struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
 
