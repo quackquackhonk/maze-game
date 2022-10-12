@@ -4,23 +4,26 @@
 use std::cmp::Ordering;
 use std::io;
 
+use common::board::Board;
 use common::gem::Gem;
 use common::tile::{ConnectorShape, Tile};
 use serde::{Deserialize, Serialize};
 
+pub type Position = (usize, usize);
+
 #[derive(Debug, Deserialize)]
-struct Board {
+struct JsonBoard {
     connectors: Matrix<Connector>,
     treasures: Matrix<Treasure>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 struct Matrix<T>(Vec<Row<T>>);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 struct Row<T>(Vec<T>);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 enum Connector {
     #[serde(rename(deserialize = "│"))]
     VerticalPath,
@@ -104,12 +107,12 @@ struct Index(usize);
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum ValidJson {
-    Board(Board),
+    Board(JsonBoard),
     Coordinate(Coordinate),
 }
 
-impl From<Board> for common::board::Board<7> {
-    fn from(val: Board) -> Self {
+impl From<JsonBoard> for Board<7> {
+    fn from(val: JsonBoard) -> Self {
         let zipped_board = val
             .treasures
             .0
@@ -124,7 +127,7 @@ impl From<Board> for common::board::Board<7> {
                 gems: tile_info.0.into(),
             });
         }
-        common::board::Board::new(
+        Board::new(
             grid,
             Tile {
                 connector: ConnectorShape::Crossroads,
@@ -134,33 +137,45 @@ impl From<Board> for common::board::Board<7> {
     }
 }
 
-fn main() {
+fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
+    if c1.row.0 < c2.row.0 {
+        Ordering::Less
+    } else if c1.row.0 > c2.row.0 {
+        Ordering::Greater
+    } else if c1.column.0 < c2.column.0 {
+        Ordering::Less
+    } else if c1.column.0 > c2.column.0 {
+        Ordering::Greater
+    } else {
+        Ordering::Equal
+    }
+}
+
+fn main() -> Result<(), String> {
+    // Turn the STDIN Stream into A ValidJson Stream
     let deserializer = serde_json::Deserializer::from_reader(io::stdin().lock());
     let mut test_input = deserializer.into_iter::<crate::ValidJson>().flatten();
-    if let Some(ValidJson::Board(board)) = test_input.next() {
-        if let Some(ValidJson::Coordinate(coord)) = test_input.next() {
-            let board: common::board::Board<7> = board.into();
-            let from_pos: (usize, usize) = coord.into();
-            let mut reachable_pos = board
-                .reachable(from_pos)
-                .unwrap()
-                .into_iter()
-                .map(|pos| pos.into())
-                .collect::<Vec<Coordinate>>();
-            reachable_pos.sort_by(|c1, c2| {
-                if c1.row.0 < c2.row.0 {
-                    Ordering::Less
-                } else if c1.row.0 > c2.row.0 {
-                    Ordering::Greater
-                } else if c1.column.0 < c2.column.0 {
-                    Ordering::Less
-                } else if c1.column.0 > c2.column.0 {
-                    Ordering::Greater
-                } else {
-                    Ordering::Equal
-                }
-            });
-            println!("{}", serde_json::to_string(&reachable_pos).unwrap());
-        }
-    }
+
+    let board: Board<7> = match test_input.next().ok_or("No valid Board JSON found")? {
+        ValidJson::Board(board) => board.into(),
+        _ => Err("Board was not the first JSON object sent")?,
+    };
+
+    // Position is the tuple (usize, usize)
+    let from_pos: Position = match test_input.next().ok_or("No valid Coordinate JSON found")? {
+        ValidJson::Coordinate(coord) => coord.into(),
+        _ => Err("Coordinate was not the second JSON object sent")?,
+    };
+
+    let mut reachable_pos = board
+        .reachable(from_pos)
+        .unwrap()
+        .into_iter()
+        .map(|pos| pos.into())
+        .collect::<Vec<Coordinate>>();
+    reachable_pos.sort_by(cmp_coordinates);
+
+    println!("{}", serde_json::to_string(&reachable_pos).unwrap());
+
+    Ok(())
 }
