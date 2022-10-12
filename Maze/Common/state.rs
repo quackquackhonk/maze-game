@@ -135,8 +135,10 @@ impl State {
 
     /// Performs a slide action
     pub fn slide(&mut self, slide: Slide<7>) {
-        self.spare = self.board.slide(slide).ok();
-        self.slide_players(&slide);
+        if let Ok(new_spare) = self.board.slide(slide) {
+            self.spare = Some(new_spare);
+            self.slide_players(&slide);
+        }
     }
 
     /// Inserts the tile that was slid off
@@ -211,6 +213,12 @@ mod tests {
 
         assert!(state.spare.is_some());
 
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+
+        // Sliding without inserting will not do anything
+        state.slide(Slide::new(0, South).unwrap());
+
+        assert!(state.spare.is_some());
         assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
     }
 
