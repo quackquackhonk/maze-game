@@ -1,14 +1,18 @@
-use crate::board::Board;
-use crate::gem::Gem;
-use crate::grid::Position;
-use crate::tile::Tile;
 use std::collections::HashMap;
 
-use self::board::Slide;
+use board::Board;
+use board::Slide;
+use gem::Gem;
+use grid::Position;
+use tile::Tile;
 
+/// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
+/// Contains the enum including all the possible Gems
 pub mod gem;
+/// Contains types for the `Grid` type and its Position type for indexing
 mod grid;
+/// Contains the Tile type for use in the `Board`
 pub mod tile;
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
