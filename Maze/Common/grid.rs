@@ -3,6 +3,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 /// Type alias for Positions on the Board
 pub type Position = (usize, usize);
 
+/// Represents a wrapper type for a 2D array with added functionality
 #[derive(Debug)]
 pub struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
 
@@ -107,7 +108,7 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to index a `Grid` using a [`common::grid::Position`].
+/// Allows us to index a `Grid` using a [`crate::grid::Position`].
 ///
 /// # Examples
 ///
@@ -138,7 +139,7 @@ impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to mutably index a `Grid` using a [`common::grid::Position`].
+/// Allows us to mutably index a `Grid` using a [`crate::grid::Position`].
 ///
 /// # Panics
 ///

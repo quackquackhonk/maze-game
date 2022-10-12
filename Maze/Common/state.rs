@@ -10,8 +10,8 @@ use tile::Tile;
 pub mod board;
 /// Contains the enum including all the possible Gems
 pub mod gem;
-/// Contains types for the `Grid` type and its Position type for indexing
-mod grid;
+/// Contains types for the `Grid` type and its `Position` type for indexing
+pub mod grid;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
