@@ -203,6 +203,18 @@ mod tests {
     }
 
     #[test]
+    fn test_slide() {
+        let mut state = State::new();
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+    }
+
+    #[test]
     fn test_rotate_spare() {
         let mut state = State::new();
 
