@@ -145,6 +145,11 @@ impl State {
         player_info.reached_goal(gem_at_player.0) && player_info.reached_goal(gem_at_player.1)
     }
 
+    pub fn player_reached_home(&self, active_player: i32) -> bool {
+        let player_info = &self.player_info[&active_player];
+        player_info.reached_home()
+    }
+
     /// Removes the currently active `Player` from game.
     pub fn remove_player(&mut self, to_remove: i32) {
         self.player_info.remove(&to_remove);
