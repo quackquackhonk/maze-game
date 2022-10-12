@@ -107,7 +107,7 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to index a `Grid` using a [`common::grid::Position`].
+/// Allows us to index a `Grid` using a [`crate::grid::Position`].
 ///
 /// # Examples
 ///
@@ -138,7 +138,7 @@ impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
     }
 }
 
-/// Allows us to mutably index a `Grid` using a [`common::grid::Position`].
+/// Allows us to mutably index a `Grid` using a [`crate::grid::Position`].
 ///
 /// # Panics
 ///
