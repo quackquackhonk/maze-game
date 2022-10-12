@@ -40,7 +40,7 @@ impl Player {
 }
 
 /// Represents the State of a single MazeGame.
-struct State {
+pub struct State {
     board: Board<BOARD_SIZE>,
     player_info: HashMap<i32, Player>,
     spare: Option<Tile>,
@@ -49,7 +49,7 @@ struct State {
 const BOARD_SIZE: usize = 7;
 
 impl State {
-    fn new() -> Self {
+    pub fn new() -> Self {
         State {
             board: Board::default(),
             player_info: HashMap::new(),
