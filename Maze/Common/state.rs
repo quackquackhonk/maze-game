@@ -176,6 +176,8 @@ impl State {
 
 #[cfg(test)]
 mod tests {
+    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
+
     use super::*;
 
     #[test]
@@ -198,5 +200,34 @@ mod tests {
         // Should not panic because `remove_player` ignores if players are actually in the game
         state.remove_player(0);
         assert_eq!(state.player_info.len(), 0);
+    }
+
+    #[test]
+    fn test_rotate_spare() {
+        let mut state = State::new();
+
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+        state.rotate_spare(1);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+
+        state.insert();
+
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+        state.rotate_spare(1);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Vertical));
+        state.rotate_spare(3);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
     }
 }
