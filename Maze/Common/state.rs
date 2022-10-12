@@ -215,6 +215,48 @@ mod tests {
     }
 
     #[test]
+    fn test_slide_players() {
+        let mut state = State::new();
+        state
+            .player_info
+            .insert(1, Player::new((0, 0), (0, 0), crate::gem::Gem::ruby));
+        state
+            .player_info
+            .insert(2, Player::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 0));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+
+        // Only player 1 is in the sliding column so it should move
+        state.slide_players(&Slide::new(0, South).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+
+        // Only player 2 is in the sliding row so it should move
+        state.slide_players(&Slide::new(1, East).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+
+        // Only player 1 is in the sliding column so it should move
+        // but it should also wrap
+        state.slide_players(&Slide::new(0, North).unwrap());
+        state.slide_players(&Slide::new(0, North).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+
+        // Only player 2 is in the sliding row so it should move
+        // but it should also wrap
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (6, 2));
+    }
+
+    #[test]
     fn test_insert() {
         let mut state = State::new();
         assert!(state.spare.is_none());
