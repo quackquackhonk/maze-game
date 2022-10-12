@@ -16,6 +16,7 @@ pub mod grid;
 pub mod tile;
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
+#[derive(Debug, PartialEq, Eq)]
 struct Player {
     home: Position,
     pub position: Position,
@@ -170,5 +171,32 @@ impl State {
     /// Removes the currently active `Player` from game.
     pub fn remove_player(&mut self, to_remove: i32) {
         self.player_info.remove(&to_remove);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_remove_player() {
+        let mut state = State::new();
+        state.player_info.insert(
+            1,
+            Player {
+                home: (0, 0),
+                position: (0, 0),
+                goal: crate::gem::Gem::ruby,
+            },
+        );
+
+        assert_eq!(state.player_info.len(), 1);
+        // Should not panic because the player exists in the HashMap
+        state.remove_player(1);
+
+        assert_eq!(state.player_info.len(), 0);
+        // Should not panic because `remove_player` ignores if players are actually in the game
+        state.remove_player(0);
+        assert_eq!(state.player_info.len(), 0);
     }
 }
