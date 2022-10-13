@@ -386,7 +386,8 @@ mod tests {
             goal: Gem::kunzite_oval,
         });
         state.active_player = 0;
-
+       assert!(!state.player_reached_home());
+       
         // active player is not on a home tile, but another player is
         let mut state = State::default();
         state.player_info.push(PlayerInfo {
