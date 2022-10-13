@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use board::Board;
 use board::Slide;
 use gem::Gem;
@@ -17,15 +15,15 @@ pub mod tile;
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
 #[derive(Debug, PartialEq, Eq)]
-struct Player {
+pub struct PlayerInfo {
     home: Position,
-    pub position: Position,
+    pub(crate) position: Position,
     goal: Gem,
 }
 
-impl Player {
+impl PlayerInfo {
     /// Constructs a new `Player` from its fields.
-    fn new(home: Position, position: Position, goal: Gem) -> Self {
+    pub fn new(home: Position, position: Position, goal: Gem) -> Self {
         Self {
             home,
             position,
@@ -44,24 +42,18 @@ impl Player {
     }
 }
 
-/// Represents the State of a single MazeGame.
+/// Represents the State of a single Maze Game.
+#[derive(Default)]
 pub struct State {
     board: Board<BOARD_SIZE>,
-    player_info: HashMap<i32, Player>,
+    player_info: Vec<PlayerInfo>,
+    active_player: usize,
     spare: Option<Tile>,
 }
 
 const BOARD_SIZE: usize = 7;
 
 impl State {
-    pub fn new() -> Self {
-        State {
-            board: Board::default(),
-            player_info: HashMap::new(),
-            spare: None,
-        }
-    }
-
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
@@ -71,15 +63,16 @@ impl State {
         }
     }
 
-    fn slide_players(&mut self, slide: &Slide<BOARD_SIZE>) {
+    fn slide_players(&mut self, slide: Slide<BOARD_SIZE>) {
+        #[allow(clippy::enum_glob_use)]
         use tile::CompassDirection::*;
-        match *slide {
+        match slide {
             Slide {
                 index: column,
                 direction: North,
             } => self
                 .player_info
-                .values_mut()
+                .iter_mut()
                 .filter(|player| player.position.0 == column)
                 .for_each(|player| {
                     if player.position.1 == 0 {
@@ -93,7 +86,7 @@ impl State {
                 direction: South,
             } => self
                 .player_info
-                .values_mut()
+                .iter_mut()
                 .filter(|player| player.position.0 == column)
                 .for_each(|player| {
                     if player.position.1 == BOARD_SIZE - 1 {
@@ -107,7 +100,7 @@ impl State {
                 direction: East,
             } => self
                 .player_info
-                .values_mut()
+                .iter_mut()
                 .filter(|player| player.position.1 == row)
                 .for_each(|player| {
                     if player.position.0 == BOARD_SIZE - 1 {
@@ -121,7 +114,7 @@ impl State {
                 direction: West,
             } => self
                 .player_info
-                .values_mut()
+                .iter_mut()
                 .filter(|player| player.position.1 == row)
                 .for_each(|player| {
                     if player.position.0 == 0 {
@@ -137,7 +130,7 @@ impl State {
     pub fn slide(&mut self, slide: Slide<7>) {
         if let Ok(new_spare) = self.board.slide(slide) {
             self.spare = Some(new_spare);
-            self.slide_players(&slide);
+            self.slide_players(slide);
         }
     }
 
@@ -151,28 +144,46 @@ impl State {
     }
 
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
-    pub fn can_reach_position(&self, active_player: i32, target: Position) -> bool {
+    #[must_use]
+    pub fn can_reach_position(&self, target: Position) -> bool {
         self.board
-            .reachable(self.player_info[&active_player].position)
-            .unwrap()
+            .reachable(self.player_info[self.active_player].position)
+            .expect("Active player positions are always in bounds")
             .contains(&target)
     }
 
     /// Checks if the currently active `Player` has landed on its goal tile
-    pub fn player_reached_goal(&self, active_player: i32) -> bool {
-        let player_info = &self.player_info[&active_player];
-        let gem_at_player = self.board[player_info.position].as_ref().unwrap().gems;
+    #[must_use]
+    pub fn player_reached_goal(&self) -> bool {
+        let player_info = &self.player_info[self.active_player];
+        let gem_at_player = self.board[player_info.position]
+            .as_ref()
+            .expect("all cells are Some(...)")
+            .gems;
         player_info.reached_goal(gem_at_player.0) && player_info.reached_goal(gem_at_player.1)
     }
 
-    pub fn player_reached_home(&self, active_player: i32) -> bool {
-        let player_info = &self.player_info[&active_player];
+    #[must_use]
+    pub fn player_reached_home(&self) -> bool {
+        let player_info = &self.player_info[self.active_player];
         player_info.reached_home()
     }
 
+    /// Adds a `Player` to the end of the list of currently active players
+    pub fn add_player(&mut self, to_add: PlayerInfo) {
+        self.player_info.push(to_add);
+    }
+
+    /// Sets `self.active_player` to be the next player by indexing `self.player_info`
+    pub fn next_player(&mut self) {
+        self.active_player = (self.active_player + 1) % self.player_info.len();
+    }
+
     /// Removes the currently active `Player` from game.
-    pub fn remove_player(&mut self, to_remove: i32) {
-        self.player_info.remove(&to_remove);
+    pub fn remove_player(&mut self) {
+        if !self.player_info.is_empty() {
+            self.player_info.remove(self.active_player);
+        }
     }
 }
 
@@ -184,29 +195,26 @@ mod tests {
 
     #[test]
     fn test_remove_player() {
-        let mut state = State::new();
-        state.player_info.insert(
-            1,
-            Player {
-                home: (0, 0),
-                position: (0, 0),
-                goal: crate::gem::Gem::ruby,
-            },
-        );
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (0, 0),
+            position: (0, 0),
+            goal: crate::gem::Gem::ruby,
+        });
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
-        state.remove_player(1);
+        state.remove_player();
 
         assert_eq!(state.player_info.len(), 0);
         // Should not panic because `remove_player` ignores if players are actually in the game
-        state.remove_player(0);
+        state.remove_player();
         assert_eq!(state.player_info.len(), 0);
     }
 
     #[test]
     fn test_slide() {
-        let mut state = State::new();
+        let mut state = State::default();
         assert!(state.spare.is_none());
 
         state.slide(Slide::new(0, North).unwrap());
@@ -224,49 +232,49 @@ mod tests {
 
     #[test]
     fn test_slide_players() {
-        let mut state = State::new();
+        let mut state = State::default();
         state
             .player_info
-            .insert(1, Player::new((0, 0), (0, 0), crate::gem::Gem::ruby));
+            .push(PlayerInfo::new((0, 0), (0, 0), crate::gem::Gem::ruby));
         state
             .player_info
-            .insert(2, Player::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
-        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 0));
-        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+            .push(PlayerInfo::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
+        assert_eq!(state.player_info[0].position, (0, 0));
+        assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 1 is in the sliding column so it should move
-        state.slide_players(&Slide::new(0, South).unwrap());
+        state.slide_players(Slide::new(0, South).unwrap());
 
-        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
-        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+        assert_eq!(state.player_info[0].position, (0, 1));
+        assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 2 is in the sliding row so it should move
-        state.slide_players(&Slide::new(1, East).unwrap());
+        state.slide_players(Slide::new(1, East).unwrap());
 
-        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
-        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+        assert_eq!(state.player_info[0].position, (0, 1));
+        assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 1 is in the sliding column so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(0, North).unwrap());
-        state.slide_players(&Slide::new(0, North).unwrap());
+        state.slide_players(Slide::new(0, North).unwrap());
+        state.slide_players(Slide::new(0, North).unwrap());
 
-        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
-        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+        assert_eq!(state.player_info[0].position, (0, 6));
+        assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 2 is in the sliding row so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(1, West).unwrap());
-        state.slide_players(&Slide::new(1, West).unwrap());
-        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(Slide::new(1, West).unwrap());
+        state.slide_players(Slide::new(1, West).unwrap());
+        state.slide_players(Slide::new(1, West).unwrap());
 
-        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
-        assert_eq!(state.player_info.get(&2).unwrap().position, (6, 2));
+        assert_eq!(state.player_info[0].position, (0, 6));
+        assert_eq!(state.player_info[1].position, (6, 2));
     }
 
     #[test]
     fn test_insert() {
-        let mut state = State::new();
+        let mut state = State::default();
         assert!(state.spare.is_none());
 
         state.slide(Slide::new(0, North).unwrap());
@@ -292,7 +300,7 @@ mod tests {
 
     #[test]
     fn test_rotate_spare() {
-        let mut state = State::new();
+        let mut state = State::default();
 
         assert!(state.spare.is_none());
 

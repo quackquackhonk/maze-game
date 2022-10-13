@@ -10,12 +10,12 @@ pub struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
 impl<T, const N: usize, const M: usize> Grid<T, N, M> {
     /// Rotates the row at `index` left one time
     pub fn rotate_left(&mut self, index: usize) {
-        self[index].rotate_left(1)
+        self[index].rotate_left(1);
     }
 
     /// Rotates the row at `index` right one time
     pub fn rotate_right(&mut self, index: usize) {
-        self[index].rotate_right(1)
+        self[index].rotate_right(1);
     }
 
     /// Rotates the column at `index` up one time

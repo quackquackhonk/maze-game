@@ -1,5 +1,5 @@
-use crate::grid::*;
-use crate::tile::*;
+use crate::grid::{Grid, Position};
+use crate::tile::{CompassDirection, ConnectorShape, PathOrientation, Tile};
 use std::collections::HashSet;
 use std::ops::Index;
 
@@ -25,6 +25,10 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     /// Slides the given Slide struct command leaving a `None` in the place of the dislodged tile
     ///
     /// Returns the current extra tile to be inserted in [`Board::insert`]
+    ///
+    /// # Errors
+    ///
+    /// Errors if `slide` is called twice before inserting a `Tile`.
     pub fn slide(&mut self, Slide { index, direction }: Slide<BOARD_SIZE>) -> BoardResult<Tile> {
         use CompassDirection::*;
         if self.grid.iter().flatten().any(std::option::Option::is_none) {
@@ -33,23 +37,33 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         match direction {
             North => {
                 let col_num = index;
-                let tmp = self.grid[(col_num, 0)].take();
+                let row_num = BOARD_SIZE - 1;
                 self.grid.rotate_up(col_num);
-                Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
+                Ok(std::mem::replace(
+                    &mut self.extra,
+                    self.grid[(col_num, row_num)]
+                        .take()
+                        .expect("All cells are Some(...) in slide"),
+                ))
             }
             South => {
                 let col_num = index;
-                let row_num = BOARD_SIZE - 1;
-                let tmp = self.grid[(col_num, row_num)].take();
                 self.grid.rotate_down(col_num);
-                Ok(std::mem::replace(&mut self.extra, tmp.unwrap()))
+                Ok(std::mem::replace(
+                    &mut self.extra,
+                    self.grid[(col_num, 0)]
+                        .take()
+                        .expect("All cells are Some(...) in slide"),
+                ))
             }
             East => {
                 let row_num = index;
                 self.grid.rotate_right(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    self.grid[(0, row_num)].take().unwrap(),
+                    self.grid[(0, row_num)]
+                        .take()
+                        .expect("All cells are Some(...) in slide"),
                 ))
             }
             West => {
@@ -57,7 +71,9 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
                 self.grid.rotate_left(row_num);
                 Ok(std::mem::replace(
                     &mut self.extra,
-                    self.grid[(BOARD_SIZE - 1, row_num)].take().unwrap(),
+                    self.grid[(BOARD_SIZE - 1, row_num)]
+                        .take()
+                        .expect("All cells are Some(...) in slide"),
                 ))
             }
         }
@@ -116,7 +132,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     /// Returns a Vector of Positions representing all cells on the Board reachable from `start`
     ///
     /// # Errors
-    /// Returns an error if `start.0` > BOARD_SIZE or `start.1` > BOARD_SIZE or either `start.0` or
+    /// Returns an error if `start.0` > `BOARD_SIZE` or `start.1` > `BOARD_SIZE` or either `start.0` or
     /// `start.1` are negative.
     pub fn reachable(&self, start: Position) -> BoardResult<Vec<Position>> {
         if start.0 >= BOARD_SIZE || start.1 >= BOARD_SIZE {
@@ -126,9 +142,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         // push start onto worklist
         // reachable = []
         // visited = <>
-        let mut worklist = Vec::new();
-        worklist.push(start);
-        let mut reachable = HashSet::new();
+        let mut worklist = vec![start];
         let mut reachable = HashSet::from([start]);
         let mut visited = HashSet::new();
         while let Some(curr) = worklist.pop() {
@@ -136,7 +150,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
             let not_visited_neighbors = neighbors.into_iter().filter(|x| !visited.contains(x));
             not_visited_neighbors.for_each(|n| {
                 reachable.insert(n);
-                worklist.push(n)
+                worklist.push(n);
             });
             //    push x onto visited
             visited.insert(curr);
@@ -208,7 +222,9 @@ pub struct Slide<const BOARD_SIZE: usize> {
 impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
     /// Attempts to create a slide command
     ///
-    /// Fails if the index for the row/col is out of bounds
+    /// # Errors
+    ///
+    /// Errors if the index for the row/col is out of bounds
     pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
         if index > BOARD_SIZE / 2 {
             Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))

@@ -7,7 +7,7 @@ pub struct Tile {
 }
 
 impl Tile {
-    /// Rotates the tile according to the symmetries of the underlying ConnectorShape
+    /// Rotates the tile according to the symmetries of the underlying `ConnectorShape`
     pub fn rotate(&mut self) {
         self.connector = self.connector.rotate();
     }
@@ -78,7 +78,7 @@ pub enum ConnectorShape {
 }
 
 impl ConnectorShape {
-    /// Rotates the ConnectorShape according to the symmetries of the ConnectorShape
+    /// Rotates the `ConnectorShape` according to the symmetries of the `ConnectorShape`
     #[must_use]
     pub fn rotate(self) -> Self {
         use ConnectorShape::*;
@@ -93,7 +93,7 @@ impl ConnectorShape {
     }
 
     /// Can we go in this `direction` from this [`ConnectorShape`], `self`?
-    fn connected_to(&self, direction: CompassDirection) -> bool {
+    fn connected_to(self, direction: CompassDirection) -> bool {
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;
@@ -114,7 +114,7 @@ impl ConnectorShape {
     }
 
     /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
-    pub fn connected(&self, other: Self, direction: CompassDirection) -> bool {
+    pub fn connected(self, other: Self, direction: CompassDirection) -> bool {
         self.connected_to(direction)
             && other.connected_to(direction.rotate_clockwise().rotate_clockwise())
     }
