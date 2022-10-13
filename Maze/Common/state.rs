@@ -336,6 +336,11 @@ mod tests {
             position: (1, 1),
             goal: Gem::ametrine,
         });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: Gem::diamond,
+        });
         state.active_player = 0;
 
         // player can reach their own position
@@ -344,6 +349,7 @@ mod tests {
         assert!(state.can_reach_position((2, 1)));
         assert!(state.can_reach_position((2, 2)));
         assert!(!state.can_reach_position((0, 2)));
+        // the second player can reach this position, but they are not the active player
         assert!(!state.can_reach_position((0, 3)));
         assert!(!state.can_reach_position((3, 3)));
 
