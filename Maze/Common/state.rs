@@ -365,4 +365,43 @@ mod tests {
         assert!(!state.can_reach_position((2, 1)));
         assert!(state.can_reach_position((2, 2)));
     }
+
+    #[test]
+    fn test_player_reached_home() {
+        // home tile is not on the same connected component as active player
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_home());
+
+        // player is on the same connected component, but not on their home tile
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (0, 1),
+            goal: Gem::kunzite_oval,
+        });
+        state.active_player = 0;
+
+        // active player is not on a home tile, but another player is
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (3, 1),
+            goal: Gem::diamond,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_home());
+        state.active_player = 1;
+        assert!(state.player_reached_home());
+    }
 }
