@@ -160,7 +160,7 @@ impl State {
             .as_ref()
             .expect("all cells are Some(...)")
             .gems;
-        player_info.reached_goal(gem_at_player.0) && player_info.reached_goal(gem_at_player.1)
+        player_info.reached_goal(gem_at_player.0) || player_info.reached_goal(gem_at_player.1)
     }
 
     /// Checks if the currently active `Player` has landed on its home tile
@@ -403,5 +403,26 @@ mod tests {
         assert!(!state.player_reached_home());
         state.active_player = 1;
         assert!(state.player_reached_home());
+    }
+
+    #[test]
+    fn test_player_reached_goal() {
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_goal());
+
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::garnet,
+        });
+        state.active_player = 0;
+        assert!(state.player_reached_goal());
     }
 }
