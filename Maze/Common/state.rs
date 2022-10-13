@@ -1,4 +1,5 @@
 use board::Board;
+use board::BoardResult;
 use board::Slide;
 use gem::Gem;
 use grid::Position;
@@ -128,18 +129,18 @@ impl State {
     }
 
     /// Performs a slide action
-    pub fn slide(&mut self, slide: Slide<7>) {
-        if let Ok(new_spare) = self.board.slide(slide) {
-            if let Some(prev) = self.previous_slide {
-                if prev.direction.opposite() == slide.direction && prev.index == slide.index {
-                    // Kicking player out code can go here
-                    return;
-                }
+    pub fn slide(&mut self, slide: Slide<7>) -> BoardResult<()> {
+        if let Some(prev) = self.previous_slide {
+            if prev.direction.opposite() == slide.direction && prev.index == slide.index {
+                // Kicking player out code can go here
+                Err("Attempted to do a slide action that would undo the previous slide")?;
             }
-            self.spare = Some(new_spare);
-            self.slide_players(&slide);
-            self.previous_slide = Some(slide);
         }
+        let new_spare = self.board.slide(slide)?;
+        self.spare = Some(new_spare);
+        self.slide_players(&slide);
+        self.previous_slide = Some(slide);
+        Ok(())
     }
 
     /// Inserts the tile that was slid off
@@ -226,14 +227,16 @@ mod tests {
         let mut state = State::default();
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         assert!(state.spare.is_some());
 
         assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
 
         // Sliding without inserting will not do anything
-        state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide(Slide::new(0, South).unwrap());
+        assert!(res.is_err());
 
         assert!(state.spare.is_some());
         assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
@@ -244,21 +247,25 @@ mod tests {
         let mut state = State::default();
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
         assert!(state.spare.is_some());
         state.insert();
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide(Slide::new(0, South).unwrap());
+        assert!(res.is_err());
         assert!(state.spare.is_none()); // This shows that this slide does not happen
 
         // Doing it twice should not matter
-        state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide(Slide::new(0, South).unwrap());
+        assert!(res.is_err());
         assert!(state.spare.is_none());
 
         // Doing it in another index is fine
-        state.slide(Slide::new(1, South).unwrap());
-        assert!(state.spare.is_none());
+        let res = state.slide(Slide::new(1, South).unwrap());
+        assert!(res.is_ok());
+        assert!(state.spare.is_some());
     }
 
     #[test]
@@ -308,7 +315,8 @@ mod tests {
         let mut state = State::default();
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         assert!(state.spare.is_some());
 
@@ -318,7 +326,8 @@ mod tests {
 
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         assert!(state.spare.is_some());
 
@@ -335,7 +344,8 @@ mod tests {
 
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         assert!(state.spare.is_some());
 
@@ -347,7 +357,8 @@ mod tests {
 
         assert!(state.spare.is_none());
 
-        state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         assert!(state.spare.is_some());
 
