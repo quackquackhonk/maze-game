@@ -177,7 +177,9 @@ impl State {
 
     /// Sets `self.active_player` to be the next player by indexing `self.player_info`
     pub fn next_player(&mut self) {
-        self.active_player = (self.active_player + 1) % self.player_info.len();
+        if !self.player_info.is_empty() {
+            self.active_player = (self.active_player + 1) % self.player_info.len();
+        }
     }
 
     /// Removes the currently active `Player` from game.
@@ -231,6 +233,35 @@ mod tests {
         // Should not panic because `remove_player` ignores if players are actually in the game
         state.remove_player();
         assert_eq!(state.player_info.len(), 0);
+    }
+
+    #[test]
+    fn test_next_player() {
+        let mut state = State::default();
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 1);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 1);
+        state.next_player();
+        assert_eq!(state.active_player, 2);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
     }
 
     #[test]
