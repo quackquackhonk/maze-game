@@ -343,6 +343,17 @@ mod tests {
         });
         state.active_player = 0;
 
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
         // player can reach their own position
         assert!(state.can_reach_position((1, 1)));
         assert!(state.can_reach_position((0, 1)));
@@ -356,11 +367,34 @@ mod tests {
         state.slide(Slide::new(0, North).unwrap());
         state.insert();
 
+        // Board after slide and insert:
+        //   0123456
+        // 0 ├│└┌┐┘┴
+        // 1 ┌┬┤┼─│└
+        // 2 ┼┐┘┴├┬┤
+        // 3 ┴─│└┌┐┘
+        // 4 └├┬┤┼─│
+        // 5 ┤┌┐┘┴├┬
+        // 6 ┼┼─│└┌┐
+        //
+        // extra = ─
         assert!(state.can_reach_position((0, 2)));
         assert!(state.can_reach_position((0, 3)));
 
         state.slide(Slide::new(1, South).unwrap());
         state.insert();
+
+        // Board after slide and insert:
+        //   0123456
+        // 0 ├│─┌┐┘┴
+        // 1 ┌┬└┼─│└
+        // 2 ┼┐┤┴├┬┤
+        // 3 ┴─┘└┌┐┘
+        // 4 └├│┤┼─│
+        // 5 ┤┌┬┘┴├┬
+        // 6 ┼┼┐│└┌┐
+        //
+        // extra = ─
 
         assert!(!state.can_reach_position((2, 1)));
         assert!(state.can_reach_position((2, 2)));
@@ -386,8 +420,8 @@ mod tests {
             goal: Gem::kunzite_oval,
         });
         state.active_player = 0;
-       assert!(!state.player_reached_home());
-       
+        assert!(!state.player_reached_home());
+
         // active player is not on a home tile, but another player is
         let mut state = State::default();
         state.player_info.push(PlayerInfo {
@@ -408,7 +442,7 @@ mod tests {
 
     #[test]
     fn test_player_reached_goal() {
-    // Current Implementation of the Default board has Garnets and Amethysts in every Tile
+        // Current Implementation of the Default board has Garnets and Amethysts in every Tile
         let mut state = State::default();
         state.player_info.push(PlayerInfo {
             home: (1, 1),
@@ -422,8 +456,7 @@ mod tests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: Gem::garnet,
-            goal: state.board[(2,3)].gems.0
+            goal: state.board[(2, 3)].as_ref().unwrap().gems.0,
         });
         state.active_player = 0;
         assert!(state.player_reached_goal());
