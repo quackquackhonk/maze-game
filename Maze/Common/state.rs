@@ -160,7 +160,7 @@ impl State {
             .as_ref()
             .expect("all cells are Some(...)")
             .gems;
-        player_info.reached_goal(gem_at_player.0) && player_info.reached_goal(gem_at_player.1)
+        player_info.reached_goal(gem_at_player.0) || player_info.reached_goal(gem_at_player.1)
     }
 
     /// Checks if the currently active `Player` has landed on its home tile
@@ -377,5 +377,139 @@ mod tests {
         assert_eq!(state.spare.as_ref().unwrap().connector, Path(Vertical));
         state.rotate_spare(3);
         assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+    }
+
+    #[test]
+    fn test_can_reach_position() {
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: Gem::ametrine,
+        });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: Gem::diamond,
+        });
+        state.active_player = 0;
+
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+        // player can reach their own position
+        assert!(state.can_reach_position((1, 1)));
+        assert!(state.can_reach_position((0, 1)));
+        assert!(state.can_reach_position((2, 1)));
+        assert!(state.can_reach_position((2, 2)));
+        assert!(!state.can_reach_position((0, 2)));
+        // the second player can reach this position, but they are not the active player
+        assert!(!state.can_reach_position((0, 3)));
+        assert!(!state.can_reach_position((3, 3)));
+
+        state.slide(Slide::new(0, North).unwrap());
+        state.insert();
+
+        // Board after slide and insert:
+        //   0123456
+        // 0 ├│└┌┐┘┴
+        // 1 ┌┬┤┼─│└
+        // 2 ┼┐┘┴├┬┤
+        // 3 ┴─│└┌┐┘
+        // 4 └├┬┤┼─│
+        // 5 ┤┌┐┘┴├┬
+        // 6 ┼┼─│└┌┐
+        //
+        // extra = ─
+        assert!(state.can_reach_position((0, 2)));
+        assert!(state.can_reach_position((0, 3)));
+
+        state.slide(Slide::new(1, South).unwrap());
+        state.insert();
+
+        // Board after slide and insert:
+        //   0123456
+        // 0 ├│─┌┐┘┴
+        // 1 ┌┬└┼─│└
+        // 2 ┼┐┤┴├┬┤
+        // 3 ┴─┘└┌┐┘
+        // 4 └├│┤┼─│
+        // 5 ┤┌┬┘┴├┬
+        // 6 ┼┼┐│└┌┐
+        //
+        // extra = ─
+
+        assert!(!state.can_reach_position((2, 1)));
+        assert!(state.can_reach_position((2, 2)));
+    }
+
+    #[test]
+    fn test_player_reached_home() {
+        // home tile is not on the same connected component as active player
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_home());
+
+        // player is on the same connected component, but not on their home tile
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (0, 1),
+            goal: Gem::kunzite_oval,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_home());
+
+        // active player is not on a home tile, but another player is
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (3, 1),
+            goal: Gem::diamond,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_home());
+        state.active_player = 1;
+        assert!(state.player_reached_home());
+    }
+
+    #[test]
+    fn test_player_reached_goal() {
+        // Current Implementation of the Default board has Garnets and Amethysts in every Tile
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: Gem::beryl,
+        });
+        state.active_player = 0;
+        assert!(!state.player_reached_goal());
+
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: state.board[(2, 3)].as_ref().unwrap().gems.0,
+        });
+        state.active_player = 0;
+        assert!(state.player_reached_goal());
     }
 }

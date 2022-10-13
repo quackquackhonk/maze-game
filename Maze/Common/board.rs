@@ -169,6 +169,16 @@ impl<const BOARD_SIZE: usize> Index<Position> for Board<BOARD_SIZE> {
 }
 
 impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
+    /// Default Board<7> is:
+    /// ─│└┌┐┘┴
+    /// ├┬┤┼─│└
+    /// ┌┐┘┴├┬┤
+    /// ┼─│└┌┐┘
+    /// ┴├┬┤┼─│
+    /// └┌┐┘┴├┬
+    /// ┤┼─│└┌┐
+    /// extra = ┼
+    ///
     /// Default Board<3> is:  
     /// ─│└  
     /// ┌┐┘  
