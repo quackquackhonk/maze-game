@@ -234,7 +234,13 @@ impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
     ///
     /// # Errors
     ///
-    /// Errors if the index for the row/col is out of bounds
+    /// Errors if the index for the row/col is not a valid index for a slideable row/col.  
+    /// i.e. on a 7x7 board valid indices are 0, 1, 2, and 3
+    /// ```should_panic
+    /// # use common::board::Slide;
+    /// # use common::tile::CompassDirection;
+    /// Slide::<7>::new(4, CompassDirection::North).unwrap();
+    /// ```
     pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<BOARD_SIZE>, String> {
         if index > BOARD_SIZE / 2 {
             Err(format!("Index must be between 0 and {}", BOARD_SIZE / 2))
