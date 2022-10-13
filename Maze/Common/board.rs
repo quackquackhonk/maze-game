@@ -129,6 +129,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
         let mut worklist = Vec::new();
         worklist.push(start);
         let mut reachable = HashSet::new();
+        let mut reachable = HashSet::from([start]);
         let mut visited = HashSet::new();
         while let Some(curr) = worklist.pop() {
             let neighbors = self.reachable_neighbors(curr);
