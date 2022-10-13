@@ -423,6 +423,7 @@ mod tests {
             home: (1, 1),
             position: (2, 3),
             goal: Gem::garnet,
+            goal: state.board[(2,3)].gems.0
         });
         state.active_player = 0;
         assert!(state.player_reached_goal());
