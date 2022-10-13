@@ -177,7 +177,9 @@ impl State {
 
     /// Sets `self.active_player` to be the next player by indexing `self.player_info`
     pub fn next_player(&mut self) {
-        self.active_player = (self.active_player + 1) % self.player_info.len();
+        if !self.player_info.is_empty() {
+            self.active_player = (self.active_player + 1) % self.player_info.len();
+        }
     }
 
     /// Removes the currently active `Player` from game.
@@ -190,18 +192,38 @@ impl State {
 
 #[cfg(test)]
 mod tests {
-    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
+    use crate::{
+        gem::Gem,
+        tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*},
+    };
 
     use super::*;
 
     #[test]
-    fn test_remove_player() {
+    fn test_add_player() {
         let mut state = State::default();
-        state.player_info.push(PlayerInfo {
+
+        assert!(state.player_info.is_empty());
+
+        state.add_player(PlayerInfo {
             home: (0, 0),
             position: (0, 0),
-            goal: crate::gem::Gem::ruby,
+            goal: Gem::ruby,
         });
+
+        assert!(!state.player_info.is_empty());
+
+        assert_eq!(state.player_info.len(), 1);
+
+        state.add_player(PlayerInfo::new((0, 1), (1, 0), Gem::blue_cushion));
+
+        assert_eq!(state.player_info.len(), 2);
+    }
+
+    #[test]
+    fn test_remove_player() {
+        let mut state = State::default();
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
@@ -211,6 +233,35 @@ mod tests {
         // Should not panic because `remove_player` ignores if players are actually in the game
         state.remove_player();
         assert_eq!(state.player_info.len(), 0);
+    }
+
+    #[test]
+    fn test_next_player() {
+        let mut state = State::default();
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 1);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
+
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        assert_eq!(state.active_player, 0);
+        state.next_player();
+        assert_eq!(state.active_player, 1);
+        state.next_player();
+        assert_eq!(state.active_player, 2);
+        state.next_player();
+        assert_eq!(state.active_player, 0);
     }
 
     #[test]
@@ -236,10 +287,10 @@ mod tests {
         let mut state = State::default();
         state
             .player_info
-            .push(PlayerInfo::new((0, 0), (0, 0), crate::gem::Gem::ruby));
+            .push(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
         state
             .player_info
-            .push(PlayerInfo::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
+            .push(PlayerInfo::new((0, 0), (1, 2), Gem::amethyst));
         assert_eq!(state.player_info[0].position, (0, 0));
         assert_eq!(state.player_info[1].position, (1, 2));
 
