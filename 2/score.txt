@@ -2,5 +2,5 @@ Delivery
 5/5 pts: state.md
 5/5 pts: board.pp
 Inspection
-65/80 pts: See inspection.md
-Total: 75/90 pts
+75/80 pts: See inspection.md
+Total: 85/90 pts
