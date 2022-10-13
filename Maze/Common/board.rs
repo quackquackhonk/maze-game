@@ -416,7 +416,7 @@ mod BoardTests {
 
     #[test]
     pub fn test_reachable() {
-        // Default Board\<3> is:
+        // Default Board<3> is:
         // ─│└
         // ┌┐┘
         // ┴├┬
@@ -425,9 +425,9 @@ mod BoardTests {
         assert!(b.reachable((10, 10)).is_err());
         let from_0_0 = b.reachable((0, 0));
         assert!(from_0_0.is_ok());
-        assert!(from_0_0.unwrap().is_empty());
+        assert_eq!(from_0_0.unwrap().len(), 1);
         let from_2_2 = b.reachable((2, 2));
         assert!(from_2_2.is_ok());
-        assert!(!from_2_2.unwrap().is_empty());
+        assert_eq!(from_2_2.unwrap().len(), 5);
     }
 }
