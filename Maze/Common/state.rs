@@ -408,6 +408,7 @@ mod tests {
 
     #[test]
     fn test_player_reached_goal() {
+    // Current Implementation of the Default board has Garnets and Amethysts in every Tile
         let mut state = State::default();
         state.player_info.push(PlayerInfo {
             home: (1, 1),
