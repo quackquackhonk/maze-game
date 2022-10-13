@@ -163,6 +163,7 @@ impl State {
         player_info.reached_goal(gem_at_player.0) && player_info.reached_goal(gem_at_player.1)
     }
 
+    /// Checks if the currently active `Player` has landed on its home tile
     #[must_use]
     pub fn player_reached_home(&self) -> bool {
         let player_info = &self.player_info[self.active_player];
