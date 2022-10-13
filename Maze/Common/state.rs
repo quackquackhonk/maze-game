@@ -49,6 +49,7 @@ pub struct State {
     player_info: Vec<PlayerInfo>,
     active_player: usize,
     spare: Option<Tile>,
+    previous_slide: Option<Slide<BOARD_SIZE>>,
 }
 
 const BOARD_SIZE: usize = 7;
@@ -63,7 +64,7 @@ impl State {
         }
     }
 
-    fn slide_players(&mut self, slide: Slide<BOARD_SIZE>) {
+    fn slide_players(&mut self, &slide: &Slide<BOARD_SIZE>) {
         #[allow(clippy::enum_glob_use)]
         use tile::CompassDirection::*;
         match slide {
@@ -129,8 +130,15 @@ impl State {
     /// Performs a slide action
     pub fn slide(&mut self, slide: Slide<7>) {
         if let Ok(new_spare) = self.board.slide(slide) {
+            if let Some(prev) = self.previous_slide {
+                if prev.direction.opposite() == slide.direction && prev.index == slide.index {
+                    // Kicking player out code can go here
+                    return;
+                }
+            }
             self.spare = Some(new_spare);
-            self.slide_players(slide);
+            self.slide_players(&slide);
+            self.previous_slide = Some(slide);
         }
     }
 
@@ -232,6 +240,28 @@ mod tests {
     }
 
     #[test]
+    fn test_slide_no_undo() {
+        let mut state = State::default();
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+        assert!(state.spare.is_some());
+        state.insert();
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, South).unwrap());
+        assert!(state.spare.is_none()); // This shows that this slide does not happen
+
+        // Doing it twice should not matter
+        state.slide(Slide::new(0, South).unwrap());
+        assert!(state.spare.is_none());
+
+        // Doing it in another index is fine
+        state.slide(Slide::new(1, South).unwrap());
+        assert!(state.spare.is_none());
+    }
+
+    #[test]
     fn test_slide_players() {
         let mut state = State::default();
         state
@@ -244,30 +274,30 @@ mod tests {
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 1 is in the sliding column so it should move
-        state.slide_players(Slide::new(0, South).unwrap());
+        state.slide_players(&Slide::new(0, South).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 2 is in the sliding row so it should move
-        state.slide_players(Slide::new(1, East).unwrap());
+        state.slide_players(&Slide::new(1, East).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 1 is in the sliding column so it should move
         // but it should also wrap
-        state.slide_players(Slide::new(0, North).unwrap());
-        state.slide_players(Slide::new(0, North).unwrap());
+        state.slide_players(&Slide::new(0, North).unwrap());
+        state.slide_players(&Slide::new(0, North).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 2 is in the sliding row so it should move
         // but it should also wrap
-        state.slide_players(Slide::new(1, West).unwrap());
-        state.slide_players(Slide::new(1, West).unwrap());
-        state.slide_players(Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (6, 2));
