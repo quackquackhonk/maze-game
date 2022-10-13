@@ -327,4 +327,36 @@ mod tests {
         state.rotate_spare(3);
         assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
     }
+
+    #[test]
+    fn test_can_reach_position() {
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: Gem::ametrine,
+        });
+        state.active_player = 0;
+
+        // player can reach their own position
+        assert!(state.can_reach_position((1, 1)));
+        assert!(state.can_reach_position((0, 1)));
+        assert!(state.can_reach_position((2, 1)));
+        assert!(state.can_reach_position((2, 2)));
+        assert!(!state.can_reach_position((0, 2)));
+        assert!(!state.can_reach_position((0, 3)));
+        assert!(!state.can_reach_position((3, 3)));
+
+        state.slide(Slide::new(0, North).unwrap());
+        state.insert();
+
+        assert!(state.can_reach_position((0, 2)));
+        assert!(state.can_reach_position((0, 3)));
+
+        state.slide(Slide::new(1, South).unwrap());
+        state.insert();
+
+        assert!(!state.can_reach_position((2, 1)));
+        assert!(state.can_reach_position((2, 2)));
+    }
 }
