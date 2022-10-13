@@ -190,18 +190,38 @@ impl State {
 
 #[cfg(test)]
 mod tests {
-    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
+    use crate::{
+        gem::Gem,
+        tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*},
+    };
 
     use super::*;
 
     #[test]
-    fn test_remove_player() {
+    fn test_add_player() {
         let mut state = State::default();
-        state.player_info.push(PlayerInfo {
+
+        assert!(state.player_info.is_empty());
+
+        state.add_player(PlayerInfo {
             home: (0, 0),
             position: (0, 0),
-            goal: crate::gem::Gem::ruby,
+            goal: Gem::ruby,
         });
+
+        assert!(!state.player_info.is_empty());
+
+        assert_eq!(state.player_info.len(), 1);
+
+        state.add_player(PlayerInfo::new((0, 1), (1, 0), Gem::blue_cushion));
+
+        assert_eq!(state.player_info.len(), 2);
+    }
+
+    #[test]
+    fn test_remove_player() {
+        let mut state = State::default();
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
@@ -236,10 +256,10 @@ mod tests {
         let mut state = State::default();
         state
             .player_info
-            .push(PlayerInfo::new((0, 0), (0, 0), crate::gem::Gem::ruby));
+            .push(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
         state
             .player_info
-            .push(PlayerInfo::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
+            .push(PlayerInfo::new((0, 0), (1, 2), Gem::amethyst));
         assert_eq!(state.player_info[0].position, (0, 0));
         assert_eq!(state.player_info[1].position, (1, 2));
 
