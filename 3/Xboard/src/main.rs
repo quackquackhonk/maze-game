@@ -2,7 +2,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 use std::cmp::Ordering;
-use std::io::Read;
+use std::io::{stdin, stdout, Read, Write};
 
 use common::board::Board;
 use common::gem::Gem;
@@ -151,9 +151,9 @@ fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
     }
 }
 
-fn read_json_from_stream(
-    mut test_input: impl Iterator<Item = ValidJson>,
-) -> Result<String, String> {
+fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
+    let mut test_input = get_json_iter_from_reader(reader)?;
+
     let board: Board<7> = match test_input.next().ok_or("No valid Board JSON found")? {
         ValidJson::Board(board) => board.into(),
         _ => Err("Board was not the first JSON object sent")?,
@@ -166,19 +166,24 @@ fn read_json_from_stream(
     };
 
     let mut reachable_pos = board
-        .reachable(from_pos)
-        .unwrap()
+        .reachable(from_pos)?
         .into_iter()
-        .map(|pos| pos.into())
+        .map(Position::into)
         .collect::<Vec<Coordinate>>();
     reachable_pos.sort_by(cmp_coordinates);
 
-    Ok(serde_json::to_string(&reachable_pos).unwrap())
+    writer
+        .write(
+            serde_json::to_string(&reachable_pos)
+                .map_err(|e| e.to_string())?
+                .as_bytes(),
+        )
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
 }
 
-fn get_test_input_from_reader(
-    reader: impl Read,
-) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<crate::ValidJson>()
@@ -190,9 +195,7 @@ fn get_test_input_from_reader(
 fn main() -> Result<(), String> {
     // Turn the STDIN Stream into A ValidJson Stream
 
-    let test_input = get_test_input_from_reader(std::io::stdin().lock())?;
-
-    println!("{}", read_json_from_stream(test_input)?);
+    read_json_and_write_json(stdin().lock(), &mut stdout().lock())?;
 
     Ok(())
 }
@@ -204,8 +207,6 @@ mod tests {
     use std::fs::File;
     use std::io::BufReader;
     use std::path::Path;
-
-    use crate::get_test_input_from_reader;
 
     #[test]
     fn test_handle_client_from_file() {
@@ -219,15 +220,14 @@ mod tests {
             if let Ok(num) = split_path.next().unwrap().parse::<usize>() {
                 match split_path.next() {
                     Some("in.json") => {
-                        results[num].0 = Some(
-                            read_json_from_stream(
-                                get_test_input_from_reader(&mut BufReader::new(
-                                    File::open(&path).unwrap(),
-                                ))
-                                .unwrap(),
-                            )
-                            .unwrap(),
-                        );
+                        let mut buf = Vec::new();
+                        read_json_and_write_json(
+                            &mut BufReader::new(File::open(&path).unwrap()),
+                            &mut buf,
+                        )
+                        .unwrap();
+
+                        results[num].0 = Some(String::from_utf8(buf).unwrap());
                     }
                     Some("out.json") => {
                         results[num].1 = Some(std::fs::read_to_string(&path).unwrap())
