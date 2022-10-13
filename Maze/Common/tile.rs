@@ -50,6 +50,25 @@ impl CompassDirection {
             West => North,
         }
     }
+
+    /// Returns the opposite direction of the given direction
+    /// ```
+    ///# use common::tile::CompassDirection;
+    /// assert_eq!(CompassDirection::North.opposite(), CompassDirection::South);
+    /// assert_eq!(CompassDirection::South.opposite(), CompassDirection::North);
+    /// assert_eq!(CompassDirection::East.opposite(), CompassDirection::West);
+    /// assert_eq!(CompassDirection::West.opposite(), CompassDirection::East);
+    /// ```
+    #[must_use]
+    pub fn opposite(self) -> Self {
+        use CompassDirection::*;
+        match self {
+            North => South,
+            South => North,
+            East => West,
+            West => East,
+        }
+    }
 }
 
 /// This type describes the connection type of a tile
