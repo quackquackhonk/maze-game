@@ -23,7 +23,8 @@ pub enum Color {
     Blue,
 }
 
-/// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
+/// Represents a Player and the `Position` of their home and themselves. Also holds their goal
+/// `Gem` and their `Color`.
 #[derive(Debug, PartialEq, Eq)]
 pub struct PlayerInfo {
     home: Position,
