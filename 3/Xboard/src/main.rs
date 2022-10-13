@@ -2,7 +2,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 use std::cmp::Ordering;
-use std::io;
+use std::io::Read;
 
 use common::board::Board;
 use common::gem::Gem;
@@ -151,11 +151,9 @@ fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
     }
 }
 
-fn main() -> Result<(), String> {
-    // Turn the STDIN Stream into A ValidJson Stream
-    let deserializer = serde_json::Deserializer::from_reader(io::stdin().lock());
-    let mut test_input = deserializer.into_iter::<crate::ValidJson>().flatten();
-
+fn read_json_from_stream(
+    mut test_input: impl Iterator<Item = ValidJson>,
+) -> Result<String, String> {
     let board: Board<7> = match test_input.next().ok_or("No valid Board JSON found")? {
         ValidJson::Board(board) => board.into(),
         _ => Err("Board was not the first JSON object sent")?,
@@ -175,7 +173,80 @@ fn main() -> Result<(), String> {
         .collect::<Vec<Coordinate>>();
     reachable_pos.sort_by(cmp_coordinates);
 
-    println!("{}", serde_json::to_string(&reachable_pos).unwrap());
+    Ok(serde_json::to_string(&reachable_pos).unwrap())
+}
+
+fn get_test_input_from_reader(
+    reader: impl Read,
+) -> Result<impl Iterator<Item = ValidJson>, String> {
+    let deserializer = serde_json::Deserializer::from_reader(reader);
+    Ok(deserializer
+        .into_iter::<crate::ValidJson>()
+        .map(|x| x.map_err(|e| e.to_string()))
+        .collect::<Result<Vec<_>, String>>()?
+        .into_iter())
+}
+
+fn main() -> Result<(), String> {
+    // Turn the STDIN Stream into A ValidJson Stream
+
+    let test_input = get_test_input_from_reader(std::io::stdin().lock())?;
+
+    println!("{}", read_json_from_stream(test_input)?);
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use std::fs::File;
+    use std::io::BufReader;
+    use std::path::Path;
+
+    use crate::get_test_input_from_reader;
+
+    #[test]
+    fn test_handle_client_from_file() {
+        let tests_path = Path::new("./../Tests/");
+        let files = tests_path.read_dir().unwrap().collect::<Vec<_>>();
+        let file_count = files.len() / 2;
+        let mut results: Vec<(Option<String>, Option<String>)> = vec![(None, None); file_count];
+        for dir_entry in files.into_iter().flatten() {
+            let path = dir_entry.path();
+            let mut split_path = path.file_name().unwrap().to_str().unwrap().split('-');
+            if let Ok(num) = split_path.next().unwrap().parse::<usize>() {
+                match split_path.next() {
+                    Some("in.json") => {
+                        results[num].0 = Some(
+                            read_json_from_stream(
+                                get_test_input_from_reader(&mut BufReader::new(
+                                    File::open(&path).unwrap(),
+                                ))
+                                .unwrap(),
+                            )
+                            .unwrap(),
+                        );
+                    }
+                    Some("out.json") => {
+                        results[num].1 = Some(std::fs::read_to_string(&path).unwrap())
+                    }
+                    _ => {}
+                };
+            }
+        }
+
+        for (input, output) in results {
+            let input = input
+                .iter()
+                .map(|str| serde_json::from_str(str).unwrap())
+                .collect::<Vec<serde_json::Value>>();
+            let output = output
+                .iter()
+                .map(|str| serde_json::from_str(str).unwrap())
+                .collect::<Vec<serde_json::Value>>();
+            assert_eq!(input, output);
+        }
+    }
 }
