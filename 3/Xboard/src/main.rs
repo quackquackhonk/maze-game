@@ -151,6 +151,7 @@ fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
     }
 }
 
+/// Read bytes (the JSON) from the reader and Write the results (the result JSON) to the writer
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
@@ -183,6 +184,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
     Ok(())
 }
 
+/// Turn the STDIN Stream into A ValidJson Stream
 fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
@@ -193,8 +195,6 @@ fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = V
 }
 
 fn main() -> Result<(), String> {
-    // Turn the STDIN Stream into A ValidJson Stream
-
     read_json_and_write_json(stdin().lock(), &mut stdout().lock())?;
 
     Ok(())
