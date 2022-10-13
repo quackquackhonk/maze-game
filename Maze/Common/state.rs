@@ -16,6 +16,7 @@ pub mod grid;
 pub mod tile;
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
+#[derive(Debug, PartialEq, Eq)]
 struct Player {
     home: Position,
     pub position: Position,
@@ -134,8 +135,10 @@ impl State {
 
     /// Performs a slide action
     pub fn slide(&mut self, slide: Slide<7>) {
-        self.spare = self.board.slide(slide).ok();
-        self.slide_players(&slide);
+        if let Ok(new_spare) = self.board.slide(slide) {
+            self.spare = Some(new_spare);
+            self.slide_players(&slide);
+        }
     }
 
     /// Inserts the tile that was slid off
@@ -170,5 +173,149 @@ impl State {
     /// Removes the currently active `Player` from game.
     pub fn remove_player(&mut self, to_remove: i32) {
         self.player_info.remove(&to_remove);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
+
+    use super::*;
+
+    #[test]
+    fn test_remove_player() {
+        let mut state = State::new();
+        state.player_info.insert(
+            1,
+            Player {
+                home: (0, 0),
+                position: (0, 0),
+                goal: crate::gem::Gem::ruby,
+            },
+        );
+
+        assert_eq!(state.player_info.len(), 1);
+        // Should not panic because the player exists in the HashMap
+        state.remove_player(1);
+
+        assert_eq!(state.player_info.len(), 0);
+        // Should not panic because `remove_player` ignores if players are actually in the game
+        state.remove_player(0);
+        assert_eq!(state.player_info.len(), 0);
+    }
+
+    #[test]
+    fn test_slide() {
+        let mut state = State::new();
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+
+        // Sliding without inserting will not do anything
+        state.slide(Slide::new(0, South).unwrap());
+
+        assert!(state.spare.is_some());
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+    }
+
+    #[test]
+    fn test_slide_players() {
+        let mut state = State::new();
+        state
+            .player_info
+            .insert(1, Player::new((0, 0), (0, 0), crate::gem::Gem::ruby));
+        state
+            .player_info
+            .insert(2, Player::new((0, 0), (1, 2), crate::gem::Gem::amethyst));
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 0));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+
+        // Only player 1 is in the sliding column so it should move
+        state.slide_players(&Slide::new(0, South).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (1, 2));
+
+        // Only player 2 is in the sliding row so it should move
+        state.slide_players(&Slide::new(1, East).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 1));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+
+        // Only player 1 is in the sliding column so it should move
+        // but it should also wrap
+        state.slide_players(&Slide::new(0, North).unwrap());
+        state.slide_players(&Slide::new(0, North).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (2, 2));
+
+        // Only player 2 is in the sliding row so it should move
+        // but it should also wrap
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(1, West).unwrap());
+
+        assert_eq!(state.player_info.get(&1).unwrap().position, (0, 6));
+        assert_eq!(state.player_info.get(&2).unwrap().position, (6, 2));
+    }
+
+    #[test]
+    fn test_insert() {
+        let mut state = State::new();
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+
+        state.insert();
+
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+
+        state.insert();
+
+        assert!(state.spare.is_none());
+    }
+
+    #[test]
+    fn test_rotate_spare() {
+        let mut state = State::new();
+
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+        state.rotate_spare(1);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+
+        state.insert();
+
+        assert!(state.spare.is_none());
+
+        state.slide(Slide::new(0, North).unwrap());
+
+        assert!(state.spare.is_some());
+
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+        state.rotate_spare(1);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Vertical));
+        state.rotate_spare(3);
+        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
     }
 }
