@@ -1,6 +1,10 @@
 use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 /// Type alias for Positions on the Board
+/// A position is a tuple of (x, y)
+/// where:
+///     x is a column index
+///     y is a row index
 pub type Position = (usize, usize);
 
 /// Represents a wrapper type for a 2D array with added functionality
