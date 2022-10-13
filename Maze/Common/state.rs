@@ -13,21 +13,33 @@ pub mod grid;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
+#[non_exhaustive]
+#[derive(Debug, PartialEq, Eq)]
+pub enum Color {
+    Red,
+    Yellow,
+    Green,
+    Blue,
+}
+
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal `Gem`.
 #[derive(Debug, PartialEq, Eq)]
 pub struct PlayerInfo {
     home: Position,
     pub(crate) position: Position,
     goal: Gem,
+    // Invariant: Every Player should have their own color
+    color: Color,
 }
 
 impl PlayerInfo {
     /// Constructs a new `Player` from its fields.
-    pub fn new(home: Position, position: Position, goal: Gem) -> Self {
+    pub fn new(home: Position, position: Position, goal: Gem, color: Color) -> Self {
         Self {
             home,
             position,
             goal,
+            color,
         }
     }
 
@@ -209,13 +221,19 @@ mod tests {
             home: (0, 0),
             position: (0, 0),
             goal: Gem::ruby,
+            color: Color::Red,
         });
 
         assert!(!state.player_info.is_empty());
 
         assert_eq!(state.player_info.len(), 1);
 
-        state.add_player(PlayerInfo::new((0, 1), (1, 0), Gem::blue_cushion));
+        state.add_player(PlayerInfo::new(
+            (0, 1),
+            (1, 0),
+            Gem::blue_cushion,
+            Color::Blue,
+        ));
 
         assert_eq!(state.player_info.len(), 2);
     }
@@ -223,7 +241,7 @@ mod tests {
     #[test]
     fn test_remove_player() {
         let mut state = State::default();
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Green));
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
@@ -242,19 +260,19 @@ mod tests {
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Red));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Green));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 1);
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
+        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Yellow));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 1);
@@ -287,10 +305,13 @@ mod tests {
         let mut state = State::default();
         state
             .player_info
-            .push(PlayerInfo::new((0, 0), (0, 0), Gem::ruby));
-        state
-            .player_info
-            .push(PlayerInfo::new((0, 0), (1, 2), Gem::amethyst));
+            .push(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Red));
+        state.player_info.push(PlayerInfo::new(
+            (0, 0),
+            (1, 2),
+            Gem::amethyst,
+            Color::Yellow,
+        ));
         assert_eq!(state.player_info[0].position, (0, 0));
         assert_eq!(state.player_info[1].position, (1, 2));
 
@@ -386,11 +407,13 @@ mod tests {
             home: (1, 1),
             position: (1, 1),
             goal: Gem::ametrine,
+            color: Color::Yellow,
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: Gem::diamond,
+            color: Color::Red,
         });
         state.active_player = 0;
 
@@ -459,6 +482,7 @@ mod tests {
             home: (1, 1),
             position: (2, 3),
             goal: Gem::beryl,
+            color: Color::Blue,
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -469,6 +493,7 @@ mod tests {
             home: (1, 1),
             position: (0, 1),
             goal: Gem::kunzite_oval,
+            color: Color::Red,
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -479,11 +504,13 @@ mod tests {
             home: (1, 1),
             position: (2, 3),
             goal: Gem::beryl,
+            color: Color::Green,
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: Gem::diamond,
+            color: Color::Blue,
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -499,6 +526,7 @@ mod tests {
             home: (1, 1),
             position: (2, 3),
             goal: Gem::beryl,
+            color: Color::Red,
         });
         state.active_player = 0;
         assert!(!state.player_reached_goal());
@@ -508,6 +536,7 @@ mod tests {
             home: (1, 1),
             position: (2, 3),
             goal: state.board[(2, 3)].as_ref().unwrap().gems.0,
+            color: Color::Green,
         });
         state.active_player = 0;
         assert!(state.player_reached_goal());
