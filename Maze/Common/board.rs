@@ -5,7 +5,7 @@ use std::ops::Index;
 
 type BoardError = String;
 
-type BoardResult<T> = Result<T, BoardError>;
+pub type BoardResult<T> = Result<T, BoardError>;
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
