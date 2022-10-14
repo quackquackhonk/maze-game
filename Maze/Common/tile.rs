@@ -134,8 +134,7 @@ impl ConnectorShape {
 
     /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
     pub fn connected(self, other: Self, direction: CompassDirection) -> bool {
-        self.connected_to(direction)
-            && other.connected_to(direction.rotate_clockwise().rotate_clockwise())
+        self.connected_to(direction) && other.connected_to(direction.opposite())
     }
 }
 
