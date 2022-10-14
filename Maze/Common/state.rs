@@ -176,6 +176,21 @@ impl State {
         Ok(())
     }
 
+    /// Attempts to move the active player to `destination`.
+    ///
+    /// # Errors
+    ///
+    /// Errors if the active player is not able to reach `destination` from their current position.
+    pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
+        if !self.can_reach_position(destination) {
+            Err("Active player cannot reach the requested tile")?;
+        } else if self.player_info[self.active_player].position == destination {
+            Err("Active player is already on that tile")?;
+        }
+        self.player_info[self.active_player].position = destination;
+        Ok(())
+    }
+
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
@@ -475,6 +490,68 @@ mod StateTests {
 
         assert!(!state.can_reach_position((2, 1)));
         assert!(state.can_reach_position((2, 2)));
+    }
+
+    #[test]
+    fn test_move_player() {
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: Gem::ametrine,
+            color: Color::Yellow,
+        });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (3, 1),
+            goal: Gem::diamond,
+            color: Color::Red,
+        });
+        state.player_info.push(PlayerInfo {
+            home: (5, 1),
+            position: (0, 4),
+            goal: Gem::zircon,
+            color: Color::Blue,
+        });
+        state.active_player = 0;
+
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+        // active player is the Yellow player
+        assert!(state.move_player((2, 1)).is_ok());
+        assert_eq!(state.player_info[state.active_player].position, (2, 1));
+        // try to move the player to the right
+        // should error and not update the player's position
+        assert!(state.move_player((4, 1)).is_err());
+        assert_eq!(state.player_info[state.active_player].position, (2, 1));
+        // try to move the player to its current position
+        // should error and not update the player's position
+        assert!(state.move_player((2, 1)).is_err());
+        assert_eq!(state.player_info[state.active_player].position, (2, 1));
+        // set active player to Red player
+        // Red player can go right to (4, 1)
+        state.next_player();
+        assert!(state.move_player((4, 1)).is_ok());
+        assert_eq!(state.player_info[state.active_player].position, (4, 1));
+        // try and go left to where Yellow player is, should error
+        assert!(state.move_player((2, 1)).is_err());
+        assert_eq!(state.player_info[state.active_player].position, (4, 1));
+        // set active player to the Blue player
+        state.next_player();
+        // tests for moving multiple tiles at a time
+        assert!(state.move_player((1, 2)).is_ok());
+        assert_eq!(state.player_info[state.active_player].position, (1, 2));
+        assert!(state.move_player((1, 3)).is_ok());
+        assert_eq!(state.player_info[state.active_player].position, (1, 3));
     }
 
     #[test]
