@@ -61,6 +61,8 @@ impl PlayerInfo {
 pub struct State {
     board: Board<BOARD_SIZE>,
     player_info: Vec<PlayerInfo>,
+    /// Invariant: active_player must be < player_info.len();
+    /// its unsigned so it will always be <= 0.
     active_player: usize,
     spare: Option<Tile>,
     previous_slide: Option<Slide<BOARD_SIZE>>,
