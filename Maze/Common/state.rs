@@ -184,6 +184,8 @@ impl State {
     pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
         if !self.can_reach_position(destination) {
             Err("Active player cannot reach the requested tile")?;
+        } else if  self.player_info[self.active_player].position == destination {
+            Err("Active player is already on that tile")?;
         }
         self.player_info[self.active_player].position = destination;
         Ok(())
