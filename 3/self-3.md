@@ -17,6 +17,7 @@ Unit tests for shifting + inserting:
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L303-L313
    
 3. move the avatar of the currently active player to a designated spot
+We didn't realize this functionality in our implementation of `State`.
 
 4. check whether the active player's move has returned its avatar home
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L196-L201
