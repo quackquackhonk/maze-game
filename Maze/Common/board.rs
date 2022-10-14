@@ -10,8 +10,8 @@ pub type BoardResult<T> = Result<T, BoardError>;
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug)]
 pub struct Board<const BOARD_SIZE: usize> {
-    grid: Grid<Tile, BOARD_SIZE, BOARD_SIZE>,
-    extra: Tile,
+    pub(crate) grid: Grid<Tile, BOARD_SIZE, BOARD_SIZE>,
+    pub(crate) extra: Tile,
 }
 
 impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {

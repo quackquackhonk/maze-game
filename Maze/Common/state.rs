@@ -70,7 +70,8 @@ impl State {
     ///
     /// Does nothing if we do not currently have a spare tile
     pub fn rotate_spare(&mut self, num_turns: i32) {
-        (0..num_turns).for_each(|_| self.board.rotate_spare());
+        // The modulo operator saves us from doing extraneous turns
+        (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
 
     fn slide_players(&mut self, &slide: &Slide<BOARD_SIZE>) {
@@ -196,7 +197,10 @@ impl State {
 
 #[cfg(test)]
 mod tests {
-    use crate::{gem::Gem, tile::CompassDirection::*};
+    use crate::{
+        gem::Gem,
+        tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*},
+    };
 
     use super::*;
 
@@ -349,19 +353,29 @@ mod tests {
 
     #[test]
     fn test_rotate_spare() {
-        // TODO: Better testing here
         let mut state = State::default();
 
+        assert_eq!(state.board.extra.connector, Crossroads);
+        state.rotate_spare(1);
+        assert_eq!(state.board.extra.connector, Crossroads);
+
         let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
 
+        assert_eq!(state.board.extra.connector, Path(Horizontal));
         state.rotate_spare(1);
+        assert_eq!(state.board.extra.connector, Path(Vertical));
 
         let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
 
+        assert_eq!(state.board.extra.connector, Fork(East));
         state.rotate_spare(1);
+        assert_eq!(state.board.extra.connector, Fork(South));
         state.rotate_spare(3);
+        assert_eq!(state.board.extra.connector, Fork(East));
+        state.rotate_spare(8);
+        assert_eq!(state.board.extra.connector, Fork(East));
     }
 
     #[test]
