@@ -17,7 +17,14 @@ Unit tests for shifting + inserting:
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L303-L313
    
 3. move the avatar of the currently active player to a designated spot:  
-We didn't realize this functionality in our implementation of `State`.
+Since `State` is a `pub` struct, the `State.player_info` field can be updated
+directly to change the position of a player. This combined with the
+`State::can_reach_position` means the `Referee` can check if the currently
+active player can reach a position before actually updating that Player's
+current position.  
+
+Perma-link to the `State::can_reach_position` method:  
+https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L179-L186
 
 4. check whether the active player's move has returned its avatar home
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L196-L201
