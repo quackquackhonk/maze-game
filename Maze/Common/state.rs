@@ -215,7 +215,7 @@ impl State {
 }
 
 #[cfg(test)]
-mod tests {
+mod StateTests {
     use crate::{
         gem::Gem,
         tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*},
