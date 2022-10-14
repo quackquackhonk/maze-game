@@ -3,7 +3,6 @@ use board::BoardResult;
 use board::Slide;
 use gem::Gem;
 use grid::Position;
-use tile::Tile;
 
 /// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
@@ -64,7 +63,6 @@ pub struct State {
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
     active_player: usize,
-    spare: Option<Tile>,
     previous_slide: Option<Slide<BOARD_SIZE>>,
 }
 
@@ -75,9 +73,8 @@ impl State {
     ///
     /// Does nothing if we do not currently have a spare tile
     pub fn rotate_spare(&mut self, num_turns: i32) {
-        if let Some(spare) = &mut self.spare {
-            (0..num_turns).for_each(|_| spare.rotate());
-        }
+        // The modulo operator saves us from doing extraneous turns
+        (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
 
     fn slide_players(&mut self, &slide: &Slide<BOARD_SIZE>) {
@@ -143,28 +140,18 @@ impl State {
         };
     }
 
-    /// Performs a slide action
-    pub fn slide(&mut self, slide: Slide<7>) -> BoardResult<()> {
+    /// Performs a slide and insert action
+    pub fn slide_and_insert(&mut self, slide: Slide<7>) -> BoardResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
                 Err("Attempted to do a slide action that would undo the previous slide")?;
             }
         }
-        let new_spare = self.board.slide(slide)?;
-        self.spare = Some(new_spare);
+        self.board.slide_and_insert(slide);
         self.slide_players(&slide);
         self.previous_slide = Some(slide);
         Ok(())
-    }
-
-    /// Inserts the tile that was slid off
-    ///
-    /// Does nothing if there is not a spare tile
-    pub fn insert(&mut self) {
-        if let Some(spare) = self.spare.take() {
-            self.board.insert(spare);
-        }
     }
 
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
@@ -180,10 +167,7 @@ impl State {
     #[must_use]
     pub fn player_reached_goal(&self) -> bool {
         let player_info = &self.player_info[self.active_player];
-        let gem_at_player = self.board[player_info.position]
-            .as_ref()
-            .expect("all cells are Some(...)")
-            .gems;
+        let gem_at_player = self.board[player_info.position].gems;
         player_info.reached_goal(gem_at_player.0) || player_info.reached_goal(gem_at_player.1)
     }
 
@@ -295,49 +279,34 @@ mod StateTests {
     }
 
     #[test]
-    fn test_slide() {
+    fn test_slide_and_insert() {
         let mut state = State::default();
-        assert!(state.spare.is_none());
 
-        let res = state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
 
-        assert!(state.spare.is_some());
-
-        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
-
         // Sliding without inserting will not do anything
-        let res = state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
         assert!(res.is_err());
-
-        assert!(state.spare.is_some());
-        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
     }
 
     #[test]
     fn test_slide_no_undo() {
         let mut state = State::default();
-        assert!(state.spare.is_none());
 
-        let res = state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
-        assert!(state.spare.is_some());
-        state.insert();
-        assert!(state.spare.is_none());
 
-        let res = state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
         assert!(res.is_err());
-        assert!(state.spare.is_none()); // This shows that this slide does not happen
 
         // Doing it twice should not matter
-        let res = state.slide(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
         assert!(res.is_err());
-        assert!(state.spare.is_none());
 
         // Doing it in another index is fine
-        let res = state.slide(Slide::new(1, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(1, South).unwrap());
         assert!(res.is_ok());
-        assert!(state.spare.is_some());
     }
 
     #[test]
@@ -386,62 +355,30 @@ mod StateTests {
     }
 
     #[test]
-    fn test_insert() {
-        let mut state = State::default();
-        assert!(state.spare.is_none());
-
-        let res = state.slide(Slide::new(0, North).unwrap());
-        assert!(res.is_ok());
-
-        assert!(state.spare.is_some());
-
-        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
-
-        state.insert();
-
-        assert!(state.spare.is_none());
-
-        let res = state.slide(Slide::new(0, North).unwrap());
-        assert!(res.is_ok());
-
-        assert!(state.spare.is_some());
-
-        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
-
-        state.insert();
-
-        assert!(state.spare.is_none());
-    }
-
-    #[test]
     fn test_rotate_spare() {
         let mut state = State::default();
 
-        assert!(state.spare.is_none());
+        assert_eq!(state.board.extra.connector, Crossroads);
+        state.rotate_spare(1);
+        assert_eq!(state.board.extra.connector, Crossroads);
 
-        let res = state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
 
-        assert!(state.spare.is_some());
-
-        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+        assert_eq!(state.board.extra.connector, Path(Horizontal));
         state.rotate_spare(1);
-        assert_eq!(state.spare.as_ref().unwrap().connector, Crossroads);
+        assert_eq!(state.board.extra.connector, Path(Vertical));
 
-        state.insert();
-
-        assert!(state.spare.is_none());
-
-        let res = state.slide(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
         assert!(res.is_ok());
 
-        assert!(state.spare.is_some());
-
-        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+        assert_eq!(state.board.extra.connector, Fork(East));
         state.rotate_spare(1);
-        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Vertical));
+        assert_eq!(state.board.extra.connector, Fork(South));
         state.rotate_spare(3);
-        assert_eq!(state.spare.as_ref().unwrap().connector, Path(Horizontal));
+        assert_eq!(state.board.extra.connector, Fork(East));
+        state.rotate_spare(8);
+        assert_eq!(state.board.extra.connector, Fork(East));
     }
 
     #[test]
@@ -482,8 +419,8 @@ mod StateTests {
         assert!(!state.can_reach_position((0, 3)));
         assert!(!state.can_reach_position((3, 3)));
 
-        state.slide(Slide::new(0, North).unwrap());
-        state.insert();
+        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        assert!(res.is_ok());
 
         // Board after slide and insert:
         //   0123456
@@ -499,8 +436,8 @@ mod StateTests {
         assert!(state.can_reach_position((0, 2)));
         assert!(state.can_reach_position((0, 3)));
 
-        state.slide(Slide::new(1, South).unwrap());
-        state.insert();
+        let res = state.slide_and_insert(Slide::new(1, South).unwrap());
+        assert!(res.is_ok());
 
         // Board after slide and insert:
         //   0123456
@@ -579,7 +516,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: state.board[(2, 3)].as_ref().unwrap().gems.0,
+            goal: state.board[(2, 3)].gems.0,
             color: Color::Green,
         });
         state.active_player = 0;
