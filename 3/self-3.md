@@ -14,7 +14,7 @@ Shifting + inserting:
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L143-L177
 
 Unit tests for shifting + inserting:  
-https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L143-L177
+https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/ba34699765c857059c8e1d05d1902ec0fec81b2e/Maze/Common/state.rs#L303-L313
    
 3. move the avatar of the currently active player to a designated spot
 
