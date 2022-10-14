@@ -113,20 +113,22 @@ enum ValidJson {
 
 impl From<JsonBoard> for Board<7> {
     fn from(val: JsonBoard) -> Self {
-        let zipped_board = val
+        let mut zipped_board = val
             .treasures
             .0
             .into_iter()
             .flat_map(|t| t.0)
             .zip(val.connectors.0.into_iter().flat_map(|c| c.0));
-        let mut grid = [[(); 7]; 7].map(|list| list.map(|_| None));
+        let grid = [[(); 7]; 7].map(|list| {
+            list.map(|_| {
+                let tile_info = zipped_board.next().unwrap();
+                Tile {
+                    connector: tile_info.1.into(),
+                    gems: tile_info.0.into(),
+                }
+            })
+        });
 
-        for (cell, tile_info) in grid.iter_mut().flatten().zip(zipped_board) {
-            *cell = Some(Tile {
-                connector: tile_info.1.into(),
-                gems: tile_info.0.into(),
-            });
-        }
         Board::new(
             grid,
             Tile {
