@@ -141,6 +141,28 @@ impl State {
     }
 
     /// Performs a slide and insert action
+    ///
+    /// # Errors
+    /// Errors if the given slide action would nullify the previous slide action
+    /// ```
+    /// # use common::State;
+    /// # use common::board::Slide;
+    /// # use common::tile::CompassDirection;
+    /// let mut state = State::default();
+    ///
+    /// // This is fine
+    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::North).unwrap());
+    /// assert!(res.is_ok());
+    ///  
+    /// // This is not
+    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::South).unwrap());
+    /// assert!(res.is_err());
+    ///
+    /// // This would however be fine
+    /// let res = state.slide_and_insert(Slide::new(1, CompassDirection::South).unwrap());
+    /// assert!(res.is_ok());
+    ///
+    /// ```
     pub fn slide_and_insert(&mut self, slide: Slide<7>) -> BoardResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {

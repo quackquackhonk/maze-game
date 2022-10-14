@@ -23,7 +23,7 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
     }
 
     /// Slides the given Slide struct command and inserts the spare tile in the location of the
-    /// hole in the board. The dislodged tile becomes the new spare_tile.
+    /// hole in the board. The dislodged tile becomes the new `spare_tile`.
     pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide<BOARD_SIZE>) {
         use CompassDirection::*;
         match direction {
@@ -31,23 +31,23 @@ impl<const BOARD_SIZE: usize> Board<BOARD_SIZE> {
                 let col_num = index;
                 let row_num = BOARD_SIZE - 1;
                 self.grid.rotate_up(col_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)])
+                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
             }
             South => {
                 let col_num = index;
                 self.grid.rotate_down(col_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, 0)])
+                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, 0)]);
             }
             East => {
                 let row_num = index;
                 self.grid.rotate_right(row_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(0, row_num)])
+                std::mem::swap(&mut self.extra, &mut self.grid[(0, row_num)]);
             }
             West => {
                 let row_num = index;
                 let col_num = BOARD_SIZE - 1;
                 self.grid.rotate_left(row_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)])
+                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
             }
         }
     }
