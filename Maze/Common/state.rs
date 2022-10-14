@@ -176,6 +176,19 @@ impl State {
         Ok(())
     }
 
+    /// Attempts to move the active player to `destination`.
+    ///
+    /// # Errors
+    ///
+    /// Errors if the active player is not able to reach `destination` from their current position.
+    pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
+        if !self.can_reach_position(destination) {
+            Err("Active player cannot reach the requested tile")?;
+        }
+        self.player_info[self.active_player].position = destination;
+        Ok(())
+    }
+
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
