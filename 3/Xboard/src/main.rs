@@ -8,6 +8,7 @@ use common::board::Board;
 use common::gem::Gem;
 use common::tile::{ConnectorShape, Tile};
 use serde::{Deserialize, Serialize};
+use unordered_pair::UnorderedPair;
 
 pub type Position = (usize, usize);
 
@@ -72,9 +73,9 @@ impl From<Connector> for ConnectorShape {
 #[derive(Debug, Deserialize)]
 struct Treasure(Gem, Gem);
 
-impl From<Treasure> for (Gem, Gem) {
+impl From<Treasure> for UnorderedPair<Gem> {
     fn from(val: Treasure) -> Self {
-        (val.0, val.1)
+        (val.0, val.1).into()
     }
 }
 
@@ -133,7 +134,7 @@ impl From<JsonBoard> for Board<7> {
             grid,
             Tile {
                 connector: ConnectorShape::Crossroads,
-                gems: (Gem::amethyst, Gem::garnet),
+                gems: (Gem::amethyst, Gem::garnet).into(),
             },
         )
     }

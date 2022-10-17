@@ -9,6 +9,7 @@ dependencies = [
  "common",
  "serde",
  "serde_json",
+ "unordered-pair",
 ]
 
 [[package]]
