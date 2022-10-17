@@ -166,7 +166,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
                         10 => Crossroads,
                         _ => unreachable!("usize % 11 is never > 10"),
                     },
-                    gems: (amethyst, garnet),
+                    gems: (amethyst, garnet).into(),
                 }
             })
         });
@@ -174,7 +174,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
             grid: Grid::from(grid),
             extra: Tile {
                 connector: Crossroads,
-                gems: (amethyst, garnet),
+                gems: (amethyst, garnet).into(),
             },
         }
     }

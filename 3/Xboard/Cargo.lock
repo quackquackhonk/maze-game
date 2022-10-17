@@ -16,6 +16,7 @@ name = "common"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "unordered-pair",
 ]
 
 [[package]]
@@ -95,3 +96,12 @@ name = "unicode-ident"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ceab39d59e4c9499d4e5a8ee0e2735b891bb7308ac83dfb4e80cad195c9f6f3"
+
+[[package]]
+name = "unordered-pair"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d82c34093ea7dd15b4e42ecbc22adf732b466ac6e03abc83a56741fad611b0ec"
+dependencies = [
+ "serde",
+]

@@ -3,6 +3,7 @@ use board::BoardResult;
 use board::Slide;
 use gem::Gem;
 use grid::Position;
+use unordered_pair::UnorderedPair;
 
 /// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
@@ -28,25 +29,30 @@ pub enum Color {
 pub struct PlayerInfo {
     home: Position,
     pub(crate) position: Position,
-    goal: Gem,
+    goal: UnorderedPair<Gem>,
     // Invariant: Every Player should have their own color
     color: Color,
 }
 
 impl PlayerInfo {
     /// Constructs a new `Player` from its fields.
-    pub fn new(home: Position, position: Position, goal: Gem, color: Color) -> Self {
+    pub fn new(
+        home: Position,
+        position: Position,
+        goal: impl Into<UnorderedPair<Gem>>,
+        color: Color,
+    ) -> Self {
         Self {
             home,
             position,
-            goal,
+            goal: goal.into(),
             color,
         }
     }
 
     /// Is the given `Gem` this `Player`'s goal?
-    fn reached_goal(&self, gem: Gem) -> bool {
-        self.goal == gem
+    fn reached_goal(&self, gem: impl Into<UnorderedPair<Gem>>) -> bool {
+        self.goal == gem.into()
     }
 
     /// Has this `Player` reached their home?
@@ -205,7 +211,7 @@ impl State {
     pub fn player_reached_goal(&self) -> bool {
         let player_info = &self.player_info[self.active_player];
         let gem_at_player = self.board[player_info.position].gems;
-        player_info.reached_goal(gem_at_player.0) || player_info.reached_goal(gem_at_player.1)
+        player_info.reached_goal(gem_at_player)
     }
 
     /// Checks if the currently active `Player` has landed on its home tile
@@ -253,7 +259,7 @@ mod StateTests {
         state.add_player(PlayerInfo {
             home: (0, 0),
             position: (0, 0),
-            goal: Gem::ruby,
+            goal: (Gem::ruby, Gem::sphalerite).into(),
             color: Color::Red,
         });
 
@@ -264,7 +270,7 @@ mod StateTests {
         state.add_player(PlayerInfo::new(
             (0, 1),
             (1, 0),
-            Gem::blue_cushion,
+            (Gem::blue_cushion, Gem::garnet),
             Color::Blue,
         ));
 
@@ -274,7 +280,12 @@ mod StateTests {
     #[test]
     fn test_remove_player() {
         let mut state = State::default();
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Green));
+        state.add_player(PlayerInfo::new(
+            (0, 0),
+            (0, 0),
+            (Gem::ruby, Gem::sphalerite),
+            Color::Green,
+        ));
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
@@ -293,19 +304,34 @@ mod StateTests {
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Red));
+        state.add_player(PlayerInfo::new(
+            (0, 0),
+            (0, 0),
+            (Gem::ruby, Gem::diamond),
+            Color::Red,
+        ));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Green));
+        state.add_player(PlayerInfo::new(
+            (0, 0),
+            (0, 0),
+            (Gem::ruby, Gem::magnesite),
+            Color::Green,
+        ));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 1);
         state.next_player();
         assert_eq!(state.active_player, 0);
 
-        state.add_player(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Yellow));
+        state.add_player(PlayerInfo::new(
+            (0, 0),
+            (0, 0),
+            (Gem::ruby, Gem::black_onyx),
+            Color::Yellow,
+        ));
         assert_eq!(state.active_player, 0);
         state.next_player();
         assert_eq!(state.active_player, 1);
@@ -349,13 +375,16 @@ mod StateTests {
     #[test]
     fn test_slide_players() {
         let mut state = State::default();
-        state
-            .player_info
-            .push(PlayerInfo::new((0, 0), (0, 0), Gem::ruby, Color::Red));
+        state.player_info.push(PlayerInfo::new(
+            (0, 0),
+            (0, 0),
+            (Gem::ruby, Gem::carnelian),
+            Color::Red,
+        ));
         state.player_info.push(PlayerInfo::new(
             (0, 0),
             (1, 2),
-            Gem::amethyst,
+            (Gem::amethyst, Gem::raw_citrine),
             Color::Yellow,
         ));
         assert_eq!(state.player_info[0].position, (0, 0));
@@ -424,13 +453,13 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (1, 1),
-            goal: Gem::ametrine,
+            goal: (Gem::ametrine, Gem::purple_cabochon).into(),
             color: Color::Yellow,
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (1, 3),
-            goal: Gem::diamond,
+            goal: (Gem::diamond, Gem::raw_beryl).into(),
             color: Color::Red,
         });
         state.active_player = 0;
@@ -498,19 +527,19 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (1, 1),
-            goal: Gem::ametrine,
+            goal: (Gem::ametrine, Gem::peridot).into(),
             color: Color::Yellow,
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (3, 1),
-            goal: Gem::diamond,
+            goal: (Gem::diamond, Gem::clinohumite).into(),
             color: Color::Red,
         });
         state.player_info.push(PlayerInfo {
             home: (5, 1),
             position: (0, 4),
-            goal: Gem::zircon,
+            goal: (Gem::zircon, Gem::gray_agate).into(),
             color: Color::Blue,
         });
         state.active_player = 0;
@@ -561,7 +590,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: Gem::beryl,
+            goal: (Gem::beryl, Gem::chrysolite).into(),
             color: Color::Blue,
         });
         state.active_player = 0;
@@ -572,7 +601,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (0, 1),
-            goal: Gem::kunzite_oval,
+            goal: (Gem::kunzite_oval, Gem::pink_round).into(),
             color: Color::Red,
         });
         state.active_player = 0;
@@ -583,13 +612,13 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: Gem::beryl,
+            goal: (Gem::beryl, Gem::prasiolite).into(),
             color: Color::Green,
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (3, 1),
-            goal: Gem::diamond,
+            goal: (Gem::diamond, Gem::red_diamond).into(),
             color: Color::Blue,
         });
         state.active_player = 0;
@@ -605,7 +634,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: Gem::beryl,
+            goal: (Gem::beryl, Gem::moss_agate).into(),
             color: Color::Red,
         });
         state.active_player = 0;
@@ -615,7 +644,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: state.board[(2, 3)].gems.0,
+            goal: state.board[(2, 3)].gems.into(),
             color: Color::Green,
         });
         state.active_player = 0;

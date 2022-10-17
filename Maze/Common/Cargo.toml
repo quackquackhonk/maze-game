@@ -11,3 +11,4 @@ path = "state.rs"
 
 [dependencies]
 serde = { version = "1.0.145", features = ["derive"] }
+unordered-pair = { version = "0.2.4", features = ["serde"] }
