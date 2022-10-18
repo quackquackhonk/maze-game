@@ -97,6 +97,20 @@ impl From<(usize, usize)> for Coordinate {
     }
 }
 
+pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
+    if c1.row.0 < c2.row.0 {
+        Ordering::Less
+    } else if c1.row.0 > c2.row.0 {
+        Ordering::Greater
+    } else if c1.column.0 < c2.column.0 {
+        Ordering::Less
+    } else if c1.column.0 > c2.column.0 {
+        Ordering::Greater
+    } else {
+        Ordering::Equal
+    }
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Index(pub usize);
 

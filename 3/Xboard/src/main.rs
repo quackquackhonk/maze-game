@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(dead_code)]
-use std::cmp::Ordering;
 use std::io::{stdin, stdout, Read, Write};
 
 use common::board::Board;
-use common::json::{Coordinate, JsonBoard};
+use common::grid::Position;
+use common::json::{cmp_coordinates, Coordinate, JsonBoard};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -13,22 +13,6 @@ use serde::Deserialize;
 pub enum ValidJson {
     Board(JsonBoard),
     Coordinate(Coordinate),
-}
-
-pub type Position = (usize, usize);
-
-fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
-    if c1.row.0 < c2.row.0 {
-        Ordering::Less
-    } else if c1.row.0 > c2.row.0 {
-        Ordering::Greater
-    } else if c1.column.0 < c2.column.0 {
-        Ordering::Less
-    } else if c1.column.0 > c2.column.0 {
-        Ordering::Greater
-    } else {
-        Ordering::Equal
-    }
 }
 
 /// Read bytes (the JSON) from the reader and Write the results (the result JSON) to the writer
