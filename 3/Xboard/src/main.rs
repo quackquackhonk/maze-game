@@ -8,6 +8,7 @@ use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonBoard};
 use serde::Deserialize;
 
+
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum ValidJson {

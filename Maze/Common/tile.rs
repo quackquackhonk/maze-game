@@ -1,9 +1,11 @@
+use unordered_pair::UnorderedPair;
+
 use crate::gem::Gem;
 /// Represents a single tile on a board
 #[derive(Debug, PartialEq, Eq)]
 pub struct Tile {
     pub connector: ConnectorShape,
-    pub gems: (Gem, Gem),
+    pub gems: UnorderedPair<Gem>,
 }
 
 impl Tile {
@@ -177,7 +179,7 @@ mod TileTests {
         use Gem::*;
         let mut tile = Tile {
             connector: Fork(North),
-            gems: (amethyst, garnet),
+            gems: (amethyst, garnet).into(),
         };
 
         tile.rotate();
@@ -265,23 +267,23 @@ mod TileTests {
         // some tests for the Tile wrapper for connected
         assert!(Tile {
             connector: Crossroads,
-            gems
+            gems: gems.into()
         }
         .connected(
             &Tile {
                 connector: Crossroads,
-                gems
+                gems: gems.into()
             },
             North
         ));
         assert!(Tile {
             connector: Path(Horizontal),
-            gems
+            gems: gems.into()
         }
         .connected(
             &Tile {
                 connector: Path(Horizontal),
-                gems
+                gems: gems.into()
             },
             West
         ));

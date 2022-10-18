@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 
 use serde::{Deserialize, Serialize};
+use unordered_pair::UnorderedPair;
 
 use crate::{
     board::{Board, Slide},
@@ -71,9 +72,9 @@ impl From<Connector> for ConnectorShape {
 #[derive(Debug, Deserialize)]
 pub struct Treasure(Gem, Gem);
 
-impl From<Treasure> for (Gem, Gem) {
+impl From<Treasure> for UnorderedPair<Gem> {
     fn from(val: Treasure) -> Self {
-        (val.0, val.1)
+        (val.0, val.1).into()
     }
 }
 
@@ -139,7 +140,7 @@ impl From<JsonBoard> for Board<7> {
             grid,
             Tile {
                 connector: ConnectorShape::Crossroads,
-                gems: (Gem::amethyst, Gem::garnet),
+                gems: (Gem::amethyst, Gem::garnet).into(),
             },
         )
     }
@@ -198,7 +199,7 @@ impl From<JsonPlayer> for PlayerInfo {
         PlayerInfo::new(
             jp.home.into(),
             jp.current.into(),
-            Gem::amethyst,
+            (Gem::garnet, Gem::amethyst),
             jp.color.into(),
         )
     }
