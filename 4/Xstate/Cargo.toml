@@ -1,12 +1,11 @@
 [package]
-name = "player"
+name = "Xstate"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[lib]
-name = "player"
-path = "lib.rs"
 
 [dependencies]
-common = { path = "../Common/" }
+serde = { version = "1.0.145", features = ["derive"] }
+common = {path = "../../Maze/Common/"}
+serde_json = "1.0.86"

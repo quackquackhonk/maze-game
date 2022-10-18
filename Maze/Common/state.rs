@@ -11,16 +11,26 @@ pub mod board;
 pub mod gem;
 /// Contains types for the `Grid` type and its `Position` type for indexing
 pub mod grid;
+/// Contains all the utilities for serializing and deserializing from JSON
+pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
 #[non_exhaustive]
 #[derive(Debug, PartialEq, Eq)]
 pub enum Color {
+    /// Represents a Hex color value
+    /// contains values for (red, green, blue).
+    Hex(u8, u8, u8),
+    Purple,
+    Orange,
+    Pink,
     Red,
-    Yellow,
-    Green,
     Blue,
+    Green,
+    Yellow,
+    White,
+    Black,
 }
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
@@ -64,21 +74,21 @@ impl PlayerInfo {
 /// Represents the State of a single Maze Game.
 #[derive(Default)]
 pub struct State {
-    board: Board<BOARD_SIZE>,
-    player_info: Vec<PlayerInfo>,
+    pub(crate) board: Board<BOARD_SIZE>,
+    pub(crate) player_info: Vec<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
-    active_player: usize,
-    previous_slide: Option<Slide<BOARD_SIZE>>,
+    pub(crate) active_player: usize,
+    pub(crate) previous_slide: Option<Slide<BOARD_SIZE>>,
 }
 
-const BOARD_SIZE: usize = 7;
+pub const BOARD_SIZE: usize = 7;
 
 impl State {
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
-    pub fn rotate_spare(&mut self, num_turns: i32) {
+    pub fn rotate_spare(&mut self, num_turns: usize) {
         // The modulo operator saves us from doing extraneous turns
         (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
@@ -195,6 +205,13 @@ impl State {
         }
         self.player_info[self.active_player].position = destination;
         Ok(())
+    }
+
+    /// Returns a Vec of positions reachable by the active player
+    pub fn reachable_by_player(&self) -> Vec<Position> {
+        self.board
+            .reachable(self.player_info[self.active_player].position)
+            .expect("Positions in `self.player_info` are never out of bounds")
     }
 
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`

@@ -1,0 +1,43 @@
+
+{
+    "board": {
+        "connectors": [ ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"] ],
+        "treasures": [[["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]]]
+    },
+    "spare": {
+        "tilekey": "│",
+        "1-image": "zircon",
+        "2-image": "garnet"
+    },
+    "plmt": [
+        {
+            "current": {"row#": 0, "column#": 0},
+            "home": {"row#": 1, "column#": 1},
+            "color": "red"
+        },
+        {
+            "current": {"row#": 3, "column#": 0},
+            "home": {"row#": 1, "column#": 3},
+            "color": "blue"
+        }
+    ],
+    "last": [0, "UP"]
+}
+
+1
+
+"DOWN"
+
+90

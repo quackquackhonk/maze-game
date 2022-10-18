@@ -1,38 +1,60 @@
-#![allow(non_camel_case_types)]
-#![allow(non_snake_case)]
-#![allow(dead_code)]
 use std::io::{stdin, stdout, Read, Write};
 
-use common::board::Board;
+use common::board::Slide;
 use common::grid::Position;
-use common::json::{cmp_coordinates, Coordinate, JsonBoard};
+use common::json::{cmp_coordinates, Coordinate, Index, JsonDegree, JsonDirection, JsonState};
+use common::tile::CompassDirection;
+use common::{State, BOARD_SIZE};
 use serde::Deserialize;
-
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum ValidJson {
-    Board(JsonBoard),
-    Coordinate(Coordinate),
+    State(JsonState),
+    Number(usize),
+    Direction(JsonDirection),
+    // Degree(JsonDegree),
 }
 
-/// Read bytes (the JSON) from the reader and Write the results (the result JSON) to the writer
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let board: Board<7> = match test_input.next().ok_or("No valid Board JSON found")? {
-        ValidJson::Board(board) => board.into(),
-        _ => Err("Board was not the first JSON object sent")?,
+    dbg!("got input iterator");
+
+    let mut state: State = match test_input.next().ok_or("No valid Board JSON found")? {
+        ValidJson::State(state) => state.into(),
+        _ => Err("State was not the first JSON object sent")?,
     };
 
-    // Position is the tuple (usize, usize)
-    let from_pos: Position = match test_input.next().ok_or("No valid Coordinate JSON found")? {
-        ValidJson::Coordinate(coord) => coord.into(),
-        _ => Err("Coordinate was not the second JSON object sent")?,
+    let slide: Slide<BOARD_SIZE> = {
+        let index: usize = match test_input.next().ok_or("No valid Index JSON found")? {
+            ValidJson::Number(index) => index,
+            _ => Err("Index was not the second JSON object sent")?,
+        };
+
+        let dir: CompassDirection =
+            match test_input.next().ok_or("No valid Direction JSON found")? {
+                ValidJson::Direction(dir) => dir.into(),
+                _ => Err("Direction was not the third JSON object sent")?,
+            };
+        Slide::new(index, dir)?
     };
 
-    let mut reachable_pos = board
-        .reachable(from_pos)?
+    let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {
+        ValidJson::Number(deg) => JsonDegree(deg).into(),
+        x => Err(format!(
+            "Degree was not the fourth JSON object sent, got {:?}",
+            x
+        ))?,
+    };
+
+    // Perform the move requested by the player
+    state.rotate_spare(num_rotations);
+    state.slide_and_insert(slide)?;
+
+    // Gets vector of reachable positions
+    let mut reachable_pos = state
+        .reachable_by_player()
         .into_iter()
         .map(Position::into)
         .collect::<Vec<Coordinate>>();
@@ -48,21 +70,18 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
 
     Ok(())
 }
-
 /// Turn the STDIN Stream into A ValidJson Stream
 fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
-        .into_iter::<crate::ValidJson>()
+        .into_iter::<ValidJson>()
         .map(|x| x.map_err(|e| e.to_string()))
         .collect::<Result<Vec<_>, String>>()?
         .into_iter())
 }
 
 fn main() -> Result<(), String> {
-    read_json_and_write_json(stdin().lock(), &mut stdout().lock())?;
-
-    Ok(())
+    read_json_and_write_json(stdin().lock(), &mut stdout().lock())
 }
 
 #[cfg(test)]
