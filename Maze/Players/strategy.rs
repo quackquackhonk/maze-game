@@ -1,22 +1,15 @@
+use std::cmp::Ordering;
+
+use common::board::Board;
 use common::{board::Slide, grid::Position, BOARD_SIZE};
 
-pub trait Strategy {
-    fn get_slide(&self) -> Slide<BOARD_SIZE>;
-    fn get_rotations(&self) -> usize;
-    fn get_avatar_destination(&self) -> Position;
-    fn get_pass(&self) -> bool;
+struct PlayerBoardState {
+    board: Board<BOARD_SIZE>,
+    player_positions: Vec<Position>,
+}
 
-    fn get_move(&self) -> PlayerMove {
-        if !self.get_pass() {
-            PlayerMove::Move {
-                slide: self.get_slide(),
-                rotations: self.get_rotations(),
-                destination: self.get_avatar_destination(),
-            }
-        } else {
-            PlayerMove::Pass
-        }
-    }
+pub trait Strategy {
+    fn get_move(&self, board_state: PlayerBoardState) -> PlayerMove;
 }
 
 #[allow(dead_code)]
@@ -27,4 +20,37 @@ pub enum PlayerMove {
         rotations: usize,
         destination: Position,
     },
+}
+
+enum NaiveStrategy {
+    Euclid,
+    Reimann,
+}
+
+impl NaiveStrategy {
+    fn find_destination(&self, board_state: &mut PlayerBoardState) -> Option<Position> {
+        let find_match = match self  {
+            Self::Euclid => |p1: &Position, p2: &Position| -> Ordering {
+                todo!();
+            }
+            Self::Reimann => |p1: &Position, p2: &Position| -> Ordering {
+                todo!();
+            }
+        };
+        todo!();
+    }
+
+    fn find_move_to_reach(&self, destination: Position) -> PlayerMove {
+        todo!();
+    }
+
+}
+
+impl Strategy for NaiveStrategy {
+    fn get_move(&self, board_state: PlayerBoardState) -> PlayerMove {
+        match self.find_destination(&mut board_state) {
+            Some(pos) => self.find_move_to_reach(pos),
+            None => PlayerMove::Pass
+        }
+    }
 }
