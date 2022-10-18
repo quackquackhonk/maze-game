@@ -1,10 +1,12 @@
+use std::cmp::Ordering;
+
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    board::Board,
+    board::{Board, Slide},
     gem::Gem,
-    tile::{ConnectorShape, Tile},
-    Color, BOARD_SIZE,
+    tile::{CompassDirection, ConnectorShape, Tile},
+    Color, PlayerInfo, State, BOARD_SIZE,
 };
 
 #[derive(Debug, Deserialize)]
@@ -65,6 +67,7 @@ impl From<Connector> for ConnectorShape {
         }
     }
 }
+
 #[derive(Debug, Deserialize)]
 pub struct Treasure(Gem, Gem);
 
@@ -159,6 +162,18 @@ pub struct JsonState {
     last: JsonAction,
 }
 
+impl From<JsonState> for State {
+    fn from(jstate: JsonState) -> Self {
+        let player_info: Vec<PlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
+        State {
+            board: jstate.board.into(),
+            player_info,
+            active_player: 0,
+            previous_slide: jstate.last.into(),
+        }
+    }
+}
+
 /// JSON representation for a single `Tile` in the `Board`
 #[derive(Debug, Deserialize)]
 pub struct JsonTile {
@@ -178,26 +193,37 @@ pub struct JsonPlayer {
     color: JsonColor,
 }
 
-#[derive(Debug, Deserialize)]
-pub enum JsonColor {
-    /// Represents a Hex color value
-    /// contains values for (red, green, blue).
-    Hex(u8, u8, u8),
-    purple,
-    orange,
-    pink,
-    red,
-    blue,
-    green,
-    yellow,
-    white,
-    black,
+impl From<JsonPlayer> for PlayerInfo {
+    fn from(jp: JsonPlayer) -> Self {
+        PlayerInfo::new(
+            jp.home.into(),
+            jp.current.into(),
+            Gem::amethyst,
+            jp.color.into(),
+        )
+    }
 }
+
+/// Type alias for representing color strings in the
+/// Json testing input
+type JsonColor = String;
 
 /// Conversion from `JsonColor`s into `common::Color`s
 impl From<JsonColor> for Color {
-    fn from(_: JsonColor) -> Self {
-        todo!()
+    fn from(jc: JsonColor) -> Self {
+        match jc.as_str() {
+            "purple" => Color::Hex(128, 0, 128),
+            "orange" => Color::Hex(255, 165, 0),
+            "pink" => Color::Hex(255, 192, 203),
+            "red" => Color::Hex(255, 0, 0),
+            "green" => Color::Hex(0, 255, 0),
+            "blue" => Color::Hex(0, 0, 255),
+            "yellow" => Color::Hex(255, 255, 0),
+            "white" => Color::Hex(255, 255, 255),
+            "black" => Color::Hex(128, 0, 128),
+            // need to do a regex match for color codes
+            _ => todo!(),
+        }
     }
 }
 
@@ -205,6 +231,16 @@ impl From<JsonColor> for Color {
 /// performed; `None` indicates that no sliding action has been performed yet.
 #[derive(Debug, Deserialize)]
 pub struct JsonAction(Option<(Index, JsonDirection)>);
+
+impl From<JsonAction> for Option<Slide<BOARD_SIZE>> {
+    fn from(ja: JsonAction) -> Self {
+        let jslide = ja.0?;
+        Some(Slide {
+            index: jslide.0 .0,
+            direction: jslide.1.into(),
+        })
+    }
+}
 
 /// Describes the direction in which a player may slide the tiles of a row
 /// or column. For example, "LEFT" means that the spare tile is inserted into the
@@ -218,16 +254,26 @@ pub enum JsonDirection {
     DOWN,
 }
 
-/// Describes the four possible counter-clockwise rotations around
-/// the center of a tile. Here is an example:
+impl From<JsonDirection> for CompassDirection {
+    fn from(jd: JsonDirection) -> Self {
+        use CompassDirection::*;
+        use JsonDirection::*;
+        match jd {
+            UP => North,
+            DOWN => South,
+            LEFT => West,
+            RIGHT => East,
+        }
+    }
+}
+
+/// Describes the possible counter-clockwise rotations around
+/// the center of a tile.
 #[derive(Debug, Deserialize)]
-pub enum JsonDegree {
-    #[serde(rename(deserialize = "0"))]
-    Zero,
-    #[serde(rename(deserialize = "90"))]
-    Ninety,
-    #[serde(rename(deserialize = "180"))]
-    OneEighty,
-    #[serde(rename(deserialize = "270"))]
-    TwoSeventy,
+pub struct JsonDegree(pub usize);
+
+impl From<JsonDegree> for usize {
+    fn from(d: JsonDegree) -> Self {
+        d.0 / 90
+    }
 }
