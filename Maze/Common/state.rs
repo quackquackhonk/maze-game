@@ -18,10 +18,18 @@ pub mod tile;
 #[non_exhaustive]
 #[derive(Debug, PartialEq, Eq)]
 pub enum Color {
+    /// Represents a Hex color value
+    /// contains values for (red, green, blue).
+    Hex(u8, u8, u8),
+    Purple,
+    Orange,
+    Pink,
     Red,
-    Yellow,
-    Green,
     Blue,
+    Green,
+    Yellow,
+    White,
+    Black,
 }
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
