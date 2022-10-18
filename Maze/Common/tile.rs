@@ -2,7 +2,7 @@ use unordered_pair::UnorderedPair;
 
 use crate::gem::Gem;
 /// Represents a single tile on a board
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Tile {
     pub connector: ConnectorShape,
     pub gems: UnorderedPair<Gem>,
