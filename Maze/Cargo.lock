@@ -12,6 +12,9 @@ dependencies = [
 [[package]]
 name = "player"
 version = "0.1.0"
+dependencies = [
+ "common",
+]
 
 [[package]]
 name = "proc-macro2"
