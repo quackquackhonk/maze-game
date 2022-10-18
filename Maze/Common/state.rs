@@ -68,12 +68,12 @@ impl PlayerInfo {
 /// Represents the State of a single Maze Game.
 #[derive(Default)]
 pub struct State {
-    board: Board<BOARD_SIZE>,
-    player_info: Vec<PlayerInfo>,
+    pub(crate) board: Board<BOARD_SIZE>,
+    pub(crate) player_info: Vec<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
-    active_player: usize,
-    previous_slide: Option<Slide<BOARD_SIZE>>,
+    pub(crate) active_player: usize,
+    pub(crate) previous_slide: Option<Slide<BOARD_SIZE>>,
 }
 
 pub const BOARD_SIZE: usize = 7;
@@ -82,7 +82,7 @@ impl State {
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
-    pub fn rotate_spare(&mut self, num_turns: i32) {
+    pub fn rotate_spare(&mut self, num_turns: usize) {
         // The modulo operator saves us from doing extraneous turns
         (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
