@@ -10,6 +10,8 @@ pub mod board;
 pub mod gem;
 /// Contains types for the `Grid` type and its `Position` type for indexing
 pub mod grid;
+/// Contains all the utilities for serializing and deserializing from JSON
+pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
