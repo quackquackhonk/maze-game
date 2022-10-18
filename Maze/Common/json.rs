@@ -4,6 +4,7 @@ use crate::{
     board::Board,
     gem::Gem,
     tile::{ConnectorShape, Tile},
+    Color, BOARD_SIZE,
 };
 
 #[derive(Debug, Deserialize)]
@@ -13,10 +14,10 @@ pub struct JsonBoard {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct Matrix<T>(Vec<Row<T>>);
+pub struct Matrix<T>([Row<T>; BOARD_SIZE]);
 
 #[derive(Debug, Deserialize)]
-pub struct Row<T>(Vec<T>);
+pub struct Row<T>([T; BOARD_SIZE]);
 
 #[derive(Debug, Deserialize)]
 pub enum Connector {
@@ -73,7 +74,7 @@ impl From<Treasure> for (Gem, Gem) {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Coordinate {
     #[serde(rename(deserialize = "row#", serialize = "row#"))]
     pub row: Index,
@@ -125,4 +126,94 @@ impl From<JsonBoard> for Board<7> {
             },
         )
     }
+}
+
+/// Describes the current state of the board; the spare tile; the
+/// players and in what order they take turns (left to right); and the last
+/// sliding action performed (if any). The first item in "plmt" is the
+/// current player.
+///
+/// # Constraints
+/// - `plmt` is a non-empty array
+/// - no two `JsonPlayer`s will have the same `JsonColor`
+#[derive(Debug, Deserialize)]
+pub struct JsonState {
+    board: JsonBoard,
+    spare: JsonTile,
+    /// the first player in `plmt` is the currently active player  
+    plmt: Vec<JsonPlayer>,
+    last: JsonAction,
+}
+
+/// JSON representation for a single `Tile` in the `Board`
+#[derive(Debug, Deserialize)]
+pub struct JsonTile {
+    tilekey: Connector,
+    #[serde(rename(deserialize = "1-image"))]
+    image1: Gem,
+    #[serde(rename(deserialize = "2-image"))]
+    image2: Gem,
+}
+
+/// Describes a player's current location, the
+/// location of its home, and the color of its avatar.
+#[derive(Debug, Deserialize)]
+pub struct JsonPlayer {
+    current: Coordinate,
+    home: Coordinate,
+    color: JsonColor,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum JsonColor {
+    /// Represents a Hex color value
+    /// contains values for (red, green, blue).
+    Hex(u8, u8, u8),
+    purple,
+    orange,
+    pink,
+    red,
+    blue,
+    green,
+    yellow,
+    white,
+    black,
+}
+
+/// Conversion from `JsonColor`s into `common::Color`s
+impl From<JsonColor> for Color {
+    fn from(_: JsonColor) -> Self {
+        todo!()
+    }
+}
+
+/// Specifies the last sliding action that an actor
+/// performed; `None` indicates that no sliding action has been performed yet.
+#[derive(Debug, Deserialize)]
+pub struct JsonAction(Option<(Index, JsonDirection)>);
+
+/// Describes the direction in which a player may slide the tiles of a row
+/// or column. For example, "LEFT" means that the spare tile is inserted into the
+/// right side, such that the pieces move to the left, and the
+/// left-most tile of the row drops out.
+#[derive(Debug, Deserialize)]
+pub enum JsonDirection {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+}
+
+/// Describes the four possible counter-clockwise rotations around
+/// the center of a tile. Here is an example:
+#[derive(Debug, Deserialize)]
+pub enum JsonDegree {
+    #[serde(rename(deserialize = "0"))]
+    Zero,
+    #[serde(rename(deserialize = "90"))]
+    Ninety,
+    #[serde(rename(deserialize = "180"))]
+    OneEighty,
+    #[serde(rename(deserialize = "270"))]
+    TwoSeventy,
 }
