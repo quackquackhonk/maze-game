@@ -66,7 +66,7 @@ pub struct State {
     previous_slide: Option<Slide<BOARD_SIZE>>,
 }
 
-const BOARD_SIZE: usize = 7;
+pub const BOARD_SIZE: usize = 7;
 
 impl State {
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
