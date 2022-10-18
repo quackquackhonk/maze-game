@@ -201,6 +201,13 @@ impl State {
         Ok(())
     }
 
+    /// Returns a Vec of positions reachable by the active player
+    pub fn reachable_by_player(&self) -> Vec<Position> {
+        self.board
+            .reachable(self.player_info[self.active_player].position)
+            .expect("Positions in `self.player_info` are never out of bounds")
+    }
+
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
