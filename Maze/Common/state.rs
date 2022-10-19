@@ -661,7 +661,7 @@ mod StateTests {
         state.player_info.push(PlayerInfo {
             home: (1, 1),
             position: (2, 3),
-            goal: state.board[(2, 3)].gems.into(),
+            goal: state.board[(2, 3)].gems,
             color: Color::Green,
         });
         state.active_player = 0;

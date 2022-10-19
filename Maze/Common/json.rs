@@ -157,6 +157,7 @@ impl From<JsonBoard> for Board<7> {
 #[derive(Debug, Deserialize)]
 pub struct JsonState {
     board: JsonBoard,
+    #[allow(dead_code)]
     spare: JsonTile,
     /// the first player in `plmt` is the currently active player  
     plmt: Vec<JsonPlayer>,
@@ -177,6 +178,7 @@ impl From<JsonState> for State {
 
 /// JSON representation for a single `Tile` in the `Board`
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct JsonTile {
     tilekey: Connector,
     #[serde(rename(deserialize = "1-image"))]
