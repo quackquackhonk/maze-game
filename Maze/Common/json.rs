@@ -202,7 +202,9 @@ impl From<JsonPlayer> for PlayerInfo {
             jp.home.into(),
             jp.current.into(),
             (Gem::garnet, Gem::amethyst),
-            jp.color.into(),
+            jp.color
+                .try_into()
+                .expect("Json Color values are always valid"),
         )
     }
 }
@@ -212,21 +214,66 @@ impl From<JsonPlayer> for PlayerInfo {
 type JsonColor = String;
 
 /// Conversion from `JsonColor`s into `common::Color`s
-impl From<JsonColor> for Color {
-    fn from(jc: JsonColor) -> Self {
-        match jc.as_str() {
-            "purple" => Color::Hex(128, 0, 128),
-            "orange" => Color::Hex(255, 165, 0),
-            "pink" => Color::Hex(255, 192, 203),
-            "red" => Color::Hex(255, 0, 0),
-            "green" => Color::Hex(0, 255, 0),
-            "blue" => Color::Hex(0, 0, 255),
-            "yellow" => Color::Hex(255, 255, 0),
-            "white" => Color::Hex(255, 255, 255),
-            "black" => Color::Hex(128, 0, 128),
+impl TryFrom<JsonColor> for Color {
+    type Error = String;
+
+    fn try_from(value: JsonColor) -> Result<Self, Self::Error> {
+        let hexcode_re =
+            regex::Regex::new(r"^[A-F|\d][A-F|\d][A-F|\d][A-F|\d][A-F|\d][A-F|\d]$").unwrap();
+        match value.as_str() {
+            "purple" => Ok(Color {
+                name: value,
+                code: (128, 0, 128),
+            }),
+            "orange" => Ok(Color {
+                name: value,
+                code: (255, 165, 0),
+            }),
+            "pink" => Ok(Color {
+                name: value,
+                code: (255, 192, 203),
+            }),
+            "red" => Ok(Color {
+                name: value,
+                code: (255, 0, 0),
+            }),
+            "green" => Ok(Color {
+                name: value,
+                code: (0, 255, 0),
+            }),
+            "blue" => Ok(Color {
+                name: value,
+                code: (0, 0, 255),
+            }),
+            "yellow" => Ok(Color {
+                name: value,
+                code: (255, 255, 0),
+            }),
+            "white" => Ok(Color {
+                name: value,
+                code: (255, 255, 255),
+            }),
+            "black" => Ok(Color {
+                name: value,
+                code: (128, 0, 128),
+            }),
+            hexcode if hexcode_re.is_match(hexcode) => {
+                // parse the hexcode
+                let rgb = hex::decode(hexcode).expect("Hexcodes will be valid from regex match");
+                Ok(Color {
+                    name: hexcode.to_string(),
+                    code: (rgb[0], rgb[1], rgb[2]),
+                })
+            }
             // need to do a regex match for color codes
-            _ => todo!(),
+            _ => Err(format!("Invalid Color code {}", value)),
         }
+    }
+}
+
+impl From<Color> for JsonColor {
+    fn from(color: Color) -> Self {
+        color.name
     }
 }
 
