@@ -1,0 +1,53 @@
+
+{
+    "board": {
+        "connectors": [ ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"],
+                        ["│", "─", "┐", "└", "┌", "┘", "┬"] ],
+        "treasures": [[["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]],
+                      [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]]]
+    },
+    "spare": {
+        "tilekey": "│",
+        "1-image": "zircon",
+        "2-image": "garnet"
+    },
+    "plmt": [
+        {
+            "current": {"row#": 0, "column#": 0},
+            "home": {"row#": 1, "column#": 1},
+            "color": "purple"
+        },
+        {
+            "current": {"row#": 3, "column#": 0},
+            "home": {"row#": 3, "column#": 3},
+            "color": "orange"
+        }
+        {
+            "current": {"row#": 3, "column#": 0},
+            "home": {"row#": 5, "column#": 3},
+            "color": "black"
+        }
+        {
+            "current": {"row#": 3, "column#": 0},
+            "home": {"row#": 5, "column#": 5},
+            "color": "ABCDEF"
+        }
+    ],
+    "last": [0, "UP"]
+}
+
+1
+
+"DOWN"
+
+90

@@ -16,21 +16,71 @@ pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
-#[non_exhaustive]
 #[derive(Debug, PartialEq, Eq)]
-pub enum Color {
+pub struct Color {
+    /// The original name of the color.
+    /// Is either the name of a color, like "red", or the Hex Color code for that color
+    name: String,
     /// Represents a Hex color value
     /// contains values for (red, green, blue).
-    Hex(u8, u8, u8),
+    code: (u8, u8, u8),
+}
+
+/// Convenience Enum for making named colors
+pub enum ColorName {
     Purple,
     Orange,
     Pink,
     Red,
-    Blue,
     Green,
+    Blue,
     Yellow,
     White,
     Black,
+}
+
+/// Converts from a `ColorName` enum to the corresponding `Color`
+impl From<ColorName> for Color {
+    fn from(cn: ColorName) -> Self {
+        match cn {
+            ColorName::Purple => Color {
+                name: "purple".to_string(),
+                code: (128, 0, 128),
+            },
+            ColorName::Orange => Color {
+                name: "orange".to_string(),
+                code: (255, 165, 0),
+            },
+            ColorName::Pink => Color {
+                name: "pink".to_string(),
+                code: (255, 192, 203),
+            },
+            ColorName::Red => Color {
+                name: "red".to_string(),
+                code: (255, 0, 0),
+            },
+            ColorName::Green => Color {
+                name: "green".to_string(),
+                code: (0, 255, 0),
+            },
+            ColorName::Blue => Color {
+                name: "blue".to_string(),
+                code: (0, 0, 255),
+            },
+            ColorName::Yellow => Color {
+                name: "yellow".to_string(),
+                code: (255, 255, 0),
+            },
+            ColorName::White => Color {
+                name: "white".to_string(),
+                code: (255, 255, 255),
+            },
+            ColorName::Black => Color {
+                name: "black".to_string(),
+                code: (128, 0, 128),
+            },
+        }
+    }
 }
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
@@ -277,7 +327,7 @@ mod StateTests {
             home: (0, 0),
             position: (0, 0),
             goal: (Gem::ruby, Gem::sphalerite).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
 
         assert!(!state.player_info.is_empty());
@@ -288,7 +338,7 @@ mod StateTests {
             (0, 1),
             (1, 0),
             (Gem::blue_cushion, Gem::garnet),
-            Color::Blue,
+            ColorName::Blue.into(),
         ));
 
         assert_eq!(state.player_info.len(), 2);
@@ -301,7 +351,7 @@ mod StateTests {
             (0, 0),
             (0, 0),
             (Gem::ruby, Gem::sphalerite),
-            Color::Green,
+            ColorName::Green.into(),
         ));
 
         assert_eq!(state.player_info.len(), 1);
@@ -325,7 +375,7 @@ mod StateTests {
             (0, 0),
             (0, 0),
             (Gem::ruby, Gem::diamond),
-            Color::Red,
+            ColorName::Red.into(),
         ));
         assert_eq!(state.active_player, 0);
         state.next_player();
@@ -335,7 +385,7 @@ mod StateTests {
             (0, 0),
             (0, 0),
             (Gem::ruby, Gem::magnesite),
-            Color::Green,
+            ColorName::Green.into(),
         ));
         assert_eq!(state.active_player, 0);
         state.next_player();
@@ -347,7 +397,7 @@ mod StateTests {
             (0, 0),
             (0, 0),
             (Gem::ruby, Gem::black_onyx),
-            Color::Yellow,
+            ColorName::Yellow.into(),
         ));
         assert_eq!(state.active_player, 0);
         state.next_player();
@@ -396,13 +446,13 @@ mod StateTests {
             (0, 0),
             (0, 0),
             (Gem::ruby, Gem::carnelian),
-            Color::Red,
+            ColorName::Red.into(),
         ));
         state.player_info.push(PlayerInfo::new(
             (0, 0),
             (1, 2),
             (Gem::amethyst, Gem::raw_citrine),
-            Color::Yellow,
+            ColorName::Yellow.into(),
         ));
         assert_eq!(state.player_info[0].position, (0, 0));
         assert_eq!(state.player_info[1].position, (1, 2));
@@ -471,13 +521,13 @@ mod StateTests {
             home: (1, 1),
             position: (1, 1),
             goal: (Gem::ametrine, Gem::purple_cabochon).into(),
-            color: Color::Yellow,
+            color: ColorName::Yellow.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (Gem::diamond, Gem::raw_beryl).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
         state.active_player = 0;
 
@@ -545,19 +595,19 @@ mod StateTests {
             home: (1, 1),
             position: (1, 1),
             goal: (Gem::ametrine, Gem::peridot).into(),
-            color: Color::Yellow,
+            color: ColorName::Yellow.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (Gem::diamond, Gem::clinohumite).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (5, 1),
             position: (0, 4),
             goal: (Gem::zircon, Gem::gray_agate).into(),
-            color: Color::Blue,
+            color: ColorName::Blue.into(),
         });
         state.active_player = 0;
 
@@ -608,7 +658,7 @@ mod StateTests {
             home: (1, 1),
             position: (2, 3),
             goal: (Gem::beryl, Gem::chrysolite).into(),
-            color: Color::Blue,
+            color: ColorName::Blue.into(),
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -619,7 +669,7 @@ mod StateTests {
             home: (1, 1),
             position: (0, 1),
             goal: (Gem::kunzite_oval, Gem::pink_round).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -630,13 +680,13 @@ mod StateTests {
             home: (1, 1),
             position: (2, 3),
             goal: (Gem::beryl, Gem::prasiolite).into(),
-            color: Color::Green,
+            color: ColorName::Green.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (Gem::diamond, Gem::red_diamond).into(),
-            color: Color::Blue,
+            color: ColorName::Blue.into(),
         });
         state.active_player = 0;
         assert!(!state.player_reached_home());
@@ -652,7 +702,7 @@ mod StateTests {
             home: (1, 1),
             position: (2, 3),
             goal: (Gem::beryl, Gem::moss_agate).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
         state.active_player = 0;
         assert!(!state.player_reached_goal());
@@ -662,7 +712,7 @@ mod StateTests {
             home: (1, 1),
             position: (2, 3),
             goal: state.board[(2, 3)].gems,
-            color: Color::Green,
+            color: ColorName::Green.into(),
         });
         state.active_player = 0;
         assert!(state.player_reached_goal());
