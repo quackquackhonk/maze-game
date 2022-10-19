@@ -8,7 +8,7 @@ type BoardError = String;
 pub type BoardResult<T> = Result<T, BoardError>;
 
 /// Describes one board for the game of Maze`.`com
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Board<const BOARD_SIZE: usize> {
     pub(crate) grid: Grid<Tile, BOARD_SIZE, BOARD_SIZE>,
     pub(crate) extra: Tile,

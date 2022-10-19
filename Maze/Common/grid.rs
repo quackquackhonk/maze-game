@@ -11,6 +11,15 @@ pub type Position = (usize, usize);
 #[derive(Debug)]
 pub struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
 
+impl<T, const N: usize, const M: usize> Clone for Grid<T, N, M>
+where
+    T: Clone,
+{
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
 impl<T, const N: usize, const M: usize> Grid<T, N, M> {
     /// Rotates the row at `index` left one time
     pub fn rotate_left(&mut self, index: usize) {
