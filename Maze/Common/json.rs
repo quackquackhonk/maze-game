@@ -7,7 +7,7 @@ use crate::{
     board::{Board, Slide},
     gem::Gem,
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, PlayerInfo, State, BOARD_SIZE,
+    Color, ColorName, PlayerInfo, State, BOARD_SIZE,
 };
 
 #[derive(Debug, Deserialize)]
@@ -218,45 +218,19 @@ impl TryFrom<JsonColor> for Color {
     type Error = String;
 
     fn try_from(value: JsonColor) -> Result<Self, Self::Error> {
+        use ColorName::*;
         let hexcode_re =
             regex::Regex::new(r"^[A-F|\d][A-F|\d][A-F|\d][A-F|\d][A-F|\d][A-F|\d]$").unwrap();
         match value.as_str() {
-            "purple" => Ok(Color {
-                name: value,
-                code: (128, 0, 128),
-            }),
-            "orange" => Ok(Color {
-                name: value,
-                code: (255, 165, 0),
-            }),
-            "pink" => Ok(Color {
-                name: value,
-                code: (255, 192, 203),
-            }),
-            "red" => Ok(Color {
-                name: value,
-                code: (255, 0, 0),
-            }),
-            "green" => Ok(Color {
-                name: value,
-                code: (0, 255, 0),
-            }),
-            "blue" => Ok(Color {
-                name: value,
-                code: (0, 0, 255),
-            }),
-            "yellow" => Ok(Color {
-                name: value,
-                code: (255, 255, 0),
-            }),
-            "white" => Ok(Color {
-                name: value,
-                code: (255, 255, 255),
-            }),
-            "black" => Ok(Color {
-                name: value,
-                code: (128, 0, 128),
-            }),
+            "purple" => Ok(Purple.into()),
+            "orange" => Ok(Orange.into()),
+            "pink" => Ok(Pink.into()),
+            "red" => Ok(Red.into()),
+            "green" => Ok(Green.into()),
+            "blue" => Ok(Blue.into()),
+            "yellow" => Ok(Yellow.into()),
+            "white" => Ok(White.into()),
+            "black" => Ok(Black.into()),
             hexcode if hexcode_re.is_match(hexcode) => {
                 // parse the hexcode
                 let rgb = hex::decode(hexcode).expect("Hexcodes will be valid from regex match");
