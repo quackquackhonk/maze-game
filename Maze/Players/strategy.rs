@@ -42,7 +42,6 @@ pub struct PlayerMove {
 #[derive(Debug)]
 /// Implements a strategy that after failing to find a move directly to the goal tile, checks
 /// every other board position as a location to move. The order in which it checks every location
-/// depends on the `NativeStrategy` type.
 /// depends on the `NaiveStrategy` type.
 pub enum NaiveStrategy {
     /// This variant sorts the posssible alternative goals in order of smallest to largest
@@ -112,6 +111,8 @@ impl NaiveStrategy {
         possible_goals
     }
 
+    /// After making `PlayerMove` and moving to `destination`, can a player reach
+    /// `to_reach` on the current `board_state`?
     fn reachable_after_move(
         board_state: &PlayerBoardState,
         PlayerMove {
@@ -119,16 +120,16 @@ impl NaiveStrategy {
             rotations,
             destination,
         }: PlayerMove,
-        start: Position,
+        to_reach: Position,
     ) -> bool {
         let mut board_state = board_state.clone();
         (0..rotations).for_each(|_| board_state.board.rotate_spare());
         board_state.board.slide_and_insert(slide);
         board_state
             .board
-            .reachable(start)
+            .reachable(destination)
             .expect("Start must be in bounds")
-            .contains(&destination)
+            .contains(&to_reach)
     }
 
     fn find_move_to_reach(
@@ -182,5 +183,52 @@ impl Strategy for NaiveStrategy {
     ) -> PlayerAction {
         self.find_move_to_reach(&board_state, start, goal_tile)
             .or_else(|| self.find_move_to_reach_alt_goal(&board_state, start, goal_tile))
+    }
+}
+#[cfg(test)]
+mod StrategyTests {
+    use super::*;
+    use CompassDirection::*;
+    #[test]
+    fn test_reachable_after_move() {
+        let pbs = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(0, 0), (2, 2)],
+        };
+        let euclid = NaiveStrategy::Euclid;
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+        assert_eq!(pbs.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
+        // slides the top row right, moves player to (1, 1)
+        let player_move = PlayerMove {
+            slide: Slide::new(0, East).unwrap(),
+            rotations: 0,
+            destination: (1, 1),
+        };
+        // new board state is:
+        //   0123456
+        // 0 ┼─│└┌┐┘
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┴
+        assert!(NaiveStrategy::reachable_after_move(
+            &pbs,
+            player_move,
+            (2, 2)
+        ));
     }
 }
