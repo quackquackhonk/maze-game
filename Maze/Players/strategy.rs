@@ -185,17 +185,47 @@ impl Strategy for NaiveStrategy {
             .or_else(|| self.find_move_to_reach_alt_goal(&board_state, start, goal_tile))
     }
 }
+
 #[cfg(test)]
 mod StrategyTests {
     use super::*;
     use CompassDirection::*;
+
+    #[test]
+    fn test_get_move_euclid() {
+        let pbs = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(1, 1), (2, 2)],
+        };
+        let euclid = NaiveStrategy::Euclid;
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // can Euclid go from (1, 1) to (1, 3)?
+        let euclid_move = euclid.get_move(pbs, (1, 1), (1, 3));
+        assert!(euclid_move.is_some());
+        let euclid_move = euclid_move.unwrap();
+        // slides row 2 east, inserts crossroads, goes to (1, 3)
+        assert_eq!(euclid_move.destination, (1, 3));
+        assert_eq!(euclid_move.rotations, 0);
+        assert_eq!(euclid_move.slide, Slide::new(1, East).unwrap());
+    }
+
     #[test]
     fn test_reachable_after_move() {
         let pbs = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
         };
-        let euclid = NaiveStrategy::Euclid;
         // Default Board<7> is:
         //   0123456
         // 0 ─│└┌┐┘┴
@@ -212,9 +242,9 @@ mod StrategyTests {
         let player_move = PlayerMove {
             slide: Slide::new(0, East).unwrap(),
             rotations: 0,
-            destination: (1, 1),
+            destination: (2, 2),
         };
-        // new board state is:
+        // board state after `player_move` is:
         //   0123456
         // 0 ┼─│└┌┐┘
         // 1 ├┬┤┼─│└
@@ -225,10 +255,24 @@ mod StrategyTests {
         // 6 ┤┼─│└┌┐
         //
         // extra = ┴
+
+        // can the player go from (0, 0) to (2, 2) after making the move?
         assert!(NaiveStrategy::reachable_after_move(
             &pbs,
             player_move,
-            (2, 2)
+            (0, 0)
+        ));
+
+        let player_move = PlayerMove {
+            slide: Slide::new(3, South).unwrap(),
+            rotations: 0,
+            destination: (6, 6),
+        };
+        // Can you go from (0, 0) to (6, 6) after sliding the rightmost column South?
+        assert!(!NaiveStrategy::reachable_after_move(
+            &pbs,
+            player_move,
+            (0, 0)
         ));
     }
 }
