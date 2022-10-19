@@ -10,5 +10,7 @@ name = "common"
 path = "state.rs"
 
 [dependencies]
+hex = { version = "0.4.3", features = ["serde"] }
+regex = "1.6.0"
 serde = { version = "1.0.145", features = ["derive"] }
 unordered-pair = { version = "0.2.4", features = ["serde"] }
