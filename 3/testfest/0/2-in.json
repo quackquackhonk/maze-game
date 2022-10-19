@@ -1,0 +1,80 @@
+{
+  "connectors" : [["─", "┼", "┤", "└", "┌", "└", "┬"],
+                  ["│", "─", "└", "│", "┌", "┘", "├"],
+                  ["┬", "┼", "│", "└", "│", "┐", "┬"],
+                  ["└", "┘", "┐", "┼", "─", "├", "┬"],
+                  ["─", "┌", "├", "└", "─", "┘", "│"],
+                  ["┌", "┼", "┼", "│", "─", "┐", "┬"],
+                  ["│", "┼", "┐", "└", "┼", "┘", "┴"]],
+  "treasures": [
+      [
+          ["green-beryl", "peridot"],
+          ["yellow-beryl-oval", "beryl"],
+          ["orange-radiant", "azurite"],
+          ["citrine", "rose-quartz"],
+          ["pink-opal", "red-spinel-square-emerald-cut"],
+          ["iolite-emerald-cut", "white-square"],
+          ["tourmaline", "kunzite"]
+      ],
+      [
+          ["purple-cabochon", "goldstone"],
+          ["star-cabochon", "color-change-oval"],
+          ["black-onyx", "stilbite"],
+          ["diamond", "green-beryl-antique"],
+          ["sphalerite", "green-aventurine"],
+          ["carnelian", "peridot"],
+          ["white-square", "chrome-diopside"]
+      ],
+      [
+          ["purple-oval", "jasper"],
+          ["pink-spinel-cushion", "prehnite"],
+          ["aquamarine", "kunzite-oval"],
+          ["citrine", "alexandrite-pear-shape"],
+          ["pink-opal", "kunzite-oval"],
+          ["purple-spinel-trillion", "super-seven"],
+          ["blue-pear-shape", "jasper"]
+      ],
+      [
+          ["black-spinel-cushion", "aventurine"],
+          ["color-change-oval", "moss-agate"],
+          ["emerald", "clinohumite"],
+          ["emerald", "rose-quartz"],
+          ["iolite-emerald-cut", "green-beryl"],
+          ["green-aventurine", "chrysoberyl-cushion"],
+          ["garnet", "blue-ceylon-sapphire"]
+      ],
+      [
+          ["cordierite", "yellow-baguette"],
+          ["beryl", "rose-quartz"],
+          ["almandine-garnet", "super-seven"],
+          ["alexandrite-pear-shape", "peridot"],
+          ["labradorite", "blue-pear-shape"],
+          ["sphalerite", "yellow-beryl-oval"],
+          ["tigers-eye", "green-princess-cut"]
+      ],
+      [
+          ["white-square", "spinel"],
+          ["apricot-square-radiant", "prehnite"],
+          ["moonstone", "tanzanite-trillion"],
+          ["alexandrite-pear-shape", "kunzite"],
+          ["hematite", "yellow-baguette"],
+          ["peridot", "iolite-emerald-cut"],
+          ["green-beryl-antique", "gray-agate"]
+      ],
+      [
+          ["citrine-checkerboard", "apricot-square-radiant"],
+          ["australian-marquise", "clinohumite"],
+          ["stilbite", "prasiolite"],
+          ["green-aventurine", "kunzite"],
+          ["red-diamond", "amethyst"],
+          ["citrine", "blue-ceylon-sapphire"],
+          ["rose-quartz", "magnesite"]
+      ]
+  ]
+}
+
+{
+  "row#": 3,
+  "column#": 2
+}
+

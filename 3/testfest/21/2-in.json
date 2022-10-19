@@ -1,0 +1,22 @@
+{"connectors":
+[["┬", "└", "│", "│", "│", "┬", "┬"],
+ ["┴", "┴", "┤", "│", "│", "┴", "┴"],
+ ["─", "─", "┘", "│", "└", "─", "─"],
+ ["─", "─", "─", "┼", "─", "─", "─"],
+ ["─", "─", "┐", "│", "┌", "─", "─"],
+ ["┬", "┬", "│", "│", "│", "┬", "┬"],
+ ["┴", "┴", "│", "│", "│", "┴", "┴"]],
+ "treasures":
+[[["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]],
+ [["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"],["beryl", "ruby"]]]}
+ 
+
+ {
+    "row#": 0,
+    "column#": 2
+ }

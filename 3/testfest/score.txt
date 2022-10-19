@@ -1,0 +1,12 @@
+Delivery
+5/5 pts: Deliverable state.pp exists
+5/5 pts: Deliverable player.md exists
+5/5 pts: Deliverable xboard exists with the right permissions
+5/5 pts: Delivery of test files
+Functionality
+0/15 pts: Passed 0 out of 3 tests (see MF.txt)
+15/15 pts: 3 valid tests (see audit.txt)
+15/15 bonus pts (other teams failing your tests)
+Inspection
+73/85 pts: See inspection.md
+Total: 123/135 pts

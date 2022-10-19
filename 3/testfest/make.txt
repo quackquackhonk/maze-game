@@ -1,0 +1,38 @@
+cargo build --release --manifest-path Xboard/Cargo.toml
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded itoa v1.0.4
+  Downloaded serde_json v1.0.86
+  Downloaded proc-macro2 v1.0.46
+  Downloaded syn v1.0.102
+  Downloaded unicode-ident v1.0.5
+   Compiling proc-macro2 v1.0.46
+   Compiling quote v1.0.21
+   Compiling unicode-ident v1.0.5
+   Compiling syn v1.0.102
+   Compiling serde_derive v1.0.145
+   Compiling serde v1.0.145
+   Compiling serde_json v1.0.86
+   Compiling ryu v1.0.11
+   Compiling itoa v1.0.4
+   Compiling common v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/Maze/Common)
+   Compiling Xboard v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/3/Xboard)
+error[E0277]: the trait bound `Grid<Tile, {_: usize}, {_: usize}>: From<[[std::option::Option<Tile>; 7]; 7]>` is not satisfied
+   --> src/main.rs:131:13
+    |
+130 |         Board::new(
+    |         ---------- required by a bound introduced by this call
+131 |             grid,
+    |             ^^^^ the trait `From<[[std::option::Option<Tile>; 7]; 7]>` is not implemented for `Grid<Tile, {_: usize}, {_: usize}>`
+    |
+    = help: the trait `From<[[T; N]; M]>` is implemented for `Grid<T, N, M>`
+    = note: required because of the requirements on the impl of `Into<Grid<Tile, {_: usize}, {_: usize}>>` for `[[std::option::Option<Tile>; 7]; 7]`
+note: required by a bound in `Board::<BOARD_SIZE>::new`
+   --> /course/cs4500f22/ta/github/tankalav-lsoto/Maze/Common/board.rs:18:27
+    |
+18  |     pub fn new(grid: impl Into<Grid<Tile, BOARD_SIZE, BOARD_SIZE>>, extra: Tile) -> Self {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `Board::<BOARD_SIZE>::new`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `Xboard` due to previous error
+make: *** [build] Error 101

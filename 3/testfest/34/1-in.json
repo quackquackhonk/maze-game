@@ -1,0 +1,78 @@
+{
+  "connectors": [
+    ["┌", "─", "─", "─", "─", "─", "┐"],
+    ["│", "┌", "─", "─", "─", "┐", "│"],
+    ["│", "│", "┌", "─", "┐", "│", "│"],
+    ["│", "│", "│", "┼", "│", "│", "│"],
+    ["│", "│", "└", "─", "┘", "│", "│"],
+    ["│", "└", "─", "─", "─", "┘", "│"],
+    ["└", "─", "─", "─", "─", "─", "┘"]
+  ],
+  "treasures": [
+    [
+      ["clinohumite", "jasper"],
+      ["blue-ceylon-sapphire", "red-spinel-square-emerald-cut"],
+      ["hackmanite", "pink-opal"],
+      ["clinohumite", "sphalerite"],
+      ["diamond", "kunzite-oval"],
+      ["bulls-eye", "jaspilite"],
+      ["hackmanite", "raw-beryl"]
+    ],
+    [
+      ["color-change-oval", "yellow-baguette"],
+      ["kunzite-oval", "raw-citrine"],
+      ["yellow-baguette", "yellow-beryl-oval"],
+      ["australian-marquise", "blue-spinel-heart"],
+      ["ammolite", "kunzite"],
+      ["kunzite", "raw-citrine"],
+      ["moss-agate", "tourmaline-laser-cut"]
+    ],
+    [
+      ["green-beryl", "pink-opal"],
+      ["blue-pear-shape", "kunzite-oval"],
+      ["chrysolite", "green-beryl"],
+      ["citrine", "labradorite"],
+      ["australian-marquise", "peridot"],
+      ["beryl", "grandidierite"],
+      ["dumortierite", "purple-square-cushion"]
+    ],
+    [
+      ["green-aventurine", "magnesite"],
+      ["green-beryl-antique", "purple-cabochon"],
+      ["purple-spinel-trillion", "tanzanite-trillion"],
+      ["grandidierite", "jasper"],
+      ["padparadscha-sapphire", "pink-spinel-cushion"],
+      ["aquamarine", "golden-diamond-cut"],
+      ["aventurine", "orange-radiant"]
+    ],
+    [
+      ["chrysolite", "labradorite"],
+      ["kunzite", "yellow-beryl-oval"],
+      ["ammolite", "citrine"],
+      ["blue-cushion", "red-diamond"],
+      ["emerald", "prehnite"],
+      ["dumortierite", "red-diamond"],
+      ["kunzite", "purple-oval"]
+    ],
+    [
+      ["blue-ceylon-sapphire", "fancy-spinel-marquise"],
+      ["blue-ceylon-sapphire", "citrine-checkerboard"],
+      ["azurite", "black-obsidian"],
+      ["ammolite", "yellow-jasper"],
+      ["padparadscha-sapphire", "raw-citrine"],
+      ["goldstone", "kunzite"],
+      ["blue-cushion", "mexican-opal"]
+    ],
+    [
+      ["blue-cushion", "super-seven"],
+      ["apricot-square-radiant", "rock-quartz"],
+      ["chrysoberyl-cushion", "garnet"],
+      ["morganite-oval", "unakite"],
+      ["blue-pear-shape", "kunzite"],
+      ["orange-radiant", "unakite"],
+      ["apatite", "pink-round"]
+    ]
+  ]
+}
+{"column#": 3, "row#": 3}
+
