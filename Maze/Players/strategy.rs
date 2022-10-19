@@ -43,6 +43,7 @@ pub struct PlayerMove {
 /// Implements a strategy that after failing to find a move directly to the goal tile, checks
 /// every other board position as a location to move. The order in which it checks every location
 /// depends on the `NativeStrategy` type.
+/// depends on the `NaiveStrategy` type.
 pub enum NaiveStrategy {
     /// This variant sorts the posssible alternative goals in order of smallest to largest
     /// euclidian distance. It breaks any ties by picking the first one in row-column order.
@@ -83,6 +84,11 @@ impl NaiveStrategy {
             .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
     }
 
+    /// Returns a `Vec<Position>` containing alternative goals to try and reach
+    /// sorted by how desireable they are according to their algorithm.
+    /// - `NaiveStrategy::Euclid` sorts alt goals by ascending `euclidian_distance` to the
+    /// `goal_tile`
+    /// - `NaiveStrategy::Reimann` sorts alt goals in row-column order.
     fn get_alt_goals(&self, goal_tile: Position) -> Vec<Position> {
         //! alternative_goal_order is a Comparator<Position> function.
         #[allow(clippy::type_complexity)]
