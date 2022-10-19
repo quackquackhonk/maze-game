@@ -66,7 +66,7 @@ fn row_col_order(p1: &Position, p2: &Position) -> Ordering {
 }
 
 fn euclidian_distance(p1: &Position, p2: &Position) -> f32 {
-    f32::sqrt((p1.0 as f32 - p2.0 as f32).powi(2) + (p1.1 as f32 - p1.1 as f32).powi(2))
+    f32::sqrt((p1.0 as f32 - p2.0 as f32).powi(2) + (p1.1 as f32 - p2.1 as f32).powi(2))
 }
 
 impl NaiveStrategy {
@@ -78,21 +78,20 @@ impl NaiveStrategy {
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
-        let alternative_goal_order: Box<dyn Fn(&(usize, usize), &(usize, usize)) -> Ordering> =
-            match self {
-                Self::Euclid => Box::new(|p1: &Position, p2: &Position| -> Ordering {
-                    let euclid1 = euclidian_distance(p1, &goal_tile);
-                    let euclid2 = euclidian_distance(p2, &goal_tile);
-                    if euclid1 < euclid2 {
-                        Ordering::Less
-                    } else if euclid1 > euclid2 {
-                        Ordering::Greater
-                    } else {
-                        row_col_order(p1, p2)
-                    }
-                }),
-                Self::Reimann => Box::new(row_col_order),
-            };
+        let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
+            Self::Euclid => Box::new(|p1: &Position, p2: &Position| -> Ordering {
+                let euclid1 = euclidian_distance(p1, &goal_tile);
+                let euclid2 = euclidian_distance(p2, &goal_tile);
+                if euclid1 < euclid2 {
+                    Ordering::Less
+                } else if euclid1 > euclid2 {
+                    Ordering::Greater
+                } else {
+                    row_col_order(p1, p2)
+                }
+            }),
+            Self::Reimann => Box::new(row_col_order),
+        };
 
         let mut possible_goals: Vec<Position> = (0..BOARD_SIZE).zip(0..BOARD_SIZE).collect();
         possible_goals.sort_by(alternative_goal_order);
@@ -178,6 +177,6 @@ impl Strategy for NaiveStrategy {
         goal_tile: Position,
     ) -> PlayerAction {
         self.find_move_to_reach(&board_state, start, goal_tile)
-            .or(self.find_move_to_reach_alt_goal(&board_state, start, goal_tile))
+            .or_else(|| self.find_move_to_reach_alt_goal(&board_state, start, goal_tile))
     }
 }
