@@ -111,8 +111,8 @@ impl NaiveStrategy {
         possible_goals
     }
 
-    /// After making `PlayerMove` and moving to `destination`, can a player reach
-    /// `to_reach` on the current `board_state`?
+    /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
+    /// `rotations` times, can the player go from `start` to `destination`
     fn reachable_after_move(
         board_state: &PlayerBoardState,
         PlayerMove {
@@ -120,16 +120,16 @@ impl NaiveStrategy {
             rotations,
             destination,
         }: PlayerMove,
-        to_reach: Position,
+        start: Position,
     ) -> bool {
         let mut board_state = board_state.clone();
         (0..rotations).for_each(|_| board_state.board.rotate_spare());
         board_state.board.slide_and_insert(slide);
         board_state
             .board
-            .reachable(destination)
+            .reachable(start)
             .expect("Start must be in bounds")
-            .contains(&to_reach)
+            .contains(&destination)
     }
 
     fn find_move_to_reach(
