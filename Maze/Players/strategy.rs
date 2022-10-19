@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use common::board::Board;
 use common::{board::Slide, grid::Position, BOARD_SIZE};
 
-struct PlayerBoardState {
+pub struct PlayerBoardState {
     board: Board<BOARD_SIZE>,
     player_positions: Vec<Position>,
 }
