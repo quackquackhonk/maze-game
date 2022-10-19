@@ -32,7 +32,7 @@ pub type PlayerAction = Option<PlayerMove>;
 ///
 /// # Warning
 /// This type does not self-validate because it has no knowledge of the board it will be played on.
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct PlayerMove {
     pub slide: Slide<BOARD_SIZE>,
     pub rotations: usize,
@@ -78,6 +78,14 @@ impl NaiveStrategy {
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
+        self.get_alt_goals(goal_tile)
+            .into_iter()
+            .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
+    }
+
+    fn get_alt_goals(&self, goal_tile: Position) -> Vec<Position> {
+        //! alternative_goal_order is a Comparator<Position> function.
+        #[allow(clippy::type_complexity)]
         let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
             Self::Euclid => Box::new(|p1: &Position, p2: &Position| -> Ordering {
                 let euclid1 = euclidian_distance(p1, &goal_tile);
@@ -96,16 +104,16 @@ impl NaiveStrategy {
         let mut possible_goals: Vec<Position> = (0..BOARD_SIZE).zip(0..BOARD_SIZE).collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
-            .into_iter()
-            .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
     }
 
     fn reachable_after_move(
         board_state: &PlayerBoardState,
-        slide: Slide<BOARD_SIZE>,
-        rotations: usize,
+        PlayerMove {
+            slide,
+            rotations,
+            destination,
+        }: PlayerMove,
         start: Position,
-        destination: Position,
     ) -> bool {
         let mut board_state = board_state.clone();
         (0..rotations).for_each(|_| board_state.board.rotate_spare());
@@ -128,18 +136,13 @@ impl NaiveStrategy {
                 for rotations in 0..4 {
                     let slide = Slide::new(row, direction)
                         .expect("The range 0 to BOARD_SIZE/2 is always in bounds");
-                    if NaiveStrategy::reachable_after_move(
-                        board_state,
+                    let player_move = PlayerMove {
                         slide,
                         rotations,
-                        start,
                         destination,
-                    ) {
-                        return Some(PlayerMove {
-                            slide,
-                            rotations,
-                            destination,
-                        });
+                    };
+                    if NaiveStrategy::reachable_after_move(board_state, player_move, start) {
+                        return Some(player_move);
                     }
                 }
             }
@@ -149,18 +152,13 @@ impl NaiveStrategy {
                 for rotations in 0..4 {
                     let slide = Slide::new(col, direction)
                         .expect("The range 0 to BOARD_SIZE/2 is always in bounds");
-                    if NaiveStrategy::reachable_after_move(
-                        board_state,
+                    let player_move = PlayerMove {
                         slide,
                         rotations,
-                        start,
                         destination,
-                    ) {
-                        return Some(PlayerMove {
-                            slide,
-                            rotations,
-                            destination,
-                        });
+                    };
+                    if NaiveStrategy::reachable_after_move(board_state, player_move, start) {
+                        return Some(player_move);
                     }
                 }
             }
