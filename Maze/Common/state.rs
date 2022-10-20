@@ -595,19 +595,19 @@ mod StateTests {
             home: (1, 1),
             position: (1, 1),
             goal: (Gem::ametrine, Gem::purple_cabochon).into(),
-            color: Color::Green,
+            color: ColorName::Green.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (Gem::diamond, Gem::raw_beryl).into(),
-            color: Color::Red,
+            color: ColorName::Red.into(),
         });
         state.player_info.push(PlayerInfo {
             home: (5, 1),
             position: (3, 6),
             goal: (Gem::hackmanite, Gem::iolite_emerald_cut).into(),
-            color: Color::Purple,
+            color: ColorName::Purple.into(),
         });
         state.active_player = 0;
         // Default Board<7> is:
