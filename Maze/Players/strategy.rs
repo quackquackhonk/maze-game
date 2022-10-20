@@ -226,6 +226,70 @@ mod StrategyTests {
     }
 
     #[test]
+    fn test_find_move_to_reach_alt_goal() {
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(0, 2), (2, 2)],
+        };
+        let euclid = NaiveStrategy::Euclid;
+        let reimann = NaiveStrategy::Reimann;
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // if Euclid is on (0, 2) and its goal is (0, 0), it will slide the leftmost column North
+        // and then move to (0, 1)
+        let euc_move = euclid.find_move_to_reach_alt_goal(&board_state, (0, 2), (0, 0));
+        assert_eq!(
+            euc_move,
+            Some(PlayerMove {
+                slide: Slide::new(0, North).unwrap(),
+                rotations: 0,
+                destination: (0, 1)
+            })
+        );
+        // With the same conditions, reimann is going to make the same move
+        let rei_move = reimann.find_move_to_reach_alt_goal(&board_state, (0, 2), (0, 0));
+        assert_eq!(
+            rei_move,
+            Some(PlayerMove {
+                slide: Slide::new(0, North).unwrap(),
+                rotations: 0,
+                destination: (0, 1)
+            })
+        );
+        // what does Euclid do if on (3, 3) and its goal is (3, 2)?
+        // Euclid will Slide the 2nd row West, and then move up to (3, 2) to avoid staying in place
+        let euc_move = euclid.find_move_to_reach_alt_goal(&board_state, (3, 3), (2, 3));
+        assert_eq!(
+            euc_move,
+            Some(PlayerMove {
+                slide: Slide::new(1, West).unwrap(),
+                rotations: 0,
+                destination: (3, 2)
+            })
+        );
+        // Reimann will make the same slide but will move all the way up to (3, 0)
+        let rei_move = reimann.find_move_to_reach_alt_goal(&board_state, (3, 3), (2, 3));
+        assert_eq!(
+            rei_move,
+            Some(PlayerMove {
+                slide: Slide::new(1, West).unwrap(),
+                rotations: 0,
+                destination: (3, 0)
+            })
+        );
+    }
+
+    #[test]
     fn test_get_alt_goals_reimann() {
         let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
         assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
