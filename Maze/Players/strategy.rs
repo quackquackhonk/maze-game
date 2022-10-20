@@ -228,13 +228,25 @@ mod StrategyTests {
     #[test]
     fn test_get_alt_goals_reimann() {
         let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
-        dbg!(&reimann_alt_goals);
         assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
         assert_eq!(reimann_alt_goals[0], (0, 0));
         assert_eq!(reimann_alt_goals[1], (1, 0));
         assert_eq!(reimann_alt_goals[2], (2, 0));
         assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 2], (5, 6));
         assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 1], (6, 6));
+    }
+
+    #[test]
+    fn test_get_alt_goals_euclid() {
+        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1));
+        assert_eq!(euclid_alt_goals.len(), BOARD_SIZE.pow(2));
+        assert_eq!(euclid_alt_goals[0], (1, 1));
+        assert_eq!(euclid_alt_goals[1], (1, 0));
+        assert_eq!(euclid_alt_goals[2], (0, 1));
+        assert_eq!(euclid_alt_goals[3], (2, 1));
+        assert_eq!(euclid_alt_goals[4], (1, 2));
+        assert_eq!(euclid_alt_goals[BOARD_SIZE.pow(2) - 2], (5, 6));
+        assert_eq!(euclid_alt_goals[BOARD_SIZE.pow(2) - 1], (6, 6));
     }
 
     #[test]
