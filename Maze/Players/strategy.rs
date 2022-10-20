@@ -198,7 +198,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_move_euclid() {
-        let pbs = PlayerBoardState {
+        let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(1, 1), (2, 2)],
         };
@@ -216,7 +216,7 @@ mod StrategyTests {
         // extra = ┼
 
         // can Euclid go from (1, 1) to (1, 3)?
-        let euclid_move = euclid.get_move(pbs, (1, 1), (1, 3));
+        let euclid_move = euclid.get_move(board_state, (1, 1), (1, 3));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
         // slides row 2 east, inserts crossroads, goes to (1, 3)
@@ -250,8 +250,29 @@ mod StrategyTests {
     }
 
     #[test]
+    fn test_find_move_to_reach() {
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(4, 1), (2, 2)],
+        };
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+        let euclid = NaiveStrategy::Euclid;
+        assert_eq!(euclid.find_move_to_reach(&board_state, start, destination));
+    }
+
+    #[test]
     fn test_reachable_after_move() {
-        let pbs = PlayerBoardState {
+        let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
         };
@@ -266,7 +287,7 @@ mod StrategyTests {
         // 6 ┤┼─│└┌┐
         //
         // extra = ┼
-        assert_eq!(pbs.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
+        assert_eq!(board_state.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
         // slides the top row right, moves player to (1, 1)
         let player_move = PlayerMove {
             slide: Slide::new(0, East).unwrap(),
@@ -287,7 +308,7 @@ mod StrategyTests {
 
         // can the player go from (0, 0) to (2, 2) after making the move?
         assert!(NaiveStrategy::reachable_after_move(
-            &pbs,
+            &board_state,
             player_move,
             (0, 0)
         ));
@@ -299,10 +320,14 @@ mod StrategyTests {
             destination: (1, 5),
         };
         // starting at (2, 6) you can go to (1, 5)
-        assert!(pbs.board.reachable((2, 6)).unwrap().contains(&(1, 5)));
+        assert!(board_state
+            .board
+            .reachable((2, 6))
+            .unwrap()
+            .contains(&(1, 5)));
         // If you start at (2, 6) can you go to (1, 5) after making move? no
         assert!(!NaiveStrategy::reachable_after_move(
-            &pbs,
+            &board_state,
             player_move,
             (2, 6)
         ));
