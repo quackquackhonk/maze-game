@@ -267,6 +267,76 @@ mod StrategyTests {
     }
 
     #[test]
+    fn test_get_move_reimann() {
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(1, 1), (2, 2)],
+        };
+        let reimann = NaiveStrategy::Reimann;
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // what will Reimann do to go from (1, 1) -> (1, 3)
+        let reimann_move = reimann.get_move(board_state, (1, 1), (1, 3));
+        assert!(reimann_move.is_some());
+        let reimann_move = reimann_move.unwrap();
+        // slides row 2 east, inserts crossroads, goes to (1, 3)
+        assert_eq!(
+            reimann_move,
+            PlayerMove {
+                slide: Slide::new(1, East).unwrap(),
+                rotations: 0,
+                destination: (1, 3),
+            }
+        );
+
+        // what will Reimann do to go from (0, 0) to (2, 3)?
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(0, 0), (2, 2)],
+        };
+        let reimann_move = reimann.get_move(board_state, (0, 0), (2, 3));
+        assert!(reimann_move.is_some());
+        let reimann_move = reimann_move.unwrap();
+        // slides the top row east, moves to (1, 0)
+        assert_eq!(
+            reimann_move,
+            PlayerMove {
+                slide: Slide::new(0, East).unwrap(),
+                rotations: 0,
+                destination: (1, 0),
+            }
+        );
+
+        // what will Reimann do to go from (6, 4) to (2, 0)?
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(6, 4), (2, 2)],
+        };
+        let reimann_move = reimann.get_move(board_state, (6, 4), (2, 0));
+        assert!(reimann_move.is_some());
+        let reimann_move = reimann_move.unwrap();
+        // slides row 4 east to wrap around to (0, 4) then move to (0, 2)
+        assert_eq!(
+            reimann_move,
+            PlayerMove {
+                slide: Slide::new(2, East).unwrap(),
+                rotations: 0,
+                destination: (0, 2),
+            }
+        );
+    }
+
+    #[test]
     fn test_find_move_to_reach_alt_goal() {
         let board_state = PlayerBoardState {
             board: Board::default(),
