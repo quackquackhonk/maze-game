@@ -229,7 +229,7 @@ impl State {
     /// assert!(res.is_ok());
     ///
     /// ```
-    pub fn slide_and_insert(&mut self, slide: Slide<7>) -> BoardResult<()> {
+    pub fn slide_and_insert(&mut self, slide: Slide<BOARD_SIZE>) -> BoardResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
