@@ -33,7 +33,7 @@ pub type PlayerAction = Option<PlayerMove>;
 ///
 /// # Warning
 /// This type does not self-validate because it has no knowledge of the board it will be played on.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PlayerMove {
     pub slide: Slide<BOARD_SIZE>,
     pub rotations: usize,

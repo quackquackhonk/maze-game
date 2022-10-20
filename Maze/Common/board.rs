@@ -181,7 +181,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
 }
 
 /// Describes a slide motion
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Slide<const BOARD_SIZE: usize> {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
