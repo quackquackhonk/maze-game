@@ -423,6 +423,19 @@ mod StrategyTests {
     }
 
     #[test]
+    fn test_euclidian_distance() {
+        let p_0_0 = (0, 0);
+        let p_0_3 = (0, 3);
+        let p_3_3 = (3, 3);
+        let p_6_3 = (6, 3);
+        let p_6_6 = (6, 6);
+        assert_eq!(euclidian_distance(&p_0_3, &p_0_3), 0.0);
+        assert_eq!(euclidian_distance(&p_0_3, &p_3_3), 3.0);
+        assert_eq!(euclidian_distance(&p_0_3, &p_6_3), 6.0);
+        assert_eq!(euclidian_distance(&p_0_0, &p_6_6), f32::sqrt(72.0));
+    }
+
+    #[test]
     fn test_get_alt_goals_reimann() {
         let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
         assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
