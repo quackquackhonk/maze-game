@@ -263,16 +263,19 @@ mod StrategyTests {
             (0, 0)
         ));
 
+        // slide the bottom row left
         let player_move = PlayerMove {
-            slide: Slide::new(3, South).unwrap(),
+            slide: Slide::new(3, West).unwrap(),
             rotations: 0,
-            destination: (6, 6),
+            destination: (1, 5),
         };
-        // Can you go from (0, 0) to (6, 6) after sliding the rightmost column South?
+        // starting at (2, 6) you can go to (1, 5)
+        assert!(pbs.board.reachable((2, 6)).unwrap().contains(&(1, 5)));
+        // If you start at (2, 6) can you go to (1, 5) after making move? no
         assert!(!NaiveStrategy::reachable_after_move(
             &pbs,
             player_move,
-            (0, 0)
+            (2, 6)
         ));
     }
 }
