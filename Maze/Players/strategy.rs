@@ -143,7 +143,7 @@ impl NaiveStrategy {
         start: Position,
         destination: Position,
     ) -> PlayerAction {
-        for row in 0..(BOARD_SIZE / 2) {
+        for row in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     let slide = Slide::new(row, direction)
@@ -159,7 +159,7 @@ impl NaiveStrategy {
                 }
             }
         }
-        for col in 0..(BOARD_SIZE / 2) {
+        for col in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
                     let slide = Slide::new(col, direction)
