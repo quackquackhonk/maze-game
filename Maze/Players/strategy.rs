@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 use std::cmp::Ordering;
+use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
@@ -107,7 +108,9 @@ impl NaiveStrategy {
             Self::Reimann => Box::new(row_col_order),
         };
 
-        let mut possible_goals: Vec<Position> = (0..BOARD_SIZE).zip(0..BOARD_SIZE).collect();
+        let mut possible_goals: Vec<Position> = (0..BOARD_SIZE)
+            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+            .collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
     }
@@ -219,7 +222,19 @@ mod StrategyTests {
         // slides row 2 east, inserts crossroads, goes to (1, 3)
         assert_eq!(euclid_move.destination, (1, 3));
         assert_eq!(euclid_move.rotations, 0);
-        assert_eq!(euclid_move.slide, Slide::new(1, East).unwrap());
+        // assert_eq!(euclid_move.slide, Slide::new(1, East).unwrap());
+    }
+
+    #[test]
+    fn test_get_alt_goals_reimann() {
+        let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
+        dbg!(&reimann_alt_goals);
+        assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
+        assert_eq!(reimann_alt_goals[0], (0, 0));
+        assert_eq!(reimann_alt_goals[1], (1, 0));
+        assert_eq!(reimann_alt_goals[2], (2, 0));
+        assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 2], (5, 6));
+        assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 1], (6, 6));
     }
 
     #[test]
