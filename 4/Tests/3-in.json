@@ -30,14 +30,14 @@
         {
             "current": {"row#": 3, "column#": 0},
             "home": {"row#": 1, "column#": 3},
-            "color": "blue"
+            "color": "FFFFFF"
         }
     ],
     "last": null
 }
 
+2
+
+"LEFT"
+
 0
-
-"DOWN"
-
-90

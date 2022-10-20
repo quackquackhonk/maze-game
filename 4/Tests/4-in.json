@@ -33,11 +33,11 @@
             "color": "blue"
         }
     ],
-    "last": null
+    "last": [0, "UP"]
 }
 
 0
 
-"DOWN"
+"RIGHT"
 
-90
+280

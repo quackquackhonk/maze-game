@@ -17,27 +17,27 @@
                       [["amethyst", "garnet"], ["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"],["amethyst", "garnet"]]]
     },
     "spare": {
-        "tilekey": "│",
+        "2-image": "garnet",
         "1-image": "zircon",
-        "2-image": "garnet"
+        "tilekey": "│"
     },
     "plmt": [
         {
-            "current": {"row#": 0, "column#": 0},
-            "home": {"row#": 1, "column#": 1},
-            "color": "red"
+            "color": "red",
+            "current": {"column#": 0, "row#": 0},
+            "home": {"row#": 1, "column#": 1}
         },
         {
+            "home": {"column#": 3, "row#": 1},
             "current": {"row#": 3, "column#": 0},
-            "home": {"row#": 1, "column#": 3},
             "color": "blue"
         }
     ],
-    "last": null
+    "last": [0, "UP"]
 }
 
-0
+4
 
-"DOWN"
+"UP"
 
-90
+270

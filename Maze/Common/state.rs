@@ -122,7 +122,7 @@ impl PlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct State {
     pub(crate) board: Board<BOARD_SIZE>,
     pub(crate) player_info: Vec<PlayerInfo>,

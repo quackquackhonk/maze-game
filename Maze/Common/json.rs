@@ -118,7 +118,7 @@ pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Index(pub usize);
 
-impl From<JsonBoard> for Board<7> {
+impl From<JsonBoard> for Board<BOARD_SIZE> {
     fn from(val: JsonBoard) -> Self {
         let mut zipped_board = val
             .treasures
@@ -146,6 +146,28 @@ impl From<JsonBoard> for Board<7> {
     }
 }
 
+impl From<(JsonBoard, JsonTile)> for Board<BOARD_SIZE> {
+    fn from((jboard, jtile): (JsonBoard, JsonTile)) -> Self {
+        let mut zipped_board = jboard
+            .treasures
+            .0
+            .into_iter()
+            .flat_map(|t| t.0)
+            .zip(jboard.connectors.0.into_iter().flat_map(|c| c.0));
+        let grid = [[(); 7]; 7].map(|list| {
+            list.map(|_| {
+                let tile_info = zipped_board.next().unwrap();
+                Tile {
+                    connector: tile_info.1.into(),
+                    gems: tile_info.0.into(),
+                }
+            })
+        });
+
+        Board::new(grid, jtile.into())
+    }
+}
+
 /// Describes the current state of the board; the spare tile; the
 /// players and in what order they take turns (left to right); and the last
 /// sliding action performed (if any). The first item in "plmt" is the
@@ -168,7 +190,7 @@ impl From<JsonState> for State {
     fn from(jstate: JsonState) -> Self {
         let player_info: Vec<PlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
         State {
-            board: jstate.board.into(),
+            board: (jstate.board, jstate.spare).into(),
             player_info,
             active_player: 0,
             previous_slide: jstate.last.into(),
@@ -185,6 +207,15 @@ pub struct JsonTile {
     image1: Gem,
     #[serde(rename(deserialize = "2-image"))]
     image2: Gem,
+}
+
+impl From<JsonTile> for Tile {
+    fn from(jtile: JsonTile) -> Self {
+        Tile {
+            connector: jtile.tilekey.into(),
+            gems: (jtile.image1, jtile.image2).into(),
+        }
+    }
 }
 
 /// Describes a player's current location, the

@@ -31,12 +31,12 @@
             "current": {"row#": 3, "column#": 0},
             "home": {"row#": 3, "column#": 3},
             "color": "orange"
-        }
+        },
         {
             "current": {"row#": 3, "column#": 0},
             "home": {"row#": 5, "column#": 3},
             "color": "black"
-        }
+        },
         {
             "current": {"row#": 3, "column#": 0},
             "home": {"row#": 5, "column#": 5},
@@ -46,7 +46,7 @@
     "last": [0, "UP"]
 }
 
-1
+6
 
 "DOWN"
 

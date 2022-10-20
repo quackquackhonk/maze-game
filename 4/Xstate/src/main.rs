@@ -2,7 +2,7 @@ use std::io::{stdin, stdout, Read, Write};
 
 use common::board::Slide;
 use common::grid::Position;
-use common::json::{cmp_coordinates, Coordinate, Index, JsonDegree, JsonDirection, JsonState};
+use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
 use common::tile::CompassDirection;
 use common::{State, BOARD_SIZE};
 use serde::Deserialize;
@@ -18,8 +18,6 @@ pub enum ValidJson {
 
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut test_input = get_json_iter_from_reader(reader)?;
-
-    dbg!("got input iterator");
 
     let mut state: State = match test_input.next().ok_or("No valid Board JSON found")? {
         ValidJson::State(state) => state.into(),
@@ -37,7 +35,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
                 ValidJson::Direction(dir) => dir.into(),
                 _ => Err("Direction was not the third JSON object sent")?,
             };
-        Slide::new(index, dir)?
+        Slide::new(index / 2, dir)?
     };
 
     let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {
@@ -109,6 +107,10 @@ mod tests {
                             &mut BufReader::new(File::open(&path).unwrap()),
                             &mut buf,
                         )
+                        .map_err(|e| {
+                            println!("{}", e);
+                            e
+                        })
                         .unwrap();
 
                         results[num].0 = Some(String::from_utf8(buf).unwrap());
