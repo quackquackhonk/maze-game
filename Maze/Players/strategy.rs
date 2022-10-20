@@ -215,14 +215,55 @@ mod StrategyTests {
         //
         // extra = ┼
 
-        // can Euclid go from (1, 1) to (1, 3)?
+        // what will Euclid do to go from (1, 1) -> (1, 3)
         let euclid_move = euclid.get_move(board_state, (1, 1), (1, 3));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
         // slides row 2 east, inserts crossroads, goes to (1, 3)
-        assert_eq!(euclid_move.destination, (1, 3));
-        assert_eq!(euclid_move.rotations, 0);
-        // assert_eq!(euclid_move.slide, Slide::new(1, East).unwrap());
+        assert_eq!(
+            euclid_move,
+            PlayerMove {
+                slide: Slide::new(1, East).unwrap(),
+                rotations: 0,
+                destination: (1, 3),
+            }
+        );
+
+        // what will Euclid do to go from (0, 0) to (2, 3)?
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(0, 0), (2, 2)],
+        };
+        let euclid_move = euclid.get_move(board_state, (0, 0), (2, 3));
+        assert!(euclid_move.is_some());
+        let euclid_move = euclid_move.unwrap();
+        // slides the top row east, moves to (2, 2)
+        assert_eq!(
+            euclid_move,
+            PlayerMove {
+                slide: Slide::new(0, East).unwrap(),
+                rotations: 0,
+                destination: (2, 2),
+            }
+        );
+
+        // what will Euclid do to go from (6, 4) to (2, 0)?
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(6, 4), (2, 2)],
+        };
+        let euclid_move = euclid.get_move(board_state, (6, 4), (2, 0));
+        assert!(euclid_move.is_some());
+        let euclid_move = euclid_move.unwrap();
+        // slides row 4 east to wrap around to (0, 4) then move to (1, 2)
+        assert_eq!(
+            euclid_move,
+            PlayerMove {
+                slide: Slide::new(2, East).unwrap(),
+                rotations: 0,
+                destination: (1, 2),
+            }
+        );
     }
 
     #[test]
