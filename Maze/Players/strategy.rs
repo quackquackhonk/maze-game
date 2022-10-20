@@ -267,7 +267,60 @@ mod StrategyTests {
         //
         // extra = ┼
         let euclid = NaiveStrategy::Euclid;
-        assert_eq!(euclid.find_move_to_reach(&board_state, start, destination));
+        let reimann = NaiveStrategy::Reimann;
+        let start = board_state.player_positions[0];
+        let destination = (0, 1);
+        assert_eq!(
+            euclid.find_move_to_reach(&board_state, start, destination),
+            Some(PlayerMove {
+                slide: Slide::new(0, West).unwrap(),
+                rotations: 0,
+                destination: (0, 1),
+            })
+        );
+        assert_eq!(
+            reimann.find_move_to_reach(&board_state, start, destination),
+            Some(PlayerMove {
+                slide: Slide::new(0, West).unwrap(),
+                rotations: 0,
+                destination: (0, 1),
+            })
+        );
+
+        // no move will take you from (4, 1) -> (2, 3)
+        let destination = (2, 3);
+        assert_eq!(
+            euclid.find_move_to_reach(&board_state, start, destination),
+            None
+        );
+        assert_eq!(
+            reimann.find_move_to_reach(&board_state, start, destination),
+            None
+        );
+
+        let board_state = PlayerBoardState {
+            board: Board::default(),
+            player_positions: vec![(6, 0), (2, 2)],
+        };
+        // you can go from (6, 1) -> (1, 1) by wrapping around the board
+        let start = board_state.player_positions[0];
+        let destination = (1, 1);
+        assert_eq!(
+            euclid.find_move_to_reach(&board_state, start, destination),
+            Some(PlayerMove {
+                slide: Slide::new(0, East).unwrap(),
+                rotations: 0,
+                destination: (1, 1)
+            })
+        );
+        assert_eq!(
+            reimann.find_move_to_reach(&board_state, start, destination),
+            Some(PlayerMove {
+                slide: Slide::new(0, East).unwrap(),
+                rotations: 0,
+                destination: (1, 1)
+            })
+        )
     }
 
     #[test]
