@@ -287,6 +287,28 @@ mod StrategyTests {
                 destination: (3, 0)
             })
         );
+
+        // What if you start on (6, 6) and your goal is (0, 5)
+        // Euclid will slide the bottom row east and move to (1,6)
+        let euc_move = euclid.find_move_to_reach_alt_goal(&board_state, (6, 6), (0, 5));
+        assert_eq!(
+            euc_move,
+            Some(PlayerMove {
+                slide: Slide::new(3, East).unwrap(),
+                rotations: 0,
+                destination: (1, 6)
+            })
+        );
+        // Reimann will slide the last column down and move to (6, 1)
+        let rei_move = reimann.find_move_to_reach_alt_goal(&board_state, (6, 6), (0, 5));
+        assert_eq!(
+            rei_move,
+            Some(PlayerMove {
+                slide: Slide::new(3, South).unwrap(),
+                rotations: 0,
+                destination: (6, 1)
+            })
+        );
     }
 
     #[test]
