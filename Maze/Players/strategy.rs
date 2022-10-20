@@ -125,6 +125,7 @@ impl NaiveStrategy {
         let mut board_state = board_state.clone();
         (0..rotations).for_each(|_| board_state.board.rotate_spare());
         board_state.board.slide_and_insert(slide);
+        let start = slide.move_position(start);
         board_state
             .board
             .reachable(start)
