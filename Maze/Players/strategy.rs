@@ -80,6 +80,7 @@ impl NaiveStrategy {
     ) -> PlayerAction {
         self.get_alt_goals(goal_tile)
             .into_iter()
+            .filter(|pos| *pos != start)
             .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
     }
 
