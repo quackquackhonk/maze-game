@@ -144,66 +144,9 @@ impl State {
     }
 
     fn slide_players(&mut self, &slide: &Slide<BOARD_SIZE>) {
-        #[allow(clippy::enum_glob_use)]
-        use tile::CompassDirection::*;
-        match slide {
-            Slide {
-                index: column,
-                direction: North,
-            } => self
-                .player_info
-                .iter_mut()
-                .filter(|player| player.position.0 == column)
-                .for_each(|player| {
-                    if player.position.1 == 0 {
-                        player.position.1 = BOARD_SIZE - 1;
-                    } else {
-                        player.position.1 -= 1;
-                    }
-                }),
-            Slide {
-                index: column,
-                direction: South,
-            } => self
-                .player_info
-                .iter_mut()
-                .filter(|player| player.position.0 == column)
-                .for_each(|player| {
-                    if player.position.1 == BOARD_SIZE - 1 {
-                        player.position.1 = 0;
-                    } else {
-                        player.position.1 += 1;
-                    }
-                }),
-            Slide {
-                index: row,
-                direction: East,
-            } => self
-                .player_info
-                .iter_mut()
-                .filter(|player| player.position.1 == row)
-                .for_each(|player| {
-                    if player.position.0 == BOARD_SIZE - 1 {
-                        player.position.0 = 0;
-                    } else {
-                        player.position.0 += 1;
-                    }
-                }),
-            Slide {
-                index: row,
-                direction: West,
-            } => self
-                .player_info
-                .iter_mut()
-                .filter(|player| player.position.1 == row)
-                .for_each(|player| {
-                    if player.position.0 == 0 {
-                        player.position.0 = BOARD_SIZE - 1;
-                    } else {
-                        player.position.0 -= 1;
-                    }
-                }),
-        };
+        self.player_info.iter_mut().for_each(|player_info| {
+            player_info.position = slide.move_position(player_info.position)
+        });
     }
 
     /// Performs a slide and insert action

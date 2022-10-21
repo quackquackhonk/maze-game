@@ -181,7 +181,7 @@ impl<const BOARD_SIZE: usize> Default for Board<BOARD_SIZE> {
 }
 
 /// Describes a slide motion
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Slide<const BOARD_SIZE: usize> {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
@@ -212,6 +212,53 @@ impl<const BOARD_SIZE: usize> Slide<BOARD_SIZE> {
             })
         }
     }
+
+    pub fn move_position(&self, pos: Position) -> Position {
+        use CompassDirection::*;
+        match self {
+            Slide {
+                index,
+                direction: North,
+            } if *index == pos.0 => {
+                if pos.1 == 0 {
+                    (pos.0, BOARD_SIZE - 1)
+                } else {
+                    (pos.0, pos.1 - 1)
+                }
+            }
+            Slide {
+                index,
+                direction: South,
+            } if *index == pos.0 => {
+                if pos.1 == BOARD_SIZE - 1 {
+                    (pos.0, 0)
+                } else {
+                    (pos.0, pos.1 + 1)
+                }
+            }
+            Slide {
+                index,
+                direction: East,
+            } if *index == pos.1 => {
+                if pos.0 == BOARD_SIZE - 1 {
+                    (0, pos.1)
+                } else {
+                    (pos.0 + 1, pos.1)
+                }
+            }
+            Slide {
+                index,
+                direction: West,
+            } if *index == pos.1 => {
+                if pos.0 == 0 {
+                    (BOARD_SIZE - 1, pos.1)
+                } else {
+                    (pos.0 - 1, pos.1)
+                }
+            }
+            _ => pos,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -228,6 +275,26 @@ mod BoardTests {
         assert!(Slide::<7>::new(0, South).is_ok());
         assert!(Slide::<7>::new(2, East).is_ok());
         assert!(Slide::<7>::new(4, West).is_err());
+    }
+
+    #[test]
+    fn test_slide_move_position() {
+        let north_slide = Slide::<7>::new(0, North).unwrap();
+        assert_eq!(north_slide.move_position((1, 1)), (1, 1));
+        assert_eq!(north_slide.move_position((0, 0)), (0, 6));
+        assert_eq!(north_slide.move_position((0, 3)), (0, 2));
+        let south_slide = Slide::<7>::new(2, South).unwrap();
+        assert_eq!(south_slide.move_position((5, 1)), (5, 1));
+        assert_eq!(south_slide.move_position((4, 0)), (4, 1));
+        assert_eq!(south_slide.move_position((4, 6)), (4, 0));
+        let east_slide = Slide::<7>::new(1, East).unwrap();
+        assert_eq!(east_slide.move_position((5, 1)), (5, 1));
+        assert_eq!(east_slide.move_position((1, 2)), (2, 2));
+        assert_eq!(east_slide.move_position((6, 2)), (0, 2));
+        let west_slide = Slide::<7>::new(3, West).unwrap();
+        assert_eq!(west_slide.move_position((5, 1)), (5, 1));
+        assert_eq!(west_slide.move_position((0, 6)), (6, 6));
+        assert_eq!(west_slide.move_position((6, 6)), (5, 6));
     }
 
     #[test]
