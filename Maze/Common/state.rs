@@ -589,6 +589,74 @@ mod StateTests {
     }
 
     #[test]
+    fn test_reachable_by_player() {
+        let mut state = State::default();
+        state.player_info.push(PlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: (Gem::ametrine, Gem::purple_cabochon).into(),
+            color: ColorName::Green.into(),
+        });
+        state.player_info.push(PlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: (Gem::diamond, Gem::raw_beryl).into(),
+            color: ColorName::Red.into(),
+        });
+        state.player_info.push(PlayerInfo {
+            home: (5, 1),
+            position: (3, 6),
+            goal: (Gem::hackmanite, Gem::iolite_emerald_cut).into(),
+            color: ColorName::Purple.into(),
+        });
+        state.active_player = 0;
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        let from_1_1 = state.reachable_by_player();
+        assert_eq!(from_1_1.len(), 4);
+        // cannot go to (4, 1) from (1, 1)
+        assert!(!from_1_1.contains(&(4, 1)));
+
+        assert!(state.slide_and_insert(Slide::new(0, West).unwrap()).is_ok());
+
+        // Board after slide:
+        //   0123456
+        // 0 │└┌┐┘┴┼
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ─
+        let from_1_1 = state.reachable_by_player();
+        assert_eq!(from_1_1.len(), 10);
+        // can now go to (4, 1) from (1, 1)
+        assert!(from_1_1.contains(&(4, 1)));
+
+        // tiles reachable by Red player at (1, 3)
+        state.next_player();
+        let from_1_3 = state.reachable_by_player();
+        assert_eq!(from_1_3.len(), 5);
+
+        // isolated tile
+        state.next_player();
+        let from_3_6 = state.reachable_by_player();
+        assert_eq!(from_3_6.len(), 1);
+    }
+
+    #[test]
     fn test_move_player() {
         let mut state = State::default();
         state.player_info.push(PlayerInfo {
