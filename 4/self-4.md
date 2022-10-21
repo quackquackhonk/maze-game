@@ -11,7 +11,7 @@ code.)
 Indicate below each bullet which file/unit takes care of each task:
 
 Firstly, we have a `trait Strategy` (basically an interface) that
-has the `make_move` method signature:
+has the `get_move` method signature:
 
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74920599bd674fde29c9f77170e3fcb5/Maze/Players/strategy.rs#L16-L25
 
@@ -23,7 +23,7 @@ https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74
 
 1. the "top-level" function/method, which composes tasks 2 and 3
 
-The `make_move` method for `NaiveStrategy` composes all our other methods.
+The `get_move` method for `NaiveStrategy` composes all our other methods.
 
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74920599bd674fde29c9f77170e3fcb5/Maze/Players/strategy.rs#L182-L192
 
@@ -47,7 +47,7 @@ https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74
   
   `reachable_after_move` checks if a Player can go from `start` to `destination`
    after making the given slide and insert move. This method considers
-   rotations of the spare tile and wrapping around the board due to a slide.
+   rotations of the spare tile and if the player is moved anywhere because of the slide.
    https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74920599bd674fde29c9f77170e3fcb5/Maze/Players/strategy.rs#L118-L138
 
 ALSO point to
@@ -60,7 +60,7 @@ https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74
 
 - unit tests for the strategy
 
-Unit tests for all `NaiveStrategy` methods (including `make_move`) are unit tested in the `StrategyTests` module.
+Unit tests for all `NaiveStrategy` methods (including `get_move`) are in the `StrategyTests` module.
 
 https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/67b9c1ad74920599bd674fde29c9f77170e3fcb5/Maze/Players/strategy.rs#L195
 
