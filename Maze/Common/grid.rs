@@ -9,9 +9,9 @@ pub type Position = (usize, usize);
 
 /// Represents a wrapper type for a 2D array with added functionality
 #[derive(Debug)]
-pub struct Grid<T, const N: usize, const M: usize>([[T; N]; M]);
+pub struct Grid<T, const COLS: usize, const ROWS: usize>([[T; COLS]; ROWS]);
 
-impl<T, const N: usize, const M: usize> Clone for Grid<T, N, M>
+impl<T, const COLS: usize, const ROWS: usize> Clone for Grid<T, COLS, ROWS>
 where
     T: Clone,
 {
@@ -20,7 +20,7 @@ where
     }
 }
 
-impl<T, const N: usize, const M: usize> Grid<T, N, M> {
+impl<T, const COLS: usize, const ROWS: usize> Grid<T, COLS, ROWS> {
     /// Rotates the row at `index` left one time
     pub fn rotate_left(&mut self, index: usize) {
         self[index].rotate_left(1);
@@ -63,21 +63,21 @@ impl<T, const N: usize, const M: usize> Grid<T, N, M> {
 /// assert_eq!(g.len(), 5);
 /// assert_eq!(g[0].len(), 4);
 /// ```
-impl<T, const N: usize, const M: usize> From<[[T; N]; M]> for Grid<T, N, M> {
-    fn from(from: [[T; N]; M]) -> Self {
+impl<T, const COLS: usize, const ROWS: usize> From<[[T; COLS]; ROWS]> for Grid<T, COLS, ROWS> {
+    fn from(from: [[T; COLS]; ROWS]) -> Self {
         Grid(from)
     }
 }
 
-impl<T, const N: usize, const M: usize> Deref for Grid<T, N, M> {
-    type Target = [[T; N]; M];
+impl<T, const COLS: usize, const ROWS: usize> Deref for Grid<T, COLS, ROWS> {
+    type Target = [[T; COLS]; ROWS];
 
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
+impl<T, const COLS: usize, const ROWS: usize> DerefMut for Grid<T, COLS, ROWS> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
     }
@@ -102,8 +102,8 @@ impl<T, const N: usize, const M: usize> DerefMut for Grid<T, N, M> {
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
-impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
-    type Output = [T; N];
+impl<T, const COLS: usize, const ROWS: usize> Index<usize> for Grid<T, COLS, ROWS> {
+    type Output = [T; COLS];
 
     fn index(&self, index: usize) -> &Self::Output {
         &self.0[index]
@@ -115,7 +115,7 @@ impl<T, const N: usize, const M: usize> Index<usize> for Grid<T, N, M> {
 /// # Panics
 ///
 /// Same panic conditions as `Index`.
-impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
+impl<T, const COLS: usize, const ROWS: usize> IndexMut<usize> for Grid<T, COLS, ROWS> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.0[index]
     }
@@ -144,7 +144,7 @@ impl<T, const N: usize, const M: usize> IndexMut<usize> for Grid<T, N, M> {
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
-impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
+impl<T, const COLS: usize, const ROWS: usize> Index<Position> for Grid<T, COLS, ROWS> {
     type Output = T;
 
     fn index(&self, index: Position) -> &Self::Output {
@@ -157,7 +157,7 @@ impl<T, const N: usize, const M: usize> Index<Position> for Grid<T, N, M> {
 /// # Panics
 ///
 /// Same panic conditions as `Index`.
-impl<T, const N: usize, const M: usize> IndexMut<Position> for Grid<T, N, M> {
+impl<T, const COLS: usize, const ROWS: usize> IndexMut<Position> for Grid<T, COLS, ROWS> {
     fn index_mut(&mut self, index: Position) -> &mut Self::Output {
         &mut self.0[index.1][index.0]
     }
