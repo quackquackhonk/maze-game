@@ -8,5 +8,9 @@ edition = "2021"
 name = "player"
 path = "lib.rs"
 
+[[bin]]
+name = "player"
+path = "player.rs"
+
 [dependencies]
 common = { path = "../Common/" }
