@@ -122,19 +122,30 @@ impl PlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Debug, Default)]
-pub struct State {
-    pub(crate) board: Board<BOARD_SIZE>,
+#[derive(Debug)]
+pub struct State<const COLS: usize, const ROWS: usize> {
+    pub(crate) board: Board<COLS, ROWS>,
     pub(crate) player_info: Vec<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
     pub(crate) active_player: usize,
-    pub(crate) previous_slide: Option<Slide<BOARD_SIZE>>,
+    pub(crate) previous_slide: Option<Slide<COLS, ROWS>>,
+}
+
+impl Default for State<7, 7> {
+    fn default() -> Self {
+        Self {
+            board: Default::default(),
+            player_info: Default::default(),
+            active_player: Default::default(),
+            previous_slide: Default::default(),
+        }
+    }
 }
 
 pub const BOARD_SIZE: usize = 7;
 
-impl State {
+impl<const COLS: usize, const ROWS: usize> State<COLS, ROWS> {
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
@@ -143,7 +154,7 @@ impl State {
         (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
 
-    fn slide_players(&mut self, &slide: &Slide<BOARD_SIZE>) {
+    fn slide_players(&mut self, &slide: &Slide<COLS, ROWS>) {
         self.player_info.iter_mut().for_each(|player_info| {
             player_info.position = slide.move_position(player_info.position)
         });
@@ -168,11 +179,11 @@ impl State {
     /// assert!(res.is_err());
     ///
     /// // This would however be fine
-    /// let res = state.slide_and_insert(Slide::new(1, CompassDirection::South).unwrap());
+    /// let res = state.slide_and_insert(Slide::new(2, CompassDirection::South).unwrap());
     /// assert!(res.is_ok());
     ///
     /// ```
-    pub fn slide_and_insert(&mut self, slide: Slide<BOARD_SIZE>) -> BoardResult<()> {
+    pub fn slide_and_insert(&mut self, slide: Slide<COLS, ROWS>) -> BoardResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
@@ -378,7 +389,7 @@ mod StateTests {
         assert!(res.is_err());
 
         // Doing it in another index is fine
-        let res = state.slide_and_insert(Slide::new(1, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(2, South).unwrap());
         assert!(res.is_ok());
     }
 
@@ -407,7 +418,7 @@ mod StateTests {
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 2 is in the sliding row so it should move
-        state.slide_players(&Slide::new(1, East).unwrap());
+        state.slide_players(&Slide::new(2, East).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (2, 2));
@@ -422,9 +433,9 @@ mod StateTests {
 
         // Only player 2 is in the sliding row so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(1, West).unwrap());
-        state.slide_players(&Slide::new(1, West).unwrap());
-        state.slide_players(&Slide::new(1, West).unwrap());
+        state.slide_players(&Slide::new(2, West).unwrap());
+        state.slide_players(&Slide::new(2, West).unwrap());
+        state.slide_players(&Slide::new(2, West).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (6, 2));
@@ -512,7 +523,7 @@ mod StateTests {
         assert!(state.can_reach_position((0, 2)));
         assert!(state.can_reach_position((0, 3)));
 
-        let res = state.slide_and_insert(Slide::new(1, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(2, South).unwrap());
         assert!(res.is_ok());
 
         // Board after slide and insert:

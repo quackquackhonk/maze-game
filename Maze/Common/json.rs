@@ -118,7 +118,7 @@ pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Index(pub usize);
 
-impl From<JsonBoard> for Board<BOARD_SIZE> {
+impl From<JsonBoard> for Board<BOARD_SIZE, BOARD_SIZE> {
     fn from(val: JsonBoard) -> Self {
         let mut zipped_board = val
             .treasures
@@ -146,7 +146,7 @@ impl From<JsonBoard> for Board<BOARD_SIZE> {
     }
 }
 
-impl From<(JsonBoard, JsonTile)> for Board<BOARD_SIZE> {
+impl From<(JsonBoard, JsonTile)> for Board<BOARD_SIZE, BOARD_SIZE> {
     fn from((jboard, jtile): (JsonBoard, JsonTile)) -> Self {
         let mut zipped_board = jboard
             .treasures
@@ -186,7 +186,7 @@ pub struct JsonState {
     last: JsonAction,
 }
 
-impl From<JsonState> for State {
+impl From<JsonState> for State<BOARD_SIZE, BOARD_SIZE> {
     fn from(jstate: JsonState) -> Self {
         let player_info: Vec<PlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
         State {
@@ -287,7 +287,7 @@ impl From<Color> for JsonColor {
 #[derive(Debug, Deserialize)]
 pub struct JsonAction(Option<(Index, JsonDirection)>);
 
-impl From<JsonAction> for Option<Slide<BOARD_SIZE>> {
+impl From<JsonAction> for Option<Slide<BOARD_SIZE, BOARD_SIZE>> {
     fn from(ja: JsonAction) -> Self {
         let jslide = ja.0?;
         Some(Slide {
