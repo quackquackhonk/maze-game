@@ -14,7 +14,7 @@ pub enum JsonStrategyDesignation {
     Euclid,
 }
 
-impl From<JsonStrategyDesignation> for NaiveStrategy {
+impl From<JsonStrategyDesignation> for NaiveStrategy<BOARD_SIZE, BOARD_SIZE> {
     fn from(jsd: JsonStrategyDesignation) -> Self {
         match jsd {
             JsonStrategyDesignation::Reimann => NaiveStrategy::Reimann,
