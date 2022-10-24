@@ -1,10 +1,9 @@
 use std::io::{Read, Write};
 
 use common::grid::Position;
-use common::json::{Coordinate, JsonState};
-use common::{State, BOARD_SIZE};
-use player::json::JsonStrategyDesignation;
-use player::strategy::NaiveStrategy;
+use common::json::{Coordinate, JsonState, JsonStrategyDesignation};
+use common::BOARD_SIZE;
+use player::strategy::{NaiveStrategy, PlayerBoardState};
 use serde::{Deserialize, Serialize};
 
 /// Enumerated Valid JSON input for `xchoice`
@@ -47,7 +46,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
             _ => Err("StrategyDesignation was not the first json input found")?,
         };
 
-    let state: State<BOARD_SIZE, BOARD_SIZE> =
+    let state: PlayerBoardState<BOARD_SIZE, BOARD_SIZE> =
         match input.next().ok_or("No valid State JSON found")? {
             ValidJson::State(state) => state.into(),
             _ => Err("State was not the second json input found")?,
