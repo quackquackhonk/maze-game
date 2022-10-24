@@ -14,7 +14,7 @@ pub enum JsonStrategyDesignation {
     Euclid,
 }
 
-impl From<JsonStrategyDesignation> for NaiveStrategy<BOARD_SIZE, BOARD_SIZE> {
+impl From<JsonStrategyDesignation> for NaiveStrategy {
     fn from(jsd: JsonStrategyDesignation) -> Self {
         match jsd {
             JsonStrategyDesignation::Reimann => NaiveStrategy::Reimann,
@@ -45,32 +45,6 @@ impl From<JsonChoice> for PlayerAction<BOARD_SIZE, BOARD_SIZE> {
                 rotations: deg.into(),
                 destination: coord.into(),
             }),
-        }
-    }
-}
-
-impl TryFrom<JsonPlayer> for PubPlayerInfo {
-    type Error = String;
-    fn try_from(jp: JsonPlayer) -> Result<Self, Self::Error> {
-        Ok(Self {
-            current: jp.current.into(),
-            home: jp.home.into(),
-            color: jp.color.try_into()?,
-        })
-    }
-}
-
-impl From<JsonState> for PlayerBoardState<BOARD_SIZE, BOARD_SIZE> {
-    fn from(js: JsonState) -> Self {
-        Self {
-            board: (js.board, js.spare).into(),
-            players: js
-                .plmt
-                .into_iter()
-                .map(|player| player.try_into())
-                .collect::<Result<Vec<PubPlayerInfo>, String>>()
-                .unwrap(),
-            last: js.last.into(),
         }
     }
 }
