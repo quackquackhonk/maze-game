@@ -5,7 +5,7 @@ use std::iter::repeat;
 use common::board::Board;
 use common::tile::CompassDirection;
 use common::Color;
-use common::{board::Slide, grid::Position, BOARD_SIZE};
+use common::{board::Slide, grid::Position};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
@@ -117,8 +117,8 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
             Self::Reimann => Box::new(row_col_order),
         };
 
-        let mut possible_goals: Vec<Position> = (0..BOARD_SIZE)
-            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+        let mut possible_goals: Vec<Position> = (0..ROWS)
+            .flat_map(|row| (0..COLS).zip(repeat(row)))
             .collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
@@ -152,11 +152,11 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
         start: Position,
         destination: Position,
     ) -> PlayerAction<COLS, ROWS> {
-        for row in 0..=(BOARD_SIZE / 2) {
+        for row in 0..=(ROWS / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     let slide = Slide::new(row * 2, direction)
-                        .expect("The range 0 to BOARD_SIZE/2 is always in bounds");
+                        .expect("The range 0 to ROWS/2 is always in bounds");
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -168,11 +168,11 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
                 }
             }
         }
-        for col in 0..=(BOARD_SIZE / 2) {
+        for col in 0..=(COLS / 2) {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
                     let slide = Slide::new(col * 2, direction)
-                        .expect("The range 0 to BOARD_SIZE/2 is always in bounds");
+                        .expect("The range 0 to COLS/2 is always in bounds");
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -203,13 +203,26 @@ impl<const COLS: usize, const ROWS: usize> Strategy<COLS, ROWS> for NaiveStrateg
 #[cfg(test)]
 mod StrategyTests {
     use super::*;
+    use common::{ColorName, BOARD_SIZE};
     use CompassDirection::*;
 
     #[test]
     fn test_get_move_euclid() {
         let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(1, 1), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let euclid = NaiveStrategy::Euclid;
         // Default Board<7> is:
@@ -241,7 +254,19 @@ mod StrategyTests {
         // what will Euclid do to go from (0, 0) to (2, 3)?
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(0, 0), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let euclid_move = euclid.get_move(board_state, (0, 0), (2, 3));
         assert!(euclid_move.is_some());
@@ -259,7 +284,19 @@ mod StrategyTests {
         // what will Euclid do to go from (6, 4) to (2, 0)?
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(6, 4), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let euclid_move = euclid.get_move(board_state, (6, 4), (2, 0));
         assert!(euclid_move.is_some());
@@ -276,7 +313,19 @@ mod StrategyTests {
 
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(0, 0), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let mut any_passes = (0..BOARD_SIZE)
             .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
@@ -289,7 +338,19 @@ mod StrategyTests {
     fn test_get_move_reimann() {
         let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(1, 1), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let reimann = NaiveStrategy::Reimann;
         // Default Board<7> is:
@@ -321,7 +382,19 @@ mod StrategyTests {
         // what will Reimann do to go from (0, 0) to (2, 3)?
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(0, 0), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let reimann_move = reimann.get_move(board_state, (0, 0), (2, 3));
         assert!(reimann_move.is_some());
@@ -339,7 +412,19 @@ mod StrategyTests {
         // what will Reimann do to go from (6, 4) to (2, 0)?
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(6, 4), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let reimann_move = reimann.get_move(board_state, (6, 4), (2, 0));
         assert!(reimann_move.is_some());
@@ -359,7 +444,19 @@ mod StrategyTests {
     fn test_find_move_to_reach_alt_goal() {
         let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(0, 2), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         let euclid = NaiveStrategy::Euclid;
         let reimann = NaiveStrategy::Reimann;
@@ -482,7 +579,19 @@ mod StrategyTests {
     fn test_find_move_to_reach() {
         let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(4, 1), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         // Default Board<7> is:
         //   0123456
@@ -497,7 +606,7 @@ mod StrategyTests {
         // extra = ┼
         let euclid = NaiveStrategy::Euclid;
         let reimann = NaiveStrategy::Reimann;
-        let start = board_state.player_positions[0];
+        let start = board_state.players[0].current;
         let destination = (0, 1);
         assert_eq!(
             euclid.find_move_to_reach(&board_state, start, destination),
@@ -529,10 +638,22 @@ mod StrategyTests {
 
         let board_state = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(6, 0), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         // you can go from (6, 1) -> (1, 1) by wrapping around the board
-        let start = board_state.player_positions[0];
+        let start = board_state.players[0].current;
         let destination = (1, 1);
         assert_eq!(
             euclid.find_move_to_reach(&board_state, start, destination),
@@ -556,7 +677,19 @@ mod StrategyTests {
     fn test_reachable_after_move() {
         let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
             board: Board::default(),
-            player_positions: vec![(0, 0), (2, 2)],
+            players: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ],
+            last: None,
         };
         // Default Board<7> is:
         //   0123456
