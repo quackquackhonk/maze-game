@@ -178,12 +178,12 @@ impl From<(JsonBoard, JsonTile)> for Board {
 /// - no two `JsonPlayer`s will have the same `JsonColor`
 #[derive(Debug, Deserialize)]
 pub struct JsonState {
-    board: JsonBoard,
+    pub board: JsonBoard,
     #[allow(dead_code)]
-    spare: JsonTile,
+    pub spare: JsonTile,
     /// the first player in `plmt` is the currently active player  
-    plmt: Vec<JsonPlayer>,
-    last: JsonAction,
+    pub plmt: Vec<JsonPlayer>,
+    pub last: JsonAction,
 }
 
 impl From<JsonState> for State {
@@ -222,9 +222,9 @@ impl From<JsonTile> for Tile {
 /// location of its home, and the color of its avatar.
 #[derive(Debug, Deserialize)]
 pub struct JsonPlayer {
-    current: Coordinate,
-    home: Coordinate,
-    color: JsonColor,
+    pub current: Coordinate,
+    pub home: Coordinate,
+    pub color: JsonColor,
 }
 
 impl From<JsonPlayer> for PlayerInfo {
