@@ -1,0 +1,40 @@
+{
+    "board" : {
+        "connectors": [
+            ["┼", "┐", "┐", "└", "┌", "┘", "┬"],
+            ["└", "┼", "┐", "└", "┌", "┘", "┬"],
+            ["│", "└", "┼", "┐", "┌", "┘", "┬"],
+            ["│", "─", "└", "┼", "┐", "┘", "┬"],
+            ["│", "─", "┐", "└", "┼", "┐", "┬"],
+            ["─", "─", "└", "└", "└", "┼", "┐"],
+            ["│", "─", "┐", "└", "┌", "└", "┼"] 
+        ],
+        "treasures": [
+            [["alexandrite-pear-shape", "alexandrite"],["alexandrite", "almandine-garnet"],["almandine-garnet", "amethyst"],["amethyst", "ametrine"],["ametrine", "ammolite"],["ammolite", "apatite"],["apatite", "aplite"]],
+            [["aplite", "apricot-square-radiant"],["apricot-square-radiant", "aquamarine"],["aquamarine", "australian-marquise"],["australian-marquise", "aventurine"],["aventurine", "azurite"],["azurite", "beryl"],["beryl", "black-obsidian"]],
+            [["black-obsidian", "black-onyx"],["black-onyx", "black-spinel-cushion"],["black-spinel-cushion", "blue-ceylon-sapphire"],["blue-ceylon-sapphire", "blue-cushion"],["blue-cushion", "blue-pear-shape"],["blue-pear-shape", "blue-spinel-heart"],["blue-spinel-heart", "bulls-eye"]],
+            [["bulls-eye", "carnelian"],["carnelian", "chrome-diopside"],["chrome-diopside", "chrysoberyl-cushion"],["chrysoberyl-cushion", "chrysolite"],["chrysolite", "citrine-checkerboard"],["citrine-checkerboard", "citrine"],["citrine", "clinohumite"]],
+            [["clinohumite", "color-change-oval"],["color-change-oval", "cordierite"],["cordierite", "diamond"],["diamond", "dumortierite"],["dumortierite", "emerald"],["emerald", "fancy-spinel-marquise"],["fancy-spinel-marquise", "garnet"]],
+            [["garnet", "golden-diamond-cut"],["golden-diamond-cut", "goldstone"],["goldstone", "grandidierite"],["grandidierite", "gray-agate"],["gray-agate", "green-aventurine"],["green-aventurine", "green-beryl-antique"],["green-beryl-antique", "green-beryl"]],
+            [["green-beryl", "green-princess-cut"],["green-princess-cut", "grossular-garnet"],["grossular-garnet", "hackmanite"],["hackmanite", "heliotrope"],["heliotrope", "hematite"],["hematite", "iolite-emerald-cut"],["iolite-emerald-cut", "jasper"]]
+        ]
+    },
+    "spare": {
+        "tilekey": "┐",
+        "1-image": "green-princess-cut",
+        "2-image": "zircon"
+    },
+    "plmt": [
+        {
+            "current": { "row#": 0, "column#": 0 },
+            "home": { "row#": 3, "column#": 3 },
+            "color": "AAAAAA"
+        },
+        {
+            "current": { "row#": 0, "column#": 0 },
+            "home": { "row#": 0, "column#": 0 },
+            "color": "111111"
+        }
+    ],
+    "last": [ 4, "LEFT" ]
+}0"UP"180

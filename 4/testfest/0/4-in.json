@@ -1,0 +1,25 @@
+{ "board" : { "connectors" :
+[
+  ["┬", "│", "│", "┬", "┘", "└", "┐"],
+  ["└", "┌", "┴", "┐", "┬", "┐", "└"],
+  ["├", "┌", "┤", "┴", "└", "┐", "┤"],
+  ["┴", "┴", "┼", "┬", "├", "┼", "┘"],
+  ["┤", "└", "┬", "┘", "┬", "┴", "├"],
+  ["┬", "└", "│", "┬", "┼", "└", "┐"],
+  ["┌", "┌", "┤", "┤", "┌", "┐", "├"]
+],
+  "treasures"  : [[["raw-beryl", "unakite"], ["blue-pear-shape", "tanzanite-trillion"], ["pink-opal", "prasiolite"], ["ammolite", "fancy-spinel-marquise"], ["sunstone", "blue-spinel-heart"], ["azurite", "spinel"], ["chrome-diopside", "beryl"]], [["tourmaline-laser-cut", "bulls-eye"], ["ametrine", "black-obsidian"], ["blue-spinel-heart", "rock-quartz"], ["sphalerite", "padparadscha-oval"], ["moonstone", "white-square"], ["red-spinel-square-emerald-cut", "zircon"], ["zircon", "orange-radiant"]], [["beryl", "labradorite"], ["azurite", "sunstone"], ["apricot-square-radiant", "yellow-baguette"], ["garnet", "rock-quartz"], ["yellow-jasper", "gray-agate"], ["rose-quartz", "chrysoberyl-cushion"], ["jaspilite", "aplite"]], [["labradorite", "red-diamond"], ["purple-oval", "carnelian"], ["morganite-oval", "yellow-beryl-oval"], ["black-spinel-cushion", "jasper"], ["iolite-emerald-cut", "kunzite"], ["gray-agate", "blue-spinel-heart"], ["purple-oval", "rose-quartz"]], [["mexican-opal", "citrine"], ["emerald", "orange-radiant"], ["green-beryl", "aquamarine"], ["red-diamond", "sunstone"], ["goldstone", "red-spinel-square-emerald-cut"], ["yellow-baguette", "tigers-eye"], ["carnelian", "apatite"]], [["purple-spinel-trillion", "tigers-eye"], ["padparadscha-oval", "spinel"], ["pink-emerald-cut", "citrine"], ["aplite", "pink-opal"], ["iolite-emerald-cut", "hackmanite"], ["iolite-emerald-cut", "grossular-garnet"], ["white-square", "garnet"]], [["gray-agate", "mexican-opal"], ["purple-cabochon", "jaspilite"], ["peridot", "yellow-baguette"], ["star-cabochon", "citrine-checkerboard"], ["tigers-eye", "green-beryl"], ["kunzite", "kunzite-oval"], ["aquamarine", "ametrine"]]] },
+  "spare" : { "tilekey" : "┐",
+    "1-image" : "red-diamond",
+    "2-image" : "jaspilite" },
+  "plmt"  : [{ "current" : { "row#": 6,"column#" : 2 },
+    "home"    : { "row#": 1,"column#" : 1 },
+    "color"   : "yellow" },{ "current" : { "row#": 1,"column#" : 2 },
+    "home"    : { "row#": 3,"column#" : 1 },
+    "color"   : "pink" }],
+  "last"  : [6, "DOWN"]
+}
+2
+"DOWN"
+270
+

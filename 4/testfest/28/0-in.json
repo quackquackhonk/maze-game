@@ -1,0 +1,90 @@
+{
+    "board": {
+        "connectors": [
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"],
+            ["┼","┼","┼","┼","┼","┼","┼"]
+        ],
+        "treasures": [
+            [   
+                ["alexandrite","pink-emerald-cut"],
+                ["alexandrite","pink-opal"],
+                ["alexandrite","pink-round"],
+                ["alexandrite","pink-spinel-cushion"],
+                ["alexandrite","purple-cabochon"],
+                ["alexandrite","purple-oval"],
+                ["alexandrite","purple-spinel-trillion"]
+            ],
+            [
+                ["amethyst","pink-emerald-cut"],
+                ["amethyst","pink-opal"],
+                ["amethyst","pink-round"],
+                ["amethyst","pink-spinel-cushion"],
+                ["amethyst","purple-cabochon"],
+                ["amethyst","purple-oval"],
+                ["amethyst","purple-spinel-trillion"]
+            ],
+            [
+                ["ametrine","pink-emerald-cut"],
+                ["ametrine","pink-opal"],
+                ["ametrine","pink-round"],
+                ["ametrine","pink-spinel-cushion"],
+                ["ametrine","purple-cabochon"],
+                ["ametrine","purple-oval"],
+                ["ametrine","purple-spinel-trillion"]
+            ],
+            [
+                ["ammolite","pink-emerald-cut"],
+                ["ammolite","pink-opal"],
+                ["ammolite","pink-round"],
+                ["ammolite","pink-spinel-cushion"],
+                ["ammolite","purple-cabochon"],
+                ["ammolite","purple-oval"],
+                ["ammolite","purple-spinel-trillion"]
+            ],
+            [
+                ["apatite","pink-emerald-cut"],
+                ["apatite","pink-opal"],
+                ["apatite","pink-round"],
+                ["apatite","pink-spinel-cushion"],
+                ["apatite","purple-cabochon"],
+                ["apatite","purple-oval"],
+                ["apatite","purple-spinel-trillion"]
+            ],
+            [
+                ["aplite","pink-emerald-cut"],
+                ["aplite","pink-opal"],
+                ["aplite","pink-round"],
+                ["aplite","pink-spinel-cushion"],
+                ["aplite","purple-cabochon"],
+                ["aplite","purple-oval"],
+                ["aplite","purple-spinel-trillion"]
+            ],
+            [
+                ["aquamarine","pink-emerald-cut"],
+                ["aquamarine","pink-opal"],
+                ["aquamarine","pink-round"],
+                ["aquamarine","pink-spinel-cushion"],
+                ["aquamarine","purple-cabochon"],
+                ["aquamarine","purple-oval"],
+                ["aquamarine","purple-spinel-trillion"]
+            ]
+        ]
+    },
+    "last": null,
+    "plmt": [
+        {
+            "color":"purple",
+            "current":{"column#":1,"row#":1},
+            "home":{"column#":1,"row#":1}
+        }
+    ],
+    "spare":{"1-image":"citrine","2-image":"citrine","tilekey":"│"}
+}
+2
+"UP"
+180

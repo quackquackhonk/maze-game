@@ -1,0 +1,28 @@
+{ "board" : { "connectors" : [
+  ["┬", "┬", "┘", "┘", "┌", "┤", "┼"],
+  ["└", "├", "┼", "─", "─", "┘", "┬"],
+  ["─", "┤", "┐", "─", "┘", "─", "┤"],
+  ["┐", "─", "┤", "─", "┤", "├", "┴"],
+  ["┤", "┌", "┘", "└", "─", "┴", "┤"],
+  ["┌", "└", "┼", "┐", "─", "─", "┬"],
+  ["┘", "┐", "┴", "┼", "└", "┤", "┘"]
+],
+  "treasures"  : [[["australian-marquise", "tourmaline-laser-cut"], ["jasper", "tourmaline"], ["pink-emerald-cut", "moss-agate"], ["green-princess-cut", "lemon-quartz-briolette"], ["beryl", "pink-emerald-cut"], ["black-onyx", "pink-opal"], ["alexandrite", "apatite"]], [["yellow-beryl-oval", "magnesite"], ["pink-spinel-cushion", "diamond"], ["purple-cabochon", "clinohumite"], ["blue-spinel-heart", "pink-opal"], ["apricot-square-radiant", "azurite"], ["australian-marquise", "pink-emerald-cut"], ["rhodonite", "cordierite"]], [["prasiolite", "jasper"], ["yellow-beryl-oval", "green-beryl"], ["red-spinel-square-emerald-cut", "bulls-eye"], ["emerald", "bulls-eye"], ["heliotrope", "kunzite-oval"], ["peridot", "almandine-garnet"], ["mexican-opal", "alexandrite-pear-shape"]], [["sunstone", "heliotrope"], ["yellow-jasper", "chrysolite"], ["prasiolite", "emerald"], ["amethyst", "tanzanite-trillion"], ["purple-spinel-trillion", "star-cabochon"], ["tourmaline", "almandine-garnet"], ["blue-cushion", "australian-marquise"]], [["goldstone", "apatite"], ["bulls-eye", "peridot"], ["azurite", "jasper"], ["orange-radiant", "ametrine"], ["purple-square-cushion", "amethyst"], ["apricot-square-radiant", "bulls-eye"], ["yellow-jasper", "zoisite"]], [["lapis-lazuli", "super-seven"], ["almandine-garnet", "moss-agate"], ["chrome-diopside", "zircon"], ["jaspilite", "blue-pear-shape"], ["alexandrite-pear-shape", "iolite-emerald-cut"], ["white-square", "gray-agate"], ["blue-pear-shape", "amethyst"]], [["jasper", "purple-oval"], ["purple-square-cushion", "pink-spinel-cushion"], ["ruby-diamond-profile", "red-diamond"], ["golden-diamond-cut", "pink-round"], ["super-seven", "ammolite"], ["hematite", "aplite"], ["red-spinel-square-emerald-cut", "goldstone"]]] },
+  "spare" : { "tilekey" : "┼",
+    "1-image" : "pink-opal",
+    "2-image" : "azurite" },
+  "plmt"  : [{ "current" : { "row#": 0,"column#" : 4 },
+    "home"    : { "row#": 3,"column#" : 1 },
+    "color"   : "black" }, { "current" : { "row#": 3,"column#" : 1 },
+    "home"    : { "row#": 1,"column#" : 3 },
+    "color"   : "pink" }, { "current" : { "row#": 2,"column#" : 5 },
+    "home"    : { "row#": 5,"column#" : 5 },
+    "color"   : "red" }, { "current" : { "row#": 2,"column#" : 4 },
+    "home"    : { "row#": 5,"column#" : 1 },
+    "color"   : "123456" }],
+  "last"  : [2, "UP"]
+}
+4
+"DOWN"
+180
+

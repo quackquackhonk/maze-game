@@ -1,0 +1,105 @@
+{ "board" : { "connectors" : [ ["┘", "┘", "┘", "│", "┘", "┘", "┘"],
+
+  ["┘", "┘", "┘", "│", "┘", "┘", "┘"],
+
+  ["┘", "┘", "┘", "│", "┘", "┘", "┘"],
+
+  ["─", "─", "─", "┼", "─", "─", "─"],
+
+  ["┘", "┘", "┘", "│", "┘", "┘", "┘"],
+
+  ["┘", "┘", "┘", "│", "┘", "┘", "┘"],
+
+  ["┘", "┘", "┘", "│", "┘", "┘", "┘"]  ]
+
+,
+
+  "treasures"  : [[["diamond", "zoisite"],
+    ["diamond", "alexandrite"],
+    ["diamond", "alexandrite-pear-shape"],
+    ["diamond", "almandine-garnet"],
+    ["diamond", "amethyst"],
+    ["diamond", "ametrine"],
+    ["diamond", "ammolite"]],
+    [["diamond", "apatite"],
+      ["diamond", "aplite"],
+      ["diamond", "apricot-square-radiant"],
+      ["diamond", "aquamarine"],
+      ["diamond", "australian-marquise"],
+      ["diamond", "aventurine"],
+      ["diamond", "azurite"]],
+    [["diamond", "beryl"],
+      ["diamond", "black-obsidian"],
+      ["diamond", "black-onyx"],
+      ["diamond", "black-spinel-cushion"],
+      ["diamond", "blue-ceylon-sapphire"],
+      ["diamond", "blue-cushion"],
+      ["diamond", "blue-pear-shape"]],
+    [["diamond", "blue-spinel-heart"],
+      ["diamond", "bulls-eye"],
+      ["diamond", "carnelian"],
+      ["diamond", "chrome-diopside"],
+      ["diamond", "chrysoberyl-cushion"],
+      ["diamond", "chrysolite"],
+      ["diamond", "citrine-checkerboard"]],
+    [["diamond", "citrine"],
+      ["diamond", "clinohumite"],
+      ["diamond", "color-change-oval"],
+      ["diamond", "cordierite"],
+      ["diamond", "diamond"],
+      ["diamond", "dumortierite"],
+      ["diamond", "emerald"]],
+    [["diamond", "fancy-spinel-marquise"],
+      ["diamond", "garnet"],
+      ["diamond", "golden-diamond-cut"],
+      ["diamond", "goldstone"],
+      ["diamond", "grandidierite"],
+      ["diamond", "gray-agate"],
+      ["diamond", "green-aventurine"]],
+    [["diamond", "green-beryl-antique"],
+      ["diamond", "green-beryl"],
+      ["diamond", "green-princess-cut"],
+      ["diamond", "grossular-garnet"],
+      ["diamond", "hackmanite"],
+      ["diamond", "heliotrope"],
+      ["diamond", "hematite"]]]},
+
+  "spare" : { "tilekey" : "┘",
+
+    "1-image" : "clinohumite",
+
+    "2-image" : "zoisite" },
+
+  "plmt"  : [{ "current" : { "row#"    : 3,
+
+    "column#" : 3 },
+
+    "home"    : { "row#"    : 1,
+
+      "column#" : 1 },
+
+    "color"   : "BBBBBB" },
+    { "current" : { "row#"    : 4,
+
+      "column#" : 4 },
+
+      "home"    : { "row#"    : 3,
+
+        "column#" : 3 },
+
+      "color"   : "blue" },
+    { "current" : { "row#"    : 6,
+
+      "column#" : 6 },
+
+      "home"    : { "row#"    : 5,
+
+        "column#" : 5 },
+
+      "color"   : "CCCCCC" }],
+
+  "last"  : null}
+
+2
+"DOWN"
+180

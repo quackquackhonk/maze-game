@@ -1,0 +1,24 @@
+{ "board" : { "connectors" : [
+  ["─", "─", "┬", "┤", "─", "├", "┌"],
+  ["┴", "┬", "├", "┴", "┴", "┘", "┬"],
+  ["┌", "─", "┘", "┴", "├", "│", "┼"],
+  ["┤", "─", "┘", "─", "┴", "┐", "│"],
+  ["│", "┌", "┘", "│", "├", "─", "│"],
+  ["│", "├", "│", "┤", "┐", "─", "└"],
+  ["┴", "│", "┐", "└", "┘", "┼", "┼"]
+],
+  "treasures"  : [[["blue-cushion", "purple-spinel-trillion"], ["padparadscha-oval", "clinohumite"], ["raw-citrine", "blue-cushion"], ["purple-cabochon", "purple-oval"], ["jasper", "yellow-baguette"], ["color-change-oval", "kunzite-oval"], ["chrysoberyl-cushion", "star-cabochon"]], [["zoisite", "alexandrite-pear-shape"], ["ruby-diamond-profile", "dumortierite"], ["lapis-lazuli", "raw-beryl"], ["red-diamond", "moss-agate"], ["color-change-oval", "heliotrope"], ["ruby-diamond-profile", "gray-agate"], ["magnesite", "moonstone"]], [["aquamarine", "moss-agate"], ["star-cabochon", "goldstone"], ["amethyst", "emerald"], ["zoisite", "apricot-square-radiant"], ["tourmaline-laser-cut", "emerald"], ["tanzanite-trillion", "rhodonite"], ["pink-opal", "grandidierite"]], [["black-onyx", "chrome-diopside"], ["rhodonite", "blue-ceylon-sapphire"], ["black-onyx", "lemon-quartz-briolette"], ["citrine", "purple-square-cushion"], ["stilbite", "cordierite"], ["rose-quartz", "hackmanite"], ["rose-quartz", "ruby"]], [["labradorite", "yellow-baguette"], ["tourmaline-laser-cut", "tourmaline"], ["grandidierite", "chrysolite"], ["iolite-emerald-cut", "purple-spinel-trillion"], ["pink-spinel-cushion", "prehnite"], ["aplite", "aventurine"], ["citrine-checkerboard", "prehnite"]], [["super-seven", "rock-quartz"], ["green-aventurine", "kunzite"], ["hematite", "pink-opal"], ["green-beryl", "spinel"], ["prehnite", "padparadscha-sapphire"], ["pink-opal", "almandine-garnet"], ["yellow-beryl-oval", "purple-oval"]], [["sunstone", "green-princess-cut"], ["tourmaline-laser-cut", "green-aventurine"], ["blue-cushion", "raw-citrine"], ["aplite", "heliotrope"], ["labradorite", "star-cabochon"], ["ruby-diamond-profile", "jaspilite"], ["citrine", "pink-opal"]]]},
+  "spare" : { "tilekey" : "─",
+    "1-image" : "blue-cushion",
+    "2-image" : "purple-spinel-trillion" },
+  "plmt"  : [{ "current" : { "row#": 2,"column#" : 3 },
+    "home"    : { "row#": 1,"column#" : 5 },
+    "color"   : "blue" }, { "current" : { "row#": 1,"column#" : 1 },
+    "home"    : { "row#": 5,"column#" : 1 },
+    "color"   : "AFAFAF" }],
+  "last"  : [2, "UP"]
+}
+0
+"RIGHT"
+270
+

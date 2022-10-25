@@ -1,0 +1,61 @@
+{
+  "board" : { 
+    "connectors" : 
+    [ 
+      ["─", "┐", "└", "┌", "┘", "┬", "├"],
+  
+      ["┴", "┤", "┼", "│", "─", "┐", "└"],
+  
+      ["┌", "┘", "┬", "├", "┴", "┤", "┼"],
+  
+      ["│", "─", "┐", "└", "┌", "┘", "┬"],
+  
+      ["├", "┴", "┤", "┼", "│", "─", "┐"],
+  
+      ["└", "┌", "┘", "┬", "├", "┴", "┤"],
+  
+      ["┼", "│", "─", "┐", "└", "┌", "┘"]
+    ],
+  
+    "treasures" : 
+    [ 
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ],
+      [ [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ], [ "alexandrite", "alexandrite" ] ]
+    ]
+  },
+  
+  "spare" : { 
+    "tilekey" : "│",
+    "1-image" : "alexandrite-pear-shape",
+    "2-image" : "alexandrite-pear-shape" 
+  },
+  
+  "plmt" : [
+    { 
+      "current" : { 
+        "row#"    : 4,
+        "column#" : 0 
+      },
+
+      "home" : { 
+        "row#"    : 1,
+        "column#" : 1 
+      },
+
+      "color" : "blue" 
+    }
+  ],
+
+  "last" : null
+}
+
+0
+
+"UP"
+
+180

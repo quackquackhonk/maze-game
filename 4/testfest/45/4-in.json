@@ -1,0 +1,36 @@
+{ "board":
+{"connectors":
+[ ["─","┐","├","┬","┬","┼","│"],
+  ["├","┌","└","┐","┌","├","┘"],
+  ["┤","┘","┐","┤","┴","┼","└"],
+  ["┘","┌","┴","┐","└","┤","└"],
+  ["┤","┬","┘","─","─","┼","┬"],
+  ["┴","┴","┌","┴","┘","│","└"],
+  ["┤","┤","├","┌","─","─","─"]],
+  "treasures":
+  [[["rock-quartz","chrysolite"],["purple-oval","green-aventurine"],["pink-emerald-cut","alexandrite-pear-shape"],["magnesite","lemon-quartz-briolette"],["purple-spinel-trillion","peridot"],["yellow-jasper","kunzite-oval"],["padparadscha-oval","diamond"]],
+    [["blue-spinel-heart","padparadscha-sapphire"],["ruby-diamond-profile","purple-spinel-trillion"],["ametrine","beryl"],["padparadscha-sapphire","spinel"],["diamond","green-beryl"],["red-diamond","ruby"],["white-square","kunzite-oval"]],
+    [["yellow-beryl-oval","tanzanite-trillion"],["peridot","jaspilite"],["green-aventurine","carnelian"],["sphalerite","raw-beryl"],["morganite-oval","alexandrite-pear-shape"],["hematite","tanzanite-trillion"],["magnesite","apatite"]],
+    [["purple-spinel-trillion","orange-radiant"],["apricot-square-radiant","hematite"],["carnelian","golden-diamond-cut"],["blue-spinel-heart","emerald"],["purple-square-cushion","padparadscha-oval"],["padparadscha-oval","goldstone"],["moonstone","raw-citrine"]],
+    [["aquamarine","pink-spinel-cushion"],["ametrine","kunzite-oval"],["ruby","lapis-lazuli"],["azurite","garnet"],["zircon","green-beryl-antique"],["zoisite","bulls-eye"],["red-diamond","lapis-lazuli"]],
+    [["pink-emerald-cut","ammolite"],["green-aventurine","grossular-garnet"],["yellow-jasper","diamond"],["citrine-checkerboard","kunzite"],["red-spinel-square-emerald-cut","tourmaline-laser-cut"],["pink-spinel-cushion","iolite-emerald-cut"],["citrine-checkerboard","ruby"]],
+    [["pink-opal","white-square"],["kunzite-oval","grandidierite"],["ametrine","emerald"],["grandidierite","white-square"],["citrine-checkerboard","blue-ceylon-sapphire"],["white-square","jasper"],["red-diamond","diamond"]]]
+},
+
+  "spare":
+  { "tilekey" : "┬", "1-image" : "rose-quartz","2-image" : "emerald" },
+
+  "plmt":
+  [ { "current" : {"row#": 0, "column#":0}, "home" : {"row#": 1, "column#":5}, "color" : "A95746" },
+    { "current" : {"row#": 4, "column#":6}, "home" : {"row#": 1, "column#":1}, "color" : "25C26A" },
+    { "current" : {"row#": 2, "column#":6}, "home" : {"row#": 3, "column#":1}, "color" : "2C61B3" },
+    { "current" : {"row#": 3, "column#":3}, "home" : {"row#": 5, "column#":3}, "color" : "8D1DEA" }
+  ],
+
+  "last": [0, "RIGHT"]}
+
+6
+
+"UP"
+
+180

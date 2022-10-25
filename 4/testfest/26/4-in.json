@@ -1,0 +1,32 @@
+{
+    "board":{
+        "connectors":[
+            ["┤", "│", "├", "┘", "├", "┌", "├"],
+            ["┐", "┴", "┐", "┤", "├", "┬", "┴"],
+            ["├", "┘", "├", "├", "─", "│", "┴"],
+            ["│", "┐", "┤", "┼", "├", "┴", "└"],
+            ["─", "┼", "─", "│", "│", "┴", "├"],
+            ["┴", "├", "┼", "┤", "┤", "┘", "┘"],
+            ["┬", "├", "┌", "─", "┌", "┴", "┌"]
+        ],
+        "treasures":[
+            [["zoisite", "yellow-baguette"], ["zircon", "rose-quartz"], ["zoisite", "unakite"], ["zoisite", "white-square"], ["zircon", "rock-quartz"], ["zoisite", "yellow-jasper"], ["zoisite", "tourmaline"]],
+            [["zoisite", "zoisite"], ["zoisite", "tigers-eye"], ["zoisite", "tourmaline-laser-cut"], ["zoisite", "yellow-heart"], ["zoisite", "super-seven"], ["zircon", "rhodonite"], ["zoisite", "tanzanite-trillion"]],
+            [["zoisite", "star-cabochon"], ["zoisite", "stilbite"], ["zoisite", "zircon"], ["zoisite", "yellow-beryl-oval"], ["zoisite", "sunstone"], ["zoisite", "spinel"], ["zoisite", "sphalerite"]],
+            [["zoisite", "red-diamond"], ["zoisite", "ruby"], ["zoisite", "ruby-diamond-profile"], ["zoisite", "rhodonite"], ["zoisite", "red-spinel-square-emerald-cut"], ["zoisite", "rose-quartz"], ["zoisite", "rock-quartz"]],
+            [["zoisite", "purple-square-cushion"], ["zoisite", "purple-oval"], ["zoisite", "purple-cabochon"], ["zoisite", "prehnite"], ["zoisite", "purple-spinel-trillion"], ["zoisite", "raw-beryl"], ["zoisite", "raw-citrine"]],
+            [["zoisite", "pink-spinel-cushion"], ["zoisite", "pink-emerald-cut"], ["zoisite", "padparadscha-sapphire"], ["zoisite", "pink-round"], ["zoisite", "pink-opal"], ["zoisite", "peridot"], ["zoisite", "prasiolite"]],
+            [["zoisite", "moonstone"], ["zoisite", "moss-agate"], ["zoisite", "morganite-oval"], ["zoisite", "orange-radiant"], ["zoisite", "padparadscha-oval"], ["zoisite", "mexican-opal"], ["zircon", "ammolite"]]
+        ]
+    },
+    "last":[0,"DOWN"],
+    "plmt":[
+        {"color":"ABCDEF","current":{"column#":0,"row#":4},"home":{"column#":1,"row#":1}},
+        {"color":"red","current":{"column#":2,"row#":0},"home":{"column#":1,"row#":1}}
+    ],
+    "spare":{"1-image":"zircon","2-image":"ruby-diamond-profile","tilekey":"┌"}
+}
+4
+"RIGHT"
+180
+

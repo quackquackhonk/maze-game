@@ -1,0 +1,68 @@
+{
+    "board": {
+		
+		
+		
+
+        "connectors": [
+            ["┴","─","┴","─","┴","─","┴"],
+            ["┤","┐","┤","┐","┤","┐","┤"],
+            ["┴","─","┴","─","┴","─","┴"],
+            ["┤","┐","┤","┐","┤","┐","┤"],
+            ["┴","─","┴","─","┴","─","┴"],
+            ["┤","┐","┤","┐","┤","┐","┤"],
+            ["┴","─","┴","─","┴","─","┴"]
+        ],
+        "treasures": [
+            [["unakite", "alexandrite-pear-shape"], ["unakite", "alexandrite"], ["unakite", "almandine-garnet"], ["unakite", "amethyst"], ["unakite", "ametrine"], ["unakite", "ammolite"], ["unakite", "apatite"]],
+
+            [["unakite", "aplite"], ["unakite", "apricot-square-radiant"], ["unakite", "aquamarine"], ["unakite", "australian-marquise"], ["unakite", "aventurine"], ["unakite", "azurite"], ["unakite", "beryl"]],
+            
+            [["unakite", "black-obsidian"], ["unakite", "black-onyx"], ["unakite", "black-spinel-cushion"], ["unakite", "blue-ceylon-sapphire"], ["unakite", "blue-cushion"], ["unakite", "blue-pear-shape"], ["unakite", "blue-spinel-heart"]],
+            
+            [["unakite", "bulls-eye"], ["unakite", "carnelian"], ["unakite", "chrome-diopside"], ["unakite", "chrysoberyl-cushion"], ["unakite", "chrysolite"], ["unakite", "citrine-checkerboard"], ["unakite", "citrine"]],
+            
+            [["unakite", "clinohumite"], ["unakite", "color-change-oval"], ["unakite", "cordierite"], ["unakite", "diamond"], ["unakite", "dumortierite"], ["unakite", "emerald"], ["unakite", "fancy-spinel-marquise"]],
+            
+            [["unakite", "garnet"], ["unakite", "golden-diamond-cut"], ["unakite", "goldstone"], ["unakite", "grandidierite"], ["unakite", "gray-agate"], ["unakite", "green-aventurine"], ["unakite", "green-beryl-antique"]],
+            
+            [["unakite", "green-beryl"], ["unakite", "green-princess-cut"], ["unakite", "grossular-garnet"], ["unakite", "hackmanite"], ["unakite", "heliotrope"], ["unakite", "hematite"], ["unakite", "iolite-emerald-cut"]]
+        ]
+    },
+    "last": [
+        2,
+        "RIGHT"
+    ],
+    "plmt": [
+        {
+            "color": "green",
+            "current": {
+                "row#": 1,
+                "column#": 1
+            },
+            "home": {
+                "row#": 1,
+                "column#": 1
+            }
+        },
+        {
+            "color": "pink",
+            "current": {
+                "row#": 3,
+                "column#": 3
+            },
+            "home": {
+                "row#": 3,
+                "column#": 3
+            }
+        }
+    ],
+    "spare": {
+        "1-image": "unakite",
+        "2-image": "goldstone",
+        "tilekey": "┐"
+    }
+}
+2
+"RIGHT"
+180

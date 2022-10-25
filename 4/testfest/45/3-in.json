@@ -1,0 +1,37 @@
+{ "board":
+{ "connectors":
+[ ["┌","┬","┬","┬","┬","─","┐"],
+  ["┌","┘","│","┘","┘","─","┤"],
+  ["┌","│","┬","│","┘","├","│"],
+  ["┌","├","┘","┘","┐","┼","│"],
+  ["┌","┼","│","─","┘","─","┘"],
+  ["┘","┼","├","┴","─","┼","│"],
+  ["┘","┌","└","─","┬","┴","┘"]],
+
+  "treasures":
+  [[["alexandrite-pear-shape","ruby-diamond-profile"],["zircon","rose-quartz"],["clinohumite","yellow-jasper"],["garnet","yellow-baguette"],["rhodonite","white-square"],["zoisite","unakite"],["zoisite","tourmaline"]],
+    [["zircon","rock-quartz"],["beryl","rhodonite"],["chrysolite","yellow-heart"],["diamond","tourmaline-laser-cut"],["zoisite","tigers-eye"],["zoisite","tanzanite-trillion"],["zoisite","super-seven"]],
+    [["alexandrite","zoisite"],["ammolite","zircon"],["carnelian","yellow-beryl-oval"],["cordierite","sunstone"],["zoisite","stilbite"],["zoisite","star-cabochon"],["zoisite","spinel"]],
+    [["almandine-garnet","sphalerite"],["zoisite","ruby"],["aventurine","ruby-diamond-profile"],["zoisite","rose-quartz"],["zoisite","rock-quartz"],["zoisite","rhodonite"],["zoisite","red-spinel-square-emerald-cut"]],
+    [["zoisite","red-diamond"],["black-onyx","raw-citrine"],["zoisite","raw-beryl"],["diamond","purple-square-cushion"],["zoisite","purple-spinel-trillion"],["zoisite","purple-oval"],["zoisite","purple-cabochon"]],
+    [["amethyst","prehnite"],["ametrine","prasiolite"],["citrine","pink-spinel-cushion"],["emerald","pink-round"],["zoisite","pink-opal"],["zoisite","pink-emerald-cut"],["zoisite","peridot"]],
+    [["zoisite","padparadscha-sapphire"],["zoisite","padparadscha-oval"],["zoisite","orange-radiant"],["zoisite","moss-agate"],["zoisite","morganite-oval"],["zoisite","moonstone"],["zoisite","mexican-opal"]]]
+},
+
+  "spare":
+  { "tilekey" : "┼", "1-image" : "rose-quartz","2-image" : "alexandrite" },
+
+  "plmt":
+  [ { "current" : {"row#": 0, "column#":0}, "home" : {"row#": 1, "column#":5}, "color" : "A95746" },
+    { "current" : {"row#": 4, "column#":6}, "home" : {"row#": 1, "column#":1}, "color" : "25C26A" },
+    { "current" : {"row#": 2, "column#":6}, "home" : {"row#": 3, "column#":1}, "color" : "2C61B3" },
+    { "current" : {"row#": 3, "column#":3}, "home" : {"row#": 5, "column#":3}, "color" : "8D1DEA" }
+  ],
+
+  "last": [4, "UP"]}
+
+0
+
+"UP"
+
+0

@@ -1,0 +1,7 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/4/xstate)
+(testing /course/cs4500f22/ta/github/4/32/Tests/1-in.json /course/cs4500f22/ta/github/4/32/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/4/32/Tests/3-in.json /course/cs4500f22/ta/github/4/32/Tests/3-out.json)
+Error: "No valid Board JSON found"
+((/course/cs4500f22/ta/github/4/32/Tests/1-in.json /course/cs4500f22/ta/github/4/32/Tests/1-out.json) (/course/cs4500f22/ta/github/4/32/Tests/3-in.json /course/cs4500f22/ta/github/4/32/Tests/3-out.json))
+((passed 2) (total 2) (partial-score 2))
+

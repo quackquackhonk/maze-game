@@ -1,0 +1,123 @@
+
+
+{ "board" : { "connectors" : [
+  ["─", "┐", "└", "┌", "┘", "┬", "├"],
+  ["┴", "│", "┼", "│", "┘", "┐", "└"],
+  ["┌", "┘", "┬", "├", "┴", "┤", "┼"],
+  ["│", "─", "┐", "└", "┌", "┬", "┬"],
+  ["├", "┴", "┤", "┼", "│", "─", "┐"],
+  ["└", "┌", "┘", "┬", "├", "┴", "┤"],
+  ["┼", "│", "─", "┐", "└", "┌", "┘"]
+],
+
+  "treasures"  : [
+    [
+      ["alexandrite", "almandine-garnet"],
+      ["alexandrite", "amethyst"],
+      ["alexandrite", "ametrine"],
+      ["alexandrite", "ammolite"],
+      ["alexandrite", "apatite"],
+      ["alexandrite", "aplite"],
+      ["alexandrite", "apricot-square-radiant"]
+    ],
+    [
+      ["alexandrite", "aquamarine"],
+      ["alexandrite", "australian-marquise"],
+      ["alexandrite", "aventurine"],
+      ["alexandrite", "azurite"],
+      ["alexandrite", "beryl"],
+      ["alexandrite", "black-obsidian"],
+      ["alexandrite", "black-onyx"]
+    ],
+    [
+      ["alexandrite", "black-spinel-cushion"],
+      ["alexandrite", "blue-ceylon-sapphire"],
+      ["alexandrite", "blue-cushion"],
+      ["alexandrite", "blue-pear-shape"],
+      ["alexandrite", "blue-spinel-heart"],
+      ["alexandrite", "bulls-eye"],
+      ["alexandrite", "carnelian"]
+    ],
+    [
+      ["alexandrite", "chrome-diopside"],
+      ["alexandrite", "chrysoberyl-cushion"],
+      ["alexandrite", "chrysolite"],
+      ["alexandrite", "citrine-checkerboard"],
+      ["alexandrite", "citrine"],
+      ["alexandrite", "clinohumite"],
+      ["alexandrite", "color-change-oval"]
+    ],
+    [
+      ["alexandrite", "cordierite"],
+      ["alexandrite", "diamond"],
+      ["alexandrite", "dumortierite"],
+      ["alexandrite", "emerald"],
+      ["alexandrite", "fancy-spinel-marquise"],
+      ["alexandrite", "garnet"],
+      ["alexandrite", "golden-diamond-cut"]
+    ],
+    [
+      ["alexandrite", "goldstone"],
+      ["alexandrite", "grandidierite"],
+      ["alexandrite", "gray-agate"],
+      ["alexandrite", "green-aventurine"],
+      ["alexandrite", "green-beryl-antique"],
+      ["alexandrite", "green-beryl"],
+      ["alexandrite", "green-princess-cut"]
+    ],
+    [
+      ["alexandrite", "grossular-garnet"],
+      ["alexandrite", "hackmanite"],
+      ["alexandrite", "heliotrope"],
+      ["alexandrite", "hematite"],
+      ["alexandrite", "iolite-emerald-cut"],
+      ["alexandrite", "jasper"],
+      ["alexandrite", "jaspilite"]
+    ]
+  ]
+},
+
+  "spare" : { "tilekey" : "─",
+
+    "1-image" : "alexandrite",
+
+    "2-image" : "kunzite-oval" },
+
+  "plmt"  : [
+    { "current" : { "row#"    : 2,
+      "column#" : 6 },
+
+      "home"    : { "row#"    : 4,
+        "column#" : 3 },
+
+      "color"   : "orange" },
+    { "current" : { "row#"    : 0,
+      "column#" : 1 },
+
+      "home"    : { "row#"    : 4,
+        "column#" : 5 },
+
+      "color"   : "A3C909" },
+    { "current" : { "row#"    : 6,
+      "column#" : 6 },
+
+      "home"    : { "row#"    : 5,
+        "column#" : 5 },
+
+      "color"   : "purple" },
+    { "current" : { "row#"    : 5,
+      "column#" : 4 },
+
+      "home"    : { "row#"    : 3,
+        "column#" : 3 },
+
+      "color"   : "blue" }
+  ],
+
+  "last"  : null }
+
+2
+
+"LEFT"
+
+0

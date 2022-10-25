@@ -1,0 +1,37 @@
+{"board":
+{"connectors":
+[
+  ["┌","─","─","─","│","│","│"],
+  ["└","─","─","─","┐","│","│"],
+  ["─","─","─","┘","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["┘","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"]
+],
+  "treasures":
+  [
+    [["carnelian","rock-quartz"], ["zircon","rose-quartz"],["azurite","carnelian"],["goldstone","yellow-baguette"],["garnet","white-square"],["jasper","unakite"],["dumortierite","tourmaline"]],
+    [["jasper","goldstone"],["zircon","rhodonite"],["jasper","yellow-heart"],["garnet","tourmaline-laser-cut"],["garnet","tigers-eye"],["dumortierite","tanzanite-trillion"],["jasper","super-seven"]],
+    [["goldstone","sphalerite"],["carnelian","zircon"],["goldstone","yellow-beryl-oval"],["azurite","sunstone"],["garnet","jasper"],["beryl","star-cabochon"],["dumortierite","spinel"]],
+    [["azurite","red-diamond"],["jasper","ruby"],["goldstone","ruby-diamond-profile"],["diamond","rose-quartz"],["diamond","rock-quartz"],["apatite","rhodonite"],["dumortierite","red-spinel-square-emerald-cut"]],
+    [["carnelian","prehnite"],["jasper","raw-citrine"],["diamond","raw-beryl"],["diamond","purple-square-cushion"],["diamond","purple-spinel-trillion"],["apatite","purple-oval"],["jasper","purple-cabochon"]],
+    [["carnelian","padparadscha-sapphire"],["azurite","prasiolite"],["garnet","pink-spinel-cushion"],["carnelian","pink-round"],["dumortierite","pink-opal"],["beryl","pink-emerald-cut"],["jasper","peridot"]],
+    [["zircon","ammolite"],["goldstone","padparadscha-oval"],["garnet","orange-radiant"],["carnelian","moss-agate"],["carnelian","morganite-oval"],["apatite","moonstone"],["apatite","mexican-opal"]]
+  ]
+},
+  "last": [4,"RIGHT"],
+  "plmt":
+  [
+    {"color":"FFFFFF","current":{"row#":0,"column#":3},"home":{"row#":1,"column#":1}},
+    {"color":"blue","current":{"row#":0,"column#":0},"home":{"row#":3,"column#":4}},
+    {"color":"pink","current":{"row#":4,"column#":5},"home":{"row#":1,"column#":1}}],
+  "spare":
+  {"1-image":"alexandrite-pear-shape","2-image":"alexandrite","tilekey":"┘"}}
+2
+"RIGHT"
+180
+
+
+
+

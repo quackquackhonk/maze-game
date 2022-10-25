@@ -1,0 +1,33 @@
+{"board" :
+{"connectors" : [[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+[ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ]],
+
+"treasures" : [[["heliotrope", "almandine-garnet"],["fancy-spinel-marquise", "almandine-garnet"],["clinohumite", "chrysoberyl-cushion"],["heliotrope", "raw-beryl"],["cordierite", "black-spinel-cushion"],["zircon", "magnesite"],["unakite", "orange-radiant"]],[["tourmaline", "purple-spinel-trillion"],["rhodonite", "ametrine"],["tanzanite-trillion", "citrine-checkerboard"],["mexican-opal", "red-diamond"],["red-spinel-square-emerald-cut", "diamond"],["purple-spinel-trillion", "raw-beryl"],["purple-cabochon", "carnelian"]],[["blue-spinel-heart", "padparadscha-oval"],["yellow-beryl-oval", "sphalerite"],["cordierite", "green-beryl"],["blue-spinel-heart", "moonstone"],["red-diamond", "heliotrope"],["rock-quartz", "purple-square-cushion"],["clinohumite", "purple-cabochon"]],[["tigers-eye", "stilbite"],["moss-agate", "alexandrite-pear-shape"],["yellow-baguette", "grossular-garnet"],["stilbite", "stilbite"],["zircon", "rose-quartz"],["blue-pear-shape", "purple-square-cushion"],["dumortierite", "magnesite"]],[["purple-oval", "pink-opal"],["aventurine", "zircon"],["pink-round", "prehnite"],["kunzite-oval", "sunstone"],["ruby", "iolite-emerald-cut"],["purple-cabochon", "apatite"],["australian-marquise", "chrysolite"]],[["almandine-garnet", "raw-beryl"],["red-spinel-square-emerald-cut", "purple-cabochon"],["alexandrite-pear-shape", "aventurine"],["rock-quartz", "orange-radiant"],["pink-round", "apatite"],["grossular-garnet", "grandidierite"],["labradorite", "grossular-garnet"]],[["australian-marquise", "padparadscha-sapphire"],["color-change-oval", "padparadscha-sapphire"],["zoisite", "cordierite"],["stilbite", "lapis-lazuli"],["chrome-diopside", "yellow-heart"],["black-obsidian", "blue-cushion"],["yellow-baguette", "golden-diamond-cut"]]]},
+
+"spare" :
+{
+"tilekey" : "┘",
+"1-image" : "emerald",
+"2-image" : "diamond"
+},
+
+"plmt" : [ {"current" : {"column#": 3, "row#": 3},
+"home":{"column#": 0, "row#": 0},
+"color" : "blue"}
+],
+
+"last" : [6, "DOWN"]
+}
+
+4
+
+"DOWN"
+
+270
+
+

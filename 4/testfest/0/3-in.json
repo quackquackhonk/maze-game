@@ -1,0 +1,29 @@
+{ "board" : { "connectors" :
+[
+  ["─", "┘", "└", "┤", "┴", "─", "┘"]
+, ["└", "┐", "┬", "┼", "┴", "│", "└"],
+  ["┐", "┤", "─", "┤", "┼", "─", "┬"],
+  ["┼", "┐", "┘", "│", "┘", "┴", "┬"],
+  ["┤", "┌", "│", "┤", "┼", "┘", "┼"],
+  ["┬", "─", "┐", "┼", "┤", "└", "┐"],
+  ["┌", "┼", "┬", "┌", "┴", "┼", "┐"]
+]
+
+ ,
+
+
+  "treasures"  : [[["peridot", "goldstone"], ["jasper", "tourmaline"], ["unakite", "stilbite"], ["emerald", "black-spinel-cushion"], ["padparadscha-sapphire", "aventurine"], ["zoisite", "yellow-heart"], ["yellow-beryl-oval", "cordierite"]], [["peridot", "red-spinel-square-emerald-cut"], ["apricot-square-radiant", "jaspilite"], ["pink-opal", "lemon-quartz-briolette"], ["purple-cabochon", "chrysoberyl-cushion"], ["beryl", "yellow-baguette"], ["pink-round", "blue-pear-shape"], ["green-princess-cut", "hematite"]], [["tourmaline", "kunzite"], ["unakite", "stilbite"], ["diamond", "tanzanite-trillion"], ["lemon-quartz-briolette", "lemon-quartz-briolette"], ["cordierite", "green-beryl"], ["purple-cabochon", "aquamarine"], ["zoisite", "black-obsidian"]], [["red-diamond", "jasper"], ["cordierite", "orange-radiant"], ["diamond", "purple-square-cushion"], ["blue-pear-shape", "purple-square-cushion"], ["mexican-opal", "apricot-square-radiant"], ["tanzanite-trillion", "yellow-baguette"], ["pink-round", "golden-diamond-cut"]], [["aplite", "aquamarine"], ["kunzite", "hackmanite"], ["purple-square-cushion", "purple-spinel-trillion"], ["green-beryl-antique", "blue-ceylon-sapphire"], ["magnesite", "ammolite"], ["green-princess-cut", "stilbite"], ["dumortierite", "alexandrite-pear-shape"]], [["gray-agate", "tanzanite-trillion"], ["padparadscha-sapphire", "purple-oval"], ["yellow-heart", "blue-pear-shape"], ["super-seven", "apatite"], ["alexandrite-pear-shape", "aquamarine"], ["chrysoberyl-cushion", "golden-diamond-cut"], ["alexandrite", "citrine-checkerboard"]], [["iolite-emerald-cut", "yellow-heart"], ["star-cabochon", "tigers-eye"], ["ammolite", "tigers-eye"], ["orange-radiant", "padparadscha-sapphire"], ["pink-round", "magnesite"], ["black-onyx", "chrysoberyl-cushion"], ["amethyst", "green-princess-cut"]]] },
+  "spare" : { "tilekey" : "─",
+    "1-image" : "kunzite",
+    "2-image" : "tourmaline" },
+  "plmt"  : [{ "current" : { "row#": 0,"column#" : 6 },
+    "home"    : { "row#": 1,"column#" : 3 },
+    "color"   : "white" },{ "current" : { "row#": 5,"column#" : 5 },
+    "home"    : { "row#": 1,"column#" : 5 },
+    "color"   : "green" }],
+  "last"  : null
+}
+6
+"UP"
+0
+

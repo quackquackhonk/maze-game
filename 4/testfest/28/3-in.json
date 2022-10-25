@@ -1,0 +1,95 @@
+{
+    "board": {
+        "connectors": [
+            ["┌","┐","┌","─","┐","┌","┐"],
+            ["└","┘","└","─","┘","└","┘"],
+            ["┌","┐","┌","─","┐","┌","┐"],
+            ["│","│","│","┼","│","│","│"],
+            ["└","┘","└","─","┘","└","┘"],
+            ["┌","┐","┌","─","┐","┌","┐"],
+            ["└","┘","└","─","┘","└","┘"]
+        ],
+        "treasures": [
+            [   
+                ["hackmanite","pink-emerald-cut"],
+                ["hackmanite","pink-opal"],
+                ["hackmanite","pink-round"],
+                ["hackmanite","pink-spinel-cushion"],
+                ["hackmanite","purple-cabochon"],
+                ["hackmanite","purple-oval"],
+                ["hackmanite","purple-spinel-trillion"]
+            ],
+            [
+                ["heliotrope","pink-emerald-cut"],
+                ["heliotrope","pink-opal"],
+                ["heliotrope","pink-round"],
+                ["heliotrope","pink-spinel-cushion"],
+                ["heliotrope","purple-cabochon"],
+                ["heliotrope","purple-oval"],
+                ["heliotrope","purple-spinel-trillion"]
+            ],
+            [
+                ["hematite","pink-emerald-cut"],
+                ["hematite","pink-opal"],
+                ["hematite","pink-round"],
+                ["hematite","pink-spinel-cushion"],
+                ["hematite","purple-cabochon"],
+                ["hematite","purple-oval"],
+                ["hematite","purple-spinel-trillion"]
+            ],
+            [
+                ["jasper","pink-emerald-cut"],
+                ["jasper","pink-opal"],
+                ["jasper","pink-round"],
+                ["jasper","pink-spinel-cushion"],
+                ["jasper","purple-cabochon"],
+                ["jasper","purple-oval"],
+                ["jasper","purple-spinel-trillion"]
+            ],
+            [
+                ["jaspilite","pink-emerald-cut"],
+                ["jaspilite","pink-opal"],
+                ["jaspilite","pink-round"],
+                ["jaspilite","pink-spinel-cushion"],
+                ["jaspilite","purple-cabochon"],
+                ["jaspilite","purple-oval"],
+                ["jaspilite","purple-spinel-trillion"]
+            ],
+            [
+                ["kunzite","pink-emerald-cut"],
+                ["kunzite","pink-opal"],
+                ["kunzite","pink-round"],
+                ["kunzite","pink-spinel-cushion"],
+                ["kunzite","purple-cabochon"],
+                ["kunzite","purple-oval"],
+                ["kunzite","purple-spinel-trillion"]
+            ],
+            [
+                ["labradorite","pink-emerald-cut"],
+                ["labradorite","pink-opal"],
+                ["labradorite","pink-round"],
+                ["labradorite","pink-spinel-cushion"],
+                ["labradorite","purple-cabochon"],
+                ["labradorite","purple-oval"],
+                ["labradorite","purple-spinel-trillion"]
+            ]
+        ]
+    },
+    "last": [0, "UP"],
+    "plmt": [
+        {
+            "color":"black",
+            "current":{"column#":6,"row#":4},
+            "home":{"column#":1,"row#":1}
+        },
+        {
+            "color":"white",
+            "current":{"column#":5,"row#":2},
+            "home":{"column#":5,"row#":5}
+        }
+    ],
+    "spare":{"1-image":"citrine","2-image":"citrine","tilekey":"┴"}
+}
+4
+"RIGHT"
+0

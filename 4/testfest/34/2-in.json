@@ -1,0 +1,75 @@
+{"board" : 
+ { "connectors" : 
+[ ["─", "┼", "┐", "┌", "├", "┼", "┤"],
+  ["┼", "┴", "┼", "─", "┤", "└", "┘"],
+  ["└", "─", "┘", "┼", "┬", "┐", "┼"],
+  ["├", "┼", "└", "┘", "└", "┘", "┼"],
+  ["┐", "┴", "─", "┼", "─", "┐", "├"], 
+  ["└", "┼", "┼", "┬", "│", "┴", "┤"],
+  ["─", "┘", "│", "└", "┼", "┼", "┐"] ],
+
+        "treasures"  : [[["zircon", "green-beryl-antique"], ["zircon", "azurite"], ["white-square", "zircon"], ["zircon", "tourmaline"], ["iolite-emerald-cut", "zircon"], ["zircon", "ruby-diamond-profile"], ["zoisite", "black-spinel-cushion"]], 
+                        [["stilbite", "tourmaline-laser-cut"], ["kunzite-oval", "azurite"], ["rose-quartz", "yellow-heart"], ["ammolite", "blue-spinel-heart"], ["tigers-eye", "moss-agate"], ["magnesite", "dumortierite"], ["morganite-oval", "black-onyx"]], 
+                        [["spinel", "red-diamond"], ["spinel", "black-onyx"], ["zoisite", "gray-agate"], ["blue-cushion", "kunzite"], ["tourmaline", "magnesite"], ["rose-quartz", "white-square"], ["zircon", "white-square"]], 
+                        [["super-seven", "ruby-diamond-profile"], ["raw-beryl", "blue-spinel-heart"], ["blue-cushion", "zircon"], ["prehnite", "aventurine"], ["kunzite-oval", "ammolite"], ["super-seven", "prehnite"], ["golden-diamond-cut", "mexican-opal"]], 
+                        [["tigers-eye", "blue-spinel-heart"], ["super-seven", "stilbite"], ["rose-quartz", "orange-radiant"], ["rose-quartz", "zircon"], ["azurite", "pink-emerald-cut"], ["green-beryl-antique", "tourmaline"], ["bulls-eye", "stilbite"]], 
+                        [["mexican-opal", "black-spinel-cushion"], ["raw-beryl", "super-seven"], ["aventurine", "white-square"], ["ruby", "black-onyx"], ["super-seven", "heliotrope"], ["labradorite", "black-obsidian"], ["citrine-checkerboard", "black-onyx"]], 
+                        [["azurite", "super-seven"], ["orange-radiant", "tourmaline-laser-cut"], ["super-seven", "apatite"], ["bulls-eye", "black-onyx"], ["citrine-checkerboard", "black-spinel-cushion"], ["super-seven", "red-diamond"], ["moss-agate", "citrine-checkerboard"]]] },
+
+        "spare" : 
+            { "tilekey" : "─",
+
+              "1-image" : "alexandrite-pear-shape",
+
+              "2-image" : "green-beryl-antique" },
+
+        "plmt"  : [
+            { "current" : { "row#"    : 6,
+
+                            "column#" : 2 },
+
+              "home"    : { "row#"    : 3,
+
+                            "column#" : 4 },
+
+              "color"   : "FFFFFF" },
+          
+            { "current" : { "row#"    : 5,
+
+                            "column#" : 0 },
+
+              "home"    : { "row#"    : 4,
+
+                            "column#" : 2 },
+
+              "color"   : "928123" },
+
+            { "current" : { "row#"    : 4,
+
+                            "column#" : 0 },
+
+              "home"    : { "row#"    : 4,
+
+                            "column#" : 1 },
+
+              "color"   : "A5E12A" },
+
+            { "current" : { "row#"    : 3,
+
+                            "column#" : 4 },
+
+              "home"    : { "row#"    : 0,
+
+                            "column#" : 1 },
+
+              "color"   : "pink" }
+        
+        
+        ],
+
+        "last"  : null }
+
+2
+"DOWN"
+270
+
