@@ -1,11 +1,11 @@
 //! Contains JSON definitions for data in the `player` module
 
 use common::board::Slide;
-use common::json::{Coordinate, Index, JsonDegree, JsonDirection};
+use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonPlayer, JsonState};
 use common::BOARD_SIZE;
 use serde::Deserialize;
 
-use crate::strategy::{NaiveStrategy, PlayerAction, PlayerMove};
+use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove, PubPlayerInfo};
 
 /// Describes either a `Reimann` or a `Euclid` strategy
 #[derive(Debug, Deserialize)]
@@ -29,6 +29,7 @@ impl From<JsonStrategyDesignation> for NaiveStrategy<BOARD_SIZE, BOARD_SIZE> {
 /// number of `JsonDegree`s to rotate the spare tile counter-clockwise, and the destination
 /// `Coordinate` that the player is moving to.
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum JsonChoice {
     #[serde(rename(deserialize = "PASS"))]
     Pass,
@@ -44,6 +45,32 @@ impl From<JsonChoice> for PlayerAction<BOARD_SIZE, BOARD_SIZE> {
                 rotations: deg.into(),
                 destination: coord.into(),
             }),
+        }
+    }
+}
+
+impl TryFrom<JsonPlayer> for PubPlayerInfo {
+    type Error = String;
+    fn try_from(jp: JsonPlayer) -> Result<Self, Self::Error> {
+        Ok(Self {
+            current: jp.current.into(),
+            home: jp.home.into(),
+            color: jp.color.try_into()?,
+        })
+    }
+}
+
+impl From<JsonState> for PlayerBoardState<BOARD_SIZE, BOARD_SIZE> {
+    fn from(js: JsonState) -> Self {
+        Self {
+            board: (js.board, js.spare).into(),
+            players: js
+                .plmt
+                .into_iter()
+                .map(|player| player.try_into())
+                .collect::<Result<Vec<PubPlayerInfo>, String>>()
+                .unwrap(),
+            last: js.last.into(),
         }
     }
 }

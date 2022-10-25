@@ -4,14 +4,22 @@ use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
+use common::Color;
 use common::{board::Slide, grid::Position, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
-pub struct PlayerBoardState {
-    pub board: Board,
-    pub player_positions: Vec<Position>,
-    pub last: Option<Slide>,
+pub struct PlayerBoardState<const COLS: usize, const ROWS: usize> {
+    pub board: Board<COLS, ROWS>,
+    pub players: Vec<PubPlayerInfo>,
+    pub last: Option<Slide<COLS, ROWS>>,
+}
+
+#[derive(Debug, Clone)]
+pub struct PubPlayerInfo {
+    pub current: Position,
+    pub home: Position,
+    pub color: Color,
 }
 
 /// This trait represents getting a valid move from a given board state
