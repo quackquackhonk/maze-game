@@ -16,7 +16,7 @@ pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Color {
     /// The original name of the color.
     /// Is either the name of a color, like "red", or the Hex Color code for that color
