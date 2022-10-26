@@ -1,21 +1,23 @@
 use common::board::Board;
+use common::grid::Position;
 use common::{ColorName, PlayerInfo, State, BOARD_SIZE};
-use players::player::Player;
-use rand::SeedableRng;
+use players::player::{self, Player};
+use rand::distributions::uniform::SampleRange;
+use rand::{Rng, RngCore};
 
 /// The Result of calling `Referee::run_game(...)`.
 /// - The `winners` field contains all the winning players.
 /// - The `kicked` field contains all the players who misbehaved during the game.
-struct GameResult {
+pub struct GameResult {
     winners: Vec<Box<dyn Player>>,
     kicked: Vec<Box<dyn Player>>,
 }
 
-struct Referee<'a> {
+pub struct Referee<'a> {
     state: State,
     kicked_players: Vec<Box<dyn Player>>,
     reached_goals: Vec<&'a dyn Player>,
-    rand: Box<dyn SeedableRng<Seed = usize>>,
+    rand: Box<dyn RngCore>,
 }
 
 impl<'a> Referee<'a> {
@@ -23,7 +25,7 @@ impl<'a> Referee<'a> {
     ///
     /// # Panics  
     /// This method will panic is `player` is an empty vector
-    fn get_player_boards(&self, players: Vec<Box<dyn Player>>) -> Board {
+    fn get_player_boards(&self, players: &[Box<dyn Player>]) -> Board {
         // FIXME: this should actually ask every player for a board
         players[0].propose_board0(BOARD_SIZE as u32, BOARD_SIZE as u32)
     }
@@ -32,14 +34,29 @@ impl<'a> Referee<'a> {
     ///
     /// This will assign each player a Goal and a home tile, and set each `Player`'s current
     /// position to be their home tile.
-    fn make_initial_state(&self, players: Vec<Box<dyn Player>>, board: Board) -> State {
-        todo!();
+    fn make_initial_state(&mut self, players: &[Box<dyn Player>], board: Board) -> State {
+        let player_info = players
+            .iter()
+            .map(|_| {
+                let home: Position = gen_immovable_tile_pos(&mut self.rand);
+                PlayerInfo::new(
+                    home,
+                    home, /* players start on their home tile */
+                    board[home].gems,
+                    ColorName::Red.into(),
+                )
+            })
+            .collect();
+
+        State::new(board, player_info)
     }
 
     /// Communicates all public information of the current `state` and each `Player`'s private goal
     /// to all `Player`s in `players`.
-    fn broadcast_state(&self, players: Vec<Box<dyn Player>>) {
-        todo!();
+    fn broadcast_initial_state(&self, players: Vec<Box<dyn Player>>) {
+        for player in players {
+            //player.setup(state.into(), goal);
+        }
     }
 
     /// Has `player` won?
@@ -51,17 +68,15 @@ impl<'a> Referee<'a> {
     pub fn run_game(&mut self, players: Vec<Box<dyn Player>>) -> GameResult {
         // Iterate over players to get their proposed boards
         // - for now, use the first players proposed board
-        let board = self.get_player_boards(players);
+        let board = self.get_player_boards(&players);
+
+        self.state = self.make_initial_state(&players, board);
+
+        self.broadcast_initial_state(players);
 
         // Create `State` from the chosen board
         // Assign each player a home + goal + current position
         // communicate initial state to all players
-        // FIXME: these positions needs to be random
-        let player_info = players
-            .iter()
-            .map(|_| PlayerInfo::new((1, 1), (1, 1), board[(1, 1)].gems, ColorName::Red.into()));
-
-        self.state = State::new(board, player_info);
 
         // loop until game is over
         // - ask each player for a turn
@@ -74,6 +89,13 @@ impl<'a> Referee<'a> {
         // return GameResult
         todo!();
     }
+}
+
+fn gen_immovable_tile_pos(rng: &mut impl Rng) -> Position {
+    (
+        rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
+        rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
+    )
 }
 
 fn main() {
