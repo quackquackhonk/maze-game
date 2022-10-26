@@ -122,30 +122,19 @@ impl PlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Debug)]
-pub struct State<const COLS: usize, const ROWS: usize> {
-    pub(crate) board: Board<COLS, ROWS>,
+#[derive(Debug, Default)]
+pub struct State {
+    pub(crate) board: Board,
     pub(crate) player_info: Vec<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
     pub(crate) active_player: usize,
-    pub(crate) previous_slide: Option<Slide<COLS, ROWS>>,
-}
-
-impl Default for State<7, 7> {
-    fn default() -> Self {
-        Self {
-            board: Default::default(),
-            player_info: Default::default(),
-            active_player: Default::default(),
-            previous_slide: Default::default(),
-        }
-    }
+    pub(crate) previous_slide: Option<Slide>,
 }
 
 pub const BOARD_SIZE: usize = 7;
 
-impl<const COLS: usize, const ROWS: usize> State<COLS, ROWS> {
+impl State {
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
@@ -154,9 +143,13 @@ impl<const COLS: usize, const ROWS: usize> State<COLS, ROWS> {
         (0..num_turns % 4).for_each(|_| self.board.rotate_spare());
     }
 
-    fn slide_players(&mut self, &slide: &Slide<COLS, ROWS>) {
+    fn slide_players(&mut self, &slide: &Slide) {
         self.player_info.iter_mut().for_each(|player_info| {
-            player_info.position = slide.move_position(player_info.position)
+            player_info.position = slide.move_position(
+                player_info.position,
+                self.board.grid[0].len(),
+                self.board.grid.len(),
+            )
         });
     }
 
@@ -183,7 +176,7 @@ impl<const COLS: usize, const ROWS: usize> State<COLS, ROWS> {
     /// assert!(res.is_ok());
     ///
     /// ```
-    pub fn slide_and_insert(&mut self, slide: Slide<COLS, ROWS>) -> BoardResult<()> {
+    pub fn slide_and_insert(&mut self, slide: Slide) -> BoardResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here

@@ -8,19 +8,10 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 pub type Position = (usize, usize);
 
 /// Represents a wrapper type for a 2D array with added functionality
-#[derive(Debug)]
-pub struct Grid<T, const COLS: usize, const ROWS: usize>([[T; COLS]; ROWS]);
+#[derive(Debug, Clone)]
+pub struct Grid<T>(Box<[Box<[T]>]>);
 
-impl<T, const COLS: usize, const ROWS: usize> Clone for Grid<T, COLS, ROWS>
-where
-    T: Clone,
-{
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
-impl<T, const COLS: usize, const ROWS: usize> Grid<T, COLS, ROWS> {
+impl<T> Grid<T> {
     /// Rotates the row at `index` left one time
     pub fn rotate_left(&mut self, index: usize) {
         self[index].rotate_left(1);
@@ -63,21 +54,41 @@ impl<T, const COLS: usize, const ROWS: usize> Grid<T, COLS, ROWS> {
 /// assert_eq!(g.len(), 5);
 /// assert_eq!(g[0].len(), 4);
 /// ```
-impl<T, const COLS: usize, const ROWS: usize> From<[[T; COLS]; ROWS]> for Grid<T, COLS, ROWS> {
-    fn from(from: [[T; COLS]; ROWS]) -> Self {
+impl<T> From<Box<[Box<[T]>]>> for Grid<T> {
+    fn from(from: Box<[Box<[T]>]>) -> Self {
         Grid(from)
     }
 }
 
-impl<T, const COLS: usize, const ROWS: usize> Deref for Grid<T, COLS, ROWS> {
-    type Target = [[T; COLS]; ROWS];
+impl<T: Clone, const COLS: usize, const ROWS: usize> From<[[T; COLS]; ROWS]> for Grid<T> {
+    fn from(from: [[T; COLS]; ROWS]) -> Self {
+        let grid: Box<[Box<[T]>]> = from[0..ROWS]
+            .iter()
+            .map(|row| row[0..COLS].iter().cloned().collect())
+            .collect();
+        Grid(grid)
+    }
+}
+
+impl<T: Clone> From<&[&[T]]> for Grid<T> {
+    fn from(from: &[&[T]]) -> Self {
+        let from = from
+            .iter()
+            .map(|row| row.iter().cloned().collect::<Box<[_]>>())
+            .collect::<Box<[_]>>();
+        Grid(from)
+    }
+}
+
+impl<T> Deref for Grid<T> {
+    type Target = Box<[Box<[T]>]>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl<T, const COLS: usize, const ROWS: usize> DerefMut for Grid<T, COLS, ROWS> {
+impl<T> DerefMut for Grid<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
     }
@@ -90,7 +101,7 @@ impl<T, const COLS: usize, const ROWS: usize> DerefMut for Grid<T, COLS, ROWS> {
 /// ```
 /// use common::grid::Grid;
 /// let g = Grid::from([[(); 3]; 3]);
-/// assert_eq!(g[0], [(), (), ()]);
+/// assert_eq!(*g[0], [(), (), ()]);
 /// ```
 ///
 /// # Panics
@@ -102,8 +113,8 @@ impl<T, const COLS: usize, const ROWS: usize> DerefMut for Grid<T, COLS, ROWS> {
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
-impl<T, const COLS: usize, const ROWS: usize> Index<usize> for Grid<T, COLS, ROWS> {
-    type Output = [T; COLS];
+impl<T> Index<usize> for Grid<T> {
+    type Output = Box<[T]>;
 
     fn index(&self, index: usize) -> &Self::Output {
         &self.0[index]
@@ -115,7 +126,7 @@ impl<T, const COLS: usize, const ROWS: usize> Index<usize> for Grid<T, COLS, ROW
 /// # Panics
 ///
 /// Same panic conditions as `Index`.
-impl<T, const COLS: usize, const ROWS: usize> IndexMut<usize> for Grid<T, COLS, ROWS> {
+impl<T> IndexMut<usize> for Grid<T> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.0[index]
     }
@@ -144,7 +155,7 @@ impl<T, const COLS: usize, const ROWS: usize> IndexMut<usize> for Grid<T, COLS, 
 /// let g = Grid::from([[(); 3]; 3]);
 /// assert_eq!(g[(4, 0)], ());
 /// ```
-impl<T, const COLS: usize, const ROWS: usize> Index<Position> for Grid<T, COLS, ROWS> {
+impl<T> Index<Position> for Grid<T> {
     type Output = T;
 
     fn index(&self, index: Position) -> &Self::Output {
@@ -157,7 +168,7 @@ impl<T, const COLS: usize, const ROWS: usize> Index<Position> for Grid<T, COLS, 
 /// # Panics
 ///
 /// Same panic conditions as `Index`.
-impl<T, const COLS: usize, const ROWS: usize> IndexMut<Position> for Grid<T, COLS, ROWS> {
+impl<T> IndexMut<Position> for Grid<T> {
     fn index_mut(&mut self, index: Position) -> &mut Self::Output {
         &mut self.0[index.1][index.0]
     }
@@ -175,19 +186,19 @@ mod GridTests {
             [9, 10, 11, 12],
             [13, 14, 15, 16],
         ]);
-        assert_eq!(g[0], [1, 2, 3, 4]);
+        assert_eq!(*g[0], [1, 2, 3, 4]);
         g.rotate_left(0);
-        assert_eq!(g[0], [2, 3, 4, 1]);
+        assert_eq!(*g[0], [2, 3, 4, 1]);
         g.rotate_left(0);
-        assert_eq!(g[0], [3, 4, 1, 2]);
+        assert_eq!(*g[0], [3, 4, 1, 2]);
         g.rotate_left(0);
-        assert_eq!(g[0], [4, 1, 2, 3]);
+        assert_eq!(*g[0], [4, 1, 2, 3]);
         g.rotate_left(0);
-        assert_eq!(g[0], [1, 2, 3, 4]);
+        assert_eq!(*g[0], [1, 2, 3, 4]);
 
-        assert_eq!(g[3], [13, 14, 15, 16]);
+        assert_eq!(*g[3], [13, 14, 15, 16]);
         g.rotate_left(3);
-        assert_eq!(g[3], [14, 15, 16, 13]);
+        assert_eq!(*g[3], [14, 15, 16, 13]);
     }
 
     #[test]
@@ -198,22 +209,18 @@ mod GridTests {
             [9, 10, 11, 12],
             [13, 14, 15, 16],
         ]);
-        assert_eq!(g[1], [5, 6, 7, 8]);
+        assert_eq!(*g[1], [5, 6, 7, 8]);
         g.rotate_right(1);
-        assert_eq!(g[1], [8, 5, 6, 7]);
+        assert_eq!(*g[1], [8, 5, 6, 7]);
         g.rotate_right(1);
-        assert_eq!(g[1], [7, 8, 5, 6]);
+        assert_eq!(*g[1], [7, 8, 5, 6]);
         g.rotate_right(1);
-        assert_eq!(g[1], [6, 7, 8, 5]);
+        assert_eq!(*g[1], [6, 7, 8, 5]);
         g.rotate_right(1);
-        assert_eq!(g[1], [5, 6, 7, 8]);
+        assert_eq!(*g[1], [5, 6, 7, 8]);
     }
 
-    fn compare_col<T: Eq + std::fmt::Debug, const N: usize, const M: usize>(
-        g: &Grid<T, N, M>,
-        col_idx: usize,
-        col: [T; M],
-    ) {
+    fn compare_col<T: Eq + std::fmt::Debug>(g: &Grid<T>, col_idx: usize, col: &[T]) {
         for (row_idx, row_val) in col.iter().enumerate() {
             assert_eq!(g[(col_idx, row_idx)], *row_val);
         }
@@ -228,15 +235,15 @@ mod GridTests {
             [13, 14, 15, 16],
         ]);
 
-        compare_col(&g, 0, [1, 5, 9, 13]);
+        compare_col(&g, 0, &[1, 5, 9, 13]);
         g.rotate_up(0);
-        compare_col(&g, 0, [5, 9, 13, 1]);
+        compare_col(&g, 0, &[5, 9, 13, 1]);
         g.rotate_up(0);
-        compare_col(&g, 0, [9, 13, 1, 5]);
+        compare_col(&g, 0, &[9, 13, 1, 5]);
         g.rotate_up(0);
-        compare_col(&g, 0, [13, 1, 5, 9]);
+        compare_col(&g, 0, &[13, 1, 5, 9]);
         g.rotate_up(0);
-        compare_col(&g, 0, [1, 5, 9, 13]);
+        compare_col(&g, 0, &[1, 5, 9, 13]);
     }
 
     #[test]
@@ -248,14 +255,14 @@ mod GridTests {
             [13, 14, 15, 16],
         ]);
 
-        compare_col(&g, 1, [2, 6, 10, 14]);
+        compare_col(&g, 1, &[2, 6, 10, 14]);
         g.rotate_down(1);
-        compare_col(&g, 1, [14, 2, 6, 10]);
+        compare_col(&g, 1, &[14, 2, 6, 10]);
         g.rotate_down(1);
-        compare_col(&g, 1, [10, 14, 2, 6]);
+        compare_col(&g, 1, &[10, 14, 2, 6]);
         g.rotate_down(1);
-        compare_col(&g, 1, [6, 10, 14, 2]);
+        compare_col(&g, 1, &[6, 10, 14, 2]);
         g.rotate_down(1);
-        compare_col(&g, 1, [2, 6, 10, 14]);
+        compare_col(&g, 1, &[2, 6, 10, 14]);
     }
 }

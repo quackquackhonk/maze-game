@@ -9,13 +9,13 @@ pub type BoardResult<T> = Result<T, BoardError>;
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug, Clone)]
-pub struct Board<const COLS: usize, const ROWS: usize> {
-    pub(crate) grid: Grid<Tile, COLS, ROWS>,
-    pub(crate) extra: Tile,
+pub struct Board {
+    pub grid: Grid<Tile>,
+    pub extra: Tile,
 }
 
-impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
-    pub fn new(grid: impl Into<Grid<Tile, COLS, ROWS>>, extra: Tile) -> Self {
+impl Board {
+    pub fn new(grid: impl Into<Grid<Tile>>, extra: Tile) -> Self {
         Board {
             grid: grid.into(),
             extra,
@@ -24,12 +24,12 @@ impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
 
     /// Slides the given Slide struct command and inserts the spare tile in the location of the
     /// hole in the board. The dislodged tile becomes the new `spare_tile`.
-    pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide<COLS, ROWS>) {
+    pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide) {
         use CompassDirection::*;
         match direction {
             North => {
                 let col_num = index;
-                let row_num = ROWS - 1;
+                let row_num = self.grid.len() - 1;
                 self.grid.rotate_up(col_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
             }
@@ -45,7 +45,7 @@ impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
             }
             West => {
                 let row_num = index;
-                let col_num = COLS - 1;
+                let col_num = self.grid[0].len() - 1;
                 self.grid.rotate_left(row_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
             }
@@ -66,11 +66,15 @@ impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
             neighbors.push((start.0, start.1 - 1));
         }
         // east neighbor
-        if start.0 < COLS - 1 && self.connected_positions(start, (start.0 + 1, start.1), East) {
+        if start.0 < self.grid[0].len() - 1
+            && self.connected_positions(start, (start.0 + 1, start.1), East)
+        {
             neighbors.push((start.0 + 1, start.1));
         }
         // south neighbor
-        if start.1 < ROWS - 1 && self.connected_positions(start, (start.0, start.1 + 1), South) {
+        if start.1 < self.grid.len() - 1
+            && self.connected_positions(start, (start.0, start.1 + 1), South)
+        {
             neighbors.push((start.0, start.1 + 1));
         }
         // west neighbor
@@ -86,7 +90,7 @@ impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
     /// Returns an error if `start.0` > `BOARD_SIZE` or `start.1` > `BOARD_SIZE` or either `start.0` or
     /// `start.1` are negative.
     pub fn reachable(&self, start: Position) -> BoardResult<Vec<Position>> {
-        if start.0 >= COLS || start.1 >= ROWS {
+        if start.0 >= self.grid[0].len() || start.1 >= self.grid.len() {
             return Err("Out-of-bounds Position".to_string());
         }
 
@@ -115,7 +119,7 @@ impl<const COLS: usize, const ROWS: usize> Board<COLS, ROWS> {
     }
 }
 
-impl<const COLS: usize, const ROWS: usize> Index<Position> for Board<COLS, ROWS> {
+impl Index<Position> for Board {
     type Output = Tile;
 
     fn index(&self, index: Position) -> &Self::Output {
@@ -123,7 +127,11 @@ impl<const COLS: usize, const ROWS: usize> Index<Position> for Board<COLS, ROWS>
     }
 }
 
-impl<const COLS: usize, const ROWS: usize> Default for Board<COLS, ROWS> {
+trait DefaultBoard<const COLS: usize, const ROWS: usize> {
+    fn default_board() -> Self;
+}
+
+impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
     /// Default Board<7> is:
     /// ─│└┌┐┘┴
     /// ├┬┤┼─│└
@@ -139,7 +147,7 @@ impl<const COLS: usize, const ROWS: usize> Default for Board<COLS, ROWS> {
     /// ┌┐┘  
     /// ┴├┬  
     /// extra = ┼
-    fn default() -> Self {
+    fn default_board() -> Self {
         use crate::gem::Gem::*;
         use CompassDirection::*;
         use ConnectorShape::*;
@@ -177,9 +185,15 @@ impl<const COLS: usize, const ROWS: usize> Default for Board<COLS, ROWS> {
     }
 }
 
+impl Default for Board {
+    fn default() -> Self {
+        DefaultBoard::<7, 7>::default_board()
+    }
+}
+
 /// Describes a slide motion
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Slide<const COLS: usize, const ROWS: usize> {
+pub struct Slide {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
     pub(crate) index: usize,
@@ -187,7 +201,7 @@ pub struct Slide<const COLS: usize, const ROWS: usize> {
     pub(crate) direction: CompassDirection,
 }
 
-impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
+impl Slide {
     /// Attempts to create a slide command
     ///
     /// # Errors
@@ -197,24 +211,21 @@ impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
     /// ```should_panic
     /// # use common::board::Slide;
     /// # use common::tile::CompassDirection;
-    /// Slide::<7, 7>::new(3, CompassDirection::North).unwrap();
+    /// Slide::new(3, CompassDirection::North).unwrap();
     /// ```
-    pub fn new(index: usize, direction: CompassDirection) -> Result<Slide<COLS, ROWS>, String> {
+    pub fn new(index: usize, direction: CompassDirection) -> BoardResult<Slide> {
         match direction {
-            CompassDirection::North | CompassDirection::South if index < ROWS && index % 2 == 0 => {
+            CompassDirection::North | CompassDirection::South if index % 2 == 0 => {
                 Ok(Slide { index, direction })
             }
-            CompassDirection::East | CompassDirection::West if index < COLS && index % 2 == 0 => {
+            CompassDirection::East | CompassDirection::West if index % 2 == 0 => {
                 Ok(Slide { index, direction })
             }
-            _ => Err(format!(
-                "Invalid Slide index for Board of size {}x{}",
-                COLS, ROWS
-            )),
+            _ => Err("Only even indicies are slideable!".to_string()),
         }
     }
 
-    pub fn move_position(&self, pos: Position) -> Position {
+    pub fn move_position(&self, pos: Position, cols: usize, rows: usize) -> Position {
         use CompassDirection::*;
         match self {
             Slide {
@@ -222,7 +233,7 @@ impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
                 direction: North,
             } if *index == pos.0 => {
                 if pos.1 == 0 {
-                    (pos.0, ROWS - 1)
+                    (pos.0, rows - 1)
                 } else {
                     (pos.0, pos.1 - 1)
                 }
@@ -231,7 +242,7 @@ impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
                 index,
                 direction: South,
             } if *index == pos.0 => {
-                if pos.1 == ROWS - 1 {
+                if pos.1 == rows - 1 {
                     (pos.0, 0)
                 } else {
                     (pos.0, pos.1 + 1)
@@ -241,7 +252,7 @@ impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
                 index,
                 direction: East,
             } if *index == pos.1 => {
-                if pos.0 == COLS - 1 {
+                if pos.0 == cols - 1 {
                     (0, pos.1)
                 } else {
                     (pos.0 + 1, pos.1)
@@ -252,7 +263,7 @@ impl<const COLS: usize, const ROWS: usize> Slide<COLS, ROWS> {
                 direction: West,
             } if *index == pos.1 => {
                 if pos.0 == 0 {
-                    (COLS - 1, pos.1)
+                    (cols - 1, pos.1)
                 } else {
                     (pos.0 - 1, pos.1)
                 }
@@ -270,32 +281,33 @@ mod BoardTests {
 
     #[test]
     pub fn test_slide_new() {
-        assert!(Slide::<1, 1>::new(0, North).is_ok());
-        assert!(Slide::<1, 1>::new(2, North).is_err());
-
-        assert!(Slide::<7, 7>::new(0, South).is_ok());
-        assert!(Slide::<7, 7>::new(2, East).is_ok());
-        assert!(Slide::<7, 7>::new(5, West).is_err());
+        assert!(Slide::new(0, North).is_ok());
+        assert!(Slide::new(1, South).is_err());
+        assert!(Slide::new(2, East).is_ok());
+        assert!(Slide::new(3, North).is_err());
+        assert!(Slide::new(4, South).is_ok());
+        assert!(Slide::new(5, West).is_err());
+        assert!(Slide::new(6, East).is_ok());
     }
 
     #[test]
     fn test_slide_move_position() {
-        let north_slide = Slide::<7, 7>::new(0, North).unwrap();
-        assert_eq!(north_slide.move_position((1, 1)), (1, 1));
-        assert_eq!(north_slide.move_position((0, 0)), (0, 6));
-        assert_eq!(north_slide.move_position((0, 3)), (0, 2));
-        let south_slide = Slide::<7, 7>::new(4, South).unwrap();
-        assert_eq!(south_slide.move_position((5, 1)), (5, 1));
-        assert_eq!(south_slide.move_position((4, 0)), (4, 1));
-        assert_eq!(south_slide.move_position((4, 6)), (4, 0));
-        let east_slide = Slide::<7, 7>::new(2, East).unwrap();
-        assert_eq!(east_slide.move_position((5, 1)), (5, 1));
-        assert_eq!(east_slide.move_position((1, 2)), (2, 2));
-        assert_eq!(east_slide.move_position((6, 2)), (0, 2));
-        let west_slide = Slide::<7, 7>::new(6, West).unwrap();
-        assert_eq!(west_slide.move_position((5, 1)), (5, 1));
-        assert_eq!(west_slide.move_position((0, 6)), (6, 6));
-        assert_eq!(west_slide.move_position((6, 6)), (5, 6));
+        let north_slide = Slide::new(0, North).unwrap();
+        assert_eq!(north_slide.move_position((1, 1), 7, 7), (1, 1));
+        assert_eq!(north_slide.move_position((0, 0), 7, 7), (0, 6));
+        assert_eq!(north_slide.move_position((0, 3), 7, 7), (0, 2));
+        let south_slide = Slide::new(4, South).unwrap();
+        assert_eq!(south_slide.move_position((5, 1), 7, 7), (5, 1));
+        assert_eq!(south_slide.move_position((4, 0), 7, 7), (4, 1));
+        assert_eq!(south_slide.move_position((4, 6), 7, 7), (4, 0));
+        let east_slide = Slide::new(2, East).unwrap();
+        assert_eq!(east_slide.move_position((5, 1), 7, 7), (5, 1));
+        assert_eq!(east_slide.move_position((1, 2), 7, 7), (2, 2));
+        assert_eq!(east_slide.move_position((6, 2), 7, 7), (0, 2));
+        let west_slide = Slide::new(6, West).unwrap();
+        assert_eq!(west_slide.move_position((5, 1), 7, 7), (5, 1));
+        assert_eq!(west_slide.move_position((0, 6), 7, 7), (6, 6));
+        assert_eq!(west_slide.move_position((6, 6), 7, 7), (5, 6));
     }
 
     #[test]
@@ -305,7 +317,7 @@ mod BoardTests {
         // ┌┐┘
         // ┴├┬
         // extra = ┼
-        let mut b: Board<3, 3> = Board::default();
+        let mut b: Board = DefaultBoard::<3, 3>::default_board();
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Crossroads);
 
@@ -346,7 +358,7 @@ mod BoardTests {
         // ┌┐┘
         // ┴├┬
         // extra = ┼
-        let b = Board::<3, 3>::default();
+        let b: Board = DefaultBoard::<3, 3>::default_board();
         assert_eq!(b.reachable_neighbors((0, 0)), Vec::new());
         assert_eq!(b.reachable_neighbors((2, 2)), vec![(1, 2)]);
         assert_eq!(b.reachable_neighbors((0, 1)), vec![(1, 1), (0, 2)]);
@@ -361,7 +373,7 @@ mod BoardTests {
         // ┌┐┘
         // ┴├┬
         // extra = ┼
-        let b = Board::<3, 3>::default();
+        let b: Board = DefaultBoard::<3, 3>::default_board();
         assert!(b.reachable((10, 10)).is_err());
         let from_0_0 = b.reachable((0, 0));
         assert!(from_0_0.is_ok());

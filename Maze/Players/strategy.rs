@@ -8,34 +8,34 @@ use common::{board::Slide, grid::Position, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
-pub struct PlayerBoardState<const COLS: usize, const ROWS: usize> {
-    board: Board<COLS, ROWS>,
+pub struct PlayerBoardState {
+    board: Board,
     player_positions: Vec<Position>,
 }
 
 /// This trait represents getting a valid move from a given board state
-pub trait Strategy<const COLS: usize, const ROWS: usize> {
+pub trait Strategy {
     /// This returns a valid move given the game state
     fn get_move(
         &self,
-        board_state: PlayerBoardState<COLS, ROWS>,
+        board_state: PlayerBoardState,
         start: Position,
         goal_tile: Position,
-    ) -> PlayerAction<COLS, ROWS>;
+    ) -> PlayerAction;
 }
 
 /// This type represents a possible player action  
 /// `None` -> A pass  
 /// `Some(PlayerMove)` -> A move  
-pub type PlayerAction<const COLS: usize, const ROWS: usize> = Option<PlayerMove<COLS, ROWS>>;
+pub type PlayerAction = Option<PlayerMove>;
 
 /// This type represents all the data needed to execute a move
 ///
 /// # Warning
 /// This type does not self-validate because it has no knowledge of the board it will be played on.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct PlayerMove<const COLS: usize, const ROWS: usize> {
-    pub slide: Slide<COLS, ROWS>,
+pub struct PlayerMove {
+    pub slide: Slide,
     pub rotations: usize,
     pub destination: Position,
 }
@@ -44,7 +44,7 @@ pub struct PlayerMove<const COLS: usize, const ROWS: usize> {
 /// Implements a strategy that after failing to find a move directly to the goal tile, checks
 /// every other board position as a location to move. The order in which it checks every location
 /// depends on the `NaiveStrategy` type.
-pub enum NaiveStrategy<const COLS: usize, const ROWS: usize> {
+pub enum NaiveStrategy {
     /// This variant sorts the posssible alternative goals in order of smallest to largest
     /// euclidian distance. It breaks any ties by picking the first one in row-column order.
     Euclid,
@@ -70,15 +70,15 @@ fn euclidian_distance(p1: &Position, p2: &Position) -> f32 {
     f32::sqrt((p1.0 as f32 - p2.0 as f32).powi(2) + (p1.1 as f32 - p2.1 as f32).powi(2))
 }
 
-impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
+impl NaiveStrategy {
     /// This function creates a list of possible goals and orders them according to the strategy
     /// and returns a player action with the move if it found one or a pass if it couldn't
     fn find_move_to_reach_alt_goal(
         &self,
-        board_state: &PlayerBoardState<COLS, ROWS>,
+        board_state: &PlayerBoardState,
         start: Position,
         goal_tile: Position,
-    ) -> PlayerAction<COLS, ROWS> {
+    ) -> PlayerAction {
         self.get_alt_goals(goal_tile)
             .into_iter()
             .filter(|pos| *pos != start)
@@ -118,18 +118,22 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
     /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
     /// `rotations` times, can the player go from `start` to `destination`
     fn reachable_after_move(
-        board_state: &PlayerBoardState<COLS, ROWS>,
+        board_state: &PlayerBoardState,
         PlayerMove {
             slide,
             rotations,
             destination,
-        }: PlayerMove<COLS, ROWS>,
+        }: PlayerMove,
         start: Position,
     ) -> bool {
         let mut board_state = board_state.clone();
         (0..rotations).for_each(|_| board_state.board.rotate_spare());
         board_state.board.slide_and_insert(slide);
-        let start = slide.move_position(start);
+        let start = slide.move_position(
+            start,
+            board_state.board.grid[0].len(),
+            board_state.board.grid.len(),
+        );
         board_state
             .board
             .reachable(start)
@@ -139,10 +143,10 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
 
     fn find_move_to_reach(
         &self,
-        board_state: &PlayerBoardState<COLS, ROWS>,
+        board_state: &PlayerBoardState,
         start: Position,
         destination: Position,
-    ) -> PlayerAction<COLS, ROWS> {
+    ) -> PlayerAction {
         for row in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
@@ -179,13 +183,13 @@ impl<const COLS: usize, const ROWS: usize> NaiveStrategy<COLS, ROWS> {
     }
 }
 
-impl<const COLS: usize, const ROWS: usize> Strategy<COLS, ROWS> for NaiveStrategy<COLS, ROWS> {
+impl Strategy for NaiveStrategy {
     fn get_move(
         &self,
-        board_state: PlayerBoardState<COLS, ROWS>,
+        board_state: PlayerBoardState,
         start: Position,
         goal_tile: Position,
-    ) -> PlayerAction<COLS, ROWS> {
+    ) -> PlayerAction {
         self.find_move_to_reach(&board_state, start, goal_tile)
             .or_else(|| self.find_move_to_reach_alt_goal(&board_state, start, goal_tile))
     }
@@ -198,7 +202,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_move_euclid() {
-        let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
+        let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(1, 1), (2, 2)],
         };
@@ -278,7 +282,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_move_reimann() {
-        let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
+        let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(1, 1), (2, 2)],
         };
@@ -348,7 +352,7 @@ mod StrategyTests {
 
     #[test]
     fn test_find_move_to_reach_alt_goal() {
-        let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
+        let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 2), (2, 2)],
         };
@@ -447,7 +451,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_reimann() {
-        let reimann_alt_goals = NaiveStrategy::<7, 7>::Reimann.get_alt_goals((1, 1));
+        let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
         assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
         assert_eq!(reimann_alt_goals[0], (0, 0));
         assert_eq!(reimann_alt_goals[1], (1, 0));
@@ -458,7 +462,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_euclid() {
-        let euclid_alt_goals = NaiveStrategy::<7, 7>::Euclid.get_alt_goals((1, 1));
+        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1));
         assert_eq!(euclid_alt_goals.len(), BOARD_SIZE.pow(2));
         assert_eq!(euclid_alt_goals[0], (1, 1));
         assert_eq!(euclid_alt_goals[1], (1, 0));
@@ -471,7 +475,7 @@ mod StrategyTests {
 
     #[test]
     fn test_find_move_to_reach() {
-        let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
+        let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(4, 1), (2, 2)],
         };
@@ -545,7 +549,7 @@ mod StrategyTests {
 
     #[test]
     fn test_reachable_after_move() {
-        let board_state: PlayerBoardState<7, 7> = PlayerBoardState {
+        let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
         };
