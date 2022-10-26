@@ -24,7 +24,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
         _ => Err("State was not the first JSON object sent")?,
     };
 
-    let slide: Slide<BOARD_SIZE> = {
+    let slide: Slide = {
         let index: usize = match test_input.next().ok_or("No valid Index JSON found")? {
             ValidJson::Number(index) => index,
             _ => Err("Index was not the second JSON object sent")?,
@@ -35,7 +35,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
                 ValidJson::Direction(dir) => dir.into(),
                 _ => Err("Direction was not the third JSON object sent")?,
             };
-        Slide::new(index / 2, dir)?
+        Slide::new(index, dir)?
     };
 
     let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {
