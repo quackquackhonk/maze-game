@@ -11,3 +11,4 @@ path = "referee.rs"
 [dependencies]
 common = { path = "../Common/" }
 players = { path = "../Players/" }
+rand = "0.8.5"
