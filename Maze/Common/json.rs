@@ -327,8 +327,16 @@ impl From<JsonDirection> for CompassDirection {
 #[derive(Debug, Deserialize)]
 pub struct JsonDegree(pub usize);
 
-impl From<JsonDegree> for usize {
-    fn from(d: JsonDegree) -> Self {
-        d.0 / 90
+impl TryFrom<JsonDegree> for usize {
+    type Error = String;
+
+    fn try_from(d: JsonDegree) -> Result<Self, Self::Error> {
+        match d.0 {
+            0 => Ok(0),
+            90 => Ok(1),
+            180 => Ok(2),
+            270 => Ok(3),
+            _ => Err(format!("Invalid JsonDegree {}", d.0)),
+        }
     }
 }

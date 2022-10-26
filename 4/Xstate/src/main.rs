@@ -39,7 +39,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
     };
 
     let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {
-        ValidJson::Number(deg) => JsonDegree(deg).into(),
+        ValidJson::Number(deg) => JsonDegree(deg).try_into()?,
         x => Err(format!(
             "Degree was not the fourth JSON object sent, got {:?}",
             x
