@@ -256,7 +256,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (0, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -286,7 +286,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (6, 4),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -311,6 +311,7 @@ mod StrategyTests {
             }
         );
 
+        // there are no moves that will pass starting from (0, 0) on this board
         let board_state = PlayerBoardState {
             board: Board::default(),
             players: vec![
@@ -384,7 +385,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (0, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -414,7 +415,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (6, 4),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -446,7 +447,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (0, 2),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -581,7 +582,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (4, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -640,7 +641,7 @@ mod StrategyTests {
             board: Board::default(),
             players: vec![
                 PubPlayerInfo {
-                    current: (1, 1),
+                    current: (6, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
@@ -652,7 +653,7 @@ mod StrategyTests {
             ],
             last: None,
         };
-        // you can go from (6, 1) -> (1, 1) by wrapping around the board
+        // you can go from (6, 0) -> (1, 1) by wrapping around the board
         let start = board_state.players[0].current;
         let destination = (1, 1);
         assert_eq!(
