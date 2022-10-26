@@ -77,7 +77,7 @@ impl From<ColorName> for Color {
             },
             ColorName::Black => Color {
                 name: "black".to_string(),
-                code: (128, 0, 128),
+                code: (0, 0, 0),
             },
         }
     }
