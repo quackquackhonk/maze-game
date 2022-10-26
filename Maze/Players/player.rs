@@ -1,5 +1,5 @@
 use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, Strategy};
-use common::board::Board;
+use common::board::{Board, DefaultBoard};
 use common::grid::Position;
 
 /// Trait describing the methods that `Player`s must implement
@@ -34,13 +34,14 @@ impl<S: Strategy> Player for LocalPlayer<S> {
     }
 
     fn propose_board0(&self, cols: u32, rows: u32) -> Board {
-        todo!()
+        // FIXME: this shouldn't just propose the default board
+        DefaultBoard::<7, 7>::default_board()
     }
 
     /// # Effect
     /// Sets `self.goal = Some(goal)`.
-    fn setup(&mut self, state: Option<PlayerBoardState>, goal: Position) {
-        todo!()
+    fn setup(&mut self, _state: Option<PlayerBoardState>, goal: Position) {
+        self.goal = Some(goal);
     }
 
     fn take_turn(&self, state: PlayerBoardState) -> PlayerAction {
@@ -53,7 +54,6 @@ impl<S: Strategy> Player for LocalPlayer<S> {
         )
     }
 
-    fn won(&self, did_win: bool) {
-        todo!()
-    }
+    /// Does nothing
+    fn won(&self, _did_win: bool) {}
 }
