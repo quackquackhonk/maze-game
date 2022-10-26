@@ -19,10 +19,11 @@ pub enum ValidJson {
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let mut state: State = match test_input.next().ok_or("No valid Board JSON found")? {
-        ValidJson::State(state) => state.into(),
-        _ => Err("State was not the first JSON object sent")?,
-    };
+    let mut state: State<BOARD_SIZE, BOARD_SIZE> =
+        match test_input.next().ok_or("No valid Board JSON found")? {
+            ValidJson::State(state) => state.into(),
+            _ => Err("State was not the first JSON object sent")?,
+        };
 
     let slide: Slide = {
         let index: usize = match test_input.next().ok_or("No valid Index JSON found")? {
