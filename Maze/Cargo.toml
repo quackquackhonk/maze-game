@@ -3,5 +3,5 @@
 [workspace]
 
 members = [
-	"Common", "Players"
+	"Common", "Players", "Referee",
 ]

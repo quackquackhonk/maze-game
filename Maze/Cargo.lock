@@ -3,6 +3,14 @@
 version = 3
 
 [[package]]
+name = "Referee"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "player",
+]
+
+[[package]]
 name = "aho-corasick"
 version = "0.7.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
