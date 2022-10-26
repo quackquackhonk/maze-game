@@ -10,4 +10,4 @@ path = "referee.rs"
 
 [dependencies]
 common = { path = "../Common/" }
-player = { path = "../Players/" }
+players = { path = "../Players/" }
