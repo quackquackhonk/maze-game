@@ -127,7 +127,7 @@ impl Index<Position> for Board {
     }
 }
 
-trait DefaultBoard<const COLS: usize, const ROWS: usize> {
+pub trait DefaultBoard<const COLS: usize, const ROWS: usize> {
     fn default_board() -> Self;
 }
 
