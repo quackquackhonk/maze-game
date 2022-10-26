@@ -9,8 +9,9 @@ use common::{board::Slide, grid::Position, BOARD_SIZE};
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
 pub struct PlayerBoardState {
-    board: Board,
-    player_positions: Vec<Position>,
+    pub board: Board,
+    pub player_positions: Vec<Position>,
+    pub last: Option<Slide>,
 }
 
 /// This trait represents getting a valid move from a given board state
@@ -205,6 +206,7 @@ mod StrategyTests {
         let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(1, 1), (2, 2)],
+            last: None,
         };
         let euclid = NaiveStrategy::Euclid;
         // Default Board<7> is:
@@ -237,6 +239,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
+            last: None,
         };
         let euclid_move = euclid.get_move(board_state, (0, 0), (2, 3));
         assert!(euclid_move.is_some());
@@ -255,6 +258,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(6, 4), (2, 2)],
+            last: None,
         };
         let euclid_move = euclid.get_move(board_state, (6, 4), (2, 0));
         assert!(euclid_move.is_some());
@@ -272,6 +276,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
+            last: None,
         };
         let mut any_passes = (0..BOARD_SIZE)
             .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
@@ -285,6 +290,7 @@ mod StrategyTests {
         let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(1, 1), (2, 2)],
+            last: None,
         };
         let reimann = NaiveStrategy::Reimann;
         // Default Board<7> is:
@@ -317,6 +323,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
+            last: None,
         };
         let reimann_move = reimann.get_move(board_state, (0, 0), (2, 3));
         assert!(reimann_move.is_some());
@@ -335,6 +342,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(6, 4), (2, 2)],
+            last: None,
         };
         let reimann_move = reimann.get_move(board_state, (6, 4), (2, 0));
         assert!(reimann_move.is_some());
@@ -355,6 +363,7 @@ mod StrategyTests {
         let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 2), (2, 2)],
+            last: None,
         };
         let euclid = NaiveStrategy::Euclid;
         let reimann = NaiveStrategy::Reimann;
@@ -478,6 +487,7 @@ mod StrategyTests {
         let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(4, 1), (2, 2)],
+            last: None,
         };
         // Default Board<7> is:
         //   0123456
@@ -525,6 +535,7 @@ mod StrategyTests {
         let board_state = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(6, 0), (2, 2)],
+            last: None,
         };
         // you can go from (6, 1) -> (1, 1) by wrapping around the board
         let start = board_state.player_positions[0];
@@ -552,6 +563,7 @@ mod StrategyTests {
         let board_state: PlayerBoardState = PlayerBoardState {
             board: Board::default(),
             player_positions: vec![(0, 0), (2, 2)],
+            last: None,
         };
         // Default Board<7> is:
         //   0123456
