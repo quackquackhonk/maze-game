@@ -135,6 +135,15 @@ pub struct State {
 pub const BOARD_SIZE: usize = 7;
 
 impl State {
+    pub fn new(board: Board, player_info: Vec<PlayerInfo>) -> Self {
+        State {
+            board,
+            player_info,
+            active_player: 0,
+            previous_slide: None,
+        }
+    }
+
     /// Rotates the spare `Tile` in the `board` by a given number of 90 degree turns
     ///
     /// Does nothing if we do not currently have a spare tile
