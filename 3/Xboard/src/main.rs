@@ -8,7 +8,6 @@ use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonBoard};
 use serde::Deserialize;
 
-
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum ValidJson {
@@ -20,7 +19,7 @@ pub enum ValidJson {
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let board: Board<7> = match test_input.next().ok_or("No valid Board JSON found")? {
+    let board: Board = match test_input.next().ok_or("No valid Board JSON found")? {
         ValidJson::Board(board) => board.into(),
         _ => Err("Board was not the first JSON object sent")?,
     };
