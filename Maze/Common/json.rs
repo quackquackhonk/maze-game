@@ -300,7 +300,7 @@ impl From<JsonAction> for Option<Slide> {
 /// or column. For example, "LEFT" means that the spare tile is inserted into the
 /// right side, such that the pieces move to the left, and the
 /// left-most tile of the row drops out.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum JsonDirection {
     LEFT,
     RIGHT,
@@ -321,9 +321,22 @@ impl From<JsonDirection> for CompassDirection {
     }
 }
 
+impl From<CompassDirection> for JsonDirection {
+    fn from(cd: CompassDirection) -> Self {
+        use CompassDirection::*;
+        use JsonDirection::*;
+        match cd {
+            North => UP,
+            South => DOWN,
+            East => RIGHT,
+            West => LEFT,
+        }
+    }
+}
+
 /// Describes the possible counter-clockwise rotations around
 /// the center of a tile.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonDegree(pub usize);
 
 impl TryFrom<JsonDegree> for usize {
