@@ -13,7 +13,7 @@ pub fn squared_euclidian_distance(p1: &Position, p2: &Position) -> usize {
 }
 
 /// Represents a wrapper type for a 2D array with added functionality
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid<T>(Box<[Box<[T]>]>);
 
 impl<T> Grid<T> {

@@ -33,7 +33,7 @@ impl<S: Strategy> Player for LocalPlayer<S> {
         self.name.clone()
     }
 
-    fn propose_board0(&self, cols: u32, rows: u32) -> Board {
+    fn propose_board0(&self, _cols: u32, _rows: u32) -> Board {
         // FIXME: this shouldn't just propose the default board
         DefaultBoard::<7, 7>::default_board()
     }
@@ -56,4 +56,93 @@ impl<S: Strategy> Player for LocalPlayer<S> {
 
     /// Does nothing
     fn won(&self, _did_win: bool) {}
+}
+
+#[cfg(test)]
+mod tests {
+    use common::{board::DefaultBoard, ColorName};
+
+    use crate::{
+        player::Player,
+        strategy::{NaiveStrategy, PlayerBoardState, PubPlayerInfo, Strategy},
+    };
+
+    use super::LocalPlayer;
+
+    #[test]
+    fn test_name() {
+        let player = LocalPlayer {
+            name: String::from("bill"),
+            strategy: NaiveStrategy::Euclid,
+            goal: None,
+        };
+
+        assert_eq!(player.name(), String::from("bill"));
+    }
+
+    #[test]
+    fn test_propose_board() {
+        let player = LocalPlayer {
+            name: String::from("bill"),
+            strategy: NaiveStrategy::Euclid,
+            goal: None,
+        };
+
+        assert_eq!(
+            player.propose_board0(7, 7),
+            DefaultBoard::<7, 7>::default_board()
+        );
+    }
+
+    #[test]
+    fn test_setup() {
+        let mut player = LocalPlayer {
+            name: String::from("bill"),
+            strategy: NaiveStrategy::Euclid,
+            goal: None,
+        };
+
+        assert!(player.goal.is_none());
+
+        let state = Some(PlayerBoardState {
+            board: DefaultBoard::<7, 7>::default_board(),
+            players: Default::default(),
+            last: None,
+        });
+        player.setup(state, (1, 1));
+        assert!(player.goal.is_some());
+        assert_eq!(player.goal.unwrap(), (1, 1));
+
+        player.setup(None, (2, 1));
+        assert_eq!(player.goal.unwrap(), (2, 1));
+    }
+
+    #[test]
+    fn test_take_turn() {
+        let mut player = LocalPlayer {
+            name: String::from("bill"),
+            strategy: NaiveStrategy::Euclid,
+            goal: None,
+        };
+
+        let state = Some(PlayerBoardState {
+            board: DefaultBoard::<7, 7>::default_board(),
+            players: Default::default(),
+            last: None,
+        });
+        player.setup(state, (1, 1));
+
+        let state = PlayerBoardState {
+            board: DefaultBoard::<7, 7>::default_board(),
+            players: vec![PubPlayerInfo {
+                current: (0, 0),
+                home: (0, 0),
+                color: ColorName::Red.into(),
+            }],
+            last: None,
+        };
+
+        let turn = player.take_turn(state.clone());
+        assert_eq!(turn, NaiveStrategy::Euclid.get_move(state, (0, 0), (1, 1)));
+    }
 }
