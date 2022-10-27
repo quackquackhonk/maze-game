@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 use serde::Deserialize;
 /// Describes the gems a tile can have
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize)]
 pub enum Gem {
     #[serde(rename(deserialize = "alexandrite-pear-shape"))]
     alexandrite_pear_shape,
