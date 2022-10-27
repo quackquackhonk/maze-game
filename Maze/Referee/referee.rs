@@ -3,8 +3,8 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use common::board::Board;
-use common::grid::Position;
-use common::{ColorName, PlayerInfo, State, BOARD_SIZE};
+use common::grid::{squared_euclidian_distance, Position};
+use common::{Color, ColorName, PlayerInfo, State, BOARD_SIZE};
 use players::player::Player;
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::distributions::uniform::SampleRange;
@@ -86,6 +86,56 @@ impl Referee {
         state.next_player();
     }
 
+    /// Returns a tuple of two `Vec<Box<dyn Player>>`. The first of these vectors contains all
+    /// `Box<dyn Player>`s who won the game, and the second vector contains all the losers.
+    fn calculate_winners(
+        winner: GameWinner,
+        players: Vec<Box<dyn Player>>,
+        state: &State,
+    ) -> (Vec<Box<dyn Player>>, Vec<Box<dyn Player>>) {
+        let zipped_players = players.into_iter().zip(state.player_info.iter());
+        match winner {
+            Some(winner) => zipped_players.fold(
+                (vec![], vec![]),
+                |(mut winners, mut losers), (api, info)| {
+                    if info.color == winner.color {
+                        winners.push(api);
+                    } else {
+                        losers.push(api);
+                    }
+                    (winners, losers)
+                },
+            ),
+            None => {
+                let min_dist = state.player_info.iter().fold(usize::MAX, |prev, info| {
+                    usize::min(prev, squared_euclidian_distance(&info.position, &info.goal))
+                });
+
+                zipped_players.fold(
+                    (vec![], vec![]),
+                    |(mut winners, mut losers), (api, info)| {
+                        if min_dist == squared_euclidian_distance(&info.position, &info.goal) {
+                            winners.push(api);
+                        } else {
+                            losers.push(api);
+                        }
+                        (winners, losers)
+                    },
+                )
+            }
+        }
+    }
+
+    /// Communicates if a player won to all `Player`s in the given tuple of winners and losers
+    fn broadcast_winners(winners: &[Box<dyn Player>], losers: Vec<Box<dyn Player>>) {
+        for player in winners {
+            player.won(true);
+        }
+        for player in losers {
+            player.won(false);
+        }
+    }
+
     /// Runs the game given the age-sorted `Vec<Box<dyn Player>>`, `players`.
     pub fn run_game(&mut self, mut players: Vec<Box<dyn Player>>) -> GameResult {
         // Iterate over players to get their proposed boards
@@ -103,9 +153,9 @@ impl Referee {
         // - ask each player for a turn
         // - check if that player won
         let mut game_result = GameResult::default();
-        let mut reached_goal: HashSet<PlayerInfo> = HashSet::default();
+        let mut reached_goal: HashSet<Color> = HashSet::default();
         let mut round = 0;
-        let first_player = state.current_player_info().clone();
+        let mut first_player = state.current_player_info().clone();
         let mut num_passed = 0;
         let winner = loop {
             let turn: PlayerAction = players[0].take_turn(state.clone().into());
@@ -130,10 +180,10 @@ impl Referee {
                             // player has reached their goal
                             let pi = pi.clone();
                             players[0].setup(None, pi.home);
-                            reached_goal.insert(pi);
-                        } else if state.player_reached_home() && reached_goal.contains(pi) {
+                            reached_goal.insert(pi.color);
+                        } else if state.player_reached_home() && reached_goal.contains(&pi.color) {
                             // current player won
-                            break Some(pi);
+                            break Some(pi.clone());
                         }
                     } else {
                         players.rotate_left(1);
@@ -147,7 +197,7 @@ impl Referee {
                                     first_player = state.current_player_info().clone();
                                 }
 
-                                reached_goal.remove(&pi);
+                                reached_goal.remove(&pi.color);
                                 game_result.kicked.push(player);
                             }
                             None => {
@@ -179,11 +229,14 @@ impl Referee {
                     break None;
                 }
             }
-        }
+        };
 
         // Communicate winners to all players
+        let (winners, losers) = Referee::calculate_winners(winner, players, &state);
+        Referee::broadcast_winners(&winners, losers);
 
         // return GameResult
+        game_result.winners = winners;
         game_result
     }
 }
