@@ -283,7 +283,7 @@ impl From<Color> for JsonColor {
 
 /// Specifies the last sliding action that an actor
 /// performed; `None` indicates that no sliding action has been performed yet.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonAction(Option<(Index, JsonDirection)>);
 
 impl From<JsonAction> for Option<Slide> {

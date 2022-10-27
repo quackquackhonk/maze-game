@@ -40,7 +40,7 @@ impl From<JsonChoice> for PlayerAction {
         match jc {
             JsonChoice::Pass => None,
             JsonChoice::Move(ind, dir, deg, coord) => Some(PlayerMove {
-                slide: Slide::new(ind.0, dir.into()).unwrap(),
+                slide: Slide::new(ind.0, dir.into()),
                 rotations: deg.try_into().unwrap(),
                 destination: coord.into(),
             }),
