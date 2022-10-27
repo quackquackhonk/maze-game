@@ -196,9 +196,9 @@ impl Default for Board {
 pub struct Slide {
     /// The index of the row or column to be slid
     /// Counts from 0 from left to right and top to bottom
-    pub(crate) index: usize,
+    pub index: usize,
     /// The direction the row or column is sliding to
-    pub(crate) direction: CompassDirection,
+    pub direction: CompassDirection,
 }
 
 impl Slide {
