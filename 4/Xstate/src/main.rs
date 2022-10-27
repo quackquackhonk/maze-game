@@ -35,7 +35,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
                 ValidJson::Direction(dir) => dir.into(),
                 _ => Err("Direction was not the third JSON object sent")?,
             };
-        Slide::new(index, dir)?
+        Slide::new(index, dir)
     };
 
     let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {

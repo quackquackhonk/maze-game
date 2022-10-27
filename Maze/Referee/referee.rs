@@ -5,6 +5,7 @@ use common::grid::Position;
 use common::{ColorName, PlayerInfo, State, BOARD_SIZE};
 use players::player::Player;
 use players::strategy::PlayerAction;
+use rand::distributions::uniform::SampleRange;
 use rand::{Rng, RngCore};
 
 /// The Result of calling `Referee::run_game(...)`.

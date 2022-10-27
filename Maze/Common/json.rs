@@ -178,12 +178,12 @@ impl From<(JsonBoard, JsonTile)> for Board {
 /// - no two `JsonPlayer`s will have the same `JsonColor`
 #[derive(Debug, Deserialize)]
 pub struct JsonState {
-    board: JsonBoard,
+    pub board: JsonBoard,
     #[allow(dead_code)]
-    spare: JsonTile,
+    pub spare: JsonTile,
     /// the first player in `plmt` is the currently active player  
-    plmt: Vec<JsonPlayer>,
-    last: JsonAction,
+    pub plmt: Vec<JsonPlayer>,
+    pub last: JsonAction,
 }
 
 impl From<JsonState> for State {
@@ -221,9 +221,9 @@ impl From<JsonTile> for Tile {
 /// location of its home, and the color of its avatar.
 #[derive(Debug, Deserialize)]
 pub struct JsonPlayer {
-    current: Coordinate,
-    home: Coordinate,
-    color: JsonColor,
+    pub current: Coordinate,
+    pub home: Coordinate,
+    pub color: JsonColor,
 }
 
 impl From<JsonPlayer> for PlayerInfo {
@@ -284,7 +284,7 @@ impl From<Color> for JsonColor {
 
 /// Specifies the last sliding action that an actor
 /// performed; `None` indicates that no sliding action has been performed yet.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonAction(Option<(Index, JsonDirection)>);
 
 impl From<JsonAction> for Option<Slide> {
@@ -301,7 +301,7 @@ impl From<JsonAction> for Option<Slide> {
 /// or column. For example, "LEFT" means that the spare tile is inserted into the
 /// right side, such that the pieces move to the left, and the
 /// left-most tile of the row drops out.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum JsonDirection {
     LEFT,
     RIGHT,
@@ -322,9 +322,22 @@ impl From<JsonDirection> for CompassDirection {
     }
 }
 
+impl From<CompassDirection> for JsonDirection {
+    fn from(cd: CompassDirection) -> Self {
+        use CompassDirection::*;
+        use JsonDirection::*;
+        match cd {
+            North => UP,
+            South => DOWN,
+            East => RIGHT,
+            West => LEFT,
+        }
+    }
+}
+
 /// Describes the possible counter-clockwise rotations around
 /// the center of a tile.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonDegree(pub usize);
 
 impl TryFrom<JsonDegree> for usize {
