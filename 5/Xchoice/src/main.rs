@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::{stdin, stdout, Read, Write};
 
 use common::grid::Position;
 use common::json::{Coordinate, JsonState};
@@ -59,4 +59,6 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
     Ok(())
 }
 
-fn main() {}
+fn main() {
+    read_and_write_json(stdin().lock(), &mut stdout().lock());
+}
