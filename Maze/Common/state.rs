@@ -89,11 +89,11 @@ impl From<ColorName> for Color {
 /// `Gem` and their `Color`.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PlayerInfo {
-    home: Position,
-    pub(crate) position: Position,
+    pub home: Position,
+    pub position: Position,
     pub goal: Position,
     // Invariant: Every Player should have their own color
-    color: Color,
+    pub color: Color,
 }
 
 impl PlayerInfo {
@@ -121,11 +121,11 @@ impl PlayerInfo {
 /// Represents the State of a single Maze Game.
 #[derive(Debug, Default, Clone)]
 pub struct State {
-    pub(crate) board: Board,
-    pub(crate) player_info: VecDeque<PlayerInfo>,
+    pub board: Board,
+    pub player_info: VecDeque<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
-    pub(crate) previous_slide: Option<Slide>,
+    pub previous_slide: Option<Slide>,
 }
 
 pub const BOARD_SIZE: usize = 7;
@@ -136,6 +136,20 @@ impl State {
             board,
             player_info: player_info.into(),
             previous_slide: None,
+        }
+    }
+
+    /// Can the active player make the move represented by these arguments?
+    pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
+        if !slide.is_valid_slide(self.board.grid.len(), self.board.grid[0].len()) {
+            return false;
+        }
+        let mut state = self.clone();
+        let start = self.player_info[0].position;
+        state.rotate_spare(rotations);
+        match state.board.slide_and_insert(slide) {
+            Ok(_) => destination != start && state.move_player(destination).is_ok(),
+            Err(_) => false,
         }
     }
 
