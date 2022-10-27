@@ -4,7 +4,7 @@ use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
-use common::{board::Slide, grid::euclidian_distance, grid::Position};
+use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
 use common::{Color, PlayerInfo, State, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
@@ -120,8 +120,8 @@ impl NaiveStrategy {
         #[allow(clippy::type_complexity)]
         let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
             Self::Euclid => Box::new(|p1: &Position, p2: &Position| -> Ordering {
-                let euclid1 = euclidian_distance(p1, &goal_tile);
-                let euclid2 = euclidian_distance(p2, &goal_tile);
+                let euclid1 = squared_euclidian_distance(p1, &goal_tile);
+                let euclid2 = squared_euclidian_distance(p2, &goal_tile);
                 if euclid1 < euclid2 {
                     Ordering::Less
                 } else if euclid1 > euclid2 {
@@ -567,10 +567,10 @@ mod StrategyTests {
         let p_3_3 = (3, 3);
         let p_6_3 = (6, 3);
         let p_6_6 = (6, 6);
-        assert_eq!(euclidian_distance(&p_0_3, &p_0_3), 0.0);
-        assert_eq!(euclidian_distance(&p_0_3, &p_3_3), 3.0);
-        assert_eq!(euclidian_distance(&p_0_3, &p_6_3), 6.0);
-        assert_eq!(euclidian_distance(&p_0_0, &p_6_6), f32::sqrt(72.0));
+        assert_eq!(squared_euclidian_distance(&p_0_3, &p_0_3), 0);
+        assert_eq!(squared_euclidian_distance(&p_0_3, &p_3_3), 9);
+        assert_eq!(squared_euclidian_distance(&p_0_3, &p_6_3), 36);
+        assert_eq!(squared_euclidian_distance(&p_0_0, &p_6_6), 72);
     }
 
     #[test]
