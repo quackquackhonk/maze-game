@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use board::Board;
 use board::BoardResult;
 use board::Slide;
@@ -16,7 +18,7 @@ pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Color {
     /// The original name of the color.
     /// Is either the name of a color, like "red", or the Hex Color code for that color
@@ -85,7 +87,7 @@ impl From<ColorName> for Color {
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
 /// `Gem` and their `Color`.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PlayerInfo {
     home: Position,
     pub(crate) position: Position,
@@ -122,13 +124,12 @@ impl PlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct State {
     pub(crate) board: Board,
-    pub(crate) player_info: Vec<PlayerInfo>,
+    pub(crate) player_info: VecDeque<PlayerInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
-    pub(crate) active_player: usize,
     pub(crate) previous_slide: Option<Slide>,
 }
 
@@ -138,8 +139,7 @@ impl State {
     pub fn new(board: Board, player_info: Vec<PlayerInfo>) -> Self {
         State {
             board,
-            player_info,
-            active_player: 0,
+            player_info: player_info.into(),
             previous_slide: None,
         }
     }
@@ -173,26 +173,28 @@ impl State {
     /// let mut state = State::default();
     ///
     /// // This is fine
-    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::North).unwrap());
+    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::North));
     /// assert!(res.is_ok());
     ///  
     /// // This is not
-    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::South).unwrap());
+    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::South));
     /// assert!(res.is_err());
     ///
     /// // This would however be fine
-    /// let res = state.slide_and_insert(Slide::new(2, CompassDirection::South).unwrap());
+    /// let res = state.slide_and_insert(Slide::new(2, CompassDirection::South));
     /// assert!(res.is_ok());
     ///
     /// ```
     pub fn slide_and_insert(&mut self, slide: Slide) -> BoardResult<()> {
-        if let Some(prev) = self.previous_slide {
+        if !slide.is_valid_slide(self.board.grid.len(), self.board.grid[0].len()) {
+            Err("Slide move is invalid".to_string())?;
+        } else if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
                 Err("Attempted to do a slide action that would undo the previous slide")?;
             }
         }
-        self.board.slide_and_insert(slide);
+        self.board.slide_and_insert(slide)?;
         self.slide_players(&slide);
         self.previous_slide = Some(slide);
         Ok(())
@@ -206,17 +208,17 @@ impl State {
     pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
         if !self.can_reach_position(destination) {
             Err("Active player cannot reach the requested tile")?;
-        } else if self.player_info[self.active_player].position == destination {
+        } else if self.player_info[0].position == destination {
             Err("Active player is already on that tile")?;
         }
-        self.player_info[self.active_player].position = destination;
+        self.player_info[0].position = destination;
         Ok(())
     }
 
     /// Returns a Vec of positions reachable by the active player
     pub fn reachable_by_player(&self) -> Vec<Position> {
         self.board
-            .reachable(self.player_info[self.active_player].position)
+            .reachable(self.player_info[0].position)
             .expect("Positions in `self.player_info` are never out of bounds")
     }
 
@@ -224,7 +226,7 @@ impl State {
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
         self.board
-            .reachable(self.player_info[self.active_player].position)
+            .reachable(self.player_info[0].position)
             .expect("Active player positions are always in bounds")
             .contains(&target)
     }
@@ -232,7 +234,7 @@ impl State {
     /// Checks if the currently active `Player` has landed on its goal tile
     #[must_use]
     pub fn player_reached_goal(&self) -> bool {
-        let player_info = &self.player_info[self.active_player];
+        let player_info = &self.player_info[0];
         let gem_at_player = self.board[player_info.position].gems;
         player_info.reached_goal(gem_at_player)
     }
@@ -240,27 +242,27 @@ impl State {
     /// Checks if the currently active `Player` has landed on its home tile
     #[must_use]
     pub fn player_reached_home(&self) -> bool {
-        let player_info = &self.player_info[self.active_player];
+        let player_info = &self.player_info[0];
         player_info.reached_home()
     }
 
     /// Adds a `Player` to the end of the list of currently active players
     pub fn add_player(&mut self, to_add: PlayerInfo) {
-        self.player_info.push(to_add);
+        self.player_info.push_back(to_add);
     }
 
     /// Sets `self.active_player` to be the next player by indexing `self.player_info`
     pub fn next_player(&mut self) {
         if !self.player_info.is_empty() {
-            self.active_player = (self.active_player + 1) % self.player_info.len();
+            self.player_info.rotate_left(1);
         }
     }
 
     /// Removes the currently active `Player` from game.
-    pub fn remove_player(&mut self) {
-        if !self.player_info.is_empty() {
-            self.player_info.remove(self.active_player);
-        }
+    pub fn remove_player(&mut self) -> BoardResult<PlayerInfo> {
+        self.player_info
+            .pop_front()
+            .ok_or("No Players left".to_string())
     }
 }
 
@@ -312,11 +314,11 @@ mod StateTests {
 
         assert_eq!(state.player_info.len(), 1);
         // Should not panic because the player exists in the HashMap
-        state.remove_player();
+        assert!(state.remove_player().is_ok());
 
         assert_eq!(state.player_info.len(), 0);
         // Should not panic because `remove_player` ignores if players are actually in the game
-        state.remove_player();
+        assert!(state.remove_player().is_err());
         assert_eq!(state.player_info.len(), 0);
     }
 
@@ -368,11 +370,11 @@ mod StateTests {
     fn test_slide_and_insert() {
         let mut state = State::default();
 
-        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North));
         assert!(res.is_ok());
 
         // Sliding without inserting will not do anything
-        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South));
         assert!(res.is_err());
     }
 
@@ -380,18 +382,18 @@ mod StateTests {
     fn test_slide_no_undo() {
         let mut state = State::default();
 
-        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North));
         assert!(res.is_ok());
 
-        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South));
         assert!(res.is_err());
 
         // Doing it twice should not matter
-        let res = state.slide_and_insert(Slide::new(0, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, South));
         assert!(res.is_err());
 
         // Doing it in another index is fine
-        let res = state.slide_and_insert(Slide::new(2, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(2, South));
         assert!(res.is_ok());
     }
 
@@ -414,30 +416,30 @@ mod StateTests {
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 1 is in the sliding column so it should move
-        state.slide_players(&Slide::new(0, South).unwrap());
+        state.slide_players(&Slide::new(0, South));
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 2 is in the sliding row so it should move
-        state.slide_players(&Slide::new(2, East).unwrap());
+        state.slide_players(&Slide::new(2, East));
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 1 is in the sliding column so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(0, North).unwrap());
-        state.slide_players(&Slide::new(0, North).unwrap());
+        state.slide_players(&Slide::new(0, North));
+        state.slide_players(&Slide::new(0, North));
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 2 is in the sliding row so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(2, West).unwrap());
-        state.slide_players(&Slide::new(2, West).unwrap());
-        state.slide_players(&Slide::new(2, West).unwrap());
+        state.slide_players(&Slide::new(2, West));
+        state.slide_players(&Slide::new(2, West));
+        state.slide_players(&Slide::new(2, West));
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (6, 2));
@@ -451,14 +453,14 @@ mod StateTests {
         state.rotate_spare(1);
         assert_eq!(state.board.extra.connector, Crossroads);
 
-        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North));
         assert!(res.is_ok());
 
         assert_eq!(state.board.extra.connector, Path(Horizontal));
         state.rotate_spare(1);
         assert_eq!(state.board.extra.connector, Path(Vertical));
 
-        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North));
         assert!(res.is_ok());
 
         assert_eq!(state.board.extra.connector, Fork(East));
@@ -508,7 +510,7 @@ mod StateTests {
         assert!(!state.can_reach_position((0, 3)));
         assert!(!state.can_reach_position((3, 3)));
 
-        let res = state.slide_and_insert(Slide::new(0, North).unwrap());
+        let res = state.slide_and_insert(Slide::new(0, North));
         assert!(res.is_ok());
 
         // Board after slide and insert:
@@ -525,7 +527,7 @@ mod StateTests {
         assert!(state.can_reach_position((0, 2)));
         assert!(state.can_reach_position((0, 3)));
 
-        let res = state.slide_and_insert(Slide::new(2, South).unwrap());
+        let res = state.slide_and_insert(Slide::new(2, South));
         assert!(res.is_ok());
 
         // Board after slide and insert:
@@ -583,7 +585,7 @@ mod StateTests {
         // cannot go to (4, 1) from (1, 1)
         assert!(!from_1_1.contains(&(4, 1)));
 
-        assert!(state.slide_and_insert(Slide::new(0, West).unwrap()).is_ok());
+        assert!(state.slide_and_insert(Slide::new(0, West)).is_ok());
 
         // Board after slide:
         //   0123456

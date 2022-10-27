@@ -1,8 +1,10 @@
+#![allow(dead_code)]
+
 use common::board::Board;
 use common::grid::Position;
 use common::{ColorName, PlayerInfo, State, BOARD_SIZE};
-use players::player::{self, Player};
-use rand::distributions::uniform::SampleRange;
+use players::player::Player;
+use players::strategy::PlayerAction;
 use rand::{Rng, RngCore};
 
 /// The Result of calling `Referee::run_game(...)`.
@@ -53,14 +55,15 @@ impl<'a> Referee<'a> {
 
     /// Communicates all public information of the current `state` and each `Player`'s private goal
     /// to all `Player`s in `players`.
-    fn broadcast_initial_state(&self, players: Vec<Box<dyn Player>>) {
-        for player in players {
+    fn broadcast_initial_state(&self, players: &[Box<dyn Player>]) {
+        for _player in players {
             //player.setup(state.into(), goal);
+            todo!();
         }
     }
 
     /// Has `player` won?
-    fn check_player_won(&self, player: Box<dyn Player>) -> bool {
+    fn check_player_won(&self, _player: Box<dyn Player>) -> bool {
         todo!();
     }
 
@@ -72,12 +75,35 @@ impl<'a> Referee<'a> {
 
         self.state = self.make_initial_state(&players, board);
 
-        self.broadcast_initial_state(players);
+        self.broadcast_initial_state(&players);
 
         // Create `State` from the chosen board
         // Assign each player a home + goal + current position
         // communicate initial state to all players
 
+        for _round in 0..1000 {
+            for _player in &players {
+                let turn: PlayerAction = None; //player.take_turn(self.state);
+                match turn {
+                    Some(pmove) => {
+                        let mut test = self.state.clone();
+                        test.rotate_spare(pmove.rotations);
+                        match test.slide_and_insert(pmove.slide) {
+                            Ok(_) => {
+                                self.state.rotate_spare(pmove.rotations);
+                                self.state
+                                    .slide_and_insert(pmove.slide)
+                                    .expect("Slide has already been verified");
+                            }
+                            Err(_) => {
+                                //self.kicked_players.push(self.state.remove_player());
+                            }
+                        }
+                    }
+                    None => todo!("Passing stuff"),
+                }
+            }
+        }
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won

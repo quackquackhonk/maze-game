@@ -191,8 +191,7 @@ impl From<JsonState> for State {
         let player_info: Vec<PlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
         State {
             board: (jstate.board, jstate.spare).into(),
-            player_info,
-            active_player: 0,
+            player_info: player_info.into(),
             previous_slide: jstate.last.into(),
         }
     }

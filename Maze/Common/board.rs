@@ -24,30 +24,46 @@ impl Board {
 
     /// Slides the given Slide struct command and inserts the spare tile in the location of the
     /// hole in the board. The dislodged tile becomes the new `spare_tile`.
-    pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide) {
+    pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide) -> BoardResult<()> {
         use CompassDirection::*;
         match direction {
             North => {
+                if index > self.grid.len() {
+                    return Err(format!("Row index: {} out of bounds", index));
+                }
                 let col_num = index;
                 let row_num = self.grid.len() - 1;
                 self.grid.rotate_up(col_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
+                Ok(())
             }
             South => {
+                if index > self.grid.len() {
+                    return Err(format!("Row index: {} out of bounds", index));
+                }
                 let col_num = index;
                 self.grid.rotate_down(col_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(col_num, 0)]);
+                Ok(())
             }
             East => {
+                if index > self.grid[0].len() {
+                    return Err(format!("Col index: {} out of bounds", index));
+                }
                 let row_num = index;
                 self.grid.rotate_right(row_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(0, row_num)]);
+                Ok(())
             }
             West => {
+                if index > self.grid[0].len() {
+                    return Err(format!("Col index: {} out of bounds", index));
+                }
                 let row_num = index;
                 let col_num = self.grid[0].len() - 1;
                 self.grid.rotate_left(row_num);
                 std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
+                Ok(())
             }
         }
     }
@@ -204,24 +220,28 @@ pub struct Slide {
 impl Slide {
     /// Attempts to create a slide command
     ///
-    /// # Errors
-    ///
-    /// Errors if the index for the row/col is not a valid index for a slideable row/col.  
-    /// i.e. on a 7x7 board valid indices are 0, 2, 4, and 6
-    /// ```should_panic
+    /// ```
     /// # use common::board::Slide;
     /// # use common::tile::CompassDirection;
-    /// Slide::new(3, CompassDirection::North).unwrap();
+    /// Slide::new(3, CompassDirection::North);
     /// ```
-    pub fn new(index: usize, direction: CompassDirection) -> BoardResult<Slide> {
-        match direction {
-            CompassDirection::North | CompassDirection::South if index % 2 == 0 => {
-                Ok(Slide { index, direction })
+    pub fn new(index: usize, direction: CompassDirection) -> Slide {
+        Self { index, direction }
+    }
+
+    pub fn is_valid_slide(&self, rows: usize, cols: usize) -> bool {
+        match self.direction {
+            CompassDirection::North | CompassDirection::South
+                if self.index % 2 == 0 && self.index < rows =>
+            {
+                true
             }
-            CompassDirection::East | CompassDirection::West if index % 2 == 0 => {
-                Ok(Slide { index, direction })
+            CompassDirection::East | CompassDirection::West
+                if self.index % 2 == 0 && self.index < cols =>
+            {
+                true
             }
-            _ => Err("Only even indicies are slideable!".to_string()),
+            _ => false,
         }
     }
 
@@ -281,30 +301,29 @@ mod BoardTests {
 
     #[test]
     pub fn test_slide_new() {
-        assert!(Slide::new(0, North).is_ok());
-        assert!(Slide::new(1, South).is_err());
-        assert!(Slide::new(2, East).is_ok());
-        assert!(Slide::new(3, North).is_err());
-        assert!(Slide::new(4, South).is_ok());
-        assert!(Slide::new(5, West).is_err());
-        assert!(Slide::new(6, East).is_ok());
+        assert!(Slide::new(0, North).is_valid_slide(1, 1));
+        assert!(!Slide::new(2, North).is_valid_slide(1, 1));
+
+        assert!(Slide::new(0, South).is_valid_slide(7, 7));
+        assert!(Slide::new(2, East).is_valid_slide(7, 7));
+        assert!(!Slide::new(5, West).is_valid_slide(7, 7));
     }
 
     #[test]
     fn test_slide_move_position() {
-        let north_slide = Slide::new(0, North).unwrap();
+        let north_slide = Slide::new(0, North);
         assert_eq!(north_slide.move_position((1, 1), 7, 7), (1, 1));
         assert_eq!(north_slide.move_position((0, 0), 7, 7), (0, 6));
         assert_eq!(north_slide.move_position((0, 3), 7, 7), (0, 2));
-        let south_slide = Slide::new(4, South).unwrap();
+        let south_slide = Slide::new(4, South);
         assert_eq!(south_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(south_slide.move_position((4, 0), 7, 7), (4, 1));
         assert_eq!(south_slide.move_position((4, 6), 7, 7), (4, 0));
-        let east_slide = Slide::new(2, East).unwrap();
+        let east_slide = Slide::new(2, East);
         assert_eq!(east_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(east_slide.move_position((1, 2), 7, 7), (2, 2));
         assert_eq!(east_slide.move_position((6, 2), 7, 7), (0, 2));
-        let west_slide = Slide::new(6, West).unwrap();
+        let west_slide = Slide::new(6, West);
         assert_eq!(west_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(west_slide.move_position((0, 6), 7, 7), (6, 6));
         assert_eq!(west_slide.move_position((6, 6), 7, 7), (5, 6));
@@ -321,7 +340,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Crossroads);
 
-        b.slide_and_insert(Slide::new(0, South).unwrap());
+        b.slide_and_insert(Slide::new(0, South));
         // Board after slide + insert
         // ┼│└
         // ─┐┘
@@ -331,7 +350,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Fork(North));
 
-        b.slide_and_insert(Slide::new(0, East).unwrap());
+        b.slide_and_insert(Slide::new(0, East));
         // Board after insert
         // ┴┼│
         // ─┐┘
@@ -340,7 +359,7 @@ mod BoardTests {
         assert_eq!(b.grid[(0, 0)].connector, Fork(North));
         assert_eq!(b.extra.connector, Corner(North));
 
-        b.slide_and_insert(Slide::new(2, West).unwrap());
+        b.slide_and_insert(Slide::new(2, West));
         dbg!(&b);
         // Board after slide + insert
         // ┴┼│
