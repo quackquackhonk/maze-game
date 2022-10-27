@@ -231,7 +231,8 @@ impl From<JsonPlayer> for PlayerInfo {
         PlayerInfo::new(
             jp.home.into(),
             jp.current.into(),
-            (Gem::garnet, Gem::amethyst),
+            // FIXME: this should not always be (1, 1)
+            (1, 1),
             jp.color
                 .try_into()
                 .expect("Json Color values are always valid"),
