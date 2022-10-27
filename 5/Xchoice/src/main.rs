@@ -3,7 +3,7 @@ use std::io::{stdin, stdout, Read, Write};
 use common::grid::Position;
 use common::json::{Coordinate, JsonAction, JsonState};
 use common::{State, BOARD_SIZE};
-use players::json::JsonStrategyDesignation;
+use players::json::{JsonChoice, JsonStrategyDesignation};
 use players::strategy::{NaiveStrategy, PlayerBoardState, Strategy};
 use serde::{Deserialize, Serialize};
 
@@ -58,7 +58,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
 
     let start = state.players[0].current;
     let choice = strat.get_move(state, start, goal);
-    let action: JsonAction = choice.into();
+    let action: JsonChoice = choice.into();
 
     write_json_out_to_writer(action, writer)?;
 
