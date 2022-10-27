@@ -4,8 +4,8 @@ use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
-use common::{board::Slide, grid::Position};
-use common::{Color, BOARD_SIZE};
+use common::{board::Slide, grid::euclidian_distance, grid::Position};
+use common::{Color, PlayerInfo, State, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
@@ -15,11 +15,31 @@ pub struct PlayerBoardState {
     pub last: Option<Slide>,
 }
 
+impl From<State> for PlayerBoardState {
+    fn from(state: State) -> Self {
+        PlayerBoardState {
+            board: state.board,
+            players: state.player_info.into_iter().map(|pi| pi.into()).collect(),
+            last: state.previous_slide,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct PubPlayerInfo {
     pub current: Position,
     pub home: Position,
     pub color: Color,
+}
+
+impl From<PlayerInfo> for PubPlayerInfo {
+    fn from(pi: PlayerInfo) -> Self {
+        PubPlayerInfo {
+            current: pi.position,
+            home: pi.home,
+            color: pi.color,
+        }
+    }
 }
 
 /// This trait represents getting a valid move from a given board state
@@ -73,10 +93,6 @@ fn row_col_order(p1: &Position, p2: &Position) -> Ordering {
     } else {
         Ordering::Equal
     }
-}
-
-fn euclidian_distance(p1: &Position, p2: &Position) -> f32 {
-    f32::sqrt((p1.0 as f32 - p2.0 as f32).powi(2) + (p1.1 as f32 - p2.1 as f32).powi(2))
 }
 
 impl NaiveStrategy {
