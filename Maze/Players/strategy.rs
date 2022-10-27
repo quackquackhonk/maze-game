@@ -155,8 +155,8 @@ impl NaiveStrategy {
         board_state: &PlayerBoardState,
         start: Position,
         destination: Position,
-    ) -> PlayerAction {
-        for row in 0..=(BOARD_SIZE / 2) {
+    ) -> PlayerAction<COLS, ROWS> {
+        for row in 0..=(ROWS / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     let slide = Slide::new(row * 2, direction)
