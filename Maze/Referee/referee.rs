@@ -1,7 +1,7 @@
 use common::board::Board;
 use common::grid::Position;
 use common::{ColorName, PlayerInfo, State, BOARD_SIZE};
-use players::player::{self, Player};
+use players::player::Player;
 use rand::distributions::uniform::SampleRange;
 use rand::{Rng, RngCore};
 
