@@ -7,6 +7,11 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 ///     y is a row index
 pub type Position = (usize, usize);
 
+/// Returns the euclidian distance between two `Position`s
+pub fn euclidian_distance(p1: &Position, p2: &Position) -> f32 {
+    f32::sqrt((p1.0 as f32 - p2.0 as f32).powi(2) + (p1.1 as f32 - p2.1 as f32).powi(2))
+}
+
 /// Represents a wrapper type for a 2D array with added functionality
 #[derive(Debug, Clone)]
 pub struct Grid<T>(Box<[Box<[T]>]>);
