@@ -4,15 +4,15 @@ use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
-use common::Color;
 use common::{board::Slide, grid::Position};
+use common::{Color, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
-pub struct PlayerBoardState<const COLS: usize, const ROWS: usize> {
-    pub board: Board<COLS, ROWS>,
+pub struct PlayerBoardState {
+    pub board: Board,
     pub players: Vec<PubPlayerInfo>,
-    pub last: Option<Slide<COLS, ROWS>>,
+    pub last: Option<Slide>,
 }
 
 #[derive(Debug, Clone)]
@@ -117,8 +117,8 @@ impl NaiveStrategy {
             Self::Reimann => Box::new(row_col_order),
         };
 
-        let mut possible_goals: Vec<Position> = (0..ROWS)
-            .flat_map(|row| (0..COLS).zip(repeat(row)))
+        let mut possible_goals: Vec<Position> = (0..BOARD_SIZE)
+            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
             .collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
@@ -155,8 +155,8 @@ impl NaiveStrategy {
         board_state: &PlayerBoardState,
         start: Position,
         destination: Position,
-    ) -> PlayerAction<COLS, ROWS> {
-        for row in 0..=(ROWS / 2) {
+    ) -> PlayerAction {
+        for row in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     let slide = Slide::new(row * 2, direction)
@@ -172,7 +172,7 @@ impl NaiveStrategy {
                 }
             }
         }
-        for col in 0..=(COLS / 2) {
+        for col in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
                     let slide = Slide::new(col * 2, direction)

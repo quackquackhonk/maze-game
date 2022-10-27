@@ -2,7 +2,6 @@
 
 use common::board::Slide;
 use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonPlayer, JsonState};
-use common::BOARD_SIZE;
 use serde::Deserialize;
 
 use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove, PubPlayerInfo};
@@ -14,7 +13,7 @@ pub enum JsonStrategyDesignation {
     Euclid,
 }
 
-impl From<JsonStrategyDesignation> for NaiveStrategy<BOARD_SIZE, BOARD_SIZE> {
+impl From<JsonStrategyDesignation> for NaiveStrategy {
     fn from(jsd: JsonStrategyDesignation) -> Self {
         match jsd {
             JsonStrategyDesignation::Reimann => NaiveStrategy::Reimann,
@@ -36,13 +35,13 @@ pub enum JsonChoice {
     Move(Index, JsonDirection, JsonDegree, Coordinate),
 }
 
-impl From<JsonChoice> for PlayerAction<BOARD_SIZE, BOARD_SIZE> {
+impl From<JsonChoice> for PlayerAction {
     fn from(jc: JsonChoice) -> Self {
         match jc {
             JsonChoice::Pass => None,
             JsonChoice::Move(ind, dir, deg, coord) => Some(PlayerMove {
-                slide: Slide::<BOARD_SIZE, BOARD_SIZE>::new(ind.0, dir.into()).unwrap(),
-                rotations: deg.into(),
+                slide: Slide::new(ind.0, dir.into()).unwrap(),
+                rotations: deg.try_into().unwrap(),
                 destination: coord.into(),
             }),
         }
@@ -60,7 +59,7 @@ impl TryFrom<JsonPlayer> for PubPlayerInfo {
     }
 }
 
-impl From<JsonState> for PlayerBoardState<BOARD_SIZE, BOARD_SIZE> {
+impl From<JsonState> for PlayerBoardState {
     fn from(js: JsonState) -> Self {
         Self {
             board: (js.board, js.spare).into(),

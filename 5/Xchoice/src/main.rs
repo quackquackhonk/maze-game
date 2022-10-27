@@ -3,8 +3,8 @@ use std::io::{Read, Write};
 use common::grid::Position;
 use common::json::{Coordinate, JsonState};
 use common::{State, BOARD_SIZE};
-use player::json::JsonStrategyDesignation;
-use player::strategy::NaiveStrategy;
+use players::json::JsonStrategyDesignation;
+use players::strategy::NaiveStrategy;
 use serde::{Deserialize, Serialize};
 
 /// Enumerated Valid JSON input for `xchoice`
@@ -41,17 +41,15 @@ fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> 
 fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let strat: NaiveStrategy<BOARD_SIZE, BOARD_SIZE> =
-        match input.next().ok_or("No valid JSON Strategy found")? {
-            ValidJson::StrategyDesig(strat) => strat.into(),
-            _ => Err("StrategyDesignation was not the first json input found")?,
-        };
+    let strat: NaiveStrategy = match input.next().ok_or("No valid JSON Strategy found")? {
+        ValidJson::StrategyDesig(strat) => strat.into(),
+        _ => Err("StrategyDesignation was not the first json input found")?,
+    };
 
-    let state: State<BOARD_SIZE, BOARD_SIZE> =
-        match input.next().ok_or("No valid State JSON found")? {
-            ValidJson::State(state) => state.into(),
-            _ => Err("State was not the second json input found")?,
-        };
+    let state: State = match input.next().ok_or("No valid State JSON found")? {
+        ValidJson::State(state) => state.into(),
+        _ => Err("State was not the second json input found")?,
+    };
 
     let goal: Position = match input.next().ok_or("No valid State JSON found")? {
         ValidJson::Goal(state) => state.into(),
