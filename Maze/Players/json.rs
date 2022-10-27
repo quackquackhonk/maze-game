@@ -2,7 +2,7 @@
 
 use common::board::Slide;
 use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonPlayer, JsonState};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove, PubPlayerInfo};
 
@@ -27,7 +27,7 @@ impl From<JsonStrategyDesignation> for NaiveStrategy {
 /// A `Move` contains the `Index` of the row/col being slid, the `JsonDirection` of the slide, a
 /// number of `JsonDegree`s to rotate the spare tile counter-clockwise, and the destination
 /// `Coordinate` that the player is moving to.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum JsonChoice {
     #[serde(rename(deserialize = "PASS"))]
@@ -44,6 +44,24 @@ impl From<JsonChoice> for PlayerAction {
                 rotations: deg.try_into().unwrap(),
                 destination: coord.into(),
             }),
+        }
+    }
+}
+
+impl From<PlayerAction> for JsonChoice {
+    fn from(pa: PlayerAction) -> Self {
+        match pa {
+            None => JsonChoice::Pass,
+            Some(PlayerMove {
+                slide,
+                rotations,
+                destination,
+            }) => JsonChoice::Move(
+                Index(slide.index),
+                slide.direction.into(),
+                JsonDegree(rotations * 90),
+                destination.into(),
+            ),
         }
     }
 }

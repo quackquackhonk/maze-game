@@ -1,4 +1,4 @@
-use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, Strategy};
+use crate::strategy::{PlayerAction, PlayerBoardState, Strategy};
 use common::board::{Board, DefaultBoard};
 use common::grid::Position;
 
@@ -45,7 +45,7 @@ impl<S: Strategy> Player for LocalPlayer<S> {
     }
 
     fn take_turn(&self, state: PlayerBoardState) -> PlayerAction {
-        let start = state.player_positions[0];
+        let start = state.players[0].current;
         self.strategy.get_move(
             state,
             start,
