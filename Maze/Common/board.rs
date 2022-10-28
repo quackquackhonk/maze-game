@@ -229,6 +229,7 @@ impl Slide {
         Self { index, direction }
     }
 
+    #[must_use]
     pub fn is_valid_slide(&self, rows: usize, cols: usize) -> bool {
         match self.direction {
             CompassDirection::North | CompassDirection::South
@@ -245,6 +246,7 @@ impl Slide {
         }
     }
 
+    #[must_use]
     pub fn move_position(&self, pos: Position, cols: usize, rows: usize) -> Position {
         use CompassDirection::*;
         match self {

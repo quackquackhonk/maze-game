@@ -4,6 +4,7 @@ use board::Board;
 use board::BoardResult;
 use board::Slide;
 use grid::Position;
+use hex::ToHex;
 
 /// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
@@ -29,7 +30,7 @@ pub struct Color {
 impl From<(u8, u8, u8)> for Color {
     fn from((r, g, b): (u8, u8, u8)) -> Self {
         Color {
-            name: format!("{r:x}{g:b}{b:x}"),
+            name: [r, g, b].encode_hex_upper::<String>(),
             code: (r, g, b),
         }
     }

@@ -120,12 +120,9 @@ impl NaiveStrategy {
             Self::Euclid => Box::new(|p1: &Position, p2: &Position| -> Ordering {
                 let euclid1 = squared_euclidian_distance(p1, &goal_tile);
                 let euclid2 = squared_euclidian_distance(p2, &goal_tile);
-                if euclid1 < euclid2 {
-                    Ordering::Less
-                } else if euclid1 > euclid2 {
-                    Ordering::Greater
-                } else {
-                    row_col_order(p1, p2)
+                match euclid1.cmp(&euclid2) {
+                    Ordering::Equal => row_col_order(p1, p2),
+                    rest => rest,
                 }
             }),
             Self::Riemann => Box::new(row_col_order),

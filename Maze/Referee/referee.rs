@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
-use common::{Color, ColorName, PlayerInfo, State, BOARD_SIZE};
+use common::{Color, PlayerInfo, State, BOARD_SIZE};
 use players::player::Player;
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore};
@@ -82,6 +82,7 @@ impl Referee {
 
     /// Returns a tuple of two `Vec<Box<dyn Player>>`. The first of these vectors contains all
     /// `Box<dyn Player>`s who won the game, and the second vector contains all the losers.
+    #[allow(clippy::type_complexity)]
     fn calculate_winners(
         winner: GameWinner,
         players: Vec<Box<dyn Player>>,
@@ -491,7 +492,7 @@ mod tests {
         let players: Vec<Box<dyn Player>> = vec![
             Box::new(LocalPlayer::new(
                 String::from("jill"),
-                NaiveStrategy::Reimann,
+                NaiveStrategy::Riemann,
             )),
             Box::new(LocalPlayer::new(String::from("joe"), NaiveStrategy::Euclid)),
             Box::new(mock.clone()),

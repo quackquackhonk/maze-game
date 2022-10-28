@@ -8,6 +8,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 pub type Position = (usize, usize);
 
 /// Returns the squared euclidian distance between two `Position`s
+#[must_use]
 pub fn squared_euclidian_distance(p1: &Position, p2: &Position) -> usize {
     ((p1.0 as isize - p2.0 as isize).pow(2) + (p1.1 as isize - p2.1 as isize).pow(2)) as usize
 }

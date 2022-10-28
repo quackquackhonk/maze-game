@@ -101,6 +101,7 @@ impl From<(usize, usize)> for Coordinate {
     }
 }
 
+#[must_use]
 pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
     if c1.row.0 < c2.row.0 {
         Ordering::Less
