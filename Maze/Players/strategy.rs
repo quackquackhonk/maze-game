@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use std::cmp::Ordering;
 use std::iter::repeat;
 
@@ -106,7 +105,6 @@ impl NaiveStrategy {
     ) -> PlayerAction {
         self.get_alt_goals(goal_tile)
             .into_iter()
-            .filter(|pos| *pos != start)
             .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
     }
 
@@ -166,7 +164,9 @@ impl NaiveStrategy {
             .board
             .reachable(start)
             .expect("Start must be in bounds")
-            .contains(&destination)
+            .into_iter()
+            .filter(|curr| curr != &start)
+            .any(|curr| curr == destination)
     }
 
     fn find_move_to_reach(
@@ -178,6 +178,11 @@ impl NaiveStrategy {
         for row in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
+                    if let Some(lslide) = board_state.last {
+                        if lslide.index == row && lslide.direction.opposite() == direction {
+                            continue;
+                        }
+                    }
                     let slide = Slide::new(row * 2, direction);
                     let player_move = PlayerMove {
                         slide,
@@ -193,6 +198,11 @@ impl NaiveStrategy {
         for col in 0..=(BOARD_SIZE / 2) {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
+                    if let Some(lslide) = board_state.last {
+                        if lslide.index == col && lslide.direction.opposite() == direction {
+                            continue;
+                        }
+                    }
                     let slide = Slide::new(col * 2, direction);
                     let player_move = PlayerMove {
                         slide,

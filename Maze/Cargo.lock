@@ -9,6 +9,7 @@ dependencies = [
  "common",
  "players",
  "rand",
+ "rand_chacha",
 ]
 
 [[package]]
