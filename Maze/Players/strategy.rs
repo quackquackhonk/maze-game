@@ -77,7 +77,7 @@ pub enum NaiveStrategy {
     /// euclidian distance. It breaks any ties by picking the first one in row-column order.
     Euclid,
     /// This variant sorts the posssible alternative goals in order of row-column order.
-    Reimann,
+    Riemann,
 }
 
 fn row_col_order(p1: &Position, p2: &Position) -> Ordering {
@@ -128,7 +128,7 @@ impl NaiveStrategy {
                     row_col_order(p1, p2)
                 }
             }),
-            Self::Reimann => Box::new(row_col_order),
+            Self::Riemann => Box::new(row_col_order),
         };
 
         let mut possible_goals: Vec<Position> = (0..BOARD_SIZE)
@@ -384,7 +384,7 @@ mod StrategyTests {
             ],
             last: None,
         };
-        let reimann = NaiveStrategy::Reimann;
+        let reimann = NaiveStrategy::Riemann;
         // Default Board<7> is:
         //   0123456
         // 0 ─│└┌┐┘┴
@@ -491,7 +491,7 @@ mod StrategyTests {
             last: None,
         };
         let euclid = NaiveStrategy::Euclid;
-        let reimann = NaiveStrategy::Reimann;
+        let reimann = NaiveStrategy::Riemann;
         // Default Board<7> is:
         //   0123456
         // 0 ─│└┌┐┘┴
@@ -585,7 +585,7 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_reimann() {
-        let reimann_alt_goals = NaiveStrategy::Reimann.get_alt_goals((1, 1));
+        let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1));
         assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
         assert_eq!(reimann_alt_goals[0], (0, 0));
         assert_eq!(reimann_alt_goals[1], (1, 0));
@@ -637,7 +637,7 @@ mod StrategyTests {
         //
         // extra = ┼
         let euclid = NaiveStrategy::Euclid;
-        let reimann = NaiveStrategy::Reimann;
+        let reimann = NaiveStrategy::Riemann;
         let start = board_state.players[0].current;
         let destination = (0, 1);
         assert_eq!(

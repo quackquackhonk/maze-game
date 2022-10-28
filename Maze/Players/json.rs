@@ -9,14 +9,14 @@ use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove,
 /// Describes either a `Reimann` or a `Euclid` strategy
 #[derive(Debug, Deserialize)]
 pub enum JsonStrategyDesignation {
-    Reimann,
+    Riemann,
     Euclid,
 }
 
 impl From<JsonStrategyDesignation> for NaiveStrategy {
     fn from(jsd: JsonStrategyDesignation) -> Self {
         match jsd {
-            JsonStrategyDesignation::Reimann => NaiveStrategy::Reimann,
+            JsonStrategyDesignation::Riemann => NaiveStrategy::Riemann,
             JsonStrategyDesignation::Euclid => NaiveStrategy::Euclid,
         }
     }
