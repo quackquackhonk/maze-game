@@ -434,7 +434,7 @@ mod StrategyTests {
             PlayerMove {
                 slide: Slide::new(0, East),
                 rotations: 0,
-                destination: (1, 0),
+                destination: (0, 0),
             }
         );
 
@@ -509,7 +509,7 @@ mod StrategyTests {
             Some(PlayerMove {
                 slide: Slide::new(0, North),
                 rotations: 0,
-                destination: (0, 1)
+                destination: (1, 1)
             })
         );
         // With the same conditions, reimann is going to make the same move
@@ -519,7 +519,7 @@ mod StrategyTests {
             Some(PlayerMove {
                 slide: Slide::new(0, North),
                 rotations: 0,
-                destination: (0, 1)
+                destination: (1, 1)
             })
         );
         // what does Euclid do if on (3, 3) and its goal is (3, 2)?
@@ -562,7 +562,7 @@ mod StrategyTests {
             Some(PlayerMove {
                 slide: Slide::new(6, South),
                 rotations: 0,
-                destination: (6, 0)
+                destination: (6, 1)
             })
         );
     }
