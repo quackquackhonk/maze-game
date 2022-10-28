@@ -1,13 +1,10 @@
-#![allow(dead_code)]
-
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::HashSet;
 
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
 use common::{Color, ColorName, PlayerInfo, State, BOARD_SIZE};
 use players::player::Player;
 use players::strategy::{PlayerAction, PlayerMove};
-use rand::distributions::uniform::SampleRange;
 use rand::{Rng, RngCore};
 
 /// The Result of calling `Referee::run_game(...)`.
@@ -53,7 +50,7 @@ impl Referee {
                     home,
                     home, /* players start on their home tile */
                     goal,
-                    ColorName::Red.into(),
+                    (self.rand.gen(), self.rand.gen(), self.rand.gen()).into(),
                 )
             })
             .collect();
@@ -64,15 +61,12 @@ impl Referee {
     /// Communicates all public information of the current `state` and each `Player`'s private goal
     /// to all `Player`s in `players`.
     fn broadcast_initial_state(&self, state: &State, players: &mut [Box<dyn Player>]) {
+        let mut state = state.clone();
         for player in players {
             let goal = state.current_player_info().goal;
             player.setup(Some(state.clone().into()), goal);
+            state.next_player();
         }
-    }
-
-    /// Has `player` won?
-    fn check_player_won(&self, _player: Box<dyn Player>) -> bool {
-        todo!();
     }
 
     /// Advances to the next player.
@@ -92,11 +86,31 @@ impl Referee {
         winner: GameWinner,
         players: Vec<Box<dyn Player>>,
         state: &State,
+        reached_goal: HashSet<Color>,
     ) -> (Vec<Box<dyn Player>>, Vec<Box<dyn Player>>) {
-        let zipped_players = players.into_iter().zip(state.player_info.iter());
+        let mut losers = vec![];
+        let zipped_players: Box<dyn Iterator<Item = (Box<dyn Player>, &PlayerInfo)>> =
+            if reached_goal.is_empty() {
+                Box::new(players.into_iter().zip(state.player_info.iter()))
+            } else {
+                Box::new(
+                    players
+                        .into_iter()
+                        .zip(state.player_info.iter())
+                        .fold(vec![], |mut acc, (api, info)| {
+                            if reached_goal.contains(&info.color) {
+                                acc.push((api, info));
+                            } else {
+                                losers.push(api);
+                            }
+                            acc
+                        })
+                        .into_iter(),
+                )
+            };
         match winner {
             Some(winner) => zipped_players.fold(
-                (vec![], vec![]),
+                (vec![], losers),
                 |(mut winners, mut losers), (api, info)| {
                     if info.color == winner.color {
                         winners.push(api);
@@ -112,9 +126,18 @@ impl Referee {
                 });
 
                 zipped_players.fold(
-                    (vec![], vec![]),
+                    (vec![], losers),
                     |(mut winners, mut losers), (api, info)| {
-                        if min_dist == squared_euclidian_distance(&info.position, &info.goal) {
+                        if min_dist
+                            == squared_euclidian_distance(
+                                &info.position,
+                                if reached_goal.is_empty() {
+                                    &info.goal
+                                } else {
+                                    &info.home
+                                },
+                            )
+                        {
                             winners.push(api);
                         } else {
                             losers.push(api);
@@ -127,11 +150,11 @@ impl Referee {
     }
 
     /// Communicates if a player won to all `Player`s in the given tuple of winners and losers
-    fn broadcast_winners(winners: &[Box<dyn Player>], losers: Vec<Box<dyn Player>>) {
+    fn broadcast_winners(winners: &mut [Box<dyn Player>], mut losers: Vec<Box<dyn Player>>) {
         for player in winners {
             player.won(true);
         }
-        for player in losers {
+        for player in &mut losers {
             player.won(false);
         }
     }
@@ -218,6 +241,9 @@ impl Referee {
             }
 
             // advance to the next player
+            if players.is_empty() {
+                break None;
+            }
             Referee::next_player(&mut players, &mut state);
 
             // One round has completed
@@ -232,8 +258,9 @@ impl Referee {
         };
 
         // Communicate winners to all players
-        let (winners, losers) = Referee::calculate_winners(winner, players, &state);
-        Referee::broadcast_winners(&winners, losers);
+        let (mut winners, losers) =
+            Referee::calculate_winners(winner, players, &state, reached_goal);
+        Referee::broadcast_winners(&mut winners, losers);
 
         // return GameResult
         game_result.winners = winners;
@@ -246,6 +273,235 @@ fn gen_immovable_tile_pos(rng: &mut impl Rng) -> Position {
         rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
         rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use std::{cell::RefCell, collections::HashSet, rc::Rc};
+
+    use common::{
+        board::{Board, DefaultBoard},
+        grid::Position,
+        ColorName, PlayerInfo, State,
+    };
+    use players::{
+        player::{LocalPlayer, Player},
+        strategy::{NaiveStrategy, PlayerAction, PlayerBoardState},
+    };
+    use rand::SeedableRng;
+    use rand_chacha::ChaChaRng;
+
+    use crate::{GameResult, Referee};
+
+    #[derive(Debug, Default, Clone)]
+    struct MockPlayer {
+        turns_taken: Rc<RefCell<usize>>,
+        state: Rc<RefCell<Option<PlayerBoardState>>>,
+        goal: Rc<RefCell<Option<Position>>>,
+        won: Rc<RefCell<Option<bool>>>,
+    }
+
+    impl Player for MockPlayer {
+        fn name(&self) -> String {
+            String::from("bob")
+        }
+
+        fn propose_board0(&self, _cols: u32, _rows: u32) -> Board {
+            DefaultBoard::<3, 3>::default_board()
+        }
+
+        fn setup(&mut self, state: Option<PlayerBoardState>, goal: Position) {
+            *self
+                .goal
+                .try_borrow_mut()
+                .expect("we are the only owners??") = Some(goal);
+            *self
+                .state
+                .try_borrow_mut()
+                .expect("we are the only owners?") = state;
+        }
+
+        fn take_turn(&self, state: PlayerBoardState) -> PlayerAction {
+            *self
+                .turns_taken
+                .try_borrow_mut()
+                .expect("we are the only owners?") += 1;
+            *self
+                .state
+                .try_borrow_mut()
+                .expect("we are the only owners?") = Some(state);
+            None
+        }
+
+        fn won(&mut self, did_win: bool) {
+            *self.won.try_borrow_mut().expect("we are the only owners?") = Some(did_win)
+        }
+    }
+
+    #[test]
+    fn test_get_player_boards() {
+        let referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(0)),
+        };
+        let mut players: Vec<Box<dyn Player>> = vec![Box::new(LocalPlayer::new(
+            String::from("bill"),
+            NaiveStrategy::Euclid,
+        ))];
+        let board = referee.get_player_boards(&players);
+        assert_eq!(board, DefaultBoard::<7, 7>::default_board());
+        players.push(Box::new(MockPlayer::default()));
+        players.rotate_left(1);
+        let board = referee.get_player_boards(&players);
+        assert_eq!(board, DefaultBoard::<3, 3>::default_board());
+    }
+
+    #[test]
+    fn test_make_initial_state() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)), // Seed 0 makes the first player have the
+                                                         // same home and goal tile
+        };
+        let player = Box::new(MockPlayer::default());
+        let players: Vec<Box<dyn Player>> = vec![player.clone(), Box::new(MockPlayer::default())];
+        let mut state = referee.make_initial_state(&players, DefaultBoard::<7, 7>::default_board());
+        assert_eq!(state.current_player_info().home, (1, 3));
+        assert_eq!(state.current_player_info().goal, (3, 3));
+        assert_eq!(state.current_player_info().position, (1, 3));
+        state.next_player();
+        assert_eq!(state.current_player_info().home, (1, 1));
+        assert_eq!(state.current_player_info().goal, (5, 3));
+        assert_eq!(state.current_player_info().position, (1, 1));
+    }
+
+    #[test]
+    fn test_broadcast_inital_state() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(0)),
+        };
+        let player = Box::new(MockPlayer::default());
+        let mut players: Vec<Box<dyn Player>> = vec![player.clone()];
+        let state = referee.make_initial_state(&players, DefaultBoard::<7, 7>::default_board());
+        assert_eq!(player.goal.borrow().to_owned(), None);
+        referee.broadcast_initial_state(&state, &mut players);
+        assert_eq!(
+            state.current_player_info().goal,
+            player.goal.borrow().unwrap()
+        );
+    }
+
+    #[test]
+    fn test_next_player() {}
+
+    #[test]
+    fn test_calculate_winners() {
+        let mut state = State::default();
+        state.add_player(PlayerInfo {
+            home: (0, 0),
+            position: (1, 0),
+            goal: (0, 5),
+            color: ColorName::Red.into(),
+        });
+        let won_player = PlayerInfo {
+            home: (1, 0),
+            position: (1, 6),
+            goal: (6, 1),
+            color: ColorName::Blue.into(),
+        };
+        state.add_player(won_player.clone());
+
+        let (winners, losers) = Referee::calculate_winners(
+            Some(won_player),
+            vec![
+                Box::new(MockPlayer::default()),
+                Box::new(LocalPlayer::new(
+                    String::from("jill"),
+                    NaiveStrategy::Euclid,
+                )),
+            ],
+            &state,
+            vec![ColorName::Blue.into()].into_iter().collect(),
+        );
+        assert_eq!(winners.len(), 1);
+        assert_eq!(winners[0].name(), "jill");
+        assert_eq!(losers.len(), 1);
+        let (winners, losers) = Referee::calculate_winners(
+            None,
+            vec![
+                Box::new(MockPlayer::default()),
+                Box::new(LocalPlayer::new(
+                    String::from("jill"),
+                    NaiveStrategy::Euclid,
+                )),
+            ],
+            &state,
+            HashSet::default(),
+        );
+        assert_eq!(winners.len(), 1);
+        assert_eq!(winners[0].name(), "bob");
+        assert_eq!(losers.len(), 1);
+    }
+
+    #[test]
+    fn test_broadcast_winners() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(0)),
+        };
+
+        let player = Box::new(MockPlayer::default());
+        let players: Vec<Box<dyn Player>> = vec![player.clone()];
+        assert_eq!(player.won.borrow().to_owned(), None);
+        referee.run_game(players);
+        assert_eq!(player.won.borrow().to_owned(), Some(true));
+
+        let player = Box::new(MockPlayer::default());
+        let players: Vec<Box<dyn Player>> = vec![
+            Box::new(LocalPlayer::new(String::from("joe"), NaiveStrategy::Euclid)),
+            player.clone(),
+        ];
+        assert_eq!(player.won.borrow().to_owned(), None);
+        referee.run_game(players);
+        assert_eq!(player.won.borrow().to_owned(), Some(false));
+    }
+
+    #[test]
+    fn test_run_game() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+        };
+
+        let player = Box::new(MockPlayer::default());
+        let players: Vec<Box<dyn Player>> = vec![player.clone()];
+        let GameResult { winners, kicked } = referee.run_game(players);
+        assert_eq!(winners[0].name(), player.name());
+        assert_eq!(player.turns_taken.borrow().to_owned(), 1);
+        assert!(kicked.is_empty());
+
+        let player = Box::new(MockPlayer::default());
+        let players: Vec<Box<dyn Player>> = vec![
+            Box::new(LocalPlayer::new(String::from("joe"), NaiveStrategy::Euclid)),
+            player.clone(),
+        ];
+        let GameResult { winners, kicked } = referee.run_game(players);
+        assert_eq!(winners[0].name(), String::from("joe"));
+        //dbg!(&player);
+        //assert_eq!(winners.len(), 1);
+        assert!(kicked.is_empty());
+
+        let mock = MockPlayer::default();
+        let players: Vec<Box<dyn Player>> = vec![
+            Box::new(LocalPlayer::new(
+                String::from("jill"),
+                NaiveStrategy::Reimann,
+            )),
+            Box::new(LocalPlayer::new(String::from("joe"), NaiveStrategy::Euclid)),
+            Box::new(mock.clone()),
+        ];
+        let GameResult { winners, kicked } = referee.run_game(players);
+        dbg!(mock);
+        assert_eq!(winners[0].name(), String::from("joe"));
+        assert_eq!(winners.len(), 1);
+        assert!(kicked.is_empty());
+    }
 }
 
 fn main() {

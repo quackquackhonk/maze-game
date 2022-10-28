@@ -3,9 +3,7 @@ use std::collections::VecDeque;
 use board::Board;
 use board::BoardResult;
 use board::Slide;
-use gem::Gem;
 use grid::Position;
-use unordered_pair::UnorderedPair;
 
 /// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
@@ -26,6 +24,15 @@ pub struct Color {
     /// Represents a Hex color value
     /// contains values for (red, green, blue).
     code: (u8, u8, u8),
+}
+
+impl From<(u8, u8, u8)> for Color {
+    fn from((r, g, b): (u8, u8, u8)) -> Self {
+        Color {
+            name: format!("{r:x}{g:b}{b:x}"),
+            code: (r, g, b),
+        }
+    }
 }
 
 /// Convenience Enum for making named colors
@@ -119,7 +126,7 @@ impl PlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct State {
     pub board: Board,
     pub player_info: VecDeque<PlayerInfo>,
@@ -147,7 +154,7 @@ impl State {
         let mut state = self.clone();
         let start = self.player_info[0].position;
         state.rotate_spare(rotations);
-        match state.board.slide_and_insert(slide) {
+        match state.slide_and_insert(slide) {
             Ok(_) => destination != start && state.move_player(destination).is_ok(),
             Err(_) => false,
         }
@@ -244,7 +251,6 @@ impl State {
     #[must_use]
     pub fn player_reached_goal(&self) -> bool {
         let player_info = &self.player_info[0];
-        let gem_at_player = self.board[player_info.position].gems;
         player_info.reached_goal()
     }
 
@@ -282,10 +288,7 @@ impl State {
 
 #[cfg(test)]
 mod StateTests {
-    use crate::{
-        gem::Gem,
-        tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*},
-    };
+    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
 
     use super::*;
 

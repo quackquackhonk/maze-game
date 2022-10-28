@@ -12,3 +12,4 @@ path = "referee.rs"
 common = { path = "../Common/" }
 players = { path = "../Players/" }
 rand = "0.8.5"
+rand_chacha = "0.3.1"

@@ -14,7 +14,7 @@ pub trait Player {
     /// Returns a `PlayerAction` based on the given `PlayerBoardState`
     fn take_turn(&self, state: PlayerBoardState) -> PlayerAction;
     /// The player is informed if they won or not.
-    fn won(&self, did_win: bool);
+    fn won(&mut self, did_win: bool);
 }
 
 /// Represents a Local AI Player
@@ -26,6 +26,15 @@ pub struct LocalPlayer<S: Strategy> {
     /// The goal position of this `LocalPlayer`. This type is an `Option` because the `LocalPlayer`
     /// will not know their goal until the `Referee` communicates it to them.
     goal: Option<Position>,
+}
+impl<S: Strategy> LocalPlayer<S> {
+    pub fn new(name: String, strategy: S) -> Self {
+        Self {
+            name,
+            strategy,
+            goal: None,
+        }
+    }
 }
 
 impl<S: Strategy> Player for LocalPlayer<S> {
@@ -55,7 +64,7 @@ impl<S: Strategy> Player for LocalPlayer<S> {
     }
 
     /// Does nothing
-    fn won(&self, _did_win: bool) {}
+    fn won(&mut self, _did_win: bool) {}
 }
 
 #[cfg(test)]
