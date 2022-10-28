@@ -391,7 +391,36 @@ mod tests {
     }
 
     #[test]
-    fn test_next_player() {}
+    fn test_next_player() {
+        let mut state = State::default();
+        state.add_player(PlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: (0, 5),
+            color: ColorName::Red.into(),
+        });
+        state.add_player(PlayerInfo {
+            home: (1, 3),
+            position: (1, 3),
+            goal: (0, 3),
+            color: ColorName::Blue.into(),
+        });
+
+        let mock = MockPlayer::default();
+        let mut players: Vec<Box<dyn Player>> = vec![
+            Box::new(mock),
+            Box::new(LocalPlayer::new("jill".to_string(), NaiveStrategy::Riemann)),
+        ];
+        assert_eq!(players[0].name(), "bob");
+        assert_eq!(state.player_info[0].color, ColorName::Red.into());
+        assert_eq!(players[1].name(), "jill");
+        assert_eq!(state.player_info[1].color, ColorName::Blue.into());
+        Referee::next_player(&mut players, &mut state);
+        assert_eq!(players[1].name(), "bob");
+        assert_eq!(state.player_info[1].color, ColorName::Red.into());
+        assert_eq!(players[0].name(), "jill");
+        assert_eq!(state.player_info[0].color, ColorName::Blue.into());
+    }
 
     #[test]
     fn test_calculate_winners() {
