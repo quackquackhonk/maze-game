@@ -1,15 +1,22 @@
 [package]
-name = "Referee"
+name = "referee"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[[bin]]
-name = "ref"
-path = "referee.rs"
+[lib]
+name = "referee"
+path = "lib.rs"
 
 [dependencies]
+aliri_braid = "0.2.4"
 common = { path = "../Common/" }
+egui = "0.19.0"
+eframe = "0.19.0"
 players = { path = "../Players/" }
 rand = "0.8.5"
 rand_chacha = "0.3.1"
+regex = "1.6.0"
+rfd = "0.10.0"
+serde = "1.0.147"
+serde_json = "1.0.87"

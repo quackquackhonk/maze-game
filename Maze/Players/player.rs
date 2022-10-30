@@ -1,11 +1,12 @@
 use crate::strategy::{PlayerAction, PlayerBoardState, Strategy};
 use common::board::{Board, DefaultBoard};
 use common::grid::Position;
+use common::json::Name;
 
 /// Trait describing the methods that `Player`s must implement
 pub trait Player {
     /// Returns the name of this Player
-    fn name(&self) -> String;
+    fn name(&self) -> Name;
     /// Returns a `Board` with at least `cols` columns and `rows` rows
     fn propose_board0(&self, cols: u32, rows: u32) -> Board;
     /// The player receives a `PlayerBoardState`, which is all the publicly available information
@@ -20,7 +21,7 @@ pub trait Player {
 /// Represents a Local AI Player
 pub struct LocalPlayer<S: Strategy> {
     /// The name of the `LocalPlayer`
-    name: String,
+    name: Name,
     /// The `strategy::Strategy` that this `LocalPlayer` will use to make moves
     strategy: S,
     /// The goal position of this `LocalPlayer`. This type is an `Option` because the `LocalPlayer`
@@ -28,7 +29,7 @@ pub struct LocalPlayer<S: Strategy> {
     goal: Option<Position>,
 }
 impl<S: Strategy> LocalPlayer<S> {
-    pub fn new(name: String, strategy: S) -> Self {
+    pub fn new(name: Name, strategy: S) -> Self {
         Self {
             name,
             strategy,
@@ -38,7 +39,7 @@ impl<S: Strategy> LocalPlayer<S> {
 }
 
 impl<S: Strategy> Player for LocalPlayer<S> {
-    fn name(&self) -> String {
+    fn name(&self) -> Name {
         self.name.clone()
     }
 
@@ -69,7 +70,7 @@ impl<S: Strategy> Player for LocalPlayer<S> {
 
 #[cfg(test)]
 mod tests {
-    use common::{board::DefaultBoard, ColorName};
+    use common::{board::DefaultBoard, json::Name, ColorName};
 
     use crate::{
         player::Player,
@@ -81,18 +82,18 @@ mod tests {
     #[test]
     fn test_name() {
         let player = LocalPlayer {
-            name: String::from("bill"),
+            name: Name::from_static("bill"),
             strategy: NaiveStrategy::Euclid,
             goal: None,
         };
 
-        assert_eq!(player.name(), String::from("bill"));
+        assert_eq!(player.name(), Name::from_static("bill"));
     }
 
     #[test]
     fn test_propose_board() {
         let player = LocalPlayer {
-            name: String::from("bill"),
+            name: Name::from_static("bill"),
             strategy: NaiveStrategy::Euclid,
             goal: None,
         };
@@ -106,7 +107,7 @@ mod tests {
     #[test]
     fn test_setup() {
         let mut player = LocalPlayer {
-            name: String::from("bill"),
+            name: Name::from_static("bill"),
             strategy: NaiveStrategy::Euclid,
             goal: None,
         };
@@ -129,7 +130,7 @@ mod tests {
     #[test]
     fn test_take_turn() {
         let mut player = LocalPlayer {
-            name: String::from("bill"),
+            name: Name::from_static("bill"),
             strategy: NaiveStrategy::Euclid,
             goal: None,
         };

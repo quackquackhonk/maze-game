@@ -1,14 +1,44 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, fmt::Display};
 
+use aliri_braid::braid;
 use serde::{Deserialize, Serialize};
 use unordered_pair::UnorderedPair;
 
 use crate::{
     board::{Board, Slide},
     gem::Gem,
-    tile::{CompassDirection, ConnectorShape, Tile},
+    tile::{CompassDirection, ConnectorShape, TileWidget},
     Color, ColorName, PlayerInfo, State,
 };
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct InvalidName;
+
+impl Display for InvalidName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("InvalidName")
+    }
+}
+
+#[braid(serde, validator)]
+pub struct Name;
+
+impl aliri_braid::Validator for Name {
+    type Error = InvalidName;
+
+    fn validate(raw: &str) -> Result<(), Self::Error> {
+        let hexcode_re = regex::Regex::new(r"^[a-zA-Z0-9]+$").unwrap();
+        (raw.len() <= 20 && hexcode_re.is_match(raw))
+            .then_some(())
+            .ok_or(InvalidName)
+    }
+}
+
+impl PartialEq<&str> for Name {
+    fn eq(&self, &other: &&str) -> bool {
+        self.0 == other
+    }
+}
 
 #[derive(Debug, Deserialize)]
 pub struct JsonBoard {
@@ -130,7 +160,7 @@ impl From<JsonBoard> for Board {
         let grid = [[(); 7]; 7].map(|list| {
             list.map(|_| {
                 let tile_info = zipped_board.next().unwrap();
-                Tile {
+                TileWidget {
                     connector: tile_info.1.into(),
                     gems: tile_info.0.into(),
                 }
@@ -139,7 +169,7 @@ impl From<JsonBoard> for Board {
 
         Board::new(
             grid,
-            Tile {
+            TileWidget {
                 connector: ConnectorShape::Crossroads,
                 gems: (Gem::amethyst, Gem::garnet).into(),
             },
@@ -158,7 +188,7 @@ impl From<(JsonBoard, JsonTile)> for Board {
         let grid = [[(); 7]; 7].map(|list| {
             list.map(|_| {
                 let tile_info = zipped_board.next().unwrap();
-                Tile {
+                TileWidget {
                     connector: tile_info.1.into(),
                     gems: tile_info.0.into(),
                 }
@@ -209,9 +239,9 @@ pub struct JsonTile {
     image2: Gem,
 }
 
-impl From<JsonTile> for Tile {
+impl From<JsonTile> for TileWidget {
     fn from(jtile: JsonTile) -> Self {
-        Tile {
+        TileWidget {
             connector: jtile.tilekey.into(),
             gems: (jtile.image1, jtile.image2).into(),
         }
@@ -243,7 +273,7 @@ impl From<JsonPlayer> for PlayerInfo {
 
 /// Type alias for representing color strings in the
 /// Json testing input
-type JsonColor = String;
+pub type JsonColor = String;
 
 /// Conversion from `JsonColor`s into `common::Color`s
 impl TryFrom<JsonColor> for Color {
@@ -352,5 +382,18 @@ impl TryFrom<JsonDegree> for usize {
             270 => Ok(3),
             _ => Err(format!("Invalid JsonDegree {}", d.0)),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_name_validator() {
+        assert!(serde_json::from_str::<Name>("\"Bill\"").is_ok());
+        assert!(serde_json::from_str::<Name>("\"\"").is_err());
+        assert!(serde_json::from_str::<Name>("\"_\"").is_err());
+        assert!(serde_json::from_str::<Name>("\"BartholomewRobertsonTheThird\"").is_err());
     }
 }
