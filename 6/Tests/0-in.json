@@ -1,4 +1,4 @@
-[["joe", "Euclid"]]
+[["bob", "Riemann"], ["joe", "Euclid"]]
 
 {
     "board": {
@@ -28,6 +28,12 @@
             "home": {"row#": 1, "column#": 1},
             "goto": {"row#": 3, "column#": 3},
             "color": "red"
+        },
+        {
+            "current": {"row#": 2, "column#": 2},
+            "home": {"row#": 1, "column#": 3},
+            "goto": {"row#": 3, "column#": 5},
+            "color": "purple"
         }
     ],
     "last": null

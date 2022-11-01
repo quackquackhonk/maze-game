@@ -568,12 +568,12 @@ mod tests {
                 Name::from_static("joe"),
                 NaiveStrategy::Euclid,
             )),
-            player.clone(),
+            player,
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners[0].name(), Name::from_static("joe"));
         //dbg!(&player);
-        //assert_eq!(winners.len(), 1);
+        assert_eq!(winners.len(), 1);
         assert!(kicked.is_empty());
 
         let mock = MockPlayer::default();

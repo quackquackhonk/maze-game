@@ -40,41 +40,41 @@ impl PartialEq<&str> for Name {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonBoard {
     connectors: Matrix<Connector>,
     treasures: Matrix<Treasure>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Matrix<T>(Vec<Row<T>>);
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Row<T>(Vec<T>);
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum Connector {
-    #[serde(rename(deserialize = "│"))]
+    #[serde(rename = "│")]
     VerticalPath,
-    #[serde(rename(deserialize = "─"))]
+    #[serde(rename = "─")]
     HorizontalPath,
-    #[serde(rename(deserialize = "┐"))]
+    #[serde(rename = "┐")]
     SouthCorner,
-    #[serde(rename(deserialize = "└"))]
+    #[serde(rename = "└")]
     NorthCorner,
-    #[serde(rename(deserialize = "┌"))]
+    #[serde(rename = "┌")]
     EastCorner,
-    #[serde(rename(deserialize = "┘"))]
+    #[serde(rename = "┘")]
     WestCorner,
-    #[serde(rename(deserialize = "┬"))]
+    #[serde(rename = "┬")]
     SouthFork,
-    #[serde(rename(deserialize = "┴"))]
+    #[serde(rename = "┴")]
     NorthFork,
-    #[serde(rename(deserialize = "┤"))]
+    #[serde(rename = "┤")]
     WestFork,
-    #[serde(rename(deserialize = "├"))]
+    #[serde(rename = "├")]
     EastFork,
-    #[serde(rename(deserialize = "┼"))]
+    #[serde(rename = "┼")]
     Crossroads,
 }
 
@@ -99,12 +99,39 @@ impl From<Connector> for ConnectorShape {
     }
 }
 
-#[derive(Debug, Deserialize)]
+impl From<ConnectorShape> for Connector {
+    fn from(cs: ConnectorShape) -> Self {
+        use crate::tile::CompassDirection::*;
+        use crate::tile::ConnectorShape::*;
+        use crate::tile::PathOrientation::*;
+        match cs {
+            Path(Vertical) => Connector::VerticalPath,
+            Path(Horizontal) => Connector::HorizontalPath,
+            Corner(South) => Connector::SouthCorner,
+            Corner(North) => Connector::NorthCorner,
+            Corner(East) => Connector::EastCorner,
+            Corner(West) => Connector::WestCorner,
+            Fork(South) => Connector::SouthFork,
+            Fork(North) => Connector::NorthFork,
+            Fork(West) => Connector::WestFork,
+            Fork(East) => Connector::EastFork,
+            Crossroads => Connector::Crossroads,
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Treasure(Gem, Gem);
 
 impl From<Treasure> for UnorderedPair<Gem> {
     fn from(val: Treasure) -> Self {
         (val.0, val.1).into()
+    }
+}
+
+impl From<UnorderedPair<Gem>> for Treasure {
+    fn from(val: UnorderedPair<Gem>) -> Self {
+        Treasure(val.0, val.1)
     }
 }
 
@@ -177,6 +204,34 @@ impl From<JsonBoard> for Board {
     }
 }
 
+impl From<Board> for (JsonBoard, JsonTile) {
+    fn from(b: Board) -> Self {
+        let rows = b.num_rows();
+        let cols = b.num_cols();
+        let mut connectors = vec![];
+        let mut treasures = vec![];
+
+        for row in 0..rows {
+            let mut connector_row = Row(vec![]);
+            let mut treasure_row = Row(vec![]);
+            for col in 0..cols {
+                connector_row.0.push(b[(col, row)].connector.into());
+                treasure_row.0.push(b[(col, row)].gems.into());
+            }
+            connectors.push(connector_row);
+            treasures.push(treasure_row);
+        }
+
+        (
+            JsonBoard {
+                connectors: Matrix(connectors),
+                treasures: Matrix(treasures),
+            },
+            b.extra.into(),
+        )
+    }
+}
+
 impl From<(JsonBoard, JsonTile)> for Board {
     fn from((jboard, jtile): (JsonBoard, JsonTile)) -> Self {
         let mut zipped_board = jboard
@@ -229,13 +284,13 @@ impl From<JsonState> for State {
 }
 
 /// JSON representation for a single `Tile` in the `Board`
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[allow(dead_code)]
 pub struct JsonTile {
     tilekey: Connector,
-    #[serde(rename(deserialize = "1-image"))]
+    #[serde(rename = "1-image")]
     image1: Gem,
-    #[serde(rename(deserialize = "2-image"))]
+    #[serde(rename = "2-image")]
     image2: Gem,
 }
 
@@ -244,6 +299,16 @@ impl From<JsonTile> for Tile {
         Tile {
             connector: jtile.tilekey.into(),
             gems: (jtile.image1, jtile.image2).into(),
+        }
+    }
+}
+
+impl From<Tile> for JsonTile {
+    fn from(tile: Tile) -> Self {
+        JsonTile {
+            tilekey: tile.connector.into(),
+            image1: tile.gems.0,
+            image2: tile.gems.1,
         }
     }
 }
@@ -325,6 +390,15 @@ impl From<JsonAction> for Option<Slide> {
             index: jslide.0 .0,
             direction: jslide.1.into(),
         })
+    }
+}
+
+impl From<Option<Slide>> for JsonAction {
+    fn from(s: Option<Slide>) -> Self {
+        match s {
+            None => JsonAction(None),
+            Some(Slide { index, direction }) => JsonAction(Some((Index(index), direction.into()))),
+        }
     }
 }
 

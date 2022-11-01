@@ -5,167 +5,168 @@ use egui_extras::RetainedImage;
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use serde::Deserialize;
+use serde::Serialize;
 /// Describes the gems a tile can have
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize, Serialize)]
 pub enum Gem {
-    #[serde(rename(deserialize = "alexandrite-pear-shape"))]
+    #[serde(rename = "alexandrite-pear-shape")]
     alexandrite_pear_shape,
     alexandrite,
-    #[serde(rename(deserialize = "almandine-garnet"))]
+    #[serde(rename = "almandine-garnet")]
     almandine_garnet,
     amethyst,
     ametrine,
     ammolite,
     apatite,
     aplite,
-    #[serde(rename(deserialize = "apricot-square-radiant"))]
+    #[serde(rename = "apricot-square-radiant")]
     apricot_square_radiant,
     aquamarine,
-    #[serde(rename(deserialize = "australian-marquise"))]
+    #[serde(rename = "australian-marquise")]
     australian_marquise,
     aventurine,
     azurite,
     beryl,
-    #[serde(rename(deserialize = "black-obsidian"))]
+    #[serde(rename = "black-obsidian")]
     black_obsidian,
-    #[serde(rename(deserialize = "black-onyx"))]
+    #[serde(rename = "black-onyx")]
     black_onyx,
-    #[serde(rename(deserialize = "black-spinel-cushion"))]
+    #[serde(rename = "black-spinel-cushion")]
     black_spinel_cushion,
-    #[serde(rename(deserialize = "blue-ceylon-sapphire"))]
+    #[serde(rename = "blue-ceylon-sapphire")]
     blue_ceylon_sapphire,
-    #[serde(rename(deserialize = "blue-cushion"))]
+    #[serde(rename = "blue-cushion")]
     blue_cushion,
-    #[serde(rename(deserialize = "blue-pear-shape"))]
+    #[serde(rename = "blue-pear-shape")]
     blue_pear_shape,
-    #[serde(rename(deserialize = "blue-spinel-heart"))]
+    #[serde(rename = "blue-spinel-heart")]
     blue_spinel_heart,
-    #[serde(rename(deserialize = "bulls-eye"))]
+    #[serde(rename = "bulls-eye")]
     bulls_eye,
     carnelian,
-    #[serde(rename(deserialize = "chrome-diopside"))]
+    #[serde(rename = "chrome-diopside")]
     chrome_diopside,
-    #[serde(rename(deserialize = "chrysoberyl-cushion"))]
+    #[serde(rename = "chrysoberyl-cushion")]
     chrysoberyl_cushion,
     chrysolite,
-    #[serde(rename(deserialize = "citrine-checkerboard"))]
+    #[serde(rename = "citrine-checkerboard")]
     citrine_checkerboard,
     citrine,
     clinohumite,
-    #[serde(rename(deserialize = "color-change-oval"))]
+    #[serde(rename = "color-change-oval")]
     color_change_oval,
     cordierite,
     diamond,
     dumortierite,
     emerald,
-    #[serde(rename(deserialize = "fancy-spinel-marquise"))]
+    #[serde(rename = "fancy-spinel-marquise")]
     fancy_spinel_marquise,
     garnet,
-    #[serde(rename(deserialize = "golden-diamond-cut"))]
+    #[serde(rename = "golden-diamond-cut")]
     golden_diamond_cut,
     goldstone,
     grandidierite,
-    #[serde(rename(deserialize = "gray-agate"))]
+    #[serde(rename = "gray-agate")]
     gray_agate,
-    #[serde(rename(deserialize = "green-aventurine"))]
+    #[serde(rename = "green-aventurine")]
     green_aventurine,
-    #[serde(rename(deserialize = "green-beryl-antique"))]
+    #[serde(rename = "green-beryl-antique")]
     green_beryl_antique,
-    #[serde(rename(deserialize = "green-beryl"))]
+    #[serde(rename = "green-beryl")]
     green_beryl,
-    #[serde(rename(deserialize = "green-princess-cut"))]
+    #[serde(rename = "green-princess-cut")]
     green_princess_cut,
-    #[serde(rename(deserialize = "grossular-garnet"))]
+    #[serde(rename = "grossular-garnet")]
     grossular_garnet,
     hackmanite,
     heliotrope,
     hematite,
-    #[serde(rename(deserialize = "iolite-emerald-cut"))]
+    #[serde(rename = "iolite-emerald-cut")]
     iolite_emerald_cut,
     jasper,
     jaspilite,
-    #[serde(rename(deserialize = "kunzite-oval"))]
+    #[serde(rename = "kunzite-oval")]
     kunzite_oval,
     kunzite,
     labradorite,
-    #[serde(rename(deserialize = "lapis-lazuli"))]
+    #[serde(rename = "lapis-lazuli")]
     lapis_lazuli,
-    #[serde(rename(deserialize = "lemon-quartz-briolette"))]
+    #[serde(rename = "lemon-quartz-briolette")]
     lemon_quartz_briolette,
     magnesite,
-    #[serde(rename(deserialize = "mexican-opal"))]
+    #[serde(rename = "mexican-opal")]
     mexican_opal,
     moonstone,
-    #[serde(rename(deserialize = "morganite-oval"))]
+    #[serde(rename = "morganite-oval")]
     morganite_oval,
-    #[serde(rename(deserialize = "moss-agate"))]
+    #[serde(rename = "moss-agate")]
     moss_agate,
-    #[serde(rename(deserialize = "orange-radiant"))]
+    #[serde(rename = "orange-radiant")]
     orange_radiant,
-    #[serde(rename(deserialize = "padparadscha-oval"))]
+    #[serde(rename = "padparadscha-oval")]
     padparadscha_oval,
-    #[serde(rename(deserialize = "padparadscha-sapphire"))]
+    #[serde(rename = "padparadscha-sapphire")]
     padparadscha_sapphire,
     peridot,
-    #[serde(rename(deserialize = "pink-emerald-cut"))]
+    #[serde(rename = "pink-emerald-cut")]
     pink_emerald_cut,
-    #[serde(rename(deserialize = "pink-opal"))]
+    #[serde(rename = "pink-opal")]
     pink_opal,
-    #[serde(rename(deserialize = "pink-round"))]
+    #[serde(rename = "pink-round")]
     pink_round,
-    #[serde(rename(deserialize = "pink-spinel-cushion"))]
+    #[serde(rename = "pink-spinel-cushion")]
     pink_spinel_cushion,
     prasiolite,
     prehnite,
-    #[serde(rename(deserialize = "purple-cabochon"))]
+    #[serde(rename = "purple-cabochon")]
     purple_cabochon,
-    #[serde(rename(deserialize = "purple-oval"))]
+    #[serde(rename = "purple-oval")]
     purple_oval,
-    #[serde(rename(deserialize = "purple-spinel-trillion"))]
+    #[serde(rename = "purple-spinel-trillion")]
     purple_spinel_trillion,
-    #[serde(rename(deserialize = "purple-square-cushion"))]
+    #[serde(rename = "purple-square-cushion")]
     purple_square_cushion,
-    #[serde(rename(deserialize = "raw-beryl"))]
+    #[serde(rename = "raw-beryl")]
     raw_beryl,
-    #[serde(rename(deserialize = "raw-citrine"))]
+    #[serde(rename = "raw-citrine")]
     raw_citrine,
-    #[serde(rename(deserialize = "red-diamond"))]
+    #[serde(rename = "red-diamond")]
     red_diamond,
-    #[serde(rename(deserialize = "red-spinel-square-emerald-cut"))]
+    #[serde(rename = "red-spinel-square-emerald-cut")]
     red_spinel_square_emerald_cut,
     rhodonite,
-    #[serde(rename(deserialize = "rock-quartz"))]
+    #[serde(rename = "rock-quartz")]
     rock_quartz,
-    #[serde(rename(deserialize = "rose-quartz"))]
+    #[serde(rename = "rose-quartz")]
     rose_quartz,
-    #[serde(rename(deserialize = "ruby-diamond-profile"))]
+    #[serde(rename = "ruby-diamond-profile")]
     ruby_diamond_profile,
     ruby,
     sphalerite,
     spinel,
-    #[serde(rename(deserialize = "star-cabochon"))]
+    #[serde(rename = "star-cabochon")]
     star_cabochon,
     stilbite,
     sunstone,
-    #[serde(rename(deserialize = "super-seven"))]
+    #[serde(rename = "super-seven")]
     super_seven,
-    #[serde(rename(deserialize = "tanzanite-trillion"))]
+    #[serde(rename = "tanzanite-trillion")]
     tanzanite_trillion,
-    #[serde(rename(deserialize = "tigers-eye"))]
+    #[serde(rename = "tigers-eye")]
     tigers_eye,
-    #[serde(rename(deserialize = "tourmaline-laser-cut"))]
+    #[serde(rename = "tourmaline-laser-cut")]
     tourmaline_laser_cut,
     tourmaline,
     unakite,
-    #[serde(rename(deserialize = "white-square"))]
+    #[serde(rename = "white-square")]
     white_square,
-    #[serde(rename(deserialize = "yellow-baguette"))]
+    #[serde(rename = "yellow-baguette")]
     yellow_baguette,
-    #[serde(rename(deserialize = "yellow-beryl-oval"))]
+    #[serde(rename = "yellow-beryl-oval")]
     yellow_beryl_oval,
-    #[serde(rename(deserialize = "yellow-heart"))]
+    #[serde(rename = "yellow-heart")]
     yellow_heart,
-    #[serde(rename(deserialize = "yellow-jasper"))]
+    #[serde(rename = "yellow-jasper")]
     yellow_jasper,
     zircon,
     zoisite,

@@ -1,4 +1,9 @@
-use std::{cell::RefCell, collections::VecDeque, rc::Rc};
+use std::{
+    cell::RefCell,
+    collections::VecDeque,
+    fs::{self, File},
+    rc::Rc,
+};
 
 use common::{
     gem::Gem,
@@ -11,6 +16,8 @@ use egui::{Color32, Grid, Image, Vec2, Widget};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;
+
+use crate::json::JsonRefereeState;
 lazy_static! {
     static ref CROSSROADS_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
         "crossroads.png",
@@ -261,11 +268,34 @@ impl Observer for ObserverGUI {
 }
 
 impl eframe::App for ObserverGUI {
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             if !self.states.borrow().is_empty() {
                 render_state(ui, &self.states.borrow()[0]);
             }
+            let mut st = self.states.borrow_mut();
+            if st.len() > 1 {
+                if ui.button("Next").clicked() {
+                    st.pop_front();
+                }
+            } else {
+                ui.label("No more states to render!");
+            };
+
+            if st.len() > 1 && ui.button("Save").clicked() {
+                let path = std::env::current_dir().unwrap();
+                if let Some(path) = rfd::FileDialog::new()
+                    .set_directory(&path)
+                    .add_filter("json", &[".json"])
+                    .set_file_name("state.json")
+                    .save_file()
+                {
+                    let jrs: JsonRefereeState = st[0].clone().into();
+                    serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
+                        .expect("Writing to json failed!");
+                };
+            }
+            drop(st);
         });
     }
 }

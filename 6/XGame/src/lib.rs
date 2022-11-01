@@ -69,16 +69,21 @@ pub fn read_and_write_json(
     let mut reached_goal = HashSet::default();
 
     r#ref.broadcast_initial_state(&state, &mut players);
+    let mut kicked = Vec::default();
 
     let gamewinner = r#ref.run_from_state(
         &mut state,
         &mut players,
         &mut observers,
         &mut reached_goal,
-        &mut Vec::default(),
+        &mut kicked,
     );
-    let (winners, _) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
+    let (winners, losers) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
+    dbg!(winners.len());
+    dbg!(losers.len());
+    dbg!(kicked.len());
     let mut winner_names: Vec<Name> = winners.into_iter().map(|w| w.name()).collect();
+    dbg!(&winner_names);
     winner_names.sort();
 
     write_json_out_to_writer(winner_names, writer)?;

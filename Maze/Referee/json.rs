@@ -3,7 +3,7 @@ use common::{
     PlayerInfo, State,
 };
 use players::strategy::NaiveStrategy;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct PS(Name, JsonStrategy);
@@ -38,7 +38,7 @@ impl From<JsonStrategy> for NaiveStrategy {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonRefereeState {
     board: JsonBoard,
     spare: JsonTile,
@@ -57,8 +57,20 @@ impl From<JsonRefereeState> for State {
     }
 }
 
+impl From<State> for JsonRefereeState {
+    fn from(st: State) -> Self {
+        let (board, spare) = st.board.into();
+        JsonRefereeState {
+            board,
+            spare,
+            plmt: st.player_info.into_iter().map(|pi| pi.into()).collect(),
+            last: st.previous_slide.into(),
+        }
+    }
+}
+
 #[allow(dead_code)]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonRefereePlayer {
     current: Coordinate,
     home: Coordinate,
@@ -73,6 +85,17 @@ impl From<JsonRefereePlayer> for PlayerInfo {
             position: jrp.current.into(),
             goal: jrp.goto.into(),
             color: jrp.color.try_into().expect("meh"),
+        }
+    }
+}
+
+impl From<PlayerInfo> for JsonRefereePlayer {
+    fn from(pi: PlayerInfo) -> Self {
+        JsonRefereePlayer {
+            current: pi.position.into(),
+            home: pi.home.into(),
+            goto: pi.goal.into(),
+            color: pi.color.into(),
         }
     }
 }

@@ -22,6 +22,14 @@ impl Board {
         }
     }
 
+    pub fn num_rows(&self) -> usize {
+        self.grid.len()
+    }
+
+    pub fn num_cols(&self) -> usize {
+        self.grid[0].len()
+    }
+
     /// Slides the given Slide struct command and inserts the spare tile in the location of the
     /// hole in the board. The dislodged tile becomes the new `spare_tile`.
     pub fn slide_and_insert(&mut self, Slide { index, direction }: Slide) -> BoardResult<()> {
