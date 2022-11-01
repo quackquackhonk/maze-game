@@ -1,36 +1,14 @@
 use common::{
     gem::Gem,
+    gem::GEM_IMGS,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
-    Color, ColorName,
+    Color, ColorName, State,
 };
 use egui::{Color32, Grid, Image, Vec2, Widget};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;
-use std::collections::HashMap;
-
 lazy_static! {
-    static ref GEM_IMGS: HashMap<Gem, RetainedImage> = {
-        let mut m = HashMap::new();
-
-        m.insert(
-            Gem::aplite,
-            egui_extras::RetainedImage::from_image_bytes(
-                "aplite.png",
-                include_bytes!("../Resources/gems/aplite.png"),
-            )
-            .unwrap(),
-        );
-        m.insert(
-            Gem::dumortierite,
-            egui_extras::RetainedImage::from_image_bytes(
-                "dumortierite.png",
-                include_bytes!("../Resources/gems/dumortierite.png"),
-            )
-            .unwrap(),
-        );
-        m
-    };
     static ref CROSSROADS_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
         "crossroads.png",
         include_bytes!("../Resources/connectors/crossroads.png"),
@@ -226,6 +204,16 @@ impl Widget for TileWidget {
     }
 }
 
+pub struct BoardWidget {
+    state: State,
+}
+
+impl Widget for BoardWidget {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
+        todo!()
+    }
+}
+
 pub struct Observer;
 
 impl eframe::App for Observer {
@@ -235,8 +223,8 @@ impl eframe::App for Observer {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.add(TileWidget {
                 tile: Tile {
-                    connector: Corner(East),
-                    gems: (Gem::aplite, Gem::dumortierite).into(),
+                    connector: Fork(East),
+                    gems: (Gem::bulls_eye, Gem::blue_pear_shape).into(),
                 },
                 home_colors: vec![
                     ColorName::Red.into(),
