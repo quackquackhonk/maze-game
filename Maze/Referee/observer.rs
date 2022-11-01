@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use common::{
     gem::Gem,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
@@ -33,6 +31,41 @@ lazy_static! {
         );
         m
     };
+    static ref CROSSROADS_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "crossroads.png",
+        include_bytes!("../Resources/connectors/crossroads.png"),
+    )
+    .unwrap();
+    static ref PATH_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "path.png",
+        include_bytes!("../Resources/connectors/path.png"),
+    )
+    .unwrap();
+    static ref FORK_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "fork.png",
+        include_bytes!("../Resources/connectors/fork.png"),
+    )
+    .unwrap();
+    static ref CORNER_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "corner.png",
+        include_bytes!("../Resources/connectors/corner.png"),
+    )
+    .unwrap();
+    static ref EMPTY_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "empty.png",
+        include_bytes!("../Resources/connectors/empty.png"),
+    )
+    .unwrap();
+    static ref PLAYER_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "player.png",
+        include_bytes!("../Resources/player.png"),
+    )
+    .unwrap();
+    static ref HOME_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+        "home.png",
+        include_bytes!("../Resources/home.png"),
+    )
+    .unwrap();
 }
 
 const CELL_SIZE: f32 = 30.0;
@@ -47,64 +80,32 @@ struct TileWidget {
 }
 
 impl TileWidget {
-    fn north_path(&self) -> RetainedImage {
+    fn north_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::North) {
-            egui_extras::RetainedImage::from_image_bytes(
-                "path.png",
-                include_bytes!("../Resources/connectors/path.png"),
-            )
-            .unwrap()
+            &PATH_IMG
         } else {
-            egui_extras::RetainedImage::from_image_bytes(
-                "empty.png",
-                include_bytes!("../Resources/connectors/empty.png"),
-            )
-            .unwrap()
+            &EMPTY_IMG
         }
     }
-    fn south_path(&self) -> RetainedImage {
+    fn south_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::South) {
-            egui_extras::RetainedImage::from_image_bytes(
-                "path.png",
-                include_bytes!("../Resources/connectors/path.png"),
-            )
-            .unwrap()
+            &PATH_IMG
         } else {
-            egui_extras::RetainedImage::from_image_bytes(
-                "empty.png",
-                include_bytes!("../Resources/connectors/empty.png"),
-            )
-            .unwrap()
+            &EMPTY_IMG
         }
     }
-    fn east_path(&self) -> RetainedImage {
+    fn east_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::East) {
-            egui_extras::RetainedImage::from_image_bytes(
-                "path.png",
-                include_bytes!("../Resources/connectors/path.png"),
-            )
-            .unwrap()
+            &PATH_IMG
         } else {
-            egui_extras::RetainedImage::from_image_bytes(
-                "empty.png",
-                include_bytes!("../Resources/connectors/empty.png"),
-            )
-            .unwrap()
+            &EMPTY_IMG
         }
     }
-    fn west_path(&self) -> RetainedImage {
+    fn west_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::West) {
-            egui_extras::RetainedImage::from_image_bytes(
-                "path.png",
-                include_bytes!("../Resources/connectors/path.png"),
-            )
-            .unwrap()
+            &PATH_IMG
         } else {
-            egui_extras::RetainedImage::from_image_bytes(
-                "empty.png",
-                include_bytes!("../Resources/connectors/empty.png"),
-            )
-            .unwrap()
+            &EMPTY_IMG
         }
     }
 }
@@ -121,26 +122,10 @@ impl Widget for TileWidget {
 
         if ui.is_rect_visible(rect) {
             let connector_img = match self.tile.connector {
-                ConnectorShape::Crossroads => egui_extras::RetainedImage::from_image_bytes(
-                    "crossroads.png",
-                    include_bytes!("../Resources/connectors/crossroads.png"),
-                )
-                .unwrap(),
-                ConnectorShape::Corner(_) => egui_extras::RetainedImage::from_image_bytes(
-                    "corner.png",
-                    include_bytes!("../Resources/connectors/corner.png"),
-                )
-                .unwrap(),
-                ConnectorShape::Fork(_) => egui_extras::RetainedImage::from_image_bytes(
-                    "fork.png",
-                    include_bytes!("../Resources/connectors/fork.png"),
-                )
-                .unwrap(),
-                ConnectorShape::Path(_) => egui_extras::RetainedImage::from_image_bytes(
-                    "path.png",
-                    include_bytes!("../Resources/connectors/path.png"),
-                )
-                .unwrap(),
+                ConnectorShape::Path(_) => &*PATH_IMG,
+                ConnectorShape::Corner(_) => &*CORNER_IMG,
+                ConnectorShape::Fork(_) => &*FORK_IMG,
+                ConnectorShape::Crossroads => &*CROSSROADS_IMG,
             };
 
             let connector_rot: f32 = match self.tile.connector {
@@ -165,16 +150,8 @@ impl Widget for TileWidget {
                 .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
 
             // creates player grid
-            let player_img = egui_extras::RetainedImage::from_image_bytes(
-                "player.png",
-                include_bytes!("../Resources/player.png"),
-            )
-            .unwrap();
-            let home_img = egui_extras::RetainedImage::from_image_bytes(
-                "home.png",
-                include_bytes!("../Resources/home.png"),
-            )
-            .unwrap();
+            let player_img = &PLAYER_IMG;
+            let home_img = &HOME_IMG;
             let player_grid = Grid::new("player_grid")
                 .min_col_width(0.0)
                 .min_row_height(0.0)
