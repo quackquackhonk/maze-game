@@ -21,10 +21,10 @@ pub mod tile;
 pub struct Color {
     /// The original name of the color.
     /// Is either the name of a color, like "red", or the Hex Color code for that color
-    name: String,
+    pub name: String,
     /// Represents a Hex color value
     /// contains values for (red, green, blue).
-    code: (u8, u8, u8),
+    pub code: (u8, u8, u8),
 }
 
 impl From<(u8, u8, u8)> for Color {

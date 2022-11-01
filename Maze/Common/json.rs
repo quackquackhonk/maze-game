@@ -7,7 +7,7 @@ use unordered_pair::UnorderedPair;
 use crate::{
     board::{Board, Slide},
     gem::Gem,
-    tile::{CompassDirection, ConnectorShape, TileWidget},
+    tile::{CompassDirection, ConnectorShape, Tile},
     Color, ColorName, PlayerInfo, State,
 };
 
@@ -160,7 +160,7 @@ impl From<JsonBoard> for Board {
         let grid = [[(); 7]; 7].map(|list| {
             list.map(|_| {
                 let tile_info = zipped_board.next().unwrap();
-                TileWidget {
+                Tile {
                     connector: tile_info.1.into(),
                     gems: tile_info.0.into(),
                 }
@@ -169,7 +169,7 @@ impl From<JsonBoard> for Board {
 
         Board::new(
             grid,
-            TileWidget {
+            Tile {
                 connector: ConnectorShape::Crossroads,
                 gems: (Gem::amethyst, Gem::garnet).into(),
             },
@@ -188,7 +188,7 @@ impl From<(JsonBoard, JsonTile)> for Board {
         let grid = [[(); 7]; 7].map(|list| {
             list.map(|_| {
                 let tile_info = zipped_board.next().unwrap();
-                TileWidget {
+                Tile {
                     connector: tile_info.1.into(),
                     gems: tile_info.0.into(),
                 }
@@ -239,9 +239,9 @@ pub struct JsonTile {
     image2: Gem,
 }
 
-impl From<JsonTile> for TileWidget {
+impl From<JsonTile> for Tile {
     fn from(jtile: JsonTile) -> Self {
-        TileWidget {
+        Tile {
             connector: jtile.tilekey.into(),
             gems: (jtile.image1, jtile.image2).into(),
         }

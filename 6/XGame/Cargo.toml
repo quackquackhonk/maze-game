@@ -19,3 +19,5 @@ players = { path="../../Maze/Players/" }
 referee = { path="../../Maze/Referee/" }
 serde = "1.0.147"
 serde_json = "1.0.87"
+egui = "0.19.0"
+eframe = "0.19.0"

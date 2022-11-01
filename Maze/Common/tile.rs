@@ -114,7 +114,7 @@ impl ConnectorShape {
     }
 
     /// Can we go in this `direction` from this [`ConnectorShape`], `self`?
-    fn connected_to(self, direction: CompassDirection) -> bool {
+    pub fn connected_to(self, direction: CompassDirection) -> bool {
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;

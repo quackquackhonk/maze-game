@@ -1,5 +1,5 @@
 use crate::grid::{Grid, Position};
-use crate::tile::{CompassDirection, ConnectorShape, PathOrientation, TileWidget};
+use crate::tile::{CompassDirection, ConnectorShape, PathOrientation, Tile};
 use std::collections::HashSet;
 use std::ops::Index;
 
@@ -10,12 +10,12 @@ pub type BoardResult<T> = Result<T, BoardError>;
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Board {
-    pub grid: Grid<TileWidget>,
-    pub extra: TileWidget,
+    pub grid: Grid<Tile>,
+    pub extra: Tile,
 }
 
 impl Board {
-    pub fn new(grid: impl Into<Grid<TileWidget>>, extra: TileWidget) -> Self {
+    pub fn new(grid: impl Into<Grid<Tile>>, extra: Tile) -> Self {
         Board {
             grid: grid.into(),
             extra,
@@ -136,7 +136,7 @@ impl Board {
 }
 
 impl Index<Position> for Board {
-    type Output = TileWidget;
+    type Output = Tile;
 
     fn index(&self, index: Position) -> &Self::Output {
         &self.grid[index]
@@ -172,7 +172,7 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
         let grid = [[(); COLS]; ROWS].map(|list| {
             list.map(|_| {
                 idx += 1;
-                TileWidget {
+                Tile {
                     connector: match idx % 11 {
                         0 => Path(Horizontal),
                         1 => Path(Vertical),
@@ -193,7 +193,7 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
         });
         Self {
             grid: Grid::from(grid),
-            extra: TileWidget {
+            extra: Tile {
                 connector: Crossroads,
                 gems: (amethyst, garnet).into(),
             },
