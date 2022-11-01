@@ -78,12 +78,8 @@ pub fn read_and_write_json(
         &mut reached_goal,
         &mut kicked,
     );
-    let (winners, losers) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
-    dbg!(winners.len());
-    dbg!(losers.len());
-    dbg!(kicked.len());
+    let (winners, _losers) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
     let mut winner_names: Vec<Name> = winners.into_iter().map(|w| w.name()).collect();
-    dbg!(&winner_names);
     winner_names.sort();
 
     write_json_out_to_writer(winner_names, writer)?;
