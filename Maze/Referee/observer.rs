@@ -88,157 +88,138 @@ impl TileWidget {
     }
 }
 
-impl Widget for TileWidget {
-    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        let desired_size = egui::vec2(20.0, 20.0);
+fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
+    let connector_img = match widget.tile.connector {
+        ConnectorShape::Path(_) => &*PATH_IMG,
+        ConnectorShape::Corner(_) => &*CORNER_IMG,
+        ConnectorShape::Fork(_) => &*FORK_IMG,
+        ConnectorShape::Crossroads => &*CROSSROADS_IMG,
+    };
 
-        let (rect, mut response) = ui.allocate_exact_size(desired_size, egui::Sense::click());
+    let connector_rot: f32 = match widget.tile.connector {
+        ConnectorShape::Path(PathOrientation::Vertical) => 0.0,
+        ConnectorShape::Path(PathOrientation::Horizontal) => 90.0,
+        ConnectorShape::Corner(CompassDirection::North) => 0.0,
+        ConnectorShape::Corner(CompassDirection::East) => 90.0,
+        ConnectorShape::Corner(CompassDirection::South) => 180.0,
+        ConnectorShape::Corner(CompassDirection::West) => 270.0,
+        ConnectorShape::Fork(CompassDirection::North) => 0.0,
+        ConnectorShape::Fork(CompassDirection::East) => 90.0,
+        ConnectorShape::Fork(CompassDirection::South) => 180.0,
+        ConnectorShape::Fork(CompassDirection::West) => 270.0,
+        ConnectorShape::Crossroads => 0.0,
+    };
 
-        if response.clicked() {
-            println!("click!");
-        }
+    let west_path = widget.west_path();
+    let west_path = egui::Image::new(west_path.texture_id(ui.ctx()), west_path.size_vec2())
+        .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
+    let east_path = widget.east_path();
+    let east_path = egui::Image::new(east_path.texture_id(ui.ctx()), east_path.size_vec2())
+        .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
 
-        if ui.is_rect_visible(rect) {
-            let connector_img = match self.tile.connector {
-                ConnectorShape::Path(_) => &*PATH_IMG,
-                ConnectorShape::Corner(_) => &*CORNER_IMG,
-                ConnectorShape::Fork(_) => &*FORK_IMG,
-                ConnectorShape::Crossroads => &*CROSSROADS_IMG,
-            };
+    // creates player grid
+    let player_img = &PLAYER_IMG;
+    let home_img = &HOME_IMG;
+    let player_grid = Grid::new(format!("{} players", id))
+        .min_col_width(0.0)
+        .min_row_height(0.0)
+        .spacing(Vec2::new(0.0, 0.0));
+    let home_grid = Grid::new(format!("{} homes", id))
+        .min_col_width(0.0)
+        .min_row_height(0.0)
+        .spacing(Vec2::new(0.0, 0.0));
 
-            let connector_rot: f32 = match self.tile.connector {
-                ConnectorShape::Path(PathOrientation::Vertical) => 0.0,
-                ConnectorShape::Path(PathOrientation::Horizontal) => 90.0,
-                ConnectorShape::Corner(CompassDirection::North) => 0.0,
-                ConnectorShape::Corner(CompassDirection::East) => 90.0,
-                ConnectorShape::Corner(CompassDirection::South) => 180.0,
-                ConnectorShape::Corner(CompassDirection::West) => 270.0,
-                ConnectorShape::Fork(CompassDirection::North) => 0.0,
-                ConnectorShape::Fork(CompassDirection::East) => 90.0,
-                ConnectorShape::Fork(CompassDirection::South) => 180.0,
-                ConnectorShape::Fork(CompassDirection::West) => 270.0,
-                ConnectorShape::Crossroads => 0.0,
-            };
+    // creates main grid for the tile
+    Grid::new(format!("{} main", id))
+        .min_col_width(0.0)
+        .spacing(Vec2::new(0.0, 0.0))
+        .show(ui, |ui| {
+            ui.add(Image::new(
+                GEM_IMGS[&widget.tile.gems.0].texture_id(ui.ctx()),
+                Vec2::new(CELL_SIZE, CELL_SIZE),
+            ));
+            widget.north_path().show(ui);
+            home_grid.show(ui, |ui| {
+                widget
+                    .home_colors
+                    .iter()
+                    .enumerate()
+                    .for_each(|(idx, col)| {
+                        if idx != 0 && idx % 2 == 0 {
+                            ui.end_row();
+                        }
+                        ui.add(
+                            Image::new(home_img.texture_id(ui.ctx()), Vec2::new(15.0, 15.0))
+                                .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
+                        );
+                    })
+            });
+            ui.end_row();
 
-            let west_path = self.west_path();
-            let west_path = egui::Image::new(west_path.texture_id(ui.ctx()), west_path.size_vec2())
-                .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
-            let east_path = self.east_path();
-            let east_path = egui::Image::new(east_path.texture_id(ui.ctx()), east_path.size_vec2())
-                .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
+            ui.add(west_path);
+            ui.add(
+                Image::new(
+                    connector_img.texture_id(ui.ctx()),
+                    connector_img.size_vec2(),
+                )
+                .rotate(connector_rot.to_radians(), Vec2::splat(0.5)),
+            );
+            ui.add(east_path);
+            ui.end_row();
 
-            // creates player grid
-            let player_img = &PLAYER_IMG;
-            let home_img = &HOME_IMG;
-            let player_grid = Grid::new("player_grid")
-                .min_col_width(0.0)
-                .min_row_height(0.0)
-                .spacing(Vec2::new(0.0, 0.0));
-            let home_grid = Grid::new("home_grid")
-                .min_col_width(0.0)
-                .min_row_height(0.0)
-                .spacing(Vec2::new(0.0, 0.0));
+            player_grid.show(ui, |ui| {
+                widget
+                    .player_colors
+                    .iter()
+                    .enumerate()
+                    .for_each(|(idx, col)| {
+                        if idx != 0 && idx % 2 == 0 {
+                            ui.end_row();
+                        }
+                        ui.add(
+                            Image::new(player_img.texture_id(ui.ctx()), Vec2::new(15.0, 15.0))
+                                .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
+                        );
+                    })
+            });
+            widget.south_path().show(ui);
+            ui.add(Image::new(
+                GEM_IMGS[&widget.tile.gems.1].texture_id(ui.ctx()),
+                Vec2::new(CELL_SIZE, CELL_SIZE),
+            ));
+        });
 
-            // creates main grid for the tile
-            Grid::new("main_grid")
-                .min_col_width(0.0)
-                .spacing(Vec2::new(0.0, 0.0))
-                .show(ui, |ui| {
-                    ui.add(Image::new(
-                        GEM_IMGS[&self.tile.gems.0].texture_id(ui.ctx()),
-                        Vec2::new(CELL_SIZE, CELL_SIZE),
-                    ));
-                    self.north_path().show(ui);
-                    home_grid.show(ui, |ui| {
-                        self.home_colors.iter().enumerate().for_each(|(idx, col)| {
-                            if idx != 0 && idx % 2 == 0 {
-                                ui.end_row();
-                            }
-                            ui.add(
-                                Image::new(home_img.texture_id(ui.ctx()), Vec2::new(15.0, 15.0))
-                                    .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
-                            );
-                        })
-                    });
-                    ui.end_row();
+    // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
+}
 
-                    ui.add(west_path);
-                    ui.add(
-                        Image::new(
-                            connector_img.texture_id(ui.ctx()),
-                            connector_img.size_vec2(),
-                        )
-                        .rotate(connector_rot.to_radians(), Vec2::splat(0.5)),
-                    );
-                    ui.add(east_path);
-                    ui.end_row();
-
-                    player_grid.show(ui, |ui| {
-                        self.player_colors
-                            .iter()
-                            .enumerate()
-                            .for_each(|(idx, col)| {
-                                if idx != 0 && idx % 2 == 0 {
-                                    ui.end_row();
-                                }
-                                ui.add(
-                                    Image::new(
-                                        player_img.texture_id(ui.ctx()),
-                                        Vec2::new(15.0, 15.0),
-                                    )
-                                    .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
-                                );
-                            })
-                    });
-                    self.south_path().show(ui);
-                    ui.add(Image::new(
-                        GEM_IMGS[&self.tile.gems.1].texture_id(ui.ctx()),
-                        Vec2::new(CELL_SIZE, CELL_SIZE),
-                    ));
+fn render_state(ui: &mut egui::Ui, state: &State) {
+    Grid::new("state_grid").show(ui, |ui| {
+        state
+            .board
+            .grid
+            .iter()
+            .enumerate()
+            .for_each(|(row_idx, row)| {
+                row.iter().enumerate().for_each(|(col_idx, tile)| {
+                    render_tile(
+                        ui,
+                        TileWidget {
+                            tile: tile.clone(),
+                            home_colors: vec![],
+                            player_colors: vec![],
+                        },
+                        &format!("({}, {})", col_idx, row_idx),
+                    )
                 });
-
-            // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
-        }
-
-        response
-    }
-}
-
-pub struct BoardWidget {
-    state: State,
-}
-
-impl Widget for BoardWidget {
-    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
-        todo!()
-    }
+                ui.end_row();
+            })
+    });
 }
 
 pub struct Observer;
 
 impl eframe::App for Observer {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        use CompassDirection::*;
-        use ConnectorShape::*;
-        egui::CentralPanel::default().show(ctx, |ui| {
-            ui.add(TileWidget {
-                tile: Tile {
-                    connector: Fork(East),
-                    gems: (Gem::bulls_eye, Gem::blue_pear_shape).into(),
-                },
-                home_colors: vec![
-                    ColorName::Red.into(),
-                    ColorName::Blue.into(),
-                    ColorName::Black.into(),
-                    ColorName::Purple.into(),
-                ],
-                player_colors: vec![
-                    ColorName::Red.into(),
-                    ColorName::Blue.into(),
-                    ColorName::Green.into(),
-                    ColorName::White.into(),
-                ],
-            })
-        });
+        egui::CentralPanel::default().show(ctx, |ui| render_state(ui, &State::default()));
     }
 }
