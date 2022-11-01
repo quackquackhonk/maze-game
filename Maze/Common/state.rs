@@ -149,11 +149,13 @@ impl State {
 
     /// Can the active player make the move represented by these arguments?
     pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
-        if !slide.is_valid_slide(self.board.grid.len(), self.board.grid[0].len()) {
+        let rows = self.board.grid.len();
+        let cols = self.board.grid[0].len();
+        if !slide.is_valid_slide(rows, cols) {
             return false;
         }
         let mut state = self.clone();
-        let start = self.player_info[0].position;
+        let start = slide.move_position(self.player_info[0].position, cols, rows);
         state.rotate_spare(rotations);
         match state.slide_and_insert(slide) {
             Ok(_) => destination != start && state.move_player(destination).is_ok(),

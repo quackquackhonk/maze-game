@@ -176,7 +176,7 @@ impl NaiveStrategy {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     if let Some(lslide) = board_state.last {
-                        if lslide.index == row && lslide.direction.opposite() == direction {
+                        if lslide.index == row * 2 && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
@@ -196,7 +196,7 @@ impl NaiveStrategy {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
                     if let Some(lslide) = board_state.last {
-                        if lslide.index == col && lslide.direction.opposite() == direction {
+                        if lslide.index == col * 2 && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
