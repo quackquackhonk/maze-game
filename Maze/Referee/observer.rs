@@ -1,8 +1,9 @@
 use common::{
     gem::Gem,
     gem::GEM_IMGS,
+    grid::Grid as CGrid,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
-    Color, ColorName, State,
+    Color, ColorName, PlayerInfo, State,
 };
 use egui::{Color32, Grid, Image, Vec2, Widget};
 use egui_extras::RetainedImage;
@@ -51,6 +52,7 @@ const CELL_SIZE: f32 = 30.0;
 /// struct for holding information about a Tile that's being rendered
 /// `home_colors` is a vector of all the colors of homes on this tile
 /// `player_colors` is a vector of all the colors of players on this tile
+#[derive(Debug, Clone)]
 struct TileWidget {
     tile: Tile,
     home_colors: Vec<Color>,
@@ -192,34 +194,62 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
     // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
 }
 
-fn render_state(ui: &mut egui::Ui, state: &State) {
-    Grid::new("state_grid").show(ui, |ui| {
-        state
-            .board
-            .grid
-            .iter()
-            .enumerate()
-            .for_each(|(row_idx, row)| {
-                row.iter().enumerate().for_each(|(col_idx, tile)| {
-                    render_tile(
-                        ui,
-                        TileWidget {
-                            tile: tile.clone(),
-                            home_colors: vec![],
-                            player_colors: vec![],
-                        },
-                        &format!("({}, {})", col_idx, row_idx),
-                    )
-                });
-                ui.end_row();
-            })
+fn render_state(ui: &mut egui::Ui, state: State) {
+    let mut tile_widget_grid: CGrid<TileWidget> = state
+        .board
+        .grid
+        .iter()
+        .map(|row| {
+            row.iter()
+                .map(|tile| TileWidget {
+                    tile: tile.clone(),
+                    player_colors: vec![],
+                    home_colors: vec![],
+                })
+                .collect::<Box<[TileWidget]>>()
+        })
+        .collect::<Box<[_]>>()
+        .into();
+    state.player_info.into_iter().for_each(|pi| {
+        tile_widget_grid[pi.position]
+            .player_colors
+            .push(pi.color.clone());
+        tile_widget_grid[pi.home].home_colors.push(pi.color);
     });
+    Grid::new("state_grid")
+        .spacing(Vec2::new(0.0, 0.0))
+        .min_col_width(0.0)
+        .min_row_height(0.0)
+        .show(ui, |ui| {
+            tile_widget_grid
+                .iter()
+                .enumerate()
+                .fold((), |_, (row_idx, row)| {
+                    row.iter().enumerate().fold((), |_, (col_idx, tile)| {
+                        render_tile(ui, tile.clone(), &format!("({}, {})", col_idx, row_idx))
+                    });
+                    ui.end_row();
+                })
+        });
 }
 
 pub struct Observer;
 
 impl eframe::App for Observer {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(ctx, |ui| render_state(ui, &State::default()));
+        let mut state = State::default();
+        state.player_info.push_front(PlayerInfo {
+            home: (1, 1),
+            position: (2, 3),
+            goal: (1, 1),
+            color: ColorName::Green.into(),
+        });
+        state.player_info.push_front(PlayerInfo {
+            home: (3, 1),
+            position: (3, 1),
+            goal: (1, 3),
+            color: ColorName::Blue.into(),
+        });
+        egui::CentralPanel::default().show(ctx, |ui| render_state(ui, state));
     }
 }
