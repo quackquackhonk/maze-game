@@ -5,7 +5,7 @@ use common::{
 use players::strategy::NaiveStrategy;
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct PS(Name, JsonStrategy);
 
 impl From<PS> for (Name, NaiveStrategy) {
@@ -14,16 +14,24 @@ impl From<PS> for (Name, NaiveStrategy) {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[test]
+fn ps_parse_test() {
+    assert_eq!(
+        serde_json::from_str::<PS>("[\"bob\", \"Riemann\"]").unwrap(),
+        PS(Name::from_static("bob"), JsonStrategy::Riemann)
+    );
+}
+
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 pub enum JsonStrategy {
-    Riemman,
+    Riemann,
     Euclid,
 }
 
 impl From<JsonStrategy> for NaiveStrategy {
     fn from(jss: JsonStrategy) -> Self {
         match jss {
-            JsonStrategy::Riemman => NaiveStrategy::Riemann,
+            JsonStrategy::Riemann => NaiveStrategy::Riemann,
             JsonStrategy::Euclid => NaiveStrategy::Euclid,
         }
     }

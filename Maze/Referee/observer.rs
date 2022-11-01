@@ -1,3 +1,5 @@
+use std::{cell::RefCell, collections::VecDeque, rc::Rc};
+
 use common::{
     gem::Gem,
     gem::GEM_IMGS,
@@ -194,7 +196,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
     // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
 }
 
-fn render_state(ui: &mut egui::Ui, state: State) {
+fn render_state(ui: &mut egui::Ui, state: &State) {
     let mut tile_widget_grid: CGrid<TileWidget> = state
         .board
         .grid
@@ -210,11 +212,11 @@ fn render_state(ui: &mut egui::Ui, state: State) {
         })
         .collect::<Box<[_]>>()
         .into();
-    state.player_info.into_iter().for_each(|pi| {
+    state.player_info.iter().for_each(|pi| {
         tile_widget_grid[pi.position]
             .player_colors
             .push(pi.color.clone());
-        tile_widget_grid[pi.home].home_colors.push(pi.color);
+        tile_widget_grid[pi.home].home_colors.push(pi.color.clone());
     });
     Grid::new("state_grid")
         .spacing(Vec2::new(0.0, 0.0))
@@ -233,23 +235,37 @@ fn render_state(ui: &mut egui::Ui, state: State) {
         });
 }
 
-pub struct Observer;
+pub trait Observer {
+    /// Recieves a state from the referee to render
+    fn recieve_state(&mut self, state: State);
 
-impl eframe::App for Observer {
+    /// Indicates to the Observer that the game has ended and no more `State`s will be sent
+    fn game_over(&mut self);
+}
+
+/// Contains all information needed for an ObserverGUI to render the game
+#[derive(Debug, Default, Clone)]
+pub struct ObserverGUI {
+    states: Rc<RefCell<VecDeque<State>>>,
+    game_over: Rc<RefCell<bool>>,
+}
+
+impl Observer for ObserverGUI {
+    fn recieve_state(&mut self, state: State) {
+        self.states.borrow_mut().push_back(state);
+    }
+
+    fn game_over(&mut self) {
+        *self.game_over.borrow_mut() = true;
+    }
+}
+
+impl eframe::App for ObserverGUI {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        let mut state = State::default();
-        state.player_info.push_front(PlayerInfo {
-            home: (1, 1),
-            position: (2, 3),
-            goal: (1, 1),
-            color: ColorName::Green.into(),
+        egui::CentralPanel::default().show(ctx, |ui| {
+            if !self.states.borrow().is_empty() {
+                render_state(ui, &self.states.borrow()[0]);
+            }
         });
-        state.player_info.push_front(PlayerInfo {
-            home: (3, 1),
-            position: (3, 1),
-            goal: (1, 3),
-            color: ColorName::Blue.into(),
-        });
-        egui::CentralPanel::default().show(ctx, |ui| render_state(ui, state));
     }
 }
