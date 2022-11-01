@@ -1,3 +1,4 @@
+use crate::gem::Gem;
 use crate::grid::{Grid, Position};
 use crate::tile::{CompassDirection, ConnectorShape, PathOrientation, Tile};
 use std::collections::HashSet;
@@ -176,11 +177,10 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;
-        let mut idx = -1;
+        let mut idx = 0;
         let grid = [[(); COLS]; ROWS].map(|list| {
             list.map(|_| {
-                idx += 1;
-                Tile {
+                let tile = Tile {
                     connector: match idx % 11 {
                         0 => Path(Horizontal),
                         1 => Path(Vertical),
@@ -195,15 +195,17 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
                         10 => Crossroads,
                         _ => unreachable!("usize % 11 is never > 10"),
                     },
-                    gems: (amethyst, garnet).into(),
-                }
+                    gems: (Gem::from_num(idx * 2), Gem::from_num(idx * 2 + 1)).into(),
+                };
+                idx += 1;
+                tile
             })
         });
         Self {
             grid: Grid::from(grid),
             extra: Tile {
                 connector: Crossroads,
-                gems: (amethyst, garnet).into(),
+                gems: (Gem::from_num(idx * 2), Gem::from_num(idx * 2 + 1)).into(),
             },
         }
     }

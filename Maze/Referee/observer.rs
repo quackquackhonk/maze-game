@@ -145,10 +145,13 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
         .min_col_width(0.0)
         .spacing(Vec2::new(0.0, 0.0))
         .show(ui, |ui| {
-            ui.add(Image::new(
-                GEM_IMGS[&widget.tile.gems.0].texture_id(ui.ctx()),
+            ui.add_sized(
                 Vec2::new(CELL_SIZE, CELL_SIZE),
-            ));
+                Image::new(
+                    GEM_IMGS[&widget.tile.gems.0].texture_id(ui.ctx()),
+                    Vec2::new(CELL_SIZE * 0.8, CELL_SIZE * 0.8),
+                ),
+            );
             widget.north_path().show(ui);
             home_grid.show(ui, |ui| {
                 widget
@@ -194,10 +197,13 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
                     })
             });
             widget.south_path().show(ui);
-            ui.add(Image::new(
-                GEM_IMGS[&widget.tile.gems.1].texture_id(ui.ctx()),
+            ui.add_sized(
                 Vec2::new(CELL_SIZE, CELL_SIZE),
-            ));
+                Image::new(
+                    GEM_IMGS[&widget.tile.gems.1].texture_id(ui.ctx()),
+                    Vec2::new(CELL_SIZE * 0.8, CELL_SIZE * 0.8),
+                ),
+            );
         });
 
     // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
