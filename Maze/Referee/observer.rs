@@ -12,7 +12,7 @@ use common::{
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
     Color, ColorName, PlayerInfo, State,
 };
-use egui::{Color32, Grid, Image, Vec2, Widget};
+use egui::{Align, Color32, Grid, Image, Layout, Vec2, Widget};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;
@@ -273,29 +273,31 @@ impl eframe::App for ObserverGUI {
             if !self.states.borrow().is_empty() {
                 render_state(ui, &self.states.borrow()[0]);
             }
-            let mut st = self.states.borrow_mut();
-            if st.len() > 1 {
-                if ui.button("Next").clicked() {
-                    st.pop_front();
-                }
-            } else {
-                ui.label("No more states to render!");
-            };
-
-            if st.len() > 1 && ui.button("Save").clicked() {
-                let path = std::env::current_dir().unwrap();
-                if let Some(path) = rfd::FileDialog::new()
-                    .set_directory(&path)
-                    .add_filter("json", &[".json"])
-                    .set_file_name("state.json")
-                    .save_file()
-                {
-                    let jrs: JsonRefereeState = st[0].clone().into();
-                    serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
-                        .expect("Writing to json failed!");
+            ui.with_layout(Layout::top_down_justified(Align::Center), |ui| {
+                let mut st = self.states.borrow_mut();
+                if st.len() > 1 {
+                    if ui.button("Next").clicked() {
+                        st.pop_front();
+                    }
+                } else {
+                    ui.label("No more states to render!");
                 };
-            }
-            drop(st);
+
+                if !st.is_empty() && ui.button("Save").clicked() {
+                    let path = std::env::current_dir().unwrap();
+                    if let Some(path) = rfd::FileDialog::new()
+                        .set_directory(&path)
+                        .add_filter("json", &[".json"])
+                        .set_file_name("state.json")
+                        .save_file()
+                    {
+                        let jrs: JsonRefereeState = st[0].clone().into();
+                        serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
+                            .expect("Writing to json failed!");
+                    };
+                }
+                drop(st);
+            });
         });
     }
 }
