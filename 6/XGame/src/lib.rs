@@ -1,7 +1,6 @@
 use std::{
     collections::HashSet,
-    io::{stdin, stdout, Read, Write},
-    mem::swap,
+    io::{Read, Write},
 };
 
 use common::{json::Name, State};
@@ -68,7 +67,6 @@ pub fn read_and_write_json(
     let r#ref = Referee::new(0);
     let mut reached_goal = HashSet::default();
 
-    r#ref.broadcast_initial_state(&state, &mut players);
     let mut kicked = Vec::default();
 
     let gamewinner = r#ref.run_from_state(

@@ -114,6 +114,9 @@ impl Referee {
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won
+        self.broadcast_initial_state(&state, players);
+        self.broadcast_state_to_observers(&state, observers);
+
         let mut round = 0;
         let mut first_player = state.current_player_info().clone();
         let mut num_passed = 0;
@@ -185,7 +188,7 @@ impl Referee {
             Referee::next_player(players, state);
 
             // One round has completed
-            if &first_player == state.current_player_info() {
+            if first_player.color == state.current_player_info().color {
                 round += 1;
 
                 if round >= 1000 {
@@ -292,9 +295,6 @@ impl Referee {
         // Assign each player a home + goal + current position
         // communicate initial state to all players
         let mut state = self.make_initial_state(&players, board);
-
-        self.broadcast_initial_state(&state, &mut players);
-        self.broadcast_state_to_observers(&state, &mut observers);
 
         let mut game_result = GameResult::default();
         let mut reached_goal: HashSet<Color> = HashSet::default();
