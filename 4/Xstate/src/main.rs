@@ -1,10 +1,12 @@
+#![allow(non_snake_case)]
+
 use std::io::{stdin, stdout, Read, Write};
 
 use common::board::Slide;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
 use common::tile::CompassDirection;
-use common::{State, BOARD_SIZE};
+use common::State;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]

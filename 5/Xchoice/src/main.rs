@@ -1,8 +1,7 @@
 use std::io::{stdin, stdout, Read, Write};
 
 use common::grid::Position;
-use common::json::{Coordinate, JsonAction, JsonState};
-use common::{State, BOARD_SIZE};
+use common::json::{Coordinate, JsonState};
 use players::json::{JsonChoice, JsonStrategyDesignation};
 use players::strategy::{NaiveStrategy, PlayerBoardState, Strategy};
 use serde::{Deserialize, Serialize};
