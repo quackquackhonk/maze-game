@@ -1,18 +1,16 @@
 use std::{
-    cell::RefCell,
     collections::VecDeque,
-    fs::{self, File},
-    rc::Rc,
+    fs::File,
+    sync::{Arc, Mutex},
 };
 
 use common::{
-    gem::Gem,
     gem::GEM_IMGS,
     grid::Grid as CGrid,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
-    Color, ColorName, PlayerInfo, State,
+    Color, State,
 };
-use egui::{Align, Color32, Grid, Image, Layout, Vec2, Widget};
+use egui::{Align, Color32, Grid, Image, Layout, Vec2};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;
@@ -259,37 +257,37 @@ pub trait Observer {
 /// Contains all information needed for an ObserverGUI to render the game
 #[derive(Debug, Default, Clone)]
 pub struct ObserverGUI {
-    states: Rc<RefCell<VecDeque<State>>>,
-    game_over: Rc<RefCell<bool>>,
+    states: Arc<Mutex<VecDeque<State>>>,
+    game_over: Arc<Mutex<bool>>,
 }
 
 impl Observer for ObserverGUI {
     fn recieve_state(&mut self, state: State) {
-        self.states.borrow_mut().push_back(state);
+        self.states.lock().unwrap().push_back(state);
     }
 
     fn game_over(&mut self) {
-        *self.game_over.borrow_mut() = true;
+        *self.game_over.lock().unwrap() = true;
     }
 }
 
 impl eframe::App for ObserverGUI {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            if !self.states.borrow().is_empty() {
-                render_state(ui, &self.states.borrow()[0]);
+            let mut states = self.states.lock().unwrap();
+            if !states.is_empty() {
+                render_state(ui, &states[0]);
             }
             ui.with_layout(Layout::top_down_justified(Align::Center), |ui| {
-                let mut st = self.states.borrow_mut();
-                if st.len() > 1 {
+                if states.len() > 1 {
                     if ui.button("Next").clicked() {
-                        st.pop_front();
+                        states.pop_front();
                     }
                 } else {
                     ui.label("No more states to render!");
                 };
 
-                if !st.is_empty() && ui.button("Save").clicked() {
+                if !states.is_empty() && ui.button("Save").clicked() {
                     let path = std::env::current_dir().unwrap();
                     if let Some(path) = rfd::FileDialog::new()
                         .set_directory(&path)
@@ -297,12 +295,12 @@ impl eframe::App for ObserverGUI {
                         .set_file_name("state.json")
                         .save_file()
                     {
-                        let jrs: JsonRefereeState = st[0].clone().into();
+                        let jrs: JsonRefereeState = states[0].clone().into();
                         serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
                             .expect("Writing to json failed!");
                     };
                 }
-                drop(st);
+                drop(states);
             });
         });
     }

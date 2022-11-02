@@ -1,8 +1,12 @@
-use std::io::{stdin, stdout};
+use std::{
+    io::{stdin, stdout},
+    thread,
+};
 
 use egui::Vec2;
-use referee::observer::{Observer, ObserverGUI};
+use referee::observer::ObserverGUI;
 use xgames::*;
+
 fn main() {
     let height = 700.0;
     let width = 650.0;
@@ -13,11 +17,16 @@ fn main() {
         ..Default::default()
     };
 
-    read_and_write_json(
-        stdin().lock(),
-        &mut stdout().lock(),
-        vec![Box::new(observer.clone())],
-    );
+    let observer_clone = observer.clone();
+    let guard = thread::spawn(|| {
+        read_and_write_json(
+            stdin().lock(),
+            &mut stdout().lock(),
+            vec![Box::new(observer_clone)],
+        )
+        .expect("Test harness failed");
+    });
 
-    eframe::run_native("Observer", options, Box::new(|_cc| Box::new(observer)));
+    eframe::run_native("Observer", options, Box::new(move |_cc| Box::new(observer)));
+    guard.join().unwrap();
 }
