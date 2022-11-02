@@ -1,0 +1,76 @@
+"Riemann"
+
+{      "board" : 
+      { "connectors" : 
+       [["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"],
+
+       ["┌", "┌", "┌", "┌", "┌", "┌", "┌"]],
+
+        "treasures"  : [[["zircon", "green-beryl-antique"], ["tourmaline-laser-cut", "azurite"], ["white-square", "morganite-oval"], ["apatite", "tourmaline"], ["iolite-emerald-cut", "moss-agate"], ["ruby", "ruby-diamond-profile"], ["zoisite", "black-spinel-cushion"]], [["stilbite", "tourmaline-laser-cut"], ["kunzite-oval", "azurite"], ["rose-quartz", "yellow-heart"], ["ammolite", "blue-spinel-heart"], ["tigers-eye", "moss-agate"], ["magnesite", "dumortierite"], ["morganite-oval", "black-onyx"]], [["spinel", "red-diamond"], ["spinel", "black-onyx"], ["zoisite", "gray-agate"], ["blue-cushion", "kunzite"], ["tourmaline", "magnesite"], ["rose-quartz", "white-square"], ["zircon", "white-square"]], [["yellow-heart", "ruby-diamond-profile"], ["raw-beryl", "blue-spinel-heart"], ["blue-cushion", "jasper"], ["prehnite", "aventurine"], ["kunzite-oval", "ammolite"], ["super-seven", "prehnite"], ["golden-diamond-cut", "mexican-opal"]], [["tigers-eye", "blue-spinel-heart"], ["tourmaline", "stilbite"], ["rose-quartz", "orange-radiant"], ["rose-quartz", "zircon"], ["azurite", "pink-emerald-cut"], ["green-beryl-antique", "tourmaline"], ["bulls-eye", "stilbite"]], [["mexican-opal", "black-spinel-cushion"], ["raw-beryl", "super-seven"], ["aventurine", "white-square"], ["ruby", "black-onyx"], ["iolite-emerald-cut", "heliotrope"], ["labradorite", "black-obsidian"], ["citrine-checkerboard", "black-onyx"]], [["azurite", "green-beryl-antique"], ["orange-radiant", "tourmaline-laser-cut"], ["rose-quartz", "apatite"], ["bulls-eye", "black-onyx"], ["citrine-checkerboard", "black-spinel-cushion"], ["kunzite", "red-diamond"], ["moss-agate", "citrine-checkerboard"]]] },
+
+        "spare" : 
+            { "tilekey" : "┌",
+
+              "1-image" : "alexandrite-pear-shape",
+
+              "2-image" : "alexandrite-pear-shape" },
+
+        "plmt"  : [
+            { "current" : { "row#"    : 4,
+
+                            "column#" : 5 },
+
+              "home"    : { "row#"    : 3,
+
+                            "column#" : 4 },
+
+              "color"   : "FFFFFF" },
+          
+            { "current" : { "row#"    : 2,
+
+                            "column#" : 2 },
+
+              "home"    : { "row#"    : 4,
+
+                            "column#" : 2 },
+
+              "color"   : "928123" },
+
+            { "current" : { "row#"    : 3,
+
+                            "column#" : 3 },
+
+              "home"    : { "row#"    : 4,
+
+                            "column#" : 1 },
+
+              "color"   : "A5E12A" },
+
+            { "current" : { "row#"    : 4,
+
+                            "column#" : 4 },
+
+              "home"    : { "row#"    : 6,
+
+                            "column#" : 1 },
+
+              "color"   : "pink" }
+        
+        
+        ],
+
+        "last"  : [0, "LEFT"] }
+        
+ { "row#"    : 3,
+        "column#" : 3 }
+

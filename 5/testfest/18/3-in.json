@@ -1,0 +1,16 @@
+"Euclid"
+{ "board" : { "connectors" : [
+  ["┤", "┌", "┌", "├", "┌", "│", "┬"],
+  ["┐", "┘", "│", "┌", "│", "┌", "┤"],
+  ["┐", "─", "┤", "┘", "┼", "┤", "┌"],
+  ["┐", "┤", "┬", "┴", "┘", "┤", "└"],
+  ["┐", "┴", "─", "┴", "┌", "┘", "│"],
+  ["┤", "┘", "┼", "├", "├", "┌", "┼"],
+  ["┼", "┴", "┼", "├", "┤", "┐", "├"]
+],
+  "treasures"  : [[["padparadscha-oval", "amethyst"], ["black-spinel-cushion", "moonstone"], ["jasper", "ruby-diamond-profile"], ["raw-beryl", "ruby"], ["kunzite-oval", "dumortierite"], ["morganite-oval", "emerald"], ["chrysolite", "jasper"]], [["padparadscha-oval", "pink-emerald-cut"], ["yellow-heart", "prasiolite"], ["purple-oval", "super-seven"], ["blue-pear-shape", "lapis-lazuli"], ["padparadscha-sapphire", "kunzite-oval"], ["amethyst", "citrine-checkerboard"], ["goldstone", "red-spinel-square-emerald-cut"]], [["purple-square-cushion", "tigers-eye"], ["raw-citrine", "pink-emerald-cut"], ["rhodonite", "purple-square-cushion"], ["zoisite", "kunzite"], ["purple-spinel-trillion", "diamond"], ["color-change-oval", "magnesite"], ["black-onyx", "pink-spinel-cushion"]], [["aplite", "hackmanite"], ["yellow-heart", "moss-agate"], ["grandidierite", "stilbite"], ["ammolite", "blue-pear-shape"], ["grossular-garnet", "ammolite"], ["blue-spinel-heart", "diamond"], ["raw-citrine", "citrine"]], [["almandine-garnet", "mexican-opal"], ["cordierite", "azurite"], ["white-square", "yellow-beryl-oval"], ["chrome-diopside", "blue-ceylon-sapphire"], ["sphalerite", "raw-citrine"], ["stilbite", "chrysolite"], ["dumortierite", "prasiolite"]], [["carnelian", "lemon-quartz-briolette"], ["tourmaline", "golden-diamond-cut"], ["aquamarine", "yellow-baguette"], ["ruby-diamond-profile", "yellow-jasper"], ["blue-spinel-heart", "ruby-diamond-profile"], ["aquamarine", "unakite"], ["pink-emerald-cut", "blue-spinel-heart"]], [["zircon", "australian-marquise"], ["orange-radiant", "blue-spinel-heart"], ["hematite", "iolite-emerald-cut"], ["zircon", "almandine-garnet"], ["hackmanite", "beryl"], ["pink-opal", "fancy-spinel-marquise"], ["yellow-jasper", "yellow-baguette"]]] },
+  "spare" : { "tilekey" : "├", "1-image" : "jasper", "2-image" : "bulls-eye" },
+  "plmt"  : [{ "current" : { "row#" : 4, "column#" : 0 }, "home" : { "row#" : 3, "column#" : 3 }, "color" : "white" }],
+  "last"  : [0, "RIGHT"] }
+{ "row#" : 6, "column#" : 5 }
+

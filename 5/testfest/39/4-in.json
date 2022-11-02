@@ -1,0 +1,78 @@
+"Euclid"
+
+{"board" :
+{"connectors" : [
+["└", "├", "┌", "│", "┐", "─", "┬"],
+["─", "┘", "│", "┬", "┤", "┬", "┴"],
+["┼", "┴", "─", "└", "│", "│", "├"],
+["─", "│", "┼", "┤", "┌", "┤", "─"],
+["┐", "├", "─", "│", "┤", "┐", "│"],
+["└", "┴", "│", "┼", "┬", "┼", "─"],
+["┼", "─", "┌", "┬", "┘", "┤", "┌"]],
+
+"treasures" : [[["tourmaline", "color-change-oval"],
+["azurite", "fancy-spinel-marquise"],
+["mexican-opal", "heliotrope"],
+["black-obsidian", "white-square"],
+["star-cabochon", "blue-cushion"],
+["diamond", "lemon-quartz-briolette"],
+["moss-agate", "heliotrope"]],
+[["orange-radiant", "white-square"],
+["raw-beryl", "rock-quartz"],
+["morganite-oval", "jasper"],
+["yellow-heart", "rock-quartz"],
+["sunstone", "raw-citrine"],
+["aplite", "dumortierite"],
+["ametrine", "citrine-checkerboard"]],
+[["color-change-oval", "alexandrite"],
+["jasper", "white-square"],
+["apatite", "heliotrope"],
+["aquamarine", "blue-cushion"],
+["green-princess-cut", "rock-quartz"],
+["dumortierite", "zoisite"],
+["white-square", "blue-cushion"]],
+[["citrine-checkerboard", "magnesite"],
+["almandine-garnet", "white-square"],
+["tanzanite-trillion", "blue-spinel-heart"],
+["emerald", "pink-spinel-cushion"],
+["green-aventurine", "ruby-diamond-profile"],
+["carnelian", "ammolite"],
+["prasiolite", "sunstone"]],
+[["tourmaline", "raw-beryl"],
+["peridot", "garnet"],
+["garnet", "amethyst"],
+["emerald", "bulls-eye"],
+["lemon-quartz-briolette", "black-onyx"],
+["aventurine", "aventurine"],
+["tanzanite-trillion", "blue-cushion"]],
+[["prehnite", "rose-quartz"],
+["stilbite", "mexican-opal"],
+["gray-agate", "black-obsidian"],
+["tigers-eye", "bulls-eye"],
+["stilbite", "prasiolite"],
+["black-onyx", "beryl"],
+["tourmaline", "super-seven"]],
+[["unakite", "kunzite"],
+["amethyst", "magnesite"],
+["jaspilite", "morganite-oval"],
+["prasiolite", "apricot-square-radiant"],
+["goldstone", "clinohumite"],
+["black-spinel-cushion", "purple-square-cushion"],
+["prehnite", "almandine-garnet"]]]},
+
+"spare" :
+{
+"tilekey" : "┘",
+"1-image" : "emerald",
+"2-image" : "diamond"
+},
+
+"plmt" : [ {"current" : {"column#": 3, "row#": 3},
+"home":{"column#": 0, "row#": 0},
+"color" : "FED123"}
+],
+
+"last" : null
+}
+
+{"column#": 3, "row#": 3}

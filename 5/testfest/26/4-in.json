@@ -1,0 +1,34 @@
+"Riemann"
+
+
+{"board":{"connectors":  [["│", "─", "┐", "└", "┌", "┘", "┬"],
+  ["│", "│", "┌",  "─", "┐", "└", "┬"],
+  ["┘", "┌", "│",  "┐", "└", "─", "┬"],
+  ["┘", "│", "┌",  "─", "┐", "└", "┬"],
+  ["│", "─", "┐", "└", "┌", "┘", "┬"],
+  ["┘", "┌", "│",  "┐", "└", "─", "┬"],
+  ["┘", "┌", "│",  "┐", "└", "─", "┬"]],
+
+  "treasures":
+
+  [[["grossular-garnet", "black-obsidian"], ["tigers-eye", "yellow-beryl-oval"],
+    ["chrysoberyl-cushion", "color-change-oval"], ["sunstone", "prasiolite"],
+    ["citrine", "purple-oval"], ["emerald", "heliotrope"], ["zircon", "pink-spinel-cushion"]],
+    [["grossular-garnet", "goldstone"], ["ruby-diamond-profile", "zoisite"], ["star-cabochon", "ruby"],
+      ["chrome-diopside", "beryl"], ["moonstone", "rock-quartz"], ["kunzite-oval", "green-beryl"],
+      ["emerald", "green-princess-cut"]], [["stilbite", "orange-radiant"], ["padparadscha-sapphire", "rose-quartz"],
+    ["purple-spinel-trillion", "garnet"], ["blue-ceylon-sapphire", "fancy-spinel-marquise"],
+    ["apricot-square-radiant", "emerald"], ["rhodonite", "almandine-garnet"], ["tigers-eye", "apatite"]],
+    [["pink-opal", "australian-marquise"], ["dumortierite", "tourmaline-laser-cut"], ["hematite", "ametrine"],
+      ["hackmanite", "carnelian"], ["citrine-checkerboard", "heliotrope"], ["green-princess-cut", "zircon"],
+      ["pink-spinel-cushion", "yellow-heart"]], [["red-spinel-square-emerald-cut", "carnelian"], ["ammolite", "green-beryl"],
+    ["aquamarine", "blue-pear-shape"], ["clinohumite", "chrysoberyl-cushion"], ["red-spinel-square-emerald-cut",
+      "padparadscha-oval"], ["carnelian", "grandidierite"], ["raw-citrine", "golden-diamond-cut"]],
+    [["cordierite", "green-aventurine"], ["tanzanite-trillion", "chrome-diopside"], ["garnet", "morganite-oval"],
+      ["golden-diamond-cut", "grossular-garnet"], ["tourmaline-laser-cut", "blue-pear-shape"], ["magnesite", "chrysolite"],
+      ["purple-cabochon", "moss-agate"]], [["spinel", "sunstone"], ["pink-spinel-cushion", "carnelian"],
+    ["apricot-square-radiant", "jaspilite"], ["magnesite", "moonstone"], ["ametrine", "ruby"], ["citrine", "diamond"],
+    ["blue-ceylon-sapphire", "chrysoberyl-cushion"]]]}, "spare": {"tilekey": "└", "1-image":"grossular-garnet", "2-image":"sunstone"},
+  "plmt": [{"current":  {"row#": 0, "column#": 6}, "home": {"row#": 6, "column#": 6}, "color": "red", "last": null}]}
+
+{"row#": 0, "column#": 0}

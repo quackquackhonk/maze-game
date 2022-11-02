@@ -1,0 +1,41 @@
+"Riemann"
+{
+    "board" : {
+    "connectors": [
+        ["┘","┘","┘","─","┐","┐","┐"],
+        ["┘","─","┴","─","┐","┼","┼"],
+        ["─","┐","┘","─","┐","┴","┼"],
+        ["┼","┴","┐","┘","─","─","┴"],
+        ["─","─","┘","┘","┼","┤","┼"],
+        ["─","┐","┘","─","┐","┴","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"]
+    ],
+    "treasures": [
+        [["apatite", "alexandrite"], ["apatite", "amethyst"], ["apatite", "ametrine"], ["apatite", "ammolite"], ["apatite", "ruby"], ["apatite", "diamond"], ["apatite", "jasper"]],
+        [["apatite", "aplite"], ["apatite", "blue-ceylon-sapphire"], ["apatite", "emerald"], ["apatite", "yellow-heart"], ["apatite", "tourmaline-laser-cut"], ["apatite", "white-square"], ["apatite", "aquamarine"]],
+        [["apatite","beryl"],["apatite", "aventurine"], ["apatite", "bulls-eye"], ["apatite", "azurite"], ["apatite", "garnet"], ["apatite", "gray-agate"], ["apatite", "green-beryl"]],
+        [["apatite", "jaspilite"], ["apatite", "kunzite"], ["apatite", "carnelian"], ["apatite", "peridot"], ["apatite", "citrine"], ["apatite", "prehnite"], ["apatite", "chrysolite"]],
+        [["apatite", "rock-quartz"], ["apatite", "rose-quartz"], ["apatite", "spinel"], ["apatite", "super-seven"], ["apatite", "tigers-eye"], ["apatite", "unakite"], ["apatite", "zircon"]],
+        [["apatite", "zoisite"], ["apatite", "stilbite"], ["apatite", "labradorite"], ["apatite", "magnesite"], ["apatite", "moss-agate"], ["apatite", "moonstone"], ["apatite", "sphalerite"]],
+        [["apatite", "hackmanite"], ["apatite", "dumortierite"], ["apatite", "sunstone"], ["apatite", "clinohumite"], ["apatite", "blue-cushion"], ["apatite", "black-onyx"], ["apatite", "black-obsidian"]]
+    ]},
+    "last": [0, "UP"],
+    "plmt": [
+        {
+            "color": "yellow", 
+            "current": {"column#":3, "row#":0}, 
+            "home": {"column#":5, "row#":1}
+        },
+        {
+            "color": "blue", 
+            "current": {"column#":5, "row#":5}, 
+            "home": {"column#":3, "row#":3}
+        }
+    ],
+    "spare": {
+        "tilekey": "│",
+        "1-image": "super-seven",
+        "2-image": "red-spinel-square-emerald-cut"
+    }
+}
+{"column#":5,"row#":1}

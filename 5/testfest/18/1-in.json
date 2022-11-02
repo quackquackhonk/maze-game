@@ -1,0 +1,17 @@
+"Euclid"
+{ "board" : { "connectors" : [
+  ["├", "─", "├", "├", "┴", "─", "┤"],
+  ["┼", "┤", "┴", "┘", "─", "└", "├"],
+  ["┼", "┼", "┘", "┤", "│", "┤", "┴"],
+  ["┬", "│", "┤", "─", "┐", "┬", "└"],
+  ["├", "┘", "├", "┘", "┌", "┬", "─"],
+  ["│", "└", "─", "┼", "├", "┐", "┘"],
+  ["┐", "─", "├", "┤", "┌", "┌", "┐"]
+],
+  "treasures"  : [[["yellow-beryl-oval", "heliotrope"], ["red-spinel-square-emerald-cut", "prehnite"], ["zoisite", "gray-agate"], ["grandidierite", "sphalerite"], ["stilbite", "grandidierite"], ["raw-beryl", "stilbite"], ["padparadscha-oval", "dumortierite"]], [["emerald", "chrysolite"], ["jaspilite", "yellow-baguette"], ["zircon", "orange-radiant"], ["ametrine", "padparadscha-oval"], ["orange-radiant", "fancy-spinel-marquise"], ["golden-diamond-cut", "hackmanite"], ["green-princess-cut", "yellow-jasper"]], [["white-square", "green-princess-cut"], ["prasiolite", "iolite-emerald-cut"], ["tourmaline", "labradorite"], ["hackmanite", "star-cabochon"], ["black-onyx", "aplite"], ["color-change-oval", "yellow-baguette"], ["chrome-diopside", "iolite-emerald-cut"]], [["yellow-beryl-oval", "tigers-eye"], ["raw-citrine", "purple-square-cushion"], ["morganite-oval", "ammolite"], ["purple-oval", "purple-square-cushion"], ["blue-spinel-heart", "green-beryl"], ["star-cabochon", "purple-oval"], ["purple-square-cushion", "raw-beryl"]], [["bulls-eye", "dumortierite"], ["citrine-checkerboard", "yellow-heart"], ["citrine", "peridot"], ["aquamarine", "chrysoberyl-cushion"], ["yellow-jasper", "hackmanite"], ["red-diamond", "alexandrite-pear-shape"], ["tanzanite-trillion", "padparadscha-oval"]], [["zircon", "beryl"], ["aventurine", "raw-beryl"], ["tourmaline", "pink-round"], ["yellow-heart", "sphalerite"], ["green-aventurine", "ruby"], ["green-beryl-antique", "stilbite"], ["aquamarine", "ammolite"]], [["purple-spinel-trillion", "chrome-diopside"], ["mexican-opal", "clinohumite"], ["moonstone", "cordierite"], ["clinohumite", "carnelian"], ["peridot", "azurite"], ["blue-cushion", "emerald"], ["garnet", "emerald"]]] },
+  "spare" : { "tilekey" : "┐", "1-image" : "yellow-jasper", "2-image" : "chrysoberyl-cushion" },
+  "plmt"  : [{ "current" : { "row#" : 2, "column#" : 4 }, "home" : { "row#" : 1, "column#" : 1 }, "color" : "black" },
+    { "current" : { "row#" : 5, "column#" : 3 }, "home" : { "row#" : 3, "column#" : 3 }, "color" : "blue" }],
+  "last"  : [4, "RIGHT"] }
+{ "row#" : 3, "column#" : 5 }
+

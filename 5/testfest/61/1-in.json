@@ -1,0 +1,122 @@
+"Euclid"
+
+{
+	"board" :
+		{
+			 "connectors" :[
+			["│" , "└", "┘", "┬", "┤", "┼", "─"],
+			["│" , "─", "┐", "─", "┌", "─", "┌"],
+			["│" , "└", "─", "┘", "┐", "┤", "┐"],
+			["└" , "─", "─", "─", "─", "─", "┐"],
+			["┐" , "└", "─", "┘", "─", "┴", "│"],
+			["└" , "┘", "┐", "┘", "─", "─", "│"],
+			["└" , "─", "─", "┴", "─", "─", "┴"]] ,
+
+			"treasures" : [
+			[
+			["stilbite", "grossular-garnet"],
+			["padparadscha-sapphire", "diamond"],
+			["jaspilite", "ametrine"],
+			["raw-beryl", "prehnite"],
+			["padparadscha-oval", "red-spinel-square-emerald-cut"],
+			["lapis-lazuli", "orange-radiant"],
+			["green-aventurine", "blue-spinel-heart"]
+			],
+			[
+			["blue-ceylon-sapphire", "morganite-oval"],
+			["padparadscha-sapphire", "jasper"],
+			["citrine-checkerboard", "dumortierite"],
+			["padparadscha-oval", "hematite"],
+			["goldstone", "mexican-opal"],
+			["zoisite", "white-square"],
+			["lemon-quartz-briolette", "black-obsidian"]
+			],
+			[
+			["black-onyx", "apatite"],
+			["prehnite", "ammolite"],
+			["aquamarine", "beryl"],
+			["hackmanite", "red-diamond"],
+			["azurite", "apricot-square-radiant"],
+			["sphalerite", "red-spinel-square-emerald-cut"],
+			["green-princess-cut", "orange-radiant"]
+			],
+			[
+			["jaspilite", "fancy-spinel-marquise"],
+			["kunzite", "carnelian"],
+			["cordierite", "white-square"],
+			["tanzanite-trillion", "jasper"],
+			["sphalerite", "almandine-garnet"],
+			["jaspilite", "aplite"],
+			["goldstone", "magnesite"]
+			],
+			[
+			["green-aventurine", "ruby-diamond-profile"],
+			["yellow-jasper", "stilbite"],
+			["clinohumite", "clinohumite"],
+			["red-spinel-square-emerald-cut", "diamond"],
+			["apatite", "grossular-garnet"],
+			["yellow-jasper", "lapis-lazuli"],
+			["sunstone", "tourmaline"]
+			],
+			[
+			["zoisite", "blue-ceylon-sapphire"],
+			["carnelian", "alexandrite"],
+			["super-seven", "unakite"],
+			["blue-spinel-heart", "yellow-beryl-oval"],
+			["black-spinel-cushion", "orange-radiant"],
+			["diamond", "tigers-eye"],
+			["gray-agate", "moss-agate"]
+			],
+			[
+			["carnelian", "black-spinel-cushion"],
+			["grossular-garnet", "jaspilite"],
+			["sunstone", "sphalerite"],
+			["beryl", "dumortierite"],
+			["moss-agate", "black-onyx"],
+			["pink-emerald-cut", "moonstone"],
+			["moss-agate", "green-princess-cut"]
+			]]
+		},
+	"spare" :
+		{
+			"tilekey" : "┌",
+			"1-image" : "star-cabochon",
+			"2-image" : "rhodonite"
+		},
+	"plmt" :
+		[
+			{
+				"current" :
+					{
+						"row#": 2,
+						"column#" : 4
+					},
+				"home" :
+					{
+						"row#": 3,
+						"column#" : 5
+					},
+				"color" : "pink"
+			},
+			{
+				"current" :
+					{
+						"row#": 1,
+						"column#" : 5
+					},
+				"home" :
+					{
+						"row#": 5,
+						"column#" : 1
+					},
+				"color" : "white"
+			}
+		],
+	"last" : [ 2, "RIGHT" ]
+}
+{ 	
+	"row#" : 1,
+	"column#": 5
+}
+
+

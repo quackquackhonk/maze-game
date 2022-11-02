@@ -1,0 +1,26 @@
+"Euclid"
+{"board" :
+{
+  "treasures" :
+  [[["ruby", "black-obsidian"], ["ruby", "black-onyx"], ["ruby", "black-spinel-cushion"], ["ruby", "blue-ceylon-sapphire"], ["ruby", "blue-cushion"], ["ruby", "blue-pear-shape"], ["ruby", "blue-spinel-heart"]],
+    [["ruby", "dumortierite"], ["ruby", "emerald"], ["ruby", "garnet"], ["ruby", "goldstone"], ["ruby", "grandidierite"], ["ruby", "gray-agate"], ["ruby", "green-beryl"]],
+    [["ruby", "almandine-garnet"], ["ruby", "alexandrite-pear-shape"], ["ruby", "alexandrite"], ["ruby", "amethyst"], ["ruby", "ametrine"], ["ruby", "ammolite"], ["ruby", "ruby"]],
+    [["ruby", "aplite"], ["ruby", "apricot-square-radiant"], ["ruby", "aquamarine"], ["ruby", "australian-marquise"], ["ruby", "aventurine"], ["ruby", "azurite"], ["ruby", "beryl"]],
+    [["ruby", "bulls-eye"], ["ruby", "carnelian"], ["ruby", "chrysolite"], ["ruby", "citrine"], ["ruby", "clinohumite"], ["ruby", "cordierite"], ["ruby", "diamond"]],
+    [["ruby", "hackmanite"], ["ruby", "heliotrope"], ["ruby", "hematite"], ["ruby", "jasper"], ["ruby", "jaspilite"], ["ruby", "kunzite"], ["ruby", "labradorite"]],
+    [["ruby", "magnesite"], ["ruby", "moonstone"], ["ruby", "moss-agate"], ["ruby", "peridot"], ["ruby", "pink-opal"], ["ruby", "pink-round"], ["ruby", "prehnite"]]],
+  "connectors" :
+  [["┌", "┬", "┬", "┬", "┬", "┬", "┐"],
+    ["├", "┘", "─", "┼", "─", "└", "┤"],
+    ["├", "─", "─", "─", "─", "─", "┤"],
+    ["├", "─", "─", "─", "─", "─", "┤"],
+    ["├", "─", "─", "─", "─", "─", "┤"],
+    ["├", "┐", "─", "┼", "─", "┌", "┤"],
+    ["└", "┴", "┴", "┴", "┴", "┴", "┘"]]
+},
+  "spare":{"tilekey":"┐","1-image":"sunstone","2-image":"zircon"},
+  "last":[2,"RIGHT"],
+  "plmt":[{"home":{"column#":0,"row#":3}, "color":"ABCDEF", "current":{"column#":1,"row#":0}},
+    {"home":{"column#":6,"row#":2}, "color":"BCDEFA", "current":{"column#":4,"row#":5}},
+    {"home":{"column#":3,"row#":0}, "color":"CDEFAB", "current":{"column#":5,"row#":5}}]}
+{"column#":4,"row#":5}

@@ -1,0 +1,63 @@
+"Euclid"
+
+{
+  "board":
+    {"connectors":
+    [
+      ["─","─","─","─","─","─","└"],
+      ["┼","┼","┼","┼","┼","┼","┼"],
+      ["─","└","└","└","└","└","│"],
+      ["├","─","─","├","├","├","├"],
+      ["─","─","─","─","┴","┴","┴"],
+      ["┼","┼","┼","┼","┼","┼","┌"],
+      ["┼","┼","┼","┼","┼","┐","┌"]
+    ],
+    "treasures":
+    [
+      [["red-diamond", "yellow-baguette"], ["prehnite", "chrysoberyl-cushion"], ["dumortierite", "padparadscha-sapphire"], ["yellow-baguette", "citrine"], ["chrome-diopside", "yellow-baguette"], ["pink-opal", "tourmaline-laser-cut"], ["australian-marquise", "chrome-diopside"]],
+      [["diamond", "citrine-checkerboard"], ["tanzanite-trillion", "grandidierite"], ["yellow-beryl-oval", "blue-pear-shape"], ["hackmanite", "iolite-emerald-cut"], ["hematite", "mexican-opal"], ["purple-cabochon", "yellow-baguette"], ["kunzite", "black-onyx"]],
+      [["raw-beryl", "super-seven"], ["zoisite", "yellow-baguette"], ["stilbite", "super-seven"], ["citrine-checkerboard", "unakite"], ["black-obsidian", "sunstone"], ["stilbite", "australian-marquise"], ["citrine-checkerboard", "ammolite"]],
+      [["sphalerite", "morganite-oval"], ["aplite", "rhodonite"], ["lemon-quartz-briolette", "almandine-garnet"], ["purple-square-cushion", "bulls-eye"], ["lemon-quartz-briolette", "apatite"], ["raw-citrine", "diamond"], ["ametrine", "red-diamond"]],
+      [["star-cabochon", "blue-ceylon-sapphire"], ["pink-round", "dumortierite"], ["aquamarine", "diamond"], ["beryl", "green-beryl-antique"], ["magnesite", "amethyst"], ["pink-opal", "green-princess-cut"], ["golden-diamond-cut", "star-cabochon"]],
+      [["black-onyx", "green-princess-cut"], ["blue-spinel-heart", "hematite"], ["carnelian", "spinel"], ["prehnite", "magnesite"], ["carnelian", "black-onyx"], ["hackmanite", "blue-ceylon-sapphire"], ["clinohumite", "amethyst"]],
+      [["aventurine", "morganite-oval"], ["heliotrope", "hematite"], ["black-obsidian", "pink-opal"], ["yellow-baguette", "apatite"], ["chrysoberyl-cushion", "cordierite"], ["super-seven", "super-seven"], ["yellow-beryl-oval", "rose-quartz"]]]
+    },
+
+  "spare" : {
+    "tilekey": "─",
+    "1-image": "red-diamond",
+    "2-image": "red-diamond"
+  },
+
+  "plmt": [
+    {
+      "current": {
+        "row#": 0,
+        "column#": 6
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "color": "FFFFFF"
+    },
+
+    {
+      "current": {
+        "row#": 3,
+        "column#": 3
+      },
+      "home": {
+        "row#": 3,
+        "column#": 3
+      },
+      "color": "blue"
+    }
+
+  ],
+
+  "last": [6, "DOWN"]
+}
+
+{"row#":  3,
+"column#": 3}

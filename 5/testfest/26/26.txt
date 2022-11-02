@@ -1,0 +1,6 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/5/xchoice)
+(testing /course/cs4500f22/ta/github/5/26/Tests/4-in.json /course/cs4500f22/ta/github/5/26/Tests/4-out.json)
+Error: "data did not match any variant of untagged enum ValidJson"
+((/course/cs4500f22/ta/github/5/26/Tests/4-in.json /course/cs4500f22/ta/github/5/26/Tests/4-out.json))
+((passed 1) (total 1) (partial-score 1))
+

@@ -1,0 +1,41 @@
+"Riemann"
+
+{"board" : { 	
+		"connectors":  [ 
+				["┼", "┼", "┼", "│", "─", "│", "┼"],
+
+	      			["┼", "┼", "┼", "│", "┼", "│", "┼"],
+
+	      			["┼", "┼", "─", "┘", "┼", "└", "─"],
+
+	      			["┼", "┼", "│", "┼", "┼", "┼", "│"],
+
+	      			["┼", "┼", "─", "┐", "┼", "┌", "─"], 
+
+	      			["┼", "┼", "┼", "─", "─", "─", "┼"],
+
+	      			["┼", "┼", "┼", "┼", "┼", "┼", "┼"] ],
+
+		"treasures": [[["heliotrope", "stilbite"], ["grossular-garnet", "kunzite"], ["pink-opal", "yellow-heart"], ["alexandrite", "raw-citrine"], ["green-beryl-antique", "sunstone"], ["chrysolite", "rose-quartz"], ["clinohumite", "purple-cabochon"]], [["green-princess-cut", "spinel"], ["green-aventurine", "peridot"], ["green-beryl", "peridot"], ["gray-agate", "rose-quartz"], ["chrome-diopside", "hackmanite"], ["blue-cushion", "unakite"], ["amethyst", "labradorite"]], [["kunzite-oval", "zoisite"], ["rock-quartz", "spinel"], ["mexican-opal", "prehnite"], ["diamond", "green-beryl-antique"], ["padparadscha-oval", "rose-quartz"], ["blue-ceylon-sapphire", "rhodonite"], ["citrine-checkerboard", "morganite-oval"]], [["black-spinel-cushion", "super-seven"], ["carnelian", "unakite"], ["tanzanite-trillion", "yellow-baguette"], ["blue-cushion", "rock-quartz"], ["diamond", "yellow-heart"], ["red-spinel-square-emerald-cut", "super-seven"], ["chrysoberyl-cushion", "red-spinel-square-emerald-cut"]], [["black-onyx", "orange-radiant"], ["hematite", "red-diamond"], ["fancy-spinel-marquise", "star-cabochon"], ["mexican-opal", "white-square"], ["tourmaline", "yellow-baguette"], ["chrysolite", "purple-oval"], ["ammolite", "grandidierite"]], [["black-obsidian", "black-spinel-cushion"], ["black-onyx", "blue-ceylon-sapphire"], ["chrysoberyl-cushion", "tourmaline-laser-cut"], ["ametrine", "citrine-checkerboard"], ["chrysolite", "clinohumite"], ["white-square", "yellow-baguette"], ["alexandrite-pear-shape", "peridot"]], [["dumortierite", "star-cabochon"], ["fancy-spinel-marquise", "rhodonite"], ["magnesite", "white-square"], ["aventurine", "zircon"], ["gray-agate", "grossular-garnet"], ["apricot-square-radiant", "chrysolite"], ["pink-spinel-cushion", "ruby"]]]
+	},
+
+    "spare" : { "tilekey" : "┼",
+
+        	    "1-image" : "hematite",
+
+        	    "2-image" : "hematite" },
+
+    "plmt"  : [ {"current" : { 	"row#"    : 4,
+
+        			"column#" : 4},
+
+        	"home"    : { 	"row#"    : 3,
+
+        			"column#" : 3},
+
+        	"color"   : "FF00FF" } ],
+
+    "last"  : [0, "UP"]}
+
+{"row#"    : 5,
+"column#" : 5}

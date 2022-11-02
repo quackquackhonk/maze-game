@@ -1,0 +1,16 @@
+"Riemann"
+{ "board" : { "connectors" : [
+  ["┴", "│", "┐", "┴", "┘", "┤", "─"],
+  ["┬", "│", "│", "│", "┐", "│", "─"],
+  ["│", "┌", "┐", "┐", "┘", "┌", "┼"],
+  ["│", "┴", "┬", "│", "┼", "├", "┤"],
+  ["┐", "┴", "┤", "┬", "┤", "┴", "┐"],
+  ["┼", "│", "┤", "┐", "┤", "└", "┌"],
+  ["┼", "│", "┐", "└", "└", "┴", "─"]
+],
+  "treasures"  : [[["white-square", "purple-spinel-trillion"], ["blue-spinel-heart", "fancy-spinel-marquise"], ["red-diamond", "rhodonite"], ["fancy-spinel-marquise", "rhodonite"], ["kunzite", "tigers-eye"], ["pink-round", "azurite"], ["moonstone", "gray-agate"]], [["raw-citrine", "alexandrite"], ["beryl", "ruby-diamond-profile"], ["golden-diamond-cut", "red-spinel-square-emerald-cut"], ["black-spinel-cushion", "tigers-eye"], ["padparadscha-oval", "yellow-baguette"], ["tanzanite-trillion", "labradorite"], ["jasper", "prehnite"]], [["green-beryl", "lapis-lazuli"], ["grandidierite", "diamond"], ["lemon-quartz-briolette", "chrysoberyl-cushion"], ["sphalerite", "green-princess-cut"], ["zircon", "magnesite"], ["carnelian", "almandine-garnet"], ["blue-ceylon-sapphire", "bulls-eye"]], [["kunzite", "grossular-garnet"], ["grossular-garnet", "apatite"], ["gray-agate", "ametrine"], ["kunzite-oval", "star-cabochon"], ["tigers-eye", "raw-citrine"], ["iolite-emerald-cut", "beryl"], ["goldstone", "rhodonite"]], [["peridot", "purple-cabochon"], ["pink-emerald-cut", "grandidierite"], ["carnelian", "apatite"], ["star-cabochon", "tigers-eye"], ["jasper", "amethyst"], ["prasiolite", "alexandrite-pear-shape"], ["tigers-eye", "jasper"]], [["almandine-garnet", "aventurine"], ["black-obsidian", "green-beryl"], ["aplite", "australian-marquise"], ["labradorite", "white-square"], ["gray-agate", "magnesite"], ["sphalerite", "prehnite"], ["cordierite", "chrysolite"]], [["azurite", "fancy-spinel-marquise"], ["dumortierite", "almandine-garnet"], ["aventurine", "pink-spinel-cushion"], ["cordierite", "blue-pear-shape"], ["purple-oval", "cordierite"], ["purple-cabochon", "kunzite-oval"], ["color-change-oval", "pink-round"]]] },
+  "spare" : { "tilekey" : "┘", "1-image" : "red-diamond", "2-image" : "white-square" },
+  "plmt"  : [{ "current" : { "row#" : 5, "column#" : 5 }, "home" : { "row#" : 1, "column#" : 1 }, "color" : "purple" }],
+  "last"  : null }
+{ "row#" : 4, "column#" : 0 }
+

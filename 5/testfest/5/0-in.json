@@ -1,0 +1,26 @@
+"Riemann"
+{"board":
+{"connectors":[
+  ["┌","┌","─","┬","─","─","┐"],
+  ["─","┌","├","┌","┬","┴","─"],
+  ["┬","│","─","│","┤","┼","│"],
+  ["─","┤","┌","┘","┬","├","│"],
+  ["─","┼","│","─","┐","└","│"],
+  ["─","┼","├","┴","┤","┼","│"],
+  ["└","└","┴","┐","─","┬","┘"]],
+  "treasures":[
+    [["mexican-opal","star-cabochon"],["zircon","lemon-quartz-briolette"],["carnelian","padparadscha-sapphire"],["ruby","padparadscha-oval"],["chrysolite","gray-agate"],["grossular-garnet","tourmaline-laser-cut"],["morganite-oval","aventurine"]],
+    [["chrome-diopside","ammolite"],["citrine-checkerboard","aventurine"],["zoisite","aventurine"],["green-beryl","hematite"],["chrome-diopside","clinohumite"],["red-diamond","aplite"],["mexican-opal","heliotrope"]],
+    [["purple-oval","lemon-quartz-briolette"],["rock-quartz","aquamarine"],["raw-beryl","almandine-garnet"],["pink-emerald-cut","blue-cushion"],["alexandrite","ametrine"],["yellow-jasper","zoisite"],["aventurine","alexandrite"]],
+    [["raw-citrine","raw-beryl"],["yellow-beryl-oval","tourmaline-laser-cut"],["goldstone","star-cabochon"],["green-aventurine","tigers-eye"],["lemon-quartz-briolette","jasper"],["peridot","black-onyx"],["ruby","purple-spinel-trillion"]],
+    [["beryl","azurite"],["chrome-diopside","ametrine"],["pink-emerald-cut","padparadscha-oval"],["clinohumite","prehnite"],["green-aventurine","rhodonite"],["bulls-eye","alexandrite"],["tourmaline","goldstone"]],
+    [["australian-marquise","color-change-oval"],["zoisite","aplite"],["pink-spinel-cushion","citrine"],["goldstone","blue-pear-shape"],["aplite","citrine"],["zoisite","super-seven"],["alexandrite","chrome-diopside"]],
+    [["carnelian","yellow-jasper"],["mexican-opal","jasper"],["rhodonite","green-beryl"],["yellow-heart","purple-spinel-trillion"],["prehnite","rose-quartz"],["color-change-oval","sunstone"],["moonstone","peridot"]]]},
+  "last":null,
+  "plmt":[
+    { "current" : {"row#": 2, "column#":0}, "home" : {"row#": 1, "column#":1}, "color" : "pink" },
+    { "color" : "white" ,"current" : {"column#": 1, "row#":2}, "home" : {"column#": 3, "row#":3} },
+    { "current" : {"row#": 2, "column#":6},  "color" : "CD8D7F" , "home" : {"row#": 5, "column#":1}}],
+  "spare":{"1-image":"apatite","2-image":"white-square","tilekey":"┐"}}
+{"column#":0,"row#":2}
+

@@ -1,0 +1,66 @@
+"Riemann"
+{
+    "board": {
+        "connectors": [
+            ["┘","─","─","┐","─","─","─"],
+            ["├","─","┐","├","┐","─","─"],
+            ["│","─","│","│","│","─","─"],
+            ["├","─","┘","│","│","─","─"],
+            ["│","─","─","│","│","─","─"],
+            ["│","┌","┐","│","┘","─","─"],
+            ["└","┘","└","┘","─","─","─"]
+        ],
+        "treasures": [
+            [["zoisite", "alexandrite-pear-shape"], ["zoisite", "alexandrite"], ["zoisite", "almandine-garnet"], ["zoisite", "amethyst"], ["zoisite", "ametrine"], ["zoisite", "ammolite"], ["zoisite", "apatite"]],
+
+            [["zoisite", "aplite"], ["zoisite", "apricot-square-radiant"], ["zoisite", "aquamarine"], ["zoisite", "australian-marquise"], ["zoisite", "aventurine"], ["zoisite", "azurite"], ["zoisite", "beryl"]],
+            
+            [["zoisite", "black-obsidian"], ["zoisite", "black-onyx"], ["zoisite", "black-spinel-cushion"], ["zoisite", "blue-ceylon-sapphire"], ["zoisite", "blue-cushion"], ["zoisite", "blue-pear-shape"], ["zoisite", "blue-spinel-heart"]],
+            
+            [["zoisite", "bulls-eye"], ["zoisite", "carnelian"], ["zoisite", "chrome-diopside"], ["zoisite", "chrysoberyl-cushion"], ["zoisite", "chrysolite"], ["zoisite", "citrine-checkerboard"], ["zoisite", "citrine"]],
+            
+            [["zoisite", "clinohumite"], ["zoisite", "color-change-oval"], ["zoisite", "cordierite"], ["zoisite", "diamond"], ["zoisite", "dumortierite"], ["zoisite", "emerald"], ["zoisite", "fancy-spinel-marquise"]],
+            
+            [["zoisite", "garnet"], ["zoisite", "golden-diamond-cut"], ["zoisite", "goldstone"], ["zoisite", "grandidierite"], ["zoisite", "gray-agate"], ["zoisite", "green-aventurine"], ["zoisite", "green-beryl-antique"]],
+            
+            [["zoisite", "green-beryl"], ["zoisite", "green-princess-cut"], ["zoisite", "grossular-garnet"], ["zoisite", "hackmanite"], ["zoisite", "heliotrope"], ["zoisite", "hematite"], ["zoisite", "iolite-emerald-cut"]]
+        ]
+    },
+    "last": [
+        2,
+        "RIGHT"
+    ],
+    "plmt": [
+        {
+            "color": "green",
+            "current": {
+                "row#": 1,
+                "column#": 6
+            },
+            "home": {
+                "row#": 1,
+                "column#": 1
+            }
+        },
+        {
+            "color": "pink",
+            "current": {
+                "row#": 3,
+                "column#": 3
+            },
+            "home": {
+                "row#": 3,
+                "column#": 3
+            }
+        }
+    ],
+    "spare": {
+        "1-image": "zoisite",
+        "2-image": "zoisite",
+        "tilekey": "┤"
+    }
+}
+{
+    "row#": 6,
+    "column#": 4
+}

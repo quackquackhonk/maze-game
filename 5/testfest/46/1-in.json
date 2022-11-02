@@ -1,0 +1,26 @@
+"Riemann"
+{"board" :
+{ "connectors" :
+[["┌", "┬", "┬", "┬", "┬", "┬", "┐"],
+  ["├", "┐", "└", "┐", "└", "└", "┤"],
+  ["├", "└", "┐", "└", "┐", "└", "┤"],
+  ["├", "┐", "└", "┐", "└", "┐", "┤"],
+  ["├", "└", "┐", "└", "┐", "└", "┤"],
+  ["├", "┐", "└", "┐", "└", "┐", "┤"],
+  ["└", "┴", "┴", "┴", "┴", "┴", "┘"]],
+  "treasures" :
+  [[["apatite", "dumortierite"], ["apatite", "emerald"], ["apatite", "garnet"], ["apatite", "goldstone"], ["apatite", "grandidierite"], ["apatite", "gray-agate"], ["apatite", "green-beryl"]],
+    [["apatite", "almandine-garnet"], ["apatite", "alexandrite-pear-shape"], ["apatite", "alexandrite"], ["apatite", "amethyst"], ["apatite", "ametrine"], ["apatite", "ammolite"], ["apatite", "apatite"]],
+    [["apatite", "black-obsidian"], ["apatite", "black-onyx"], ["apatite", "black-spinel-cushion"], ["apatite", "blue-ceylon-sapphire"], ["apatite", "blue-cushion"], ["apatite", "blue-pear-shape"], ["apatite", "blue-spinel-heart"]],
+    [["apatite", "bulls-eye"], ["apatite", "carnelian"], ["apatite", "chrysolite"], ["apatite", "citrine"], ["apatite", "clinohumite"], ["apatite", "cordierite"], ["apatite", "diamond"]],
+    [["apatite", "hackmanite"], ["apatite", "heliotrope"], ["apatite", "hematite"], ["apatite", "jasper"], ["apatite", "jaspilite"], ["apatite", "kunzite"], ["apatite", "labradorite"]],
+    [["apatite", "magnesite"], ["apatite", "moonstone"], ["apatite", "moss-agate"], ["apatite", "peridot"], ["apatite", "pink-opal"], ["apatite", "pink-round"], ["apatite", "prehnite"]],
+    [["apatite", "aplite"], ["apatite", "apricot-square-radiant"], ["apatite", "aquamarine"], ["apatite", "australian-marquise"], ["apatite", "aventurine"], ["apatite", "azurite"], ["apatite", "beryl"]]]
+
+},
+  "plmt":[{"color":"AAAAAA","home":{"column#":6,"row#":6}, "current":{"column#":2,"row#":0}},
+    {"color":"BBBBBB","home":{"column#":0,"row#":0}, "current":{"column#":1,"row#":0}},
+    {"color":"CCCCCC","home":{"column#":6,"row#":0},"current":{"column#":3,"row#":5}}],
+  "spare":{"tilekey":"┴","1-image":"spinel","2-image":"stilbite"},
+  "last":[6,"DOWN"]}
+{"column#":1,"row#":2}

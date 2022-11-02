@@ -1,0 +1,32 @@
+"Euclid"
+{"board":{"connectors": [
+  ["┌","─","┬","┘","┬","┴","┐"],
+  ["└","┘","─","┴","┌","│","│"],
+  ["├","─","├","│","┬","└","┤"],
+  ["└","─","┘","┌","┴","┘","─"],
+  ["├","│","┴","├","┤","│","┤"],
+  ["┘","├","│","┐","┐","┴","└"],
+  ["└","┘","┴","┐","┴","─","┘"]],
+  "treasures": [[["goldstone","almandine-garnet"],["goldstone","ametrine"],["goldstone","apatite"],["goldstone","apricot-square-radiant"],["goldstone","australian-marquise"],["goldstone","azurite"],["goldstone","black-obsidian"]],
+    [["goldstone","black-spinel-cushion"],["goldstone","blue-cushion"],["goldstone","blue-spinel-heart"],["goldstone","carnelian"],["goldstone","chrysoberyl-cushion"],["goldstone","citrine-checkerboard"],["goldstone","clinohumite"]],
+    [["goldstone","cordierite"],["goldstone","dumortierite"],["goldstone","fancy-spinel-marquise"],["goldstone","golden-diamond-cut"],["goldstone","grandidierite"],["goldstone","green-aventurine"],["goldstone","green-beryl"]],
+    [["goldstone","grossular-garnet"],["goldstone","heliotrope"],["goldstone","iolite-emerald-cut"],["goldstone","jaspilite"],["goldstone","kunzite"],["goldstone","lapis-lazuli"],["goldstone","magnesite"]],
+    [["goldstone","moonstone"],["goldstone","moss-agate"],["goldstone","padparadscha-oval"],["goldstone","peridot"],["goldstone","pink-opal"],["goldstone","pink-spinel-cushion"],["goldstone","prehnite"]],
+    [["goldstone","purple-oval"],["goldstone","purple-square-cushion"],["goldstone","raw-citrine"],["goldstone","red-spinel-square-emerald-cut"],["goldstone","rock-quartz"],["goldstone","ruby-diamond-profile"],["goldstone","sphalerite"]],
+    [["goldstone","star-cabochon"],["goldstone","stilbite"],["goldstone","super-seven"],["goldstone","tigers-eye"],["goldstone","tourmaline"],["goldstone","white-square"],["goldstone","yellow-beryl-oval"]]]},
+  "last":[6,"DOWN"],
+  "plmt":[{
+    "color":"FFFFFF",
+    "current":{"column#":0,"row#":0},
+    "home":{"column#":1,"row#":1}},
+    {
+      "color":"pink",
+      "current": {"column#":3,"row#":1},
+      "home":{"column#":3,"row#":1}},
+    {
+      "color":"red",
+      "current":{"column#":5,"row#":1},
+      "home":{"column#":5,"row#":1}}],
+  "spare":
+  {"1-image":"goldstone","2-image":"yellow-heart","tilekey":"│"}}
+{"column#":6,"row#":6}

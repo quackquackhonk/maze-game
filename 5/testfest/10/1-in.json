@@ -1,0 +1,11 @@
+"Euclid"
+{"board":{"connectors":[
+  ["┐","─","└","│","─","┐","└"],
+  ["│","┼","│","│","┌","┘","┬"],
+  ["┐","─","┌","│","│","┴","┴"],
+  ["─","─","─","┴","┼","┴","┐"],
+  ["┐","└","┌","┘","┬","├","┴"],
+  ["┤","┼","│","─","┐","└","┌"],
+  ["┘","┬","├","┴","┤","┼","│"]],"treasures":[[["zircon","kunzite-oval"],["zircon","jaspilite"],["zircon","jasper"],["yellow-beryl-oval","grossular-garnet"],["yellow-beryl-oval","green-aventurine"],["yellow-beryl-oval","gray-agate"],["yellow-beryl-oval","grandidierite"]],[["zircon","iolite-emerald-cut"],["zircon","hematite"],["zircon","heliotrope"],["yellow-beryl-oval","green-princess-cut"],["yellow-beryl-oval","goldstone"],["yellow-beryl-oval","golden-diamond-cut"],["yellow-beryl-oval","garnet"]],[["zircon","hackmanite"],["zircon","grossular-garnet"],["zircon","green-princess-cut"],["yellow-beryl-oval","green-beryl"],["yellow-beryl-oval","fancy-spinel-marquise"],["yellow-beryl-oval","emerald"],["yellow-beryl-oval","dumortierite"]],[["yellow-beryl-oval","hematite"],["yellow-beryl-oval","heliotrope"],["yellow-beryl-oval","hackmanite"],["yellow-beryl-oval","green-beryl-antique"],["yellow-beryl-oval","diamond"],["yellow-beryl-oval","cordierite"],["yellow-beryl-oval","color-change-oval"]],[["yellow-beryl-oval","clinohumite"],["yellow-beryl-oval","citrine"],["yellow-beryl-oval","citrine-checkerboard"],["yellow-beryl-oval","chrysolite"],["yellow-beryl-oval","chrysoberyl-cushion"],["yellow-beryl-oval","chrome-diopside"],["yellow-beryl-oval","carnelian"]],[["yellow-beryl-oval","bulls-eye"],["yellow-beryl-oval","blue-spinel-heart"],["yellow-beryl-oval","blue-pear-shape"],["yellow-beryl-oval","blue-cushion"],["yellow-beryl-oval","blue-ceylon-sapphire"],["yellow-beryl-oval","black-spinel-cushion"],["yellow-beryl-oval","black-onyx"]],[["yellow-beryl-oval","black-obsidian"],["yellow-beryl-oval","beryl"],["yellow-beryl-oval","azurite"],["yellow-beryl-oval","aventurine"],["yellow-beryl-oval","australian-marquise"],["yellow-beryl-oval","aquamarine"],["yellow-beryl-oval","apricot-square-radiant"]]]},"last":null,"plmt":[{"color":"orange","current":{"column#":4,"row#":0},"home":{"column#":3,"row#":1}}],"spare":{"1-image":"yellow-baguette","2-image":"yellow-beryl-oval","tilekey":"┼"}}
+{"column#":6,"row#":1}
+

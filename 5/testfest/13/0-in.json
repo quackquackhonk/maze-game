@@ -1,0 +1,67 @@
+"Euclid"
+{
+    "board": {
+        "connectors": [
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"],
+            ["┐","┐","┐","┐","┐","┐","┐"]
+        ],
+        "treasures": [
+            [["ruby", "alexandrite-pear-shape"], ["ruby", "alexandrite"], ["ruby", "almandine-garnet"], ["ruby", "amethyst"], ["ruby", "ametrine"], ["ruby", "ammolite"], ["ruby", "apatite"]],
+
+            [["ruby", "aplite"], ["ruby", "apricot-square-radiant"], ["ruby", "aquamarine"], ["ruby", "australian-marquise"], ["ruby", "aventurine"], ["ruby", "azurite"], ["ruby", "beryl"]],
+            
+            [["ruby", "black-obsidian"], ["ruby", "black-onyx"], ["ruby", "black-spinel-cushion"], ["ruby", "blue-ceylon-sapphire"], ["ruby", "blue-cushion"], ["ruby", "blue-pear-shape"], ["ruby", "blue-spinel-heart"]],
+            
+            [["ruby", "bulls-eye"], ["ruby", "carnelian"], ["ruby", "chrome-diopside"], ["ruby", "chrysoberyl-cushion"], ["ruby", "chrysolite"], ["ruby", "citrine-checkerboard"], ["ruby", "citrine"]],
+            
+            [["ruby", "clinohumite"], ["ruby", "color-change-oval"], ["ruby", "cordierite"], ["ruby", "diamond"], ["ruby", "dumortierite"], ["ruby", "emerald"], ["ruby", "fancy-spinel-marquise"]],
+            
+            [["ruby", "garnet"], ["ruby", "golden-diamond-cut"], ["ruby", "goldstone"], ["ruby", "grandidierite"], ["ruby", "gray-agate"], ["ruby", "green-aventurine"], ["ruby", "green-beryl-antique"]],
+            
+            [["ruby", "green-beryl"], ["ruby", "green-princess-cut"], ["ruby", "grossular-garnet"], ["ruby", "hackmanite"], ["ruby", "heliotrope"], ["ruby", "hematite"], ["ruby", "iolite-emerald-cut"]]
+        ]
+    },
+    "last": [
+        0,
+        "DOWN"
+    ],
+    "plmt": [
+        {
+            "color": "red",
+            "current": {
+                "row#": 1,
+                "column#": 1
+            },
+            "home": {
+                "row#": 1,
+                "column#": 1
+            }
+        },
+        {
+            "color": "blue",
+            "current": {
+                "row#": 3,
+                "column#": 3
+            },
+            "home": {
+                "row#": 3,
+                "column#": 3
+            }
+        }
+    ],
+    "spare": {
+        "1-image": "ruby",
+        "2-image": "ruby",
+        "tilekey": "┤"
+    }
+}
+{
+	"row#": 3,
+	"column#": 3
+}
+

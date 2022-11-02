@@ -1,0 +1,40 @@
+cargo build --release --manifest-path Xchoice/Cargo.toml
+ Downloading crates ...
+  Downloaded serde_derive v1.0.147
+  Downloaded serde v1.0.147
+  Downloaded syn v1.0.103
+   Compiling proc-macro2 v1.0.47
+   Compiling quote v1.0.21
+   Compiling unicode-ident v1.0.5
+   Compiling syn v1.0.103
+   Compiling serde_derive v1.0.147
+   Compiling serde v1.0.147
+   Compiling memchr v2.5.0
+   Compiling regex-syntax v0.6.27
+   Compiling serde_json v1.0.87
+   Compiling ryu v1.0.11
+   Compiling itoa v1.0.4
+   Compiling aho-corasick v0.7.19
+   Compiling regex v1.6.0
+   Compiling unordered-pair v0.2.4
+   Compiling hex v0.4.3
+   Compiling common v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/Maze/Common)
+   Compiling players v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/Maze/Players)
+   Compiling xchoice v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/5/Xchoice)
+warning: unused import: `JsonAction`
+ --> src/main.rs:4:32
+  |
+4 | use common::json::{Coordinate, JsonAction, JsonState};
+  |                                ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `BOARD_SIZE`, `State`
+ --> src/main.rs:5:14
+  |
+5 | use common::{State, BOARD_SIZE};
+  |              ^^^^^  ^^^^^^^^^^
+
+warning: `xchoice` (bin "xchoice") generated 2 warnings
+    Finished release [optimized] target(s) in 46.13s
+cp Xchoice/target/release/xchoice xchoice
