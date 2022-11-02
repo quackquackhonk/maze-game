@@ -173,7 +173,6 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
     /// ┴├┬  
     /// extra = ┼
     fn default_board() -> Self {
-        use crate::gem::Gem::*;
         use CompassDirection::*;
         use ConnectorShape::*;
         use PathOrientation::*;
@@ -352,7 +351,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Crossroads);
 
-        b.slide_and_insert(Slide::new(0, South));
+        b.slide_and_insert(Slide::new(0, South)).unwrap();
         // Board after slide + insert
         // ┼│└
         // ─┐┘
@@ -362,7 +361,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Fork(North));
 
-        b.slide_and_insert(Slide::new(0, East));
+        b.slide_and_insert(Slide::new(0, East)).unwrap();
         // Board after insert
         // ┴┼│
         // ─┐┘
@@ -371,7 +370,7 @@ mod BoardTests {
         assert_eq!(b.grid[(0, 0)].connector, Fork(North));
         assert_eq!(b.extra.connector, Corner(North));
 
-        b.slide_and_insert(Slide::new(2, West));
+        b.slide_and_insert(Slide::new(2, West)).unwrap();
         dbg!(&b);
         // Board after slide + insert
         // ┴┼│
