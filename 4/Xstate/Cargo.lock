@@ -75,6 +75,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< Updated upstream
 name = "atomic_refcell"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -129,11 +130,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
 
 [[package]]
+=======
+>>>>>>> Stashed changes
 name = "common"
 version = "0.1.0"
 dependencies = [
  "aliri_braid",
+<<<<<<< Updated upstream
  "egui_extras",
+=======
+>>>>>>> Stashed changes
  "hex",
  "image",
  "include_dir",

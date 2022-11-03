@@ -5,12 +5,13 @@ use std::{
 };
 
 use common::{
+    board::Slide,
     gem::GEM_IMGS,
     grid::Grid as CGrid,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
     Color, State,
 };
-use egui::{Align, Color32, Grid, Image, Layout, Vec2};
+use egui::{Align, Color32, Grid, Image, Label, Layout, RichText, Vec2};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;
@@ -55,6 +56,7 @@ lazy_static! {
 }
 
 const CELL_SIZE: f32 = 30.0;
+const CELL_SIZE_2D: Vec2 = Vec2::new(CELL_SIZE, CELL_SIZE);
 
 /// struct for holding information about a Tile that's being rendered
 /// `home_colors` is a vector of all the colors of homes on this tile
@@ -144,7 +146,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
         .spacing(Vec2::new(0.0, 0.0))
         .show(ui, |ui| {
             ui.add_sized(
-                Vec2::new(CELL_SIZE, CELL_SIZE),
+                CELL_SIZE_2D,
                 Image::new(
                     GEM_IMGS[&widget.tile.gems.0].texture_id(ui.ctx()),
                     Vec2::new(CELL_SIZE * 0.8, CELL_SIZE * 0.8),
@@ -203,11 +205,11 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
                 ),
             );
         });
-
-    // ui.add(Image::new(image.texture_id(ui.ctx()), image.size_vec2()));
 }
 
-fn render_state(ui: &mut egui::Ui, state: &State) {
+// Render's the `board` inside of a state
+fn render_board(ui: &mut egui::Ui, state: &State) {
+    // create a `common::Grid` of `TileWidget`s
     let mut tile_widget_grid: CGrid<TileWidget> = state
         .board
         .grid
@@ -223,13 +225,17 @@ fn render_state(ui: &mut egui::Ui, state: &State) {
         })
         .collect::<Box<[_]>>()
         .into();
+
+    // update `TileWidget` to include player home and goal information
     state.player_info.iter().for_each(|pi| {
         tile_widget_grid[pi.position]
             .player_colors
             .push(pi.color.clone());
         tile_widget_grid[pi.home].home_colors.push(pi.color.clone());
     });
-    Grid::new("state_grid")
+
+    // create board grid
+    Grid::new("board_grid")
         .spacing(Vec2::new(0.0, 0.0))
         .min_col_width(0.0)
         .min_row_height(0.0)
@@ -243,6 +249,61 @@ fn render_state(ui: &mut egui::Ui, state: &State) {
                     });
                     ui.end_row();
                 })
+        });
+}
+
+/// Renders the given `Slide` as a label
+fn render_slide(ui: &mut egui::Ui, state: &State) {
+    let slide_text = match state.previous_slide {
+        None => RichText::new("No Last Slide").strong(),
+        Some(Slide {
+            index,
+            direction: CompassDirection::North,
+        }) => RichText::new(format!("Column {} Up", index)).strong(),
+        Some(Slide {
+            index,
+            direction: CompassDirection::South,
+        }) => RichText::new(format!("Column {} Down", index)).strong(),
+        Some(Slide {
+            index,
+            direction: CompassDirection::East,
+        }) => RichText::new(format!("Row {} Right", index)).strong(),
+        Some(Slide {
+            index,
+            direction: CompassDirection::West,
+        }) => RichText::new(format!("Row {} Left", index)).strong(),
+    };
+    ui.label(slide_text);
+}
+
+/// Renders the spare tile and the last slide onto the `ui`
+fn render_state_info(ui: &mut egui::Ui, state: &State) {
+    let spare_tile_widget = TileWidget {
+        tile: state.board.extra.clone(),
+        player_colors: vec![],
+        home_colors: vec![],
+    };
+
+    let spare_text = RichText::new("Spare Tile:").heading().strong();
+    let last_text = RichText::new("Last Slide:").heading().strong();
+
+    ui.vertical_centered(|ui| {
+        ui.add_space(CELL_SIZE * 3.0);
+        ui.label(spare_text);
+        render_tile(ui, spare_tile_widget, "spare");
+        ui.add_space(CELL_SIZE * 3.0);
+        ui.label(last_text);
+        render_slide(ui, state);
+    });
+}
+
+fn render_state(ui: &mut egui::Ui, state: &State) {
+    // create grid for the state
+    Grid::new("state_grid")
+        .spacing(Vec2::new(25.0, 0.0))
+        .show(ui, |ui| {
+            render_board(ui, state);
+            ui.vertical(|ui| render_state_info(ui, state));
         });
 }
 
@@ -278,6 +339,7 @@ impl eframe::App for ObserverGUI {
             if !states.is_empty() {
                 render_state(ui, &states[0]);
             }
+
             ui.with_layout(Layout::top_down_justified(Align::Center), |ui| {
                 if states.len() > 1 {
                     if ui.button("Next").clicked() {

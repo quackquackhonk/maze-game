@@ -9,7 +9,7 @@ use xgames::*;
 
 fn main() {
     let height = 700.0;
-    let width = 650.0;
+    let width = 800.0;
     let observer = ObserverGUI::default();
     let options = eframe::NativeOptions {
         initial_window_size: Option::from(Vec2::new(width, height)),
