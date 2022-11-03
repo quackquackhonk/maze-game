@@ -1,4 +1,4 @@
-[["bob", "Riemann"], ["joe", "Euclid"]]
+[["bob", "Riemann"], ["joe", "Euclid"], ["sahana", "Euclid"], ["luis", "Euclid"]]
 
 {
   "board": {
@@ -28,15 +28,27 @@
   },
 "plmt": [
     {
-        "current": {"row#": 0, "column#": 0},
+        "current": {"row#": 1, "column#": 1},
         "home": {"row#": 1, "column#": 1},
-        "goto": {"row#": 3, "column#": 3},
+        "goto": {"row#": 5, "column#": 5},
         "color": "red"
     },
     {
-        "current": {"row#": 2, "column#": 2},
-        "home": {"row#": 1, "column#": 3},
-        "goto": {"row#": 3, "column#": 5},
+        "current": {"row#": 1, "column#": 5},
+        "home": {"row#": 1, "column#": 5},
+        "goto": {"row#": 5, "column#": 1},
+        "color": "blue"
+    },
+    {
+        "current": {"row#": 5, "column#": 1},
+        "home": {"row#": 5, "column#": 1},
+        "goto": {"row#": 1, "column#": 5},
+        "color": "pink"
+    },
+    {
+        "current": {"row#": 5, "column#": 5},
+        "home": {"row#": 5, "column#": 5},
+        "goto": {"row#": 1, "column#": 1},
         "color": "purple"
     }
 ],

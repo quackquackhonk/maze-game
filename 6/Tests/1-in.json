@@ -3,13 +3,13 @@
 {
   "board": {
     "connectors": [
-      [ "─", "│", "└", "┌", "┐", "┘", "┴" ],
-      [ "├", "┬", "┤", "┼", "─", "│", "└" ],
-      [ "┌", "┐", "┘", "┴", "├", "┬", "┤" ],
-      [ "┼", "─", "│", "└", "┌", "┐", "┘" ],
-      [ "┴", "├", "┬", "┤", "┼", "─", "│" ],
-      [ "└", "┌", "┐", "┘", "┴", "├", "┬" ],
-      [ "┤", "┼", "─", "│", "└", "┌", "┐" ]
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ],
+      [ "┘", "┘", "┘", "┘", "┘", "┘", "┘" ]
     ],
     "treasures": [
       [ [ "alexandrite-pear-shape", "alexandrite" ], [ "almandine-garnet", "amethyst" ], [ "ametrine", "ammolite" ], [ "apatite", "aplite" ], [ "apricot-square-radiant", "aquamarine" ], [ "australian-marquise", "aventurine" ], [ "azurite", "beryl" ] ],
@@ -22,23 +22,23 @@
     ]
   },
   "spare": {
-    "tilekey": "┼",
+    "tilekey": "┘",
     "1-image": "yellow-heart",
     "2-image": "yellow-jasper"
   },
 "plmt": [
     {
-        "current": {"row#": 0, "column#": 0},
+        "current": {"row#": 0, "column#": 1},
         "home": {"row#": 1, "column#": 1},
         "goto": {"row#": 3, "column#": 3},
         "color": "red"
     },
     {
-        "current": {"row#": 2, "column#": 2},
+        "current": {"row#": 0, "column#": 0},
         "home": {"row#": 1, "column#": 3},
-        "goto": {"row#": 3, "column#": 5},
+        "goto": {"row#": 3, "column#": 3},
         "color": "purple"
     }
 ],
-  "last": null
+  "last": [0, "LEFT"]
 }
