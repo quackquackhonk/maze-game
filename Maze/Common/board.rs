@@ -173,29 +173,11 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
     /// ┴├┬  
     /// extra = ┼
     fn default_board() -> Self {
-        use CompassDirection::*;
         use ConnectorShape::*;
-        use PathOrientation::*;
         let mut idx = 0;
         let grid = [[(); COLS]; ROWS].map(|list| {
             list.map(|_| {
-                let tile = Tile {
-                    connector: match idx % 11 {
-                        0 => Path(Horizontal),
-                        1 => Path(Vertical),
-                        2 => Corner(North),
-                        3 => Corner(East),
-                        4 => Corner(South),
-                        5 => Corner(West),
-                        6 => Fork(North),
-                        7 => Fork(East),
-                        8 => Fork(South),
-                        9 => Fork(West),
-                        10 => Crossroads,
-                        _ => unreachable!("usize % 11 is never > 10"),
-                    },
-                    gems: (Gem::from_num(idx * 2), Gem::from_num(idx * 2 + 1)).into(),
-                };
+                let tile = Tile::from_num(idx);
                 idx += 1;
                 tile
             })

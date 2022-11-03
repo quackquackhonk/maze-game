@@ -4,7 +4,8 @@ build:
 	cp XGame/target/release/xgames-with-observer xgames-with-observer
 
 clean:
-	cargo clean --manifest-path Xchoice/Cargo.toml
-	rm xchoice
+	cargo clean --manifest-path XGame/Cargo.toml
+	rm xgames
+	rm xgames-with-observer
 
 .PHONY: clean

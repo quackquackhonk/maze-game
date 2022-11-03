@@ -18,6 +18,13 @@ impl Tile {
     pub fn connected(&self, other: &Self, direction: CompassDirection) -> bool {
         self.connector.connected(other.connector, direction)
     }
+
+    pub fn from_num(num: usize) -> Tile {
+        Self {
+            connector: ConnectorShape::from_num(num),
+            gems: Gem::pair_from_num(num),
+        }
+    }
 }
 
 /// This enum describes the two orientations for [`ConnectorShape::Path`]
@@ -137,6 +144,26 @@ impl ConnectorShape {
     /// Checks if `self` can connect to `other` in the given [`CompassDirection`].
     pub fn connected(self, other: Self, direction: CompassDirection) -> bool {
         self.connected_to(direction) && other.connected_to(direction.opposite())
+    }
+
+    pub fn from_num(num: usize) -> Self {
+        use CompassDirection::*;
+        use ConnectorShape::*;
+        use PathOrientation::*;
+        match num % 11 {
+            0 => Path(Horizontal),
+            1 => Path(Vertical),
+            2 => Corner(North),
+            3 => Corner(East),
+            4 => Corner(South),
+            5 => Corner(West),
+            6 => Fork(North),
+            7 => Fork(East),
+            8 => Fork(South),
+            9 => Fork(West),
+            10 => Crossroads,
+            _ => unreachable!("usize % 11 is never > 10"),
+        }
     }
 }
 

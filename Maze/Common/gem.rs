@@ -6,6 +6,11 @@ use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use serde::Deserialize;
 use serde::Serialize;
+use unordered_pair::UnorderedPair;
+
+// The number of different gems
+const NUM_GEMS: usize = 102;
+
 /// Describes the gems a tile can have
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize, Serialize)]
 pub enum Gem {
@@ -173,8 +178,20 @@ pub enum Gem {
 }
 
 impl Gem {
+    /// Creates an unordered pair of distinct `Gem`s. This function will produce unique pairs of
+    /// gems until `num >= NUM_GEMS.pow(2))`
+    ///
+    /// # Errors
+    ///
+    /// If (num / NUM_GEMS) % NUM_GEMS == num % NUM_GEMS, returns `Err(())`
+    pub fn pair_from_num(num: usize) -> UnorderedPair<Gem> {
+        let left = Gem::from_num(num);
+        let right = Gem::from_num(num * 2 + 1);
+        UnorderedPair(left, right)
+    }
+
     pub fn from_num(num: usize) -> Gem {
-        match num % 102 {
+        match num % NUM_GEMS {
             0 => Gem::alexandrite_pear_shape,
             1 => Gem::alexandrite,
             2 => Gem::almandine_garnet,
@@ -277,7 +294,7 @@ impl Gem {
             99 => Gem::yellow_jasper,
             100 => Gem::zircon,
             101 => Gem::zoisite,
-            _ => unreachable!("% 102 never produces number > 102"),
+            _ => unreachable!("% NUM_GEMS never produces number > NUM_GEMS"),
         }
     }
 }
