@@ -167,7 +167,7 @@ impl TileWidget {
                     if idx != 0 && idx % 2 == 0 {
                         ui.end_row();
                     }
-                    ui.add(home_image_with_color(ui, col, CELL_SIZE_2D * 0.3));
+                    ui.add(home_image_with_color(ui, col, CELL_SIZE_2D * 0.5));
                 })
             });
     }
@@ -186,7 +186,7 @@ impl TileWidget {
                         if idx != 0 && idx % 2 == 0 {
                             ui.end_row();
                         }
-                        ui.add(player_image_with_color(ui, col, CELL_SIZE_2D * 0.3));
+                        ui.add(player_image_with_color(ui, col, CELL_SIZE_2D * 0.5));
                     })
             });
     }
@@ -234,7 +234,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
 /// Returns a `common::Grid<TileWidget>` containing all the `Tile` information in `state`.
 /// This includes the home and player locations, but not the goal locations
 fn widget_grid(state: &State) -> CGrid<TileWidget> {
-    let mut grid: CGrid<TileWidget> = state
+    let mut tiles: CGrid<TileWidget> = state
         .board
         .grid
         .iter()
@@ -249,27 +249,19 @@ fn widget_grid(state: &State) -> CGrid<TileWidget> {
         })
         .collect::<Box<[_]>>()
         .into();
-    // update `TileWidget` to include player home and goal information
+
+    // updates all `TileWidget`s to include player home and goal information
     state.player_info.iter().for_each(|pi| {
-        grid[pi.position].player_colors.push(pi.color.clone());
-        grid[pi.home].home_colors.push(pi.color.clone());
+        tiles[pi.position].player_colors.push(pi.color.clone());
+        tiles[pi.home].home_colors.push(pi.color.clone());
     });
 
-    grid
+    tiles
 }
 
 // Render's the `board` inside of a state
 fn render_board(ui: &mut egui::Ui, state: &State) {
-    // create a `common::Grid` of `TileWidget`s
-    let mut tile_widget_grid: CGrid<TileWidget> = widget_grid(state);
-
-    // update `TileWidget` to include player home and goal information
-    state.player_info.iter().for_each(|pi| {
-        tile_widget_grid[pi.position]
-            .player_colors
-            .push(pi.color.clone());
-        tile_widget_grid[pi.home].home_colors.push(pi.color.clone());
-    });
+    let tiles: CGrid<TileWidget> = widget_grid(state);
 
     // create board grid
     Grid::new("board_grid")
@@ -277,15 +269,12 @@ fn render_board(ui: &mut egui::Ui, state: &State) {
         .min_col_width(0.0)
         .min_row_height(0.0)
         .show(ui, |ui| {
-            tile_widget_grid
-                .iter()
-                .enumerate()
-                .fold((), |_, (row_idx, row)| {
-                    row.iter().enumerate().fold((), |_, (col_idx, tile)| {
-                        render_tile(ui, tile.clone(), &format!("({}, {})", col_idx, row_idx))
-                    });
-                    ui.end_row();
-                })
+            tiles.iter().enumerate().fold((), |_, (row_idx, row)| {
+                row.iter().enumerate().fold((), |_, (col_idx, tile)| {
+                    render_tile(ui, tile.clone(), &format!("({}, {})", col_idx, row_idx))
+                });
+                ui.end_row();
+            })
         });
 }
 
@@ -340,8 +329,7 @@ fn render_state_info(ui: &mut egui::Ui, state: &State) {
             ui.label(no_players_text);
         } else {
             ui.label(curr_player_text);
-            let curr_pl =
-                player_image_with_color(ui, &state.player_info[0].color, CELL_SIZE_2D * 0.5);
+            let curr_pl = player_image_with_color(ui, &state.player_info[0].color, CELL_SIZE_2D);
             ui.add_sized(CELL_SIZE_2D * 0.5, curr_pl);
         }
     });
