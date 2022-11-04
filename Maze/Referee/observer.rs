@@ -231,10 +231,10 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
         });
 }
 
-// Render's the `board` inside of a state
-fn render_board(ui: &mut egui::Ui, state: &State) {
-    // create a `common::Grid` of `TileWidget`s
-    let mut tile_widget_grid: CGrid<TileWidget> = state
+/// Returns a `common::Grid<TileWidget>` containing all the `Tile` information in `state`.
+/// This includes the home and player locations, but not the goal locations
+fn widget_grid(state: &State) -> CGrid<TileWidget> {
+    let mut grid: CGrid<TileWidget> = state
         .board
         .grid
         .iter()
@@ -249,6 +249,19 @@ fn render_board(ui: &mut egui::Ui, state: &State) {
         })
         .collect::<Box<[_]>>()
         .into();
+    // update `TileWidget` to include player home and goal information
+    state.player_info.iter().for_each(|pi| {
+        grid[pi.position].player_colors.push(pi.color.clone());
+        grid[pi.home].home_colors.push(pi.color.clone());
+    });
+
+    grid
+}
+
+// Render's the `board` inside of a state
+fn render_board(ui: &mut egui::Ui, state: &State) {
+    // create a `common::Grid` of `TileWidget`s
+    let mut tile_widget_grid: CGrid<TileWidget> = widget_grid(state);
 
     // update `TileWidget` to include player home and goal information
     state.player_info.iter().for_each(|pi| {
