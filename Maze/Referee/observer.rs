@@ -17,44 +17,65 @@ use egui_extras::RetainedImage;
 use lazy_static::lazy_static;
 
 use crate::json::JsonRefereeState;
+
+// static declarations for the pictures of the tiles
 lazy_static! {
-    static ref CROSSROADS_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+    static ref CROSSROADS_IMG: RetainedImage = RetainedImage::from_image_bytes(
         "crossroads.png",
         include_bytes!("../Resources/connectors/crossroads.png"),
     )
     .unwrap();
-    static ref PATH_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+    static ref PATH_IMG: RetainedImage = RetainedImage::from_image_bytes(
         "path.png",
         include_bytes!("../Resources/connectors/path.png"),
     )
     .unwrap();
-    static ref FORK_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+    static ref FORK_IMG: RetainedImage = RetainedImage::from_image_bytes(
         "fork.png",
         include_bytes!("../Resources/connectors/fork.png"),
     )
     .unwrap();
-    static ref CORNER_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+    static ref CORNER_IMG: RetainedImage = RetainedImage::from_image_bytes(
         "corner.png",
         include_bytes!("../Resources/connectors/corner.png"),
     )
     .unwrap();
-    static ref EMPTY_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
+    static ref EMPTY_IMG: RetainedImage = RetainedImage::from_image_bytes(
         "empty.png",
         include_bytes!("../Resources/connectors/empty.png"),
     )
     .unwrap();
-    static ref PLAYER_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
-        "player.png",
-        include_bytes!("../Resources/player.png"),
-    )
-    .unwrap();
-    static ref HOME_IMG: RetainedImage = egui_extras::RetainedImage::from_image_bytes(
-        "home.png",
-        include_bytes!("../Resources/home.png"),
-    )
-    .unwrap();
+    static ref PLAYER_IMG: RetainedImage =
+        RetainedImage::from_image_bytes("player.png", include_bytes!("../Resources/player.png"),)
+            .unwrap();
+    static ref HOME_IMG: RetainedImage =
+        RetainedImage::from_image_bytes("home.png", include_bytes!("../Resources/home.png"),)
+            .unwrap();
 }
 
+/// Converts the given `RetainedImage` into an `Image` widget in `ui`
+fn retained_img_to_image(from: &RetainedImage, ui: &Ui) -> Image {
+    Image::new(from.texture_id(ui.ctx()), from.size_vec2())
+}
+
+/// Returns an image of a player with the given `color`
+fn player_image_with_color(ui: &egui::Ui, color: &Color, size: Vec2) -> Image {
+    let player = &PLAYER_IMG;
+    Image::new(player.texture_id(ui.ctx()), size).tint(to_color_32(color))
+}
+
+/// Returns an image of a home with the given `color`
+fn home_image_with_color(ui: &egui::Ui, color: &Color, size: Vec2) -> Image {
+    let home = &HOME_IMG;
+    Image::new(home.texture_id(ui.ctx()), size).tint(to_color_32(color))
+}
+
+/// Converts a `common::Color` into a `Color32`
+fn to_color_32(color: &Color) -> Color32 {
+    Color32::from_rgb(color.code.0, color.code.1, color.code.2)
+}
+
+// size, in pixels, of a cell
 const CELL_SIZE: f32 = 30.0;
 const CELL_SIZE_2D: Vec2 = Vec2::new(CELL_SIZE, CELL_SIZE);
 
@@ -68,11 +89,8 @@ struct TileWidget {
     player_colors: Vec<Color>,
 }
 
-fn retained_img_to_image(from: &RetainedImage, ui: &Ui) -> Image {
-    Image::new(from.texture_id(ui.ctx()), from.size_vec2())
-}
-
 impl TileWidget {
+    /// Returns a `Path` image if you can go `North` from `self.tile`, `empty` otherwise
     fn north_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::North) {
             &PATH_IMG
@@ -80,6 +98,7 @@ impl TileWidget {
             &EMPTY_IMG
         }
     }
+    /// Returns a `Path` image if you can go `South` from `self.tile`, `empty` otherwise
     fn south_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::South) {
             &PATH_IMG
@@ -87,6 +106,7 @@ impl TileWidget {
             &EMPTY_IMG
         }
     }
+    /// Returns a `Path` image if you can go `South` from `self.tile`, `empty` otherwise
     fn east_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::East) {
             &PATH_IMG
@@ -94,6 +114,7 @@ impl TileWidget {
             &EMPTY_IMG
         }
     }
+    /// Returns a `Path` image if you can go `South` from `self.tile`, `empty` otherwise
     fn west_path(&self) -> &RetainedImage {
         if self.tile.connector.connected_to(CompassDirection::West) {
             &PATH_IMG
@@ -102,11 +123,13 @@ impl TileWidget {
         }
     }
 
+    /// Returns an `Image` widget in the given `UI` representing `self.tile.connector`
     fn center_image(&self, ui: &Ui) -> Image {
         retained_img_to_image(self.center_ret_img(), ui)
             .rotate(self.center_img_rotation().to_radians(), Vec2::splat(0.5))
     }
 
+    /// Returns the `RetainedImage` corresponding to `self.tile.connector`
     fn center_ret_img(&self) -> &RetainedImage {
         match self.tile.connector {
             ConnectorShape::Path(_) => &*PATH_IMG,
@@ -116,6 +139,7 @@ impl TileWidget {
         }
     }
 
+    /// Returns the amount that our `RetainedImage`
     fn center_img_rotation(&self) -> f32 {
         match self.tile.connector {
             ConnectorShape::Path(PathOrientation::Vertical) => 0.0,
@@ -132,8 +156,8 @@ impl TileWidget {
         }
     }
 
+    /// Renders all homes in `self.home_colors` onto `ui`
     fn render_homes(&self, ui: &mut egui::Ui, id: &str) {
-        let home_img = &HOME_IMG;
         Grid::new(format!("{} homes", id))
             .min_col_width(0.0)
             .min_row_height(0.0)
@@ -143,16 +167,13 @@ impl TileWidget {
                     if idx != 0 && idx % 2 == 0 {
                         ui.end_row();
                     }
-                    ui.add(
-                        Image::new(home_img.texture_id(ui.ctx()), Vec2::new(15.0, 15.0))
-                            .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
-                    );
+                    ui.add(home_image_with_color(ui, col, CELL_SIZE_2D * 0.3));
                 })
             });
     }
 
+    /// Renders all players in `self.player_colors` onto `ui`
     fn render_players(&self, ui: &mut egui::Ui, id: &str) {
-        let player_img = &PLAYER_IMG;
         Grid::new(format!("{} players", id))
             .min_col_width(0.0)
             .min_row_height(0.0)
@@ -165,24 +186,16 @@ impl TileWidget {
                         if idx != 0 && idx % 2 == 0 {
                             ui.end_row();
                         }
-                        ui.add(
-                            Image::new(player_img.texture_id(ui.ctx()), Vec2::new(15.0, 15.0))
-                                .tint(Color32::from_rgb(col.code.0, col.code.1, col.code.2)),
-                        );
+                        ui.add(player_image_with_color(ui, col, CELL_SIZE_2D * 0.3));
                     })
             });
     }
 
     fn gem_images(&self, ui: &Ui) -> (Image, Image) {
+        let gem_size = CELL_SIZE_2D * 0.8;
         (
-            Image::new(
-                GEM_IMGS[&self.tile.gems.0].texture_id(ui.ctx()),
-                Vec2::new(CELL_SIZE * 0.8, CELL_SIZE * 0.8),
-            ),
-            Image::new(
-                GEM_IMGS[&self.tile.gems.1].texture_id(ui.ctx()),
-                Vec2::new(CELL_SIZE * 0.8, CELL_SIZE * 0.8),
-            ),
+            Image::new(GEM_IMGS[&self.tile.gems.0].texture_id(ui.ctx()), gem_size),
+            Image::new(GEM_IMGS[&self.tile.gems.1].texture_id(ui.ctx()), gem_size),
         )
     }
 }
@@ -196,7 +209,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
         .rotate(90.0_f32.to_radians(), Vec2::splat(0.5));
 
     let (gem1_img, gem2_img) = widget.gem_images(ui);
-    // creates player grid
+
     // creates main grid for the tile
     Grid::new(format!("{} main", id))
         .min_col_width(0.0)
@@ -297,17 +310,31 @@ fn render_state_info(ui: &mut egui::Ui, state: &State) {
 
     let spare_text = RichText::new("Spare Tile:").heading().strong();
     let last_text = RichText::new("Last Slide:").heading().strong();
+    let curr_player_text = RichText::new("Current Player").heading().strong();
+    let no_players_text = RichText::new("No Players in Game!").heading().strong();
 
     ui.vertical_centered(|ui| {
-        ui.add_space(CELL_SIZE * 3.0);
+        ui.add_space(CELL_SIZE * 2.0);
         ui.label(spare_text);
         render_tile(ui, spare_tile_widget, "spare");
-        ui.add_space(CELL_SIZE * 3.0);
+
+        ui.add_space(CELL_SIZE * 2.0);
         ui.label(last_text);
         render_slide(ui, state);
+
+        ui.add_space(CELL_SIZE * 2.0);
+        if state.player_info.is_empty() {
+            ui.label(no_players_text);
+        } else {
+            ui.label(curr_player_text);
+            let curr_pl =
+                player_image_with_color(ui, &state.player_info[0].color, CELL_SIZE_2D * 0.5);
+            ui.add_sized(CELL_SIZE_2D * 0.5, curr_pl);
+        }
     });
 }
 
+/// Render `state` onto the `ui`
 fn render_state(ui: &mut egui::Ui, state: &State) {
     // create grid for the state
     Grid::new("state_grid")
@@ -318,6 +345,7 @@ fn render_state(ui: &mut egui::Ui, state: &State) {
         });
 }
 
+/// Trait describing types that can observe games run by a `Referee`
 pub trait Observer {
     /// Recieves a state from the referee to render
     fn recieve_state(&mut self, state: State);
@@ -327,13 +355,18 @@ pub trait Observer {
 }
 
 /// Contains all information needed for an ObserverGUI to render the game
+///
+/// Uses `Arc` and `Mutex` so the Observer is thread-safe :)
 #[derive(Debug, Default, Clone)]
 pub struct ObserverGUI {
+    /// `VecDeque` holding all the states the `ObserverGUI` has recieved
     states: Arc<Mutex<VecDeque<State>>>,
+    /// Flag indicating if the `Referee` has told the `ObserverGUI` the game has ended
     game_over: Arc<Mutex<bool>>,
 }
 
 impl Observer for ObserverGUI {
+    /// Recie
     fn recieve_state(&mut self, state: State) {
         self.states.lock().unwrap().push_back(state);
     }
@@ -343,16 +376,39 @@ impl Observer for ObserverGUI {
     }
 }
 
+/// Writes the `JsonRefereeState` representation of `state` to a path the user chooses
+fn save_json_state(state: State) {
+    let path = std::env::current_dir().unwrap();
+    if let Some(path) = rfd::FileDialog::new()
+        .set_directory(&path)
+        .add_filter("json", &[".json"])
+        .set_file_name("state.json")
+        .save_file()
+    {
+        let jrs: JsonRefereeState = state.into();
+        serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
+            .expect("Writing to json failed!");
+    };
+}
+
+// Allows `ObserverGUI`s to be rendered as as an `eframe::App`.
 impl eframe::App for ObserverGUI {
+    /// Updates the contents of our `ObserverGUI` window
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            // aquire the lock to `self.states`
             let mut states = self.states.lock().unwrap();
+
+            // if there are states to render, render the first state
             if !states.is_empty() {
                 render_state(ui, &states[0]);
             }
 
+            // draw the buttons below the state
             ui.with_layout(Layout::top_down_justified(Align::Center), |ui| {
+                // if we have a next state, display a "Next" button
                 if states.len() > 1 {
+                    // if the "Next" button is clicked, pop the first state from `self.states`
                     if ui.button("Next").clicked() {
                         states.pop_front();
                     }
@@ -360,20 +416,10 @@ impl eframe::App for ObserverGUI {
                     ui.label("No more states to render!");
                 };
 
+                // if we have a state to save, display a save button
                 if !states.is_empty() && ui.button("Save").clicked() {
-                    let path = std::env::current_dir().unwrap();
-                    if let Some(path) = rfd::FileDialog::new()
-                        .set_directory(&path)
-                        .add_filter("json", &[".json"])
-                        .set_file_name("state.json")
-                        .save_file()
-                    {
-                        let jrs: JsonRefereeState = states[0].clone().into();
-                        serde_json::to_writer_pretty(File::create(path).unwrap(), &jrs)
-                            .expect("Writing to json failed!");
-                    };
+                    save_json_state(states[0].clone());
                 }
-                drop(states);
             });
         });
     }
