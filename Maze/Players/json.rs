@@ -30,7 +30,7 @@ impl From<JsonStrategyDesignation> for NaiveStrategy {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum JsonChoice {
-    #[serde(rename(deserialize = "PASS"))]
+    #[serde(rename = "PASS")]
     Pass,
     Move(Index, JsonDirection, JsonDegree, Coordinate),
 }
