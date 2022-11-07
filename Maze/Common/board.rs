@@ -1,6 +1,6 @@
 use crate::gem::Gem;
 use crate::grid::{Grid, Position};
-use crate::tile::{CompassDirection, ConnectorShape, PathOrientation, Tile};
+use crate::tile::{CompassDirection, ConnectorShape, Tile};
 use std::collections::HashSet;
 use std::ops::Index;
 

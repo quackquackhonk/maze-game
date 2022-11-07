@@ -206,7 +206,7 @@ mod TileTests {
         use Gem::*;
         let mut tile = Tile {
             connector: Fork(North),
-            gems: (amethyst, garnet).into(),
+            gems: (Amethyst, Garnet).into(),
         };
 
         tile.rotate();
@@ -269,7 +269,7 @@ mod TileTests {
 
     #[test]
     pub fn test_connected() {
-        let gems = (Gem::amethyst, Gem::garnet);
+        let gems = (Gem::Amethyst, Gem::Garnet);
         assert!(Crossroads.connected(Crossroads, North));
         assert!(Crossroads.connected(Crossroads, South));
         assert!(Crossroads.connected(Crossroads, East));

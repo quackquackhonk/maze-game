@@ -11,7 +11,7 @@ use common::{
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
     Color, State,
 };
-use egui::{Align, Color32, Grid, Image, Label, Layout, RichText, Ui, Vec2};
+use egui::{Align, Color32, Grid, Image, Layout, RichText, Ui, Vec2};
 use egui_extras::RetainedImage;
 
 use lazy_static::lazy_static;

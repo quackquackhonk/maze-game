@@ -198,7 +198,7 @@ impl From<JsonBoard> for Board {
             grid,
             Tile {
                 connector: ConnectorShape::Crossroads,
-                gems: (Gem::amethyst, Gem::garnet).into(),
+                gems: (Gem::Amethyst, Gem::Garnet).into(),
             },
         )
     }
