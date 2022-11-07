@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types)]
 use std::collections::HashMap;
 
+use convert_case::{Case, Casing};
 use egui_extras::RetainedImage;
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
@@ -247,9 +248,9 @@ macro_rules! gem_insert {
         $map.insert(
             Gem::$name,
             egui_extras::RetainedImage::from_image_bytes(
-                format!("{}.png", stringify!($name).replace("_", "-")),
+                format!("{}.png", stringify!($name).to_case(Case::Kebab)),
                 GEM_RESOURCE_DIR
-                    .get_file(format!("{}.png", stringify!($name).replace("_", "-")))
+                    .get_file(format!("{}.png", stringify!($name).to_case(Case::Kebab)))
                     .unwrap()
                     .contents(),
             )
