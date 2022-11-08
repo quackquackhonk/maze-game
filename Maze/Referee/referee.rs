@@ -24,7 +24,7 @@ pub struct GameResult {
 /// Some(PlayerInfo) -> This `PlayerInfo` was the first player to reach their goal and then their
 /// home.
 /// None -> The game ended without a single winner, the Referee will calculate winners another way.
-pub type GameWinner = Option<PlayerInfo>;
+pub type GameWinner = Option<FullPlayerInfo>;
 
 pub struct Referee {
     rand: Box<dyn RngCore>,
@@ -77,7 +77,11 @@ impl Referee {
 
     /// Communicates all public information of the current `state` and each `Player`'s private goal
     /// to all `Player`s in `players`.
-    pub fn broadcast_initial_state(&self, state: &State, players: &mut [Box<dyn PlayerApi>]) {
+    pub fn broadcast_initial_state(
+        &self,
+        state: &State<FullPlayerInfo>,
+        players: &mut [Box<dyn Player>],
+    ) {
         let mut state = state.clone();
         for player in players {
             let goal = state.current_player_info().goal;
@@ -87,7 +91,11 @@ impl Referee {
     }
 
     /// Communicates the current state to all observers
-    fn broadcast_state_to_observers(&self, state: &State, observers: &mut Vec<Box<dyn Observer>>) {
+    fn broadcast_state_to_observers(
+        &self,
+        state: &State<FullPlayerInfo>,
+        observers: &mut Vec<Box<dyn Observer>>,
+    ) {
         for observer in observers {
             observer.recieve_state(state.clone());
         }
@@ -106,15 +114,15 @@ impl Referee {
     ///
     /// rotates `players` to the left once, and does the same to the internal `Vec<PlayerInfo>`
     /// stored inside `state`.
-    fn next_player(players: &mut [Box<dyn PlayerApi>], state: &mut State) {
+    fn next_player(players: &mut [Box<dyn Player>], state: &mut State<FullPlayerInfo>) {
         players.rotate_left(1);
         state.next_player();
     }
 
     pub fn run_from_state(
         &self,
-        state: &mut State,
-        players: &mut Vec<Box<dyn PlayerApi>>,
+        state: &mut State<FullPlayerInfo>,
+        players: &mut Vec<Box<dyn Player>>,
         observers: &mut Vec<Box<dyn Observer>>,
         reached_goal: &mut HashSet<Color>,
         kicked: &mut Vec<Box<dyn PlayerApi>>,
@@ -215,8 +223,8 @@ impl Referee {
     #[allow(clippy::type_complexity)]
     pub fn calculate_winners(
         winner: GameWinner,
-        players: Vec<Box<dyn PlayerApi>>,
-        state: &State,
+        players: Vec<Box<dyn Player>>,
+        state: &State<FullPlayerInfo>,
         reached_goal: HashSet<Color>,
     ) -> (Vec<Box<dyn PlayerApi>>, Vec<Box<dyn PlayerApi>>) {
         let mut losers = vec![];
@@ -335,7 +343,7 @@ mod tests {
         board::{Board, DefaultBoard},
         grid::Position,
         json::Name,
-        ColorName, PlayerInfo, State,
+        ColorName, FullPlayerInfo, PlayerInfo, State,
     };
     use players::{
         player::{LocalPlayer, PlayerApi, PlayerApiResult},
@@ -451,13 +459,13 @@ mod tests {
     #[test]
     fn test_next_player() {
         let mut state = State::default();
-        state.add_player(PlayerInfo {
+        state.add_player(FullPlayerInfo {
             home: (1, 1),
             position: (1, 1),
             goal: (0, 5),
             color: ColorName::Red.into(),
         });
-        state.add_player(PlayerInfo {
+        state.add_player(FullPlayerInfo {
             home: (1, 3),
             position: (1, 3),
             goal: (0, 3),
@@ -486,13 +494,13 @@ mod tests {
     #[test]
     fn test_calculate_winners() {
         let mut state = State::default();
-        state.add_player(PlayerInfo {
+        state.add_player(FullPlayerInfo {
             home: (0, 0),
             position: (1, 0),
             goal: (0, 5),
             color: ColorName::Red.into(),
         });
-        let won_player = PlayerInfo {
+        let won_player = FullPlayerInfo {
             home: (1, 0),
             position: (1, 6),
             goal: (6, 1),
