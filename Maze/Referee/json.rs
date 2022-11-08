@@ -1,6 +1,6 @@
 use common::{
     json::{Coordinate, JsonAction, JsonBoard, JsonColor, JsonTile, Name},
-    PlayerInfo, State,
+    FullPlayerInfo, PlayerInfo, State,
 };
 use players::strategy::NaiveStrategy;
 use serde::{Deserialize, Serialize};
@@ -46,7 +46,7 @@ pub struct JsonRefereeState {
     last: JsonAction,
 }
 
-impl From<JsonRefereeState> for State {
+impl From<JsonRefereeState> for State<FullPlayerInfo> {
     fn from(jrs: JsonRefereeState) -> Self {
         //        r#ref.run_game(players);
         State {
@@ -57,8 +57,8 @@ impl From<JsonRefereeState> for State {
     }
 }
 
-impl From<State> for JsonRefereeState {
-    fn from(st: State) -> Self {
+impl From<State<FullPlayerInfo>> for JsonRefereeState {
+    fn from(st: State<FullPlayerInfo>) -> Self {
         let (board, spare) = st.board.into();
         JsonRefereeState {
             board,
@@ -78,7 +78,7 @@ pub struct JsonRefereePlayer {
     color: JsonColor,
 }
 
-impl From<JsonRefereePlayer> for PlayerInfo {
+impl From<JsonRefereePlayer> for FullPlayerInfo {
     fn from(jrp: JsonRefereePlayer) -> Self {
         Self {
             home: jrp.home.into(),
@@ -89,8 +89,8 @@ impl From<JsonRefereePlayer> for PlayerInfo {
     }
 }
 
-impl From<PlayerInfo> for JsonRefereePlayer {
-    fn from(pi: PlayerInfo) -> Self {
+impl From<FullPlayerInfo> for JsonRefereePlayer {
+    fn from(pi: FullPlayerInfo) -> Self {
         JsonRefereePlayer {
             current: pi.position.into(),
             home: pi.home.into(),
