@@ -86,7 +86,7 @@ impl<S: Strategy> PlayerApi for LocalPlayer<S> {
 
 #[cfg(test)]
 mod tests {
-    use common::{board::DefaultBoard, json::Name, ColorName};
+    use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo};
 
     use crate::{
         player::PlayerApi,
