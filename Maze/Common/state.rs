@@ -102,6 +102,7 @@ pub trait PlayerInfo {
     fn reached_home(&self) -> bool;
     fn color(&self) -> Color;
 }
+
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
 /// `Gem` and their `Color`.
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
@@ -149,6 +150,45 @@ impl PlayerInfo for FullPlayerInfo {
     /// Has this `Player` reached their home?
     fn reached_home(&self) -> bool {
         self.home == self.position
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct PubPlayerInfo {
+    pub current: Position,
+    pub home: Position,
+    pub color: Color,
+}
+
+impl PlayerInfo for PubPlayerInfo {
+    fn position(&self) -> Position {
+        todo!()
+    }
+
+    fn set_position(&mut self, dest: Position) {
+        todo!()
+    }
+
+    fn home(&self) -> Position {
+        todo!()
+    }
+
+    fn reached_home(&self) -> bool {
+        todo!()
+    }
+
+    fn color(&self) -> Color {
+        todo!()
+    }
+}
+
+impl From<FullPlayerInfo> for PubPlayerInfo {
+    fn from(pi: FullPlayerInfo) -> Self {
+        PubPlayerInfo {
+            current: pi.position(),
+            home: pi.home(),
+            color: pi.color(),
+        }
     }
 }
 

@@ -70,11 +70,11 @@ impl<S: Strategy> Player for LocalPlayer<S> {
 
 #[cfg(test)]
 mod tests {
-    use common::{board::DefaultBoard, json::Name, ColorName};
+    use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo};
 
     use crate::{
         player::Player,
-        strategy::{NaiveStrategy, PlayerBoardState, PubPlayerInfo, Strategy},
+        strategy::{NaiveStrategy, PlayerBoardState, Strategy},
     };
 
     use super::LocalPlayer;
