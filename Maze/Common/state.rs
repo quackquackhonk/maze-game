@@ -17,7 +17,7 @@ pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Color {
     /// The original name of the color.
     /// Is either the name of a color, like "red", or the Hex Color code for that color
@@ -93,18 +93,27 @@ impl From<ColorName> for Color {
     }
 }
 
+/// Describes types that can be used as the information a `State` stores on its `Player`s
+pub trait PlayerInfo {
+    fn position(&self) -> Position;
+    fn set_position(&mut self, dest: Position);
+    fn home(&self) -> Position;
+    /// Has this Player reached their home tile?
+    fn reached_home(&self) -> bool;
+    fn color(&self) -> Color;
+}
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
 /// `Gem` and their `Color`.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct PlayerInfo {
-    pub home: Position,
-    pub position: Position,
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
+pub struct FullPlayerInfo {
+    home: Position,
+    position: Position,
     pub goal: Position,
     // Invariant: Every Player should have their own color
-    pub color: Color,
+    color: Color,
 }
 
-impl PlayerInfo {
+impl FullPlayerInfo {
     /// Constructs a new `Player` from its fields.
     pub fn new(home: Position, position: Position, goal: Position, color: Color) -> Self {
         Self {
@@ -119,7 +128,24 @@ impl PlayerInfo {
     fn reached_goal(&self) -> bool {
         self.goal == self.position
     }
+}
 
+impl PlayerInfo for FullPlayerInfo {
+    fn position(&self) -> Position {
+        self.position
+    }
+
+    fn set_position(&mut self, dest: Position) {
+        self.position = dest;
+    }
+
+    fn home(&self) -> Position {
+        self.home
+    }
+
+    fn color(&self) -> Color {
+        self.color.clone()
+    }
     /// Has this `Player` reached their home?
     fn reached_home(&self) -> bool {
         self.home == self.position
@@ -128,16 +154,18 @@ impl PlayerInfo {
 
 /// Represents the State of a single Maze Game.
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
-pub struct State {
+pub struct State<PInfo: PlayerInfo + Clone> {
     pub board: Board,
-    pub player_info: VecDeque<PlayerInfo>,
+    pub player_info: VecDeque<PInfo>,
     /// Invariant: active_player must be < player_info.len();
     /// its unsigned so it will always be <= 0.
     pub previous_slide: Option<Slide>,
 }
 
-impl State {
-    pub fn new(board: Board, player_info: Vec<PlayerInfo>) -> Self {
+pub const BOARD_SIZE: usize = 7;
+
+impl<PInfo: PlayerInfo + Clone> State<PInfo> {
+    pub fn new(board: Board, player_info: Vec<PInfo>) -> Self {
         State {
             board,
             player_info: player_info.into(),
@@ -150,7 +178,7 @@ impl State {
         let rows = self.board.grid.len();
         let cols = self.board.grid[0].len();
         let mut state = self.clone();
-        let start = slide.move_position(self.player_info[0].position, cols, rows);
+        let start = slide.move_position(self.player_info[0].position(), cols, rows);
         state.rotate_spare(rotations);
         match state.slide_and_insert(slide) {
             Ok(_) => destination != start && state.move_player(destination).is_ok(),
@@ -168,11 +196,11 @@ impl State {
 
     fn slide_players(&mut self, &slide: &Slide) {
         self.player_info.iter_mut().for_each(|player_info| {
-            player_info.position = slide.move_position(
-                player_info.position,
+            player_info.set_position(slide.move_position(
+                player_info.position(),
                 self.board.grid[0].len(),
                 self.board.grid.len(),
-            )
+            ))
         });
     }
 
@@ -220,17 +248,17 @@ impl State {
     pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
         if !self.can_reach_position(destination) {
             Err("Active player cannot reach the requested tile")?;
-        } else if self.player_info[0].position == destination {
+        } else if self.player_info[0].position() == destination {
             Err("Active player is already on that tile")?;
         }
-        self.player_info[0].position = destination;
+        self.player_info[0].set_position(destination);
         Ok(())
     }
 
     /// Returns a Vec of positions reachable by the active player
     pub fn reachable_by_player(&self) -> Vec<Position> {
         self.board
-            .reachable(self.player_info[0].position)
+            .reachable(self.player_info[0].position())
             .expect("Positions in `self.player_info` are never out of bounds")
     }
 
@@ -238,16 +266,9 @@ impl State {
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
         self.board
-            .reachable(self.player_info[0].position)
+            .reachable(self.player_info[0].position())
             .expect("Active player positions are always in bounds")
             .contains(&target)
-    }
-
-    /// Checks if the currently active `Player` has landed on its goal tile
-    #[must_use]
-    pub fn player_reached_goal(&self) -> bool {
-        let player_info = &self.player_info[0];
-        player_info.reached_goal()
     }
 
     /// Checks if the currently active `Player` has landed on its home tile
@@ -258,7 +279,7 @@ impl State {
     }
 
     /// Adds a `Player` to the end of the list of currently active players
-    pub fn add_player(&mut self, to_add: PlayerInfo) {
+    pub fn add_player(&mut self, to_add: PInfo) {
         self.player_info.push_back(to_add);
     }
 
@@ -270,15 +291,25 @@ impl State {
     }
 
     /// Removes the currently active `Player` from game.
-    pub fn remove_player(&mut self) -> BoardResult<PlayerInfo> {
+    pub fn remove_player(&mut self) -> BoardResult<PInfo> {
         self.player_info
             .pop_front()
             .ok_or_else(|| "No Players left".to_string())
     }
 
     /// Returns a reference to the currently active `PlayerInfo`
-    pub fn current_player_info(&self) -> &PlayerInfo {
+    pub fn current_player_info(&self) -> &PInfo {
         &self.player_info[0]
+    }
+}
+
+/// Methods for `State<FullPlayerInfo>` types
+impl State<FullPlayerInfo> {
+    /// Checks if the currently active `Player` has landed on its goal tile
+    #[must_use]
+    pub fn player_reached_goal(&self) -> bool {
+        let player_info = &self.player_info[0];
+        player_info.reached_goal()
     }
 }
 
@@ -294,7 +325,7 @@ mod StateTests {
 
         assert!(state.player_info.is_empty());
 
-        state.add_player(PlayerInfo {
+        state.add_player(FullPlayerInfo {
             home: (0, 0),
             position: (0, 0),
             goal: (1, 1),
@@ -305,7 +336,7 @@ mod StateTests {
 
         assert_eq!(state.player_info.len(), 1);
 
-        state.add_player(PlayerInfo::new(
+        state.add_player(FullPlayerInfo::new(
             (0, 1),
             (1, 0),
             (1, 1),
@@ -318,7 +349,7 @@ mod StateTests {
     #[test]
     fn test_remove_player() {
         let mut state = State::default();
-        state.add_player(PlayerInfo::new(
+        state.add_player(FullPlayerInfo::new(
             (0, 0),
             (0, 0),
             (1, 1),
@@ -340,13 +371,13 @@ mod StateTests {
         let mut state = State::default();
         // Does not fail
         state.next_player();
-        let p1 = PlayerInfo::new((0, 0), (0, 0), (1, 1), ColorName::Red.into());
+        let p1 = FullPlayerInfo::new((0, 0), (0, 0), (1, 1), ColorName::Red.into());
         state.add_player(p1.clone());
         assert_eq!(state.player_info[0], p1);
         state.next_player();
         assert_eq!(state.player_info[0], p1);
 
-        let p2 = PlayerInfo::new((0, 0), (0, 0), (1, 3), ColorName::Green.into());
+        let p2 = FullPlayerInfo::new((0, 0), (0, 0), (1, 3), ColorName::Green.into());
         state.add_player(p2.clone());
         assert_eq!(state.player_info[0], p1);
         state.next_player();
@@ -354,7 +385,7 @@ mod StateTests {
         state.next_player();
         assert_eq!(state.player_info[0], p1);
 
-        let p3 = PlayerInfo::new((0, 0), (0, 0), (1, 5), ColorName::Yellow.into());
+        let p3 = FullPlayerInfo::new((0, 0), (0, 0), (1, 5), ColorName::Yellow.into());
         state.add_player(p3.clone());
         assert_eq!(state.player_info[0], p1);
         state.next_player();
@@ -367,7 +398,7 @@ mod StateTests {
 
     #[test]
     fn test_slide_and_insert() {
-        let mut state = State::default();
+        let mut state: State<FullPlayerInfo> = State::default();
 
         let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
@@ -379,7 +410,7 @@ mod StateTests {
 
     #[test]
     fn test_slide_no_undo() {
-        let mut state = State::default();
+        let mut state: State<FullPlayerInfo> = State::default();
 
         let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
@@ -399,13 +430,13 @@ mod StateTests {
     #[test]
     fn test_slide_players() {
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo::new(
+        state.player_info.push_back(FullPlayerInfo::new(
             (0, 0),
             (0, 0),
             (1, 1),
             ColorName::Red.into(),
         ));
-        state.player_info.push_back(PlayerInfo::new(
+        state.player_info.push_back(FullPlayerInfo::new(
             (0, 0),
             (1, 2),
             (1, 3),
@@ -446,7 +477,7 @@ mod StateTests {
 
     #[test]
     fn test_rotate_spare() {
-        let mut state = State::default();
+        let mut state: State<FullPlayerInfo> = State::default();
 
         assert_eq!(state.board.extra.connector, Crossroads);
         state.rotate_spare(1);
@@ -474,13 +505,13 @@ mod StateTests {
     #[test]
     fn test_can_reach_position() {
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Yellow.into(),
         });
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (1, 1).into(),
@@ -547,19 +578,19 @@ mod StateTests {
     #[test]
     fn test_reachable_by_player() {
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Green.into(),
         });
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (1, 1),
             color: ColorName::Red.into(),
         });
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (5, 1),
             position: (3, 6),
             goal: (1, 1),
@@ -616,19 +647,19 @@ mod StateTests {
     #[test]
     fn test_move_player() {
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Yellow.into(),
         });
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (1, 3),
             color: ColorName::Red.into(),
         });
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (5, 1),
             position: (0, 4),
             goal: (1, 5),
@@ -678,7 +709,7 @@ mod StateTests {
     fn test_player_reached_home() {
         // home tile is not on the same connected component as active player
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (2, 3),
             goal: (1, 1),
@@ -688,7 +719,7 @@ mod StateTests {
 
         // player is on the same connected component, but not on their home tile
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (0, 1),
             goal: (1, 3),
@@ -700,13 +731,13 @@ mod StateTests {
         state.next_player();
         // active player is not on a home tile, but another player is
         let mut state = State::default();
-        state.player_info.push_front(PlayerInfo {
+        state.player_info.push_front(FullPlayerInfo {
             home: (1, 1),
             position: (2, 3),
             goal: (1, 1),
             color: ColorName::Green.into(),
         });
-        state.player_info.push_front(PlayerInfo {
+        state.player_info.push_front(FullPlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (1, 3),
@@ -721,7 +752,7 @@ mod StateTests {
     fn test_player_reached_goal() {
         // Current Implementation of the Default board has Garnets and Amethysts in every Tile
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (2, 3),
             goal: (1, 3),
@@ -730,7 +761,7 @@ mod StateTests {
         assert!(!state.player_reached_goal());
 
         let mut state = State::default();
-        state.player_info.push_back(PlayerInfo {
+        state.player_info.push_back(FullPlayerInfo {
             home: (1, 1),
             position: (2, 3),
             goal: (2, 3),
