@@ -4,7 +4,7 @@ use std::iter::repeat;
 use common::board::Board;
 use common::tile::CompassDirection;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{Color, PlayerInfo, State, BOARD_SIZE};
+use common::{FullPlayerInfo, PubPlayerInfo, State, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
@@ -14,29 +14,12 @@ pub struct PlayerBoardState {
     pub last: Option<Slide>,
 }
 
-impl From<State> for PlayerBoardState {
-    fn from(state: State) -> Self {
+impl From<State<FullPlayerInfo>> for PlayerBoardState {
+    fn from(state: State<FullPlayerInfo>) -> Self {
         PlayerBoardState {
             board: state.board,
             players: state.player_info.into_iter().map(|pi| pi.into()).collect(),
             last: state.previous_slide,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct PubPlayerInfo {
-    pub current: Position,
-    pub home: Position,
-    pub color: Color,
-}
-
-impl From<PlayerInfo> for PubPlayerInfo {
-    fn from(pi: PlayerInfo) -> Self {
-        PubPlayerInfo {
-            current: pi.position,
-            home: pi.home,
-            color: pi.color,
         }
     }
 }

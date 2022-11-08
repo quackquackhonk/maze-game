@@ -8,7 +8,7 @@ use crate::{
     board::{Board, Slide},
     gem::Gem,
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, ColorName, FullPlayerInfo, PlayerInfo, State,
+    Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
 };
 
 #[derive(Debug, PartialEq, Eq)]
@@ -284,6 +284,17 @@ impl From<JsonState> for State<FullPlayerInfo> {
     }
 }
 
+impl From<JsonState> for State<PubPlayerInfo> {
+    fn from(jstate: JsonState) -> Self {
+        let player_info: Vec<PubPlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
+        State {
+            board: (jstate.board, jstate.spare).into(),
+            player_info: player_info.into(),
+            previous_slide: jstate.last.into(),
+        }
+    }
+}
+
 /// JSON representation for a single `Tile` in the `Board`
 #[derive(Debug, Deserialize, Serialize)]
 #[allow(dead_code)]
@@ -334,6 +345,19 @@ impl From<JsonPlayer> for FullPlayerInfo {
                 .try_into()
                 .expect("Json Color values are always valid"),
         )
+    }
+}
+
+impl From<JsonPlayer> for PubPlayerInfo {
+    fn from(jp: JsonPlayer) -> Self {
+        Self {
+            current: jp.current.into(),
+            home: jp.home.into(),
+            color: jp
+                .color
+                .try_into()
+                .expect("Json Color values are always valid"),
+        }
     }
 }
 
