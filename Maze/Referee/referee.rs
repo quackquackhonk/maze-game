@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
-use common::{Color, PlayerInfo, State, BOARD_SIZE};
-use players::player::PlayerApi;
+use common::{Color, FullPlayerInfo, PlayerInfo, State, BOARD_SIZE};
+use players::player::Player;
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
@@ -465,18 +465,18 @@ mod tests {
     #[test]
     fn test_next_player() {
         let mut state = State::default();
-        state.add_player(FullPlayerInfo::new(
-            (1, 1),
-            (1, 1),
-            (0, 5),
-            ColorName::Red.into(),
-        ));
-        state.add_player(FullPlayerInfo::new(
-            (1, 3),
-            (1, 3),
-            (0, 3),
-            ColorName::Blue.into(),
-        ));
+        state.add_player(FullPlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: (0, 5),
+            color: ColorName::Red.into(),
+        });
+        state.add_player(FullPlayerInfo {
+            home: (1, 3),
+            position: (1, 3),
+            goal: (0, 3),
+            color: ColorName::Blue.into(),
+        });
 
         let mock = MockPlayer::default();
         let mut players: Vec<Box<dyn PlayerApi>> = vec![
