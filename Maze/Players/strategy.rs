@@ -6,7 +6,7 @@ use common::board::Board;
 use common::tile::CompassDirection;
 use common::PubPlayerInfo;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{FullPlayerInfo, State, BOARD_SIZE};
+use common::{FullPlayerInfo, PubPlayerInfo, State, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
