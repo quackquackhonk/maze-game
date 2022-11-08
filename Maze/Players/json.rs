@@ -1,12 +1,11 @@
 //! Contains JSON definitions for data in the `player` module
-use common::board::{Board, Slide};
-use common::json::{
-    Coordinate, Index, JsonDegree, JsonDirection, JsonError, JsonPlayer, JsonState,
-};
-use common::tile::CompassDirection;
+
+use common::board::Slide;
+use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonState};
+use common::PubPlayerInfo;
 use serde::{Deserialize, Serialize};
 
-use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove, PubPlayerInfo};
+use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove};
 
 /// Describes either a `Reimann` or a `Euclid` strategy
 #[derive(Debug, Deserialize)]
@@ -76,17 +75,6 @@ impl From<PlayerAction> for JsonChoice {
     }
 }
 
-impl TryFrom<JsonPlayer> for PubPlayerInfo {
-    type Error = String;
-    fn try_from(jp: JsonPlayer) -> Result<Self, Self::Error> {
-        Ok(Self {
-            current: jp.current.into(),
-            home: jp.home.into(),
-            color: jp.color.try_into()?,
-        })
-    }
-}
-
 impl From<JsonState> for PlayerBoardState {
     fn from(js: JsonState) -> Self {
         Self {
@@ -94,9 +82,8 @@ impl From<JsonState> for PlayerBoardState {
             players: js
                 .plmt
                 .into_iter()
-                .map(|player| player.try_into())
-                .collect::<Result<Vec<PubPlayerInfo>, String>>()
-                .unwrap(),
+                .map(|player| player.into())
+                .collect::<Vec<PubPlayerInfo>>(),
             last: js.last.into(),
         }
     }
