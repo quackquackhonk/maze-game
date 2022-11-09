@@ -3,8 +3,8 @@ use std::{
     io::{Read, Write},
 };
 
-use common::{json::Name, State};
-use players::player::{LocalPlayer, PlayerApi};
+use common::{json::Name, FullPlayerInfo, State};
+use players::player::{LocalPlayer, Player};
 use referee::{
     json::{JsonRefereeState, PS},
     observer::Observer,
