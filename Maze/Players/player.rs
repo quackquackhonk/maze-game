@@ -1,21 +1,34 @@
+use std::io;
+
 use crate::strategy::{PlayerAction, PlayerBoardState, Strategy};
 use common::board::{Board, DefaultBoard};
 use common::grid::Position;
 use common::json::Name;
+use thiserror::Error;
+
+pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
+
+#[derive(Error, Debug)]
+pub enum PlayerApiError {
+    #[error("timeout reached when attempting to recieve a response")]
+    Timeout(#[from] io::Error),
+    #[error("respnse has incorrect format")]
+    WrongFormat(#[from] serde_json::Error),
+}
 
 /// Trait describing the methods that `Player`s must implement
-pub trait Player {
+pub trait PlayerApi {
     /// Returns the name of this Player
-    fn name(&self) -> Name;
+    fn name(&self) -> PlayerApiResult<Name>;
     /// Returns a `Board` with at least `cols` columns and `rows` rows
-    fn propose_board0(&self, cols: u32, rows: u32) -> Board;
+    fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board>;
     /// The player receives a `PlayerBoardState`, which is all the publicly available information
     /// in the game, and its own private goal tile.
-    fn setup(&mut self, state: Option<PlayerBoardState>, goal: Position);
+    fn setup(&mut self, state: Option<PlayerBoardState>, goal: Position) -> PlayerApiResult<()>;
     /// Returns a `PlayerAction` based on the given `PlayerBoardState`
-    fn take_turn(&self, state: PlayerBoardState) -> PlayerAction;
+    fn take_turn(&self, state: PlayerBoardState) -> PlayerApiResult<PlayerAction>;
     /// The player is informed if they won or not.
-    fn won(&mut self, did_win: bool);
+    fn won(&mut self, did_win: bool) -> PlayerApiResult<()>;
 }
 
 /// Represents a Local AI Player
@@ -38,34 +51,37 @@ impl<S: Strategy> LocalPlayer<S> {
     }
 }
 
-impl<S: Strategy> Player for LocalPlayer<S> {
-    fn name(&self) -> Name {
-        self.name.clone()
+impl<S: Strategy> PlayerApi for LocalPlayer<S> {
+    fn name(&self) -> PlayerApiResult<Name> {
+        Ok(self.name.clone())
     }
 
-    fn propose_board0(&self, _cols: u32, _rows: u32) -> Board {
+    fn propose_board0(&self, _cols: u32, _rows: u32) -> PlayerApiResult<Board> {
         // FIXME: this shouldn't just propose the default board
-        DefaultBoard::<7, 7>::default_board()
+        Ok(DefaultBoard::<7, 7>::default_board())
     }
 
     /// # Effect
     /// Sets `self.goal = Some(goal)`.
-    fn setup(&mut self, _state: Option<PlayerBoardState>, goal: Position) {
+    fn setup(&mut self, _state: Option<PlayerBoardState>, goal: Position) -> PlayerApiResult<()> {
         self.goal = Some(goal);
+        Ok(())
     }
 
-    fn take_turn(&self, state: PlayerBoardState) -> PlayerAction {
+    fn take_turn(&self, state: PlayerBoardState) -> PlayerApiResult<PlayerAction> {
         let start = state.players[0].current;
-        self.strategy.get_move(
+        Ok(self.strategy.get_move(
             state,
             start,
             self.goal
                 .expect("setup() needs to be called before take_turn()"),
-        )
+        ))
     }
 
     /// Does nothing
-    fn won(&mut self, _did_win: bool) {}
+    fn won(&mut self, _did_win: bool) -> PlayerApiResult<()> {
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -73,7 +89,7 @@ mod tests {
     use common::{board::DefaultBoard, json::Name, ColorName};
 
     use crate::{
-        player::Player,
+        player::PlayerApi,
         strategy::{NaiveStrategy, PlayerBoardState, PubPlayerInfo, Strategy},
     };
 
@@ -87,7 +103,7 @@ mod tests {
             goal: None,
         };
 
-        assert_eq!(player.name(), Name::from_static("bill"));
+        assert_eq!(player.name().unwrap(), Name::from_static("bill"));
     }
 
     #[test]
@@ -99,7 +115,7 @@ mod tests {
         };
 
         assert_eq!(
-            player.propose_board0(7, 7),
+            player.propose_board0(7, 7).unwrap(),
             DefaultBoard::<7, 7>::default_board()
         );
     }
@@ -119,11 +135,15 @@ mod tests {
             players: Default::default(),
             last: None,
         });
-        player.setup(state, (1, 1));
+        player
+            .setup(state, (1, 1))
+            .expect("LocalPlayers are infallible");
         assert!(player.goal.is_some());
         assert_eq!(player.goal.unwrap(), (1, 1));
 
-        player.setup(None, (2, 1));
+        player
+            .setup(None, (2, 1))
+            .expect("LocalPlayers are infallible");
         assert_eq!(player.goal.unwrap(), (2, 1));
     }
 
@@ -140,7 +160,9 @@ mod tests {
             players: Default::default(),
             last: None,
         });
-        player.setup(state, (1, 1));
+        player
+            .setup(state, (1, 1))
+            .expect("LocalPlayers are infallible");
 
         let state = PlayerBoardState {
             board: DefaultBoard::<7, 7>::default_board(),
@@ -152,7 +174,7 @@ mod tests {
             last: None,
         };
 
-        let turn = player.take_turn(state.clone());
+        let turn = player.take_turn(state.clone()).unwrap();
         assert_eq!(turn, NaiveStrategy::Euclid.get_move(state, (0, 0), (1, 1)));
     }
 }

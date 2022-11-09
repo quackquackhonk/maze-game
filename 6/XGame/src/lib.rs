@@ -4,7 +4,7 @@ use std::{
 };
 
 use common::{json::Name, State};
-use players::player::{LocalPlayer, Player};
+use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},
     observer::Observer,
@@ -48,10 +48,10 @@ pub fn read_and_write_json(
 ) -> Result<(), String> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let mut players: Vec<Box<dyn Player>> = match input.next().ok_or("asdasdas")? {
+    let mut players: Vec<Box<dyn PlayerApi>> = match input.next().ok_or("asdasdas")? {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
-            .map(|pss| -> Box<dyn Player> {
+            .map(|pss| -> Box<dyn PlayerApi> {
                 let (name, strategy) = pss.into();
                 Box::new(LocalPlayer::new(name, strategy))
             })
@@ -77,7 +77,7 @@ pub fn read_and_write_json(
         &mut kicked,
     );
     let (winners, _losers) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
-    let mut winner_names: Vec<Name> = winners.into_iter().map(|w| w.name()).collect();
+    let mut winner_names: Vec<Name> = winners.into_iter().flat_map(|w| w.name()).collect();
     winner_names.sort();
 
     write_json_out_to_writer(winner_names, writer)?;
