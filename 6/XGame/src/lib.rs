@@ -4,7 +4,7 @@ use std::{
 };
 
 use common::{json::Name, FullPlayerInfo, State};
-use players::player::{LocalPlayer, Player};
+use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},
     observer::Observer,
