@@ -136,8 +136,6 @@ pub struct State {
     pub previous_slide: Option<Slide>,
 }
 
-pub const BOARD_SIZE: usize = 7;
-
 impl State {
     pub fn new(board: Board, player_info: Vec<PlayerInfo>) -> Self {
         State {

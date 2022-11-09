@@ -23,12 +23,22 @@ impl Board {
         }
     }
 
+    #[inline]
     pub fn num_rows(&self) -> usize {
         self.grid.len()
     }
 
+    pub fn slideable_rows(&self) -> impl Iterator<Item = usize> {
+        (0..=self.num_rows()).step_by(2)
+    }
+
+    #[inline]
     pub fn num_cols(&self) -> usize {
         self.grid[0].len()
+    }
+
+    pub fn slideable_cols(&self) -> impl Iterator<Item = usize> {
+        (0..=self.num_cols()).step_by(2)
     }
 
     /// Slides the given Slide struct command and inserts the spare tile in the location of the

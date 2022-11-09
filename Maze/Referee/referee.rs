@@ -2,7 +2,8 @@ use std::collections::HashSet;
 
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
-use common::{Color, PlayerInfo, State, BOARD_SIZE};
+use common::{Color, PlayerInfo, State};
+use itertools::Itertools;
 use players::player::PlayerApi;
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
@@ -42,9 +43,7 @@ impl Referee {
     /// This method will panic is `player` is an empty vector
     fn get_player_boards(&self, players: &[Box<dyn PlayerApi>]) -> Board {
         // FIXME: this should actually ask every player for a board
-        players[0]
-            .propose_board0(BOARD_SIZE as u32, BOARD_SIZE as u32)
-            .unwrap()
+        players[0].propose_board0(7, 7).unwrap()
     }
 
     /// Given a `Board` and the list of `Player`s, creates an initial `State` for this game.
@@ -52,11 +51,28 @@ impl Referee {
     /// This will assign each player a Goal and a home tile, and set each `Player`'s current
     /// position to be their home tile.
     fn make_initial_state(&mut self, players: &[Box<dyn PlayerApi>], board: Board) -> State {
+        // This is done to prevent recreating the slidable rows iterator over and over again.
+        let slideable_cols = board.slideable_cols().collect::<Vec<_>>();
+        let slideable_rows = board.slideable_cols().collect::<Vec<_>>();
+
+        // The possible locations for homes
+        let mut possible_homes = (0..board.num_cols())
+            .cartesian_product(0..board.num_rows())
+            .filter(|(col, row)| !slideable_cols.contains(col) && !slideable_rows.contains(row))
+            .collect::<Vec<_>>();
+
+        // The possible locations for goals, remove the filter here if goals become movable tiles.
+        let possible_goals = (0..board.num_cols())
+            .cartesian_product(0..board.num_rows())
+            .filter(|(col, row)| !slideable_cols.contains(col) && !slideable_rows.contains(row))
+            .collect::<Vec<_>>();
+
         let player_info = players
             .iter()
             .map(|_| {
-                let home: Position = gen_immovable_tile_pos(&mut self.rand);
-                let goal: Position = gen_immovable_tile_pos(&mut self.rand);
+                let home: Position =
+                    possible_homes.remove(self.rand.gen_range(0..possible_homes.len()));
+                let goal: Position = possible_goals[self.rand.gen_range(0..possible_goals.len())];
                 PlayerInfo::new(
                     home,
                     home, /* players start on their home tile */
@@ -321,10 +337,10 @@ impl Referee {
     }
 }
 
-fn gen_immovable_tile_pos(rng: &mut impl Rng) -> Position {
+fn gen_immovable_tile_pos(rng: &mut impl Rng, board: &Board) -> Position {
     (
-        rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
-        rng.gen_range(0..BOARD_SIZE / 2) * 2 + 1,
+        rng.gen_range(0..board.num_cols() / 2) * 2 + 1,
+        rng.gen_range(0..board.num_rows() / 2) * 2 + 1,
     )
 }
 
@@ -425,12 +441,12 @@ mod tests {
         let players: Vec<Box<dyn PlayerApi>> = vec![player, Box::new(MockPlayer::default())];
         let mut state = referee.make_initial_state(&players, DefaultBoard::<7, 7>::default_board());
         assert_eq!(state.current_player_info().home, (1, 3));
-        assert_eq!(state.current_player_info().goal, (3, 3));
+        assert_eq!(state.current_player_info().goal, (5, 5));
         assert_eq!(state.current_player_info().position, (1, 3));
         state.next_player();
-        assert_eq!(state.current_player_info().home, (1, 1));
+        assert_eq!(state.current_player_info().home, (3, 1));
         assert_eq!(state.current_player_info().goal, (5, 3));
-        assert_eq!(state.current_player_info().position, (1, 1));
+        assert_eq!(state.current_player_info().position, (3, 1));
     }
 
     #[test]
@@ -599,8 +615,8 @@ mod tests {
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         dbg!(mock);
-        assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
         assert_eq!(winners.len(), 1);
+        assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
         assert!(kicked.is_empty());
     }
 }
