@@ -3,8 +3,9 @@ use std::iter::repeat;
 
 use common::board::Board;
 use common::tile::CompassDirection;
+use common::PubPlayerInfo;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{FullPlayerInfo, PubPlayerInfo, State, BOARD_SIZE};
+use common::{FullPlayerInfo, State, BOARD_SIZE};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
@@ -438,7 +439,7 @@ mod StrategyTests {
             ],
             last: None,
         };
-        let reimann_move = reimann.get_move(board_state, (6, 4), (2, 0));
+        let reimann_move = reimann.get_move(board_state.clone(), (6, 4), (2, 0));
         assert!(reimann_move.is_some());
         let reimann_move = reimann_move.unwrap();
         // slides row 4 east to wrap around to (0, 4) then move to (0, 2)
@@ -450,6 +451,12 @@ mod StrategyTests {
                 destination: (0, 2),
             }
         );
+
+        let mut any_passes = (0..BOARD_SIZE)
+            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+            .map(|dest| reimann.get_move(board_state.clone(), (3, 3), dest))
+            .filter(|m| m.is_none());
+        assert!(any_passes.next().is_none());
     }
 
     #[test]
