@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
 use common::{Color, FullPlayerInfo, PlayerInfo, State, BOARD_SIZE};
-use players::player::Player;
+use players::player::PlayerApi;
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
@@ -53,7 +53,7 @@ impl Referee {
     /// position to be their home tile.
     fn make_initial_state(
         &mut self,
-        players: &[Box<dyn Player>],
+        players: &[Box<dyn PlayerApi>],
         board: Board,
     ) -> State<FullPlayerInfo> {
         let player_info = players
@@ -78,7 +78,7 @@ impl Referee {
     pub fn broadcast_initial_state(
         &self,
         state: &State<FullPlayerInfo>,
-        players: &mut [Box<dyn Player>],
+        players: &mut [Box<dyn PlayerApi>],
     ) {
         let mut state = state.clone();
         for player in players {
@@ -112,7 +112,7 @@ impl Referee {
     ///
     /// rotates `players` to the left once, and does the same to the internal `Vec<PlayerInfo>`
     /// stored inside `state`.
-    fn next_player(players: &mut [Box<dyn Player>], state: &mut State<FullPlayerInfo>) {
+    fn next_player(players: &mut [Box<dyn PlayerApi>], state: &mut State<FullPlayerInfo>) {
         players.rotate_left(1);
         state.next_player();
     }
@@ -120,7 +120,7 @@ impl Referee {
     pub fn run_from_state(
         &self,
         state: &mut State<FullPlayerInfo>,
-        players: &mut Vec<Box<dyn Player>>,
+        players: &mut Vec<Box<dyn PlayerApi>>,
         observers: &mut Vec<Box<dyn Observer>>,
         reached_goal: &mut HashSet<Color>,
         kicked: &mut Vec<Box<dyn PlayerApi>>,
@@ -221,12 +221,12 @@ impl Referee {
     #[allow(clippy::type_complexity)]
     pub fn calculate_winners(
         winner: GameWinner,
-        players: Vec<Box<dyn Player>>,
+        players: Vec<Box<dyn PlayerApi>>,
         state: &State<FullPlayerInfo>,
         reached_goal: HashSet<Color>,
     ) -> (Vec<Box<dyn PlayerApi>>, Vec<Box<dyn PlayerApi>>) {
         let mut losers = vec![];
-        let zipped_players: Box<dyn Iterator<Item = (Box<dyn PlayerApi>, &PlayerInfo)>> =
+        let zipped_players: Box<dyn Iterator<Item = (Box<dyn PlayerApi>, &FullPlayerInfo)>> =
             if reached_goal.is_empty() {
                 Box::new(players.into_iter().zip(state.player_info.iter()))
             } else {
@@ -487,14 +487,14 @@ mod tests {
             )),
         ];
         assert_eq!(players[0].name().unwrap(), "bob");
-        assert_eq!(state.player_info[0].color, ColorName::Red.into());
+        assert_eq!(state.player_info[0].color(), ColorName::Red.into());
         assert_eq!(players[1].name().unwrap(), "jill");
-        assert_eq!(state.player_info[1].color, ColorName::Blue.into());
+        assert_eq!(state.player_info[1].color(), ColorName::Blue.into());
         Referee::next_player(&mut players, &mut state);
         assert_eq!(players[1].name().unwrap(), "bob");
-        assert_eq!(state.player_info[1].color, ColorName::Red.into());
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
         assert_eq!(players[0].name().unwrap(), "jill");
-        assert_eq!(state.player_info[0].color, ColorName::Blue.into());
+        assert_eq!(state.player_info[0].color(), ColorName::Blue.into());
     }
 
     #[test]

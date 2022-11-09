@@ -89,7 +89,7 @@ mod tests {
     use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo};
 
     use crate::{
-        player::Player,
+        player::PlayerApi,
         strategy::{NaiveStrategy, PlayerBoardState, Strategy},
     };
 
