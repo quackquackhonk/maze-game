@@ -161,8 +161,12 @@ impl Referee {
                         if state.player_reached_goal() {
                             // player has reached their goal
                             let pi = pi.clone();
-                            players[0].setup(None, pi.home);
-                            reached_goal.insert(pi.color);
+                            players[0].setup(None, pi.home());
+                            reached_goal.insert(pi.color());
+                        } else if state.player_reached_home() && reached_goal.contains(&pi.color())
+                        {
+                            // current player won
+                            break Some(pi.clone());
                         }
                     } else {
                         players.rotate_left(1);
