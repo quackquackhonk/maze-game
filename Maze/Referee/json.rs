@@ -80,22 +80,22 @@ pub struct JsonRefereePlayer {
 
 impl From<JsonRefereePlayer> for FullPlayerInfo {
     fn from(jrp: JsonRefereePlayer) -> Self {
-        Self {
-            home: jrp.home.into(),
-            position: jrp.current.into(),
-            goal: jrp.goto.into(),
-            color: jrp.color.try_into().expect("meh"),
-        }
+        Self::new(
+            jrp.home.into(),
+            jrp.current.into(),
+            jrp.goto.into(),
+            jrp.color.try_into().expect("meh"),
+        )
     }
 }
 
 impl From<FullPlayerInfo> for JsonRefereePlayer {
     fn from(pi: FullPlayerInfo) -> Self {
         JsonRefereePlayer {
-            current: pi.position.into(),
-            home: pi.home.into(),
+            current: pi.position().into(),
+            home: pi.home().into(),
             goto: pi.goal.into(),
-            color: pi.color.into(),
+            color: pi.color().into(),
         }
     }
 }

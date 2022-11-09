@@ -128,8 +128,8 @@ impl Referee {
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won
-        self.broadcast_initial_state(&state, players);
-        self.broadcast_state_to_observers(&state, observers);
+        self.broadcast_initial_state(state, players);
+        self.broadcast_state_to_observers(state, observers);
 
         let mut round = 0;
         let mut first_player = state.current_player_info().clone();
@@ -157,9 +157,10 @@ impl Referee {
                         if state.player_reached_goal() {
                             // player has reached their goal
                             let pi = pi.clone();
-                            players[0].setup(None, pi.home);
-                            reached_goal.insert(pi.color);
-                        } else if state.player_reached_home() && reached_goal.contains(&pi.color) {
+                            players[0].setup(None, pi.home());
+                            reached_goal.insert(pi.color());
+                        } else if state.player_reached_home() && reached_goal.contains(&pi.color())
+                        {
                             // current player won
                             break Some(pi.clone());
                         }
@@ -175,7 +176,7 @@ impl Referee {
                                     first_player = state.current_player_info().clone();
                                 }
 
-                                reached_goal.remove(&pi.color);
+                                reached_goal.remove(&pi.color());
                                 kicked.push(player);
                             }
                             None => {
@@ -202,7 +203,7 @@ impl Referee {
             Referee::next_player(players, state);
 
             // One round has completed
-            if first_player.color == state.current_player_info().color {
+            if first_player.color() == state.current_player_info().color() {
                 round += 1;
 
                 if round >= 1000 {
@@ -234,7 +235,7 @@ impl Referee {
                         .into_iter()
                         .zip(state.player_info.iter())
                         .fold(vec![], |mut acc, (api, info)| {
-                            if reached_goal.contains(&info.color) {
+                            if reached_goal.contains(&info.color()) {
                                 acc.push((api, info));
                             } else {
                                 losers.push(api);
@@ -248,7 +249,7 @@ impl Referee {
             Some(winner) => zipped_players.fold(
                 (vec![], losers),
                 |(mut winners, mut losers), (api, info)| {
-                    if info.color == winner.color {
+                    if info.color() == winner.color() {
                         winners.push(api);
                     } else {
                         losers.push(api);
@@ -258,21 +259,22 @@ impl Referee {
             ),
             None => {
                 let min_dist = state.player_info.iter().fold(usize::MAX, |prev, info| {
-                    usize::min(prev, squared_euclidian_distance(&info.position, &info.goal))
+                    usize::min(
+                        prev,
+                        squared_euclidian_distance(&info.position(), &info.goal),
+                    )
                 });
 
                 zipped_players.fold(
                     (vec![], losers),
                     |(mut winners, mut losers), (api, info)| {
+                        let goal_to_measure = if reached_goal.is_empty() {
+                            info.goal
+                        } else {
+                            info.home()
+                        };
                         if min_dist
-                            == squared_euclidian_distance(
-                                &info.position,
-                                if reached_goal.is_empty() {
-                                    &info.goal
-                                } else {
-                                    &info.home
-                                },
-                            )
+                            == squared_euclidian_distance(&info.position(), &goal_to_measure)
                         {
                             winners.push(api);
                         } else {
@@ -435,13 +437,13 @@ mod tests {
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player, Box::new(MockPlayer::default())];
         let mut state = referee.make_initial_state(&players, DefaultBoard::<7, 7>::default_board());
-        assert_eq!(state.current_player_info().home, (1, 3));
+        assert_eq!(state.current_player_info().home(), (1, 3));
         assert_eq!(state.current_player_info().goal, (3, 3));
-        assert_eq!(state.current_player_info().position, (1, 3));
+        assert_eq!(state.current_player_info().position(), (1, 3));
         state.next_player();
-        assert_eq!(state.current_player_info().home, (1, 1));
+        assert_eq!(state.current_player_info().home(), (1, 1));
         assert_eq!(state.current_player_info().goal, (5, 3));
-        assert_eq!(state.current_player_info().position, (1, 1));
+        assert_eq!(state.current_player_info().position(), (1, 1));
     }
 
     #[test]
@@ -463,18 +465,18 @@ mod tests {
     #[test]
     fn test_next_player() {
         let mut state = State::default();
-        state.add_player(FullPlayerInfo {
-            home: (1, 1),
-            position: (1, 1),
-            goal: (0, 5),
-            color: ColorName::Red.into(),
-        });
-        state.add_player(FullPlayerInfo {
-            home: (1, 3),
-            position: (1, 3),
-            goal: (0, 3),
-            color: ColorName::Blue.into(),
-        });
+        state.add_player(FullPlayerInfo::new(
+            (1, 1),
+            (1, 1),
+            (0, 5),
+            ColorName::Red.into(),
+        ));
+        state.add_player(FullPlayerInfo::new(
+            (1, 3),
+            (1, 3),
+            (0, 3),
+            ColorName::Blue.into(),
+        ));
 
         let mock = MockPlayer::default();
         let mut players: Vec<Box<dyn PlayerApi>> = vec![
@@ -498,18 +500,13 @@ mod tests {
     #[test]
     fn test_calculate_winners() {
         let mut state = State::default();
-        state.add_player(FullPlayerInfo {
-            home: (0, 0),
-            position: (1, 0),
-            goal: (0, 5),
-            color: ColorName::Red.into(),
-        });
-        let won_player = FullPlayerInfo {
-            home: (1, 0),
-            position: (1, 6),
-            goal: (6, 1),
-            color: ColorName::Blue.into(),
-        };
+        state.add_player(FullPlayerInfo::new(
+            (0, 0),
+            (1, 0),
+            (0, 5),
+            ColorName::Red.into(),
+        ));
+        let won_player = FullPlayerInfo::new((1, 0), (1, 6), (6, 1), ColorName::Blue.into());
         state.add_player(won_player.clone());
 
         let (winners, losers) = Referee::calculate_winners(
