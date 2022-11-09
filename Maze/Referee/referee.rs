@@ -460,18 +460,18 @@ mod tests {
     #[test]
     fn test_next_player() {
         let mut state = State::default();
-        state.add_player(FullPlayerInfo {
-            home: (1, 1),
-            position: (1, 1),
-            goal: (0, 5),
-            color: ColorName::Red.into(),
-        });
-        state.add_player(FullPlayerInfo {
-            home: (1, 3),
-            position: (1, 3),
-            goal: (0, 3),
-            color: ColorName::Blue.into(),
-        });
+        state.add_player(FullPlayerInfo::new(
+            (1, 1),
+            (1, 1),
+            (0, 5),
+            ColorName::Red.into(),
+        ));
+        state.add_player(FullPlayerInfo::new(
+            (1, 3),
+            (1, 3),
+            (0, 3),
+            ColorName::Blue.into(),
+        ));
 
         let mock = MockPlayer::default();
         let mut players: Vec<Box<dyn PlayerApi>> = vec![
