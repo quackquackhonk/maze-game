@@ -162,23 +162,23 @@ pub struct PubPlayerInfo {
 
 impl PlayerInfo for PubPlayerInfo {
     fn position(&self) -> Position {
-        todo!()
+        self.current
     }
 
     fn set_position(&mut self, dest: Position) {
-        todo!()
+        self.current = dest
     }
 
     fn home(&self) -> Position {
-        todo!()
+        self.home
     }
 
     fn reached_home(&self) -> bool {
-        todo!()
+        self.position() == self.home()
     }
 
     fn color(&self) -> Color {
-        todo!()
+        self.color.clone()
     }
 }
 
@@ -255,7 +255,8 @@ impl<PInfo: PlayerInfo + Clone> State<PInfo> {
     /// # use common::State;
     /// # use common::board::Slide;
     /// # use common::tile::CompassDirection;
-    /// let mut state = State::default();
+    /// # use common::FullPlayerInfo;
+    /// let mut state = State::<FullPlayerInfo>::default();
     ///
     /// // This is fine
     /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::North));
