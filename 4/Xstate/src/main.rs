@@ -7,7 +7,7 @@ use common::board::Slide;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
 use common::tile::CompassDirection;
-use common::State;
+use common::{FullPlayerInfo, State};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
