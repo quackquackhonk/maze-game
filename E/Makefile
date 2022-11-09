@@ -1,6 +1,6 @@
 build:
 	cargo build --release --manifest-path Other/Cargo.toml
-	cp Other/target/release/xtcp .
+	cp ../target/release/xtcp .
 
 clean:
 	rm xtcp

@@ -1,2 +1,0 @@
-#!/usr/bin/bash
-cargo test --manifest-path Other/Cargo.toml

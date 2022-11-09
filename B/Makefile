@@ -1,6 +1,6 @@
 build:
 	cargo build --release --manifest-path Other/Cargo.toml
-	cp Other/target/release/Other xcollects
+	cp ../target/release/Other xcollects
 
 clean:
 	rm xcollects

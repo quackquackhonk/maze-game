@@ -1,6 +1,6 @@
 build:
 	cargo build --release --manifest-path Other/Cargo.toml
-	cp Other/target/release/Other xjson
+	cp ../target/release/Other xjson
 
 clean:
 	rm xjson

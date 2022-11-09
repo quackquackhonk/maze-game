@@ -1,6 +1,6 @@
 build:
 	cargo build --release --manifest-path Other/Cargo.toml
-	cp Other/target/release/xgui .
+	cp ../target/release/xgui .
 
 clean:
 	rm xgui
