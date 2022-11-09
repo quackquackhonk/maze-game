@@ -13,7 +13,8 @@
     board can validate it before creation.
 
 - [ ] Overhaul error handling i.e. `thiserror` and `anyhow`
-  - [ ] Player trait should return results. 
+  - [x] Player trait should return results. 
+    https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/2d7cba85a331b10cce4268ccbc41baa5c3f7d282/Maze/Players/player.rs#L19-L32
 
 - [ ] Use aliri_braid for JSONColors
 
