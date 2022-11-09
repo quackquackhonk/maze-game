@@ -337,13 +337,6 @@ impl Referee {
     }
 }
 
-fn gen_immovable_tile_pos(rng: &mut impl Rng, board: &Board) -> Position {
-    (
-        rng.gen_range(0..board.num_cols() / 2) * 2 + 1,
-        rng.gen_range(0..board.num_rows() / 2) * 2 + 1,
-    )
-}
-
 #[cfg(test)]
 mod tests {
     use std::{cell::RefCell, collections::HashSet, rc::Rc};
