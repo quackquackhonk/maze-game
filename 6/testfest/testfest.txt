@@ -1,0 +1,2 @@
+Results from running against tests from other teams:
+passed 3/3 from 26
