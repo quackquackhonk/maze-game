@@ -3,7 +3,7 @@ use std::{
     io::{Read, Write},
 };
 
-use common::{json::Name, State};
+use common::{json::Name, FullPlayerInfo, State};
 use players::player::{LocalPlayer, Player};
 use referee::{
     json::{JsonRefereeState, PS},
@@ -59,7 +59,7 @@ pub fn read_and_write_json(
         _ => Err("")?,
     };
 
-    let mut state: State = match input.next().ok_or("ehhhhhhh")? {
+    let mut state: State<FullPlayerInfo> = match input.next().ok_or("ehhhhhhh")? {
         ValidJson::RefereeState(a) => a.into(),
         _ => Err("")?,
     };
