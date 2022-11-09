@@ -156,7 +156,7 @@ impl Referee {
 
                         self.broadcast_state_to_observers(state, observers);
                         let pi = state.current_player_info();
-                        if state.player_reached_home() && reached_goal.contains(&pi.color) {
+                        if state.player_reached_home() && reached_goal.contains(&pi.color()) {
                             // current player won
                             break Some(pi.clone());
                         }
