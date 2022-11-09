@@ -162,23 +162,23 @@ pub struct PubPlayerInfo {
 
 impl PlayerInfo for PubPlayerInfo {
     fn position(&self) -> Position {
-        todo!()
+        self.current
     }
 
     fn set_position(&mut self, dest: Position) {
-        todo!()
+        self.current = dest
     }
 
     fn home(&self) -> Position {
-        todo!()
+        self.home
     }
 
     fn reached_home(&self) -> bool {
-        todo!()
+        self.position() == self.home()
     }
 
     fn color(&self) -> Color {
-        todo!()
+        self.color.clone()
     }
 }
 
