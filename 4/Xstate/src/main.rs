@@ -22,7 +22,7 @@ pub enum ValidJson {
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Result<()> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let mut state: State = match test_input
+    let mut state: State<FullPlayerInfo> = match test_input
         .next()
         .ok_or(anyhow!("No valid State JSON found"))?
     {
@@ -75,7 +75,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
         .collect::<Vec<Coordinate>>();
     reachable_pos.sort_by(cmp_coordinates);
 
-    writer.write(serde_json::to_string(&reachable_pos)?.as_bytes())?;
+    writer.write_all(serde_json::to_string(&reachable_pos)?.as_bytes())?;
 
     Ok(())
 }

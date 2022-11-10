@@ -96,7 +96,7 @@ mod tests {
 
     use crate::{
         player::PlayerApi,
-        strategy::{NaiveStrategy, PlayerBoardState, Strategy},
+        strategy::{NaiveStrategy, Strategy},
     };
 
     use super::LocalPlayer;

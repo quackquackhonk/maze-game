@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common::board::Board;
 use common::grid::{squared_euclidian_distance, Position};
-use common::{Color, PlayerInfo, State};
+use common::{Color, FullPlayerInfo, PlayerInfo, State};
 use itertools::Itertools;
 use players::player::PlayerApi;
 use players::strategy::{PlayerAction, PlayerMove};
@@ -50,7 +50,11 @@ impl Referee {
     ///
     /// This will assign each player a Goal and a home tile, and set each `Player`'s current
     /// position to be their home tile.
-    fn make_initial_state(&mut self, players: &[Box<dyn PlayerApi>], board: Board) -> State {
+    fn make_initial_state(
+        &mut self,
+        players: &[Box<dyn PlayerApi>],
+        board: Board,
+    ) -> State<FullPlayerInfo> {
         // The possible locations for homes
         let mut possible_homes = board.possible_homes().collect::<Vec<_>>();
 
@@ -63,7 +67,7 @@ impl Referee {
                 let home: Position =
                     possible_homes.remove(self.rand.gen_range(0..possible_homes.len()));
                 let goal: Position = possible_goals[self.rand.gen_range(0..possible_goals.len())];
-                PlayerInfo::new(
+                FullPlayerInfo::new(
                     home,
                     home, /* players start on their home tile */
                     goal,
@@ -348,11 +352,11 @@ mod tests {
         board::{Board, DefaultBoard},
         grid::Position,
         json::Name,
-        ColorName, FullPlayerInfo, PlayerInfo, State,
+        ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
     };
     use players::{
         player::{LocalPlayer, PlayerApi, PlayerApiResult},
-        strategy::{NaiveStrategy, PlayerAction, PlayerBoardState},
+        strategy::{NaiveStrategy, PlayerAction},
     };
     use rand::SeedableRng;
     use rand_chacha::ChaChaRng;
@@ -362,7 +366,7 @@ mod tests {
     #[derive(Debug, Default, Clone)]
     struct MockPlayer {
         turns_taken: Rc<RefCell<usize>>,
-        state: Rc<RefCell<Option<PlayerBoardState>>>,
+        state: Rc<RefCell<Option<State<PubPlayerInfo>>>>,
         goal: Rc<RefCell<Option<Position>>>,
         won: Rc<RefCell<Option<bool>>>,
     }
@@ -378,7 +382,7 @@ mod tests {
 
         fn setup(
             &mut self,
-            state: Option<PlayerBoardState>,
+            state: Option<State<PubPlayerInfo>>,
             goal: Position,
         ) -> PlayerApiResult<()> {
             *self
@@ -392,7 +396,7 @@ mod tests {
             Ok(())
         }
 
-        fn take_turn(&self, state: PlayerBoardState) -> PlayerApiResult<PlayerAction> {
+        fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
             *self
                 .turns_taken
                 .try_borrow_mut()
@@ -437,12 +441,12 @@ mod tests {
         let players: Vec<Box<dyn PlayerApi>> = vec![player, Box::new(MockPlayer::default())];
         let mut state = referee.make_initial_state(&players, DefaultBoard::<7, 7>::default_board());
         assert_eq!(state.current_player_info().home(), (1, 3));
-        assert_eq!(state.current_player_info().goal, (3, 3));
+        assert_eq!(state.current_player_info().goal, (5, 5));
         assert_eq!(state.current_player_info().position(), (1, 3));
         state.next_player();
-        assert_eq!(state.current_player_info().home(), (1, 1));
+        assert_eq!(state.current_player_info().home(), (3, 1));
         assert_eq!(state.current_player_info().goal, (5, 3));
-        assert_eq!(state.current_player_info().position(), (1, 1));
+        assert_eq!(state.current_player_info().position(), (3, 1));
     }
 
     #[test]

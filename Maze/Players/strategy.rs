@@ -1,30 +1,11 @@
 use std::cmp::Ordering;
 use std::iter::repeat;
-use std::ops::{Deref, DerefMut};
 
 use common::board::Board;
 use common::tile::CompassDirection;
 use common::PubPlayerInfo;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{FullPlayerInfo, State, BOARD_SIZE};
-
-/// This type represents the data a player recieves from the Referee about the Game State
-#[derive(Debug, Clone)]
-pub struct PlayerBoardState {
-    pub board: Board,
-    pub players: Vec<PubPlayerInfo>,
-    pub last: Option<Slide>,
-}
-
-impl From<State<FullPlayerInfo>> for PlayerBoardState {
-    fn from(state: State<FullPlayerInfo>) -> Self {
-        PlayerBoardState {
-            board: state.board,
-            players: state.player_info.into_iter().map(|pi| pi.into()).collect(),
-            last: state.previous_slide,
-        }
-    }
-}
+use common::{FullPlayerInfo, State};
 
 /// This trait represents getting a valid move from a given board state
 pub trait Strategy {
@@ -88,7 +69,7 @@ impl NaiveStrategy {
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
-        self.get_alt_goals(goal_tile, board_state)
+        self.get_alt_goals(goal_tile, state)
             .into_iter()
             .find_map(|goal| self.find_move_to_reach(state, start, goal))
     }
@@ -98,7 +79,11 @@ impl NaiveStrategy {
     /// - `NaiveStrategy::Euclid` sorts alt goals by ascending `euclidian_distance` to the
     /// `goal_tile`
     /// - `NaiveStrategy::Reimann` sorts alt goals in row-column order.
-    fn get_alt_goals(&self, goal_tile: Position, board_state: &PlayerBoardState) -> Vec<Position> {
+    fn get_alt_goals(
+        &self,
+        goal_tile: Position,
+        board_state: &State<PubPlayerInfo>,
+    ) -> Vec<Position> {
         //! alternative_goal_order is a Comparator<Position> function.
         #[allow(clippy::type_complexity)]
         let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
@@ -153,15 +138,15 @@ impl NaiveStrategy {
         start: Position,
         destination: Position,
     ) -> PlayerAction {
-        for row in board_state.board.slideable_rows() {
+        for row in state.board.slideable_rows() {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
-                    if let Some(lslide) = board_state.last {
+                    if let Some(lslide) = state.previous_slide {
                         if lslide.index == row && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
-                    let slide = board_state.board.new_slide(row, direction).unwrap();
+                    let slide = state.board.new_slide(row, direction).unwrap();
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -173,15 +158,15 @@ impl NaiveStrategy {
                 }
             }
         }
-        for col in board_state.board.slideable_cols() {
+        for col in state.board.slideable_cols() {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
-                    if let Some(lslide) = board_state.last {
+                    if let Some(lslide) = state.previous_slide {
                         if lslide.index == col && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
-                    let slide = board_state.board.new_slide(col, direction).unwrap();
+                    let slide = state.board.new_slide(col, direction).unwrap();
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -211,8 +196,11 @@ impl Strategy for NaiveStrategy {
 
 #[cfg(test)]
 mod StrategyTests {
+    use self::itertools::Itertools;
+
     use super::*;
     use common::ColorName;
+    use itertools;
     use CompassDirection::*;
 
     #[test]
@@ -244,7 +232,7 @@ mod StrategyTests {
         //
         // extra = ┼
 
-        let slide = board_state.board.new_slide(2, East).unwrap();
+        let slide = state.board.new_slide(2, East).unwrap();
         // what will Euclid do to go from (1, 1) -> (1, 3)
         let euclid_move = euclid.get_move(state, (1, 1), (1, 3));
         assert!(euclid_move.is_some());
@@ -274,7 +262,7 @@ mod StrategyTests {
             },
         ]
         .into();
-
+        let slide = state.board.new_slide(0, East).unwrap();
         let euclid_move = euclid.get_move(state, (0, 0), (2, 3));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
@@ -303,6 +291,7 @@ mod StrategyTests {
             },
         ]
         .into();
+        let slide = state.board.new_slide(4, East).unwrap();
         let euclid_move = euclid.get_move(state, (6, 4), (2, 0));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
@@ -331,8 +320,8 @@ mod StrategyTests {
             },
         ]
         .into();
-        let mut any_passes = (0..BOARD_SIZE)
-            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+        let mut any_passes = (0..state.board.num_rows())
+            .cartesian_product(0..state.board.num_cols())
             .map(|dest| euclid.get_move(state.clone(), (0, 0), dest))
             .filter(|m| m.is_none());
         assert!(any_passes.next().is_none());
@@ -367,7 +356,7 @@ mod StrategyTests {
         //
         // extra = ┼
 
-        let slide = board_state.board.new_slide(2, East).unwrap();
+        let slide = state.board.new_slide(2, East).unwrap();
         // what will Reimann do to go from (1, 1) -> (1, 3)
         let reimann_move = reimann.get_move(state, (1, 1), (1, 3));
         assert!(reimann_move.is_some());
@@ -397,10 +386,11 @@ mod StrategyTests {
             },
         ]
         .into();
+        let slide = state.board.new_slide(0, East).unwrap();
         let reimann_move = reimann.get_move(state, (0, 0), (2, 3));
         assert!(reimann_move.is_some());
         let reimann_move = reimann_move.unwrap();
-        // slides the top row east, moves to (1, 0)
+        // slides the top row east, moves to (0, 0)
         assert_eq!(
             reimann_move,
             PlayerMove {
@@ -425,6 +415,7 @@ mod StrategyTests {
             },
         ]
         .into();
+        let slide = state.board.new_slide(4, East).unwrap();
         let reimann_move = reimann.get_move(state.clone(), (6, 4), (2, 0));
         assert!(reimann_move.is_some());
         let reimann_move = reimann_move.unwrap();
@@ -438,8 +429,8 @@ mod StrategyTests {
             }
         );
 
-        let mut any_passes = (0..BOARD_SIZE)
-            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+        let mut any_passes = (0..state.board.num_rows())
+            .cartesian_product(0..state.board.num_cols())
             .map(|dest| reimann.get_move(state.clone(), (3, 3), dest))
             .filter(|m| m.is_none());
         assert!(any_passes.next().is_none());
@@ -481,7 +472,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, North).unwrap(),
+                slide: state.board.new_slide(0, North).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -491,7 +482,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, North).unwrap(),
+                slide: state.board.new_slide(0, North).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -502,7 +493,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(2, West).unwrap(),
+                slide: state.board.new_slide(2, West).unwrap(),
                 rotations: 0,
                 destination: (3, 2)
             })
@@ -512,7 +503,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(2, West).unwrap(),
+                slide: state.board.new_slide(2, West).unwrap(),
                 rotations: 0,
                 destination: (3, 0)
             })
@@ -524,7 +515,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(6, East).unwrap(),
+                slide: state.board.new_slide(6, East).unwrap(),
                 rotations: 0,
                 destination: (1, 5)
             })
@@ -534,7 +525,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: board_state.board.new_slide(6, South).unwrap(),
+                slide: state.board.new_slide(6, South).unwrap(),
                 rotations: 0,
                 destination: (6, 1)
             })
@@ -556,13 +547,9 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_reimann() {
-        let board_state: PlayerBoardState = PlayerBoardState {
-            board: Board::default(),
-            players: vec![],
-            last: None,
-        };
-        let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1), &board_state);
-        let max_cells = board_state.board.num_rows() * board_state.board.num_cols();
+        let state: State<PubPlayerInfo> = State::default();
+        let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1), &state);
+        let max_cells = state.board.num_rows() * state.board.num_cols();
         assert_eq!(reimann_alt_goals.len(), max_cells);
         assert_eq!(reimann_alt_goals[0], (0, 0));
         assert_eq!(reimann_alt_goals[1], (1, 0));
@@ -573,13 +560,9 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_euclid() {
-        let board_state: PlayerBoardState = PlayerBoardState {
-            board: Board::default(),
-            players: vec![],
-            last: None,
-        };
-        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1), &board_state);
-        let max_cells = board_state.board.num_rows() * board_state.board.num_cols();
+        let state = State::<PubPlayerInfo>::default();
+        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1), &state);
+        let max_cells = state.board.num_rows() * state.board.num_cols();
         assert_eq!(euclid_alt_goals.len(), max_cells);
         assert_eq!(euclid_alt_goals[0], (1, 1));
         assert_eq!(euclid_alt_goals[1], (1, 0));
@@ -624,7 +607,7 @@ mod StrategyTests {
         assert_eq!(
             euclid.find_move_to_reach(&state, start, destination),
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, West).unwrap(),
+                slide: state.board.new_slide(0, West).unwrap(),
                 rotations: 0,
                 destination: (0, 1),
             })
@@ -632,7 +615,7 @@ mod StrategyTests {
         assert_eq!(
             reimann.find_move_to_reach(&state, start, destination),
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, West).unwrap(),
+                slide: state.board.new_slide(0, West).unwrap(),
                 rotations: 0,
                 destination: (0, 1),
             })
@@ -663,7 +646,7 @@ mod StrategyTests {
         assert_eq!(
             euclid.find_move_to_reach(&state, start, destination),
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, East).unwrap(),
+                slide: state.board.new_slide(0, East).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -671,7 +654,7 @@ mod StrategyTests {
         assert_eq!(
             reimann.find_move_to_reach(&state, start, destination),
             Some(PlayerMove {
-                slide: board_state.board.new_slide(0, East).unwrap(),
+                slide: state.board.new_slide(0, East).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -708,7 +691,7 @@ mod StrategyTests {
         assert_eq!(state.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
         // slides the top row right, moves player to (1, 1)
         let player_move = PlayerMove {
-            slide: board_state.board.new_slide(0, East).unwrap(),
+            slide: state.board.new_slide(0, East).unwrap(),
             rotations: 0,
             destination: (2, 2),
         };
@@ -733,7 +716,7 @@ mod StrategyTests {
 
         // slide the bottom row left
         let player_move = PlayerMove {
-            slide: board_state.board.new_slide(6, West).unwrap(),
+            slide: state.board.new_slide(6, West).unwrap(),
             rotations: 0,
             destination: (1, 5),
         };

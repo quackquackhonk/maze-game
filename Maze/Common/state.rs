@@ -354,6 +354,21 @@ impl State<FullPlayerInfo> {
     }
 }
 
+impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
+    fn from(full_state: State<FullPlayerInfo>) -> Self {
+        Self {
+            board: full_state.board,
+            player_info: full_state
+                .player_info
+                .into_iter()
+                .map(PubPlayerInfo::from)
+                .collect::<Vec<_>>()
+                .into(),
+            previous_slide: full_state.previous_slide,
+        }
+    }
+}
+
 #[cfg(test)]
 mod StateTests {
     use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};

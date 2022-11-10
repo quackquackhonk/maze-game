@@ -4,7 +4,7 @@ use common::grid::Position;
 use common::json::{Coordinate, JsonState};
 use common::{PubPlayerInfo, State};
 use players::json::{JsonChoice, JsonStrategyDesignation};
-use players::strategy::{NaiveStrategy, PlayerBoardState, Strategy};
+use players::strategy::{NaiveStrategy, Strategy};
 use serde::{Deserialize, Serialize};
 
 /// Enumerated Valid JSON input for `xchoice`

@@ -1,11 +1,12 @@
 //! Contains JSON definitions for data in the `player` module
 
-use common::board::Slide;
-use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonState};
+use common::board::{Board, Slide};
+use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonError, JsonState};
+use common::tile::CompassDirection;
 use common::PubPlayerInfo;
 use serde::{Deserialize, Serialize};
 
-use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove};
+use crate::strategy::{NaiveStrategy, PlayerAction, PlayerMove};
 
 /// Describes either a `Reimann` or a `Euclid` strategy
 #[derive(Debug, Deserialize)]
@@ -71,20 +72,6 @@ impl From<PlayerAction> for JsonChoice {
                 JsonDegree(rotations * 90),
                 destination.into(),
             ),
-        }
-    }
-}
-
-impl From<JsonState> for PlayerBoardState {
-    fn from(js: JsonState) -> Self {
-        Self {
-            board: (js.board, js.spare).into(),
-            players: js
-                .plmt
-                .into_iter()
-                .map(|player| player.into())
-                .collect::<Vec<PubPlayerInfo>>(),
-            last: js.last.into(),
         }
     }
 }

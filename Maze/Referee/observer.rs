@@ -244,7 +244,7 @@ fn widget_grid(state: &State<FullPlayerInfo>) -> CGrid<TileWidget> {
     // updates all `TileWidget`s to include player home and goal information
     state.player_info.iter().for_each(|pi| {
         tiles[pi.position()].player_colors.push(pi.color());
-        tiles[pi.home()].home_colors.push(pi.color());
+        tiles[pi.home()].home_color = Some(pi.color());
     });
 
     tiles
