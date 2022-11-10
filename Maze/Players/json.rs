@@ -1,7 +1,9 @@
 //! Contains JSON definitions for data in the `player` module
-
-use common::board::Slide;
-use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonPlayer, JsonState};
+use common::board::{Board, Slide};
+use common::json::{
+    Coordinate, Index, JsonDegree, JsonDirection, JsonError, JsonPlayer, JsonState,
+};
+use common::tile::CompassDirection;
 use serde::{Deserialize, Serialize};
 
 use crate::strategy::{NaiveStrategy, PlayerAction, PlayerBoardState, PlayerMove, PubPlayerInfo};
@@ -35,15 +37,23 @@ pub enum JsonChoice {
     Move(Index, JsonDirection, JsonDegree, Coordinate),
 }
 
-impl From<JsonChoice> for PlayerAction {
-    fn from(jc: JsonChoice) -> Self {
-        match jc {
-            JsonChoice::Pass => None,
-            JsonChoice::Move(ind, dir, deg, coord) => Some(PlayerMove {
-                slide: Slide::new(ind.0, dir.into()),
-                rotations: deg.try_into().unwrap(),
-                destination: coord.into(),
-            }),
+impl JsonChoice {
+    pub fn into_action(self, board: &Board) -> Result<PlayerAction, JsonError> {
+        match self {
+            JsonChoice::Pass => Ok(None),
+            JsonChoice::Move(index, direction, rotations, destination) => Ok(Some(PlayerMove {
+                slide: board
+                    .new_slide(index.0, direction.into())
+                    .ok_or(JsonError {
+                        msg: format!(
+                            "Slide row/col {} with direction {:?} is not a slidable row/col",
+                            index.0,
+                            CompassDirection::from(direction),
+                        ),
+                    })?,
+                rotations: rotations.try_into()?,
+                destination: destination.into(),
+            })),
         }
     }
 }

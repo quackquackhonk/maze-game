@@ -149,9 +149,6 @@ impl State {
     pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
         let rows = self.board.grid.len();
         let cols = self.board.grid[0].len();
-        if !slide.is_valid_slide(rows, cols) {
-            return false;
-        }
         let mut state = self.clone();
         let start = slide.move_position(self.player_info[0].position, cols, rows);
         state.rotate_spare(rotations);
@@ -190,22 +187,20 @@ impl State {
     /// let mut state = State::default();
     ///
     /// // This is fine
-    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::North));
+    /// let res = state.slide_and_insert(state.board.new_slide(0, CompassDirection::North).unwrap());
     /// assert!(res.is_ok());
     ///  
     /// // This is not
-    /// let res = state.slide_and_insert(Slide::new(0, CompassDirection::South));
+    /// let res = state.slide_and_insert(state.board.new_slide(0, CompassDirection::South).unwrap());
     /// assert!(res.is_err());
     ///
     /// // This would however be fine
-    /// let res = state.slide_and_insert(Slide::new(2, CompassDirection::South));
+    /// let res = state.slide_and_insert(state.board.new_slide(2, CompassDirection::South).unwrap());
     /// assert!(res.is_ok());
     ///
     /// ```
     pub fn slide_and_insert(&mut self, slide: Slide) -> BoardResult<()> {
-        if !slide.is_valid_slide(self.board.grid.len(), self.board.grid[0].len()) {
-            Err("Slide move is invalid".to_string())?;
-        } else if let Some(prev) = self.previous_slide {
+        if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
                 Err("Attempted to do a slide action that would undo the previous slide")?;
@@ -374,11 +369,11 @@ mod StateTests {
     fn test_slide_and_insert() {
         let mut state = State::default();
 
-        let res = state.slide_and_insert(Slide::new(0, North));
+        let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
         // Sliding without inserting will not do anything
-        let res = state.slide_and_insert(Slide::new(0, South));
+        let res = state.slide_and_insert(state.board.new_slide(0, South).unwrap());
         assert!(res.is_err());
     }
 
@@ -386,18 +381,18 @@ mod StateTests {
     fn test_slide_no_undo() {
         let mut state = State::default();
 
-        let res = state.slide_and_insert(Slide::new(0, North));
+        let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
-        let res = state.slide_and_insert(Slide::new(0, South));
+        let res = state.slide_and_insert(state.board.new_slide(0, South).unwrap());
         assert!(res.is_err());
 
         // Doing it twice should not matter
-        let res = state.slide_and_insert(Slide::new(0, South));
+        let res = state.slide_and_insert(state.board.new_slide(0, South).unwrap());
         assert!(res.is_err());
 
         // Doing it in another index is fine
-        let res = state.slide_and_insert(Slide::new(2, South));
+        let res = state.slide_and_insert(state.board.new_slide(2, South).unwrap());
         assert!(res.is_ok());
     }
 
@@ -420,30 +415,30 @@ mod StateTests {
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 1 is in the sliding column so it should move
-        state.slide_players(&Slide::new(0, South));
+        state.slide_players(&state.board.new_slide(0, South).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (1, 2));
 
         // Only player 2 is in the sliding row so it should move
-        state.slide_players(&Slide::new(2, East));
+        state.slide_players(&state.board.new_slide(2, East).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 1));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 1 is in the sliding column so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(0, North));
-        state.slide_players(&Slide::new(0, North));
+        state.slide_players(&state.board.new_slide(0, North).unwrap());
+        state.slide_players(&state.board.new_slide(0, North).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (2, 2));
 
         // Only player 2 is in the sliding row so it should move
         // but it should also wrap
-        state.slide_players(&Slide::new(2, West));
-        state.slide_players(&Slide::new(2, West));
-        state.slide_players(&Slide::new(2, West));
+        state.slide_players(&state.board.new_slide(2, West).unwrap());
+        state.slide_players(&state.board.new_slide(2, West).unwrap());
+        state.slide_players(&state.board.new_slide(2, West).unwrap());
 
         assert_eq!(state.player_info[0].position, (0, 6));
         assert_eq!(state.player_info[1].position, (6, 2));
@@ -457,14 +452,14 @@ mod StateTests {
         state.rotate_spare(1);
         assert_eq!(state.board.extra.connector, Crossroads);
 
-        let res = state.slide_and_insert(Slide::new(0, North));
+        let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
         assert_eq!(state.board.extra.connector, Path(Horizontal));
         state.rotate_spare(1);
         assert_eq!(state.board.extra.connector, Path(Vertical));
 
-        let res = state.slide_and_insert(Slide::new(0, North));
+        let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
         assert_eq!(state.board.extra.connector, Fork(East));
@@ -513,7 +508,7 @@ mod StateTests {
         assert!(!state.can_reach_position((0, 3)));
         assert!(!state.can_reach_position((3, 3)));
 
-        let res = state.slide_and_insert(Slide::new(0, North));
+        let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
         // Board after slide and insert:
@@ -530,7 +525,7 @@ mod StateTests {
         assert!(state.can_reach_position((0, 2)));
         assert!(state.can_reach_position((0, 3)));
 
-        let res = state.slide_and_insert(Slide::new(2, South));
+        let res = state.slide_and_insert(state.board.new_slide(2, South).unwrap());
         assert!(res.is_ok());
 
         // Board after slide and insert:
@@ -587,7 +582,9 @@ mod StateTests {
         // cannot go to (4, 1) from (1, 1)
         assert!(!from_1_1.contains(&(4, 1)));
 
-        assert!(state.slide_and_insert(Slide::new(0, West)).is_ok());
+        assert!(state
+            .slide_and_insert(state.board.new_slide(0, West).unwrap())
+            .is_ok());
 
         // Board after slide:
         //   0123456

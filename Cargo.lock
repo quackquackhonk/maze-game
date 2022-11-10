@@ -33,6 +33,7 @@ dependencies = [
 name = "Xstate"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "common",
  "serde",
  "serde_json",
@@ -402,10 +403,12 @@ dependencies = [
  "hex",
  "image",
  "include_dir",
+ "itertools",
  "lazy_static",
  "regex",
  "serde",
  "serde_json",
+ "thiserror",
  "unordered-pair",
 ]
 
