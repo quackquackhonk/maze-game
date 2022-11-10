@@ -170,6 +170,9 @@ mod StrategyTests {
     use self::itertools::Itertools;
 
     use super::*;
+    use common::gem::Gem;
+    use common::grid::Grid;
+    use common::tile::{ConnectorShape, PathOrientation, Tile};
     use common::ColorName;
     use itertools;
     use CompassDirection::*;
@@ -291,11 +294,45 @@ mod StrategyTests {
             },
         ]
         .into();
-        let mut any_passes = (0..state.board.num_rows())
-            .cartesian_product(0..state.board.num_cols())
-            .map(|dest| euclid.get_move(state.clone(), (0, 0), dest))
-            .filter(|m| m.is_none());
-        assert!(any_passes.next().is_none());
+    }
+
+    #[test]
+    fn test_get_move_pass() {
+        let euclid = NaiveStrategy::Euclid;
+        let riemann = NaiveStrategy::Riemann;
+        let mut state: State<PubPlayerInfo> = State {
+            player_info: vec![PubPlayerInfo {
+                current: (0, 2),
+                home: (3, 3),
+                color: ColorName::Red.into(),
+            }]
+            .into(),
+            ..Default::default()
+        };
+        let mut idx = 0;
+        let horizontal = ConnectorShape::Path(PathOrientation::Horizontal);
+        let vertical = ConnectorShape::Path(PathOrientation::Vertical);
+        state.board.grid = Grid::from([[(); 7]; 7].map(|list| {
+            list.map(|_| {
+                let tile = Tile {
+                    connector: vertical,
+                    gems: Gem::pair_from_num(idx),
+                };
+                idx += 1;
+                tile
+            })
+        }));
+        state.board.extra = Tile {
+            connector: vertical,
+            gems: (Gem::Zircon, Gem::Zoisite).into(),
+        };
+        state.previous_slide = state.board.new_slide(2, East);
+        state.board.grid[(0, 1)].connector = horizontal;
+        state.board.grid[(0, 3)].connector = horizontal;
+        state.board.grid[(1, 1)].connector = horizontal;
+        state.board.grid[(1, 3)].connector = horizontal;
+        assert_eq!(euclid.get_move(state.clone(), (0, 2), (3, 1)), None);
+        assert_eq!(riemann.get_move(state, (0, 2), (3, 1)), None);
     }
 
     #[test]
@@ -409,20 +446,23 @@ mod StrategyTests {
 
     #[test]
     fn test_find_move_to_reach_alt_goal() {
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (0, 2),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state: State<PubPlayerInfo> = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (0, 2),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
+
         let euclid = NaiveStrategy::Euclid;
         let reimann = NaiveStrategy::Riemann;
         // Default Board<7> is:
