@@ -331,6 +331,21 @@ mod StrategyTests {
         state.board.grid[(0, 3)].connector = horizontal;
         state.board.grid[(1, 1)].connector = horizontal;
         state.board.grid[(1, 3)].connector = horizontal;
+        // Board is:
+        //   0123456
+        // 0 │││││││
+        // 1 ──│││││
+        // 2 │││││││
+        // 3 ──│││││
+        // 4 │││││││
+        // 5 │││││││
+        // 6 │││││││
+        //
+        // extra = │
+        //
+        // last slide: row 2 ->
+        // both euclid and riemann will pass trying to
+        // go from (0, 2) -> (3, 1)
         assert_eq!(euclid.get_move(state.clone(), (0, 2), (3, 1)), None);
         assert_eq!(riemann.get_move(state, (0, 2), (3, 1)), None);
     }
