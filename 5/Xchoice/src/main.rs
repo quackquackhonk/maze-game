@@ -2,6 +2,7 @@ use std::io::{stdin, stdout, Read, Write};
 
 use common::grid::Position;
 use common::json::{Coordinate, JsonState};
+use common::{PubPlayerInfo, State};
 use players::json::{JsonChoice, JsonStrategyDesignation};
 use players::strategy::{NaiveStrategy, PlayerBoardState, Strategy};
 use serde::{Deserialize, Serialize};
@@ -45,7 +46,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
         _ => Err("StrategyDesignation was not the first json input found")?,
     };
 
-    let state: PlayerBoardState = match input.next().ok_or("No valid State JSON found")? {
+    let state: State<PubPlayerInfo> = match input.next().ok_or("No valid State JSON found")? {
         ValidJson::State(state) => state.into(),
         _ => Err("State was not the second json input found")?,
     };
@@ -55,7 +56,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
         _ => Err("State was not the second json input found")?,
     };
 
-    let start = state.players[0].current;
+    let start = state.player_info[0].current;
     let choice = strat.get_move(state, start, goal);
     let action: JsonChoice = choice.into();
 
