@@ -9,7 +9,7 @@ use common::{
     gem::GEM_IMGS,
     grid::Grid as CGrid,
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
-    Color, State,
+    Color, FullPlayerInfo, PlayerInfo, State,
 };
 use egui::{Align, Color32, Grid, Image, Layout, RichText, Ui, Vec2};
 use egui_extras::RetainedImage;
@@ -224,7 +224,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
 
 /// Returns a `common::Grid<TileWidget>` containing all the `Tile` information in `state`.
 /// This includes the home and player locations, but not the goal locations
-fn widget_grid(state: &State) -> CGrid<TileWidget> {
+fn widget_grid(state: &State<FullPlayerInfo>) -> CGrid<TileWidget> {
     let mut tiles: CGrid<TileWidget> = state
         .board
         .grid
@@ -243,15 +243,15 @@ fn widget_grid(state: &State) -> CGrid<TileWidget> {
 
     // updates all `TileWidget`s to include player home and goal information
     state.player_info.iter().for_each(|pi| {
-        tiles[pi.position].player_colors.push(pi.color.clone());
-        tiles[pi.home].home_color = Some(pi.color.clone());
+        tiles[pi.position()].player_colors.push(pi.color());
+        tiles[pi.home()].home_color = Some(pi.color());
     });
 
     tiles
 }
 
 // Render's the `board` inside of a state
-fn render_board(ui: &mut egui::Ui, state: &State) {
+fn render_board(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
     let tiles: CGrid<TileWidget> = widget_grid(state);
 
     // create board grid
@@ -270,7 +270,7 @@ fn render_board(ui: &mut egui::Ui, state: &State) {
 }
 
 /// Renders the given `Slide` as a label
-fn render_slide(ui: &mut egui::Ui, state: &State) {
+fn render_slide(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
     let slide_text = match state.previous_slide {
         None => RichText::new("No Last Slide").strong(),
         Some(Slide {
@@ -294,7 +294,7 @@ fn render_slide(ui: &mut egui::Ui, state: &State) {
 }
 
 /// Renders the spare tile and the last slide onto the `ui`
-fn render_state_info(ui: &mut egui::Ui, state: &State) {
+fn render_state_info(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
     let spare_tile_widget = TileWidget {
         tile: state.board.extra.clone(),
         player_colors: vec![],
@@ -320,14 +320,14 @@ fn render_state_info(ui: &mut egui::Ui, state: &State) {
             ui.label(no_players_text);
         } else {
             ui.label(curr_player_text);
-            let curr_pl = player_image_with_color(ui, &state.player_info[0].color, CELL_SIZE_2D);
+            let curr_pl = player_image_with_color(ui, &state.player_info[0].color(), CELL_SIZE_2D);
             ui.add_sized(CELL_SIZE_2D * 0.5, curr_pl);
         }
     });
 }
 
 /// Render `state` onto the `ui`
-fn render_state(ui: &mut egui::Ui, state: &State) {
+fn render_state(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
     // create grid for the state
     Grid::new("state_grid")
         .spacing(Vec2::new(25.0, 0.0))
@@ -340,7 +340,7 @@ fn render_state(ui: &mut egui::Ui, state: &State) {
 /// Trait describing types that can observe games run by a `Referee`
 pub trait Observer {
     /// Recieves a state from the referee to render
-    fn recieve_state(&mut self, state: State);
+    fn recieve_state(&mut self, state: State<FullPlayerInfo>);
 
     /// Indicates to the Observer that the game has ended and no more `State`s will be sent
     fn game_over(&mut self);
@@ -352,14 +352,14 @@ pub trait Observer {
 #[derive(Debug, Default, Clone)]
 pub struct ObserverGUI {
     /// `VecDeque` holding all the states the `ObserverGUI` has recieved
-    states: Arc<Mutex<VecDeque<State>>>,
+    states: Arc<Mutex<VecDeque<State<FullPlayerInfo>>>>,
     /// Flag indicating if the `Referee` has told the `ObserverGUI` the game has ended
     game_over: Arc<Mutex<bool>>,
 }
 
 impl Observer for ObserverGUI {
     /// Recie
-    fn recieve_state(&mut self, state: State) {
+    fn recieve_state(&mut self, state: State<FullPlayerInfo>) {
         self.states.lock().unwrap().push_back(state);
     }
 
@@ -369,7 +369,7 @@ impl Observer for ObserverGUI {
 }
 
 /// Writes the `JsonRefereeState` representation of `state` to a path the user chooses
-fn save_json_state(state: State) {
+fn save_json_state(state: State<FullPlayerInfo>) {
     let path = std::env::current_dir().unwrap();
     if let Some(path) = rfd::FileDialog::new()
         .set_directory(&path)

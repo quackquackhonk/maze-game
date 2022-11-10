@@ -9,7 +9,7 @@ use crate::{
     board::{Board, Slide},
     gem::Gem,
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, ColorName, PlayerInfo, State,
+    Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
 };
 
 #[derive(Debug, Error)]
@@ -274,9 +274,21 @@ pub struct JsonState {
     pub last: JsonAction,
 }
 
-impl From<JsonState> for State {
+impl From<JsonState> for State<FullPlayerInfo> {
     fn from(jstate: JsonState) -> Self {
-        let player_info: Vec<PlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
+        let player_info: Vec<FullPlayerInfo> =
+            jstate.plmt.into_iter().map(|pi| pi.into()).collect();
+        State {
+            board: (jstate.board, jstate.spare).into(),
+            player_info: player_info.into(),
+            previous_slide: jstate.last.into(),
+        }
+    }
+}
+
+impl From<JsonState> for State<PubPlayerInfo> {
+    fn from(jstate: JsonState) -> Self {
+        let player_info: Vec<PubPlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
         State {
             board: (jstate.board, jstate.spare).into(),
             player_info: player_info.into(),
@@ -324,9 +336,9 @@ pub struct JsonPlayer {
     pub color: JsonColor,
 }
 
-impl From<JsonPlayer> for PlayerInfo {
+impl From<JsonPlayer> for FullPlayerInfo {
     fn from(jp: JsonPlayer) -> Self {
-        PlayerInfo::new(
+        FullPlayerInfo::new(
             jp.home.into(),
             jp.current.into(),
             // FIXME: this should not always be (1, 1)
@@ -335,6 +347,19 @@ impl From<JsonPlayer> for PlayerInfo {
                 .try_into()
                 .expect("Json Color values are always valid"),
         )
+    }
+}
+
+impl From<JsonPlayer> for PubPlayerInfo {
+    fn from(jp: JsonPlayer) -> Self {
+        Self {
+            current: jp.current.into(),
+            home: jp.home.into(),
+            color: jp
+                .color
+                .try_into()
+                .expect("Json Color values are always valid"),
+        }
     }
 }
 
