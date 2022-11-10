@@ -153,7 +153,7 @@ impl PlayerInfo for FullPlayerInfo {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Default, Clone)]
 pub struct PubPlayerInfo {
     pub current: Position,
     pub home: Position,

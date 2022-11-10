@@ -1,9 +1,10 @@
 use std::io;
 
-use crate::strategy::{PlayerAction, PlayerBoardState, Strategy};
+use crate::strategy::{PlayerAction, Strategy};
 use common::board::{Board, DefaultBoard};
 use common::grid::Position;
 use common::json::Name;
+use common::{PubPlayerInfo, State};
 use thiserror::Error;
 
 pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
@@ -24,9 +25,10 @@ pub trait PlayerApi {
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board>;
     /// The player receives a `PlayerBoardState`, which is all the publicly available information
     /// in the game, and its own private goal tile.
-    fn setup(&mut self, state: Option<PlayerBoardState>, goal: Position) -> PlayerApiResult<()>;
+    fn setup(&mut self, state: Option<State<PubPlayerInfo>>, goal: Position)
+        -> PlayerApiResult<()>;
     /// Returns a `PlayerAction` based on the given `PlayerBoardState`
-    fn take_turn(&self, state: PlayerBoardState) -> PlayerApiResult<PlayerAction>;
+    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction>;
     /// The player is informed if they won or not.
     fn won(&mut self, did_win: bool) -> PlayerApiResult<()>;
 }
@@ -63,13 +65,17 @@ impl<S: Strategy> PlayerApi for LocalPlayer<S> {
 
     /// # Effect
     /// Sets `self.goal = Some(goal)`.
-    fn setup(&mut self, _state: Option<PlayerBoardState>, goal: Position) -> PlayerApiResult<()> {
+    fn setup(
+        &mut self,
+        _state: Option<State<PubPlayerInfo>>,
+        goal: Position,
+    ) -> PlayerApiResult<()> {
         self.goal = Some(goal);
         Ok(())
     }
 
-    fn take_turn(&self, state: PlayerBoardState) -> PlayerApiResult<PlayerAction> {
-        let start = state.players[0].current;
+    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+        let start = state.player_info[0].current;
         Ok(self.strategy.get_move(
             state,
             start,
@@ -86,7 +92,7 @@ impl<S: Strategy> PlayerApi for LocalPlayer<S> {
 
 #[cfg(test)]
 mod tests {
-    use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo};
+    use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo, State};
 
     use crate::{
         player::PlayerApi,
@@ -130,11 +136,7 @@ mod tests {
 
         assert!(player.goal.is_none());
 
-        let state = Some(PlayerBoardState {
-            board: DefaultBoard::<7, 7>::default_board(),
-            players: Default::default(),
-            last: None,
-        });
+        let state = Some(State::default());
         player
             .setup(state, (1, 1))
             .expect("LocalPlayers are infallible");
@@ -155,24 +157,18 @@ mod tests {
             goal: None,
         };
 
-        let state = Some(PlayerBoardState {
-            board: DefaultBoard::<7, 7>::default_board(),
-            players: Default::default(),
-            last: None,
-        });
+        let state = Some(State::default());
         player
             .setup(state, (1, 1))
             .expect("LocalPlayers are infallible");
 
-        let state = PlayerBoardState {
-            board: DefaultBoard::<7, 7>::default_board(),
-            players: vec![PubPlayerInfo {
-                current: (0, 0),
-                home: (0, 0),
-                color: ColorName::Red.into(),
-            }],
-            last: None,
-        };
+        let mut state = State::<PubPlayerInfo>::default();
+        state.player_info = vec![PubPlayerInfo {
+            current: (0, 0),
+            home: (0, 0),
+            color: ColorName::Red.into(),
+        }]
+        .into();
 
         let turn = player.take_turn(state.clone()).unwrap();
         assert_eq!(turn, NaiveStrategy::Euclid.get_move(state, (0, 0), (1, 1)));
