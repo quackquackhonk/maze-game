@@ -16,6 +16,7 @@ egui_extras = { version = "0.19.0", features = ["image"] }
 hex = { version = "0.4.3", features = ["serde"] }
 image = { version = "0.24.4", features = ["png"] }
 include_dir = "0.7.3"
+itertools = "0.10.5"
 lazy_static = "1.4.0"
 regex = "1.6.0"
 serde = { version = "1.0.145", features = ["derive"] }

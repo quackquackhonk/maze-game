@@ -4,7 +4,7 @@ use std::iter::repeat;
 use common::board::Board;
 use common::tile::CompassDirection;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{Color, PlayerInfo, State, BOARD_SIZE};
+use common::{Color, PlayerInfo, State};
 
 /// This type represents the data a player recieves from the Referee about the Game State
 #[derive(Debug, Clone)]
@@ -103,7 +103,7 @@ impl NaiveStrategy {
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
-        self.get_alt_goals(goal_tile)
+        self.get_alt_goals(goal_tile, board_state)
             .into_iter()
             .find_map(|goal| self.find_move_to_reach(board_state, start, goal))
     }
@@ -113,7 +113,7 @@ impl NaiveStrategy {
     /// - `NaiveStrategy::Euclid` sorts alt goals by ascending `euclidian_distance` to the
     /// `goal_tile`
     /// - `NaiveStrategy::Reimann` sorts alt goals in row-column order.
-    fn get_alt_goals(&self, goal_tile: Position) -> Vec<Position> {
+    fn get_alt_goals(&self, goal_tile: Position, board_state: &PlayerBoardState) -> Vec<Position> {
         //! alternative_goal_order is a Comparator<Position> function.
         #[allow(clippy::type_complexity)]
         let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
@@ -128,8 +128,8 @@ impl NaiveStrategy {
             Self::Riemann => Box::new(row_col_order),
         };
 
-        let mut possible_goals: Vec<Position> = (0..BOARD_SIZE)
-            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+        let mut possible_goals: Vec<Position> = (0..board_state.board.num_rows())
+            .flat_map(|row| (0..board_state.board.num_cols()).zip(repeat(row)))
             .collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
@@ -172,15 +172,15 @@ impl NaiveStrategy {
         start: Position,
         destination: Position,
     ) -> PlayerAction {
-        for row in 0..=(BOARD_SIZE / 2) {
+        for row in board_state.board.slideable_rows() {
             for direction in [CompassDirection::West, CompassDirection::East] {
                 for rotations in 0..4 {
                     if let Some(lslide) = board_state.last {
-                        if lslide.index == row * 2 && lslide.direction.opposite() == direction {
+                        if lslide.index == row && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
-                    let slide = Slide::new(row * 2, direction);
+                    let slide = Slide::new(row, direction);
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -192,15 +192,15 @@ impl NaiveStrategy {
                 }
             }
         }
-        for col in 0..=(BOARD_SIZE / 2) {
+        for col in board_state.board.slideable_cols() {
             for direction in [CompassDirection::North, CompassDirection::South] {
                 for rotations in 0..4 {
                     if let Some(lslide) = board_state.last {
-                        if lslide.index == col * 2 && lslide.direction.opposite() == direction {
+                        if lslide.index == col && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
-                    let slide = Slide::new(col * 2, direction);
+                    let slide = Slide::new(col, direction);
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -231,7 +231,7 @@ impl Strategy for NaiveStrategy {
 #[cfg(test)]
 mod StrategyTests {
     use super::*;
-    use common::{ColorName, BOARD_SIZE};
+    use common::ColorName;
     use CompassDirection::*;
 
     #[test]
@@ -356,8 +356,8 @@ mod StrategyTests {
             ],
             last: None,
         };
-        let mut any_passes = (0..BOARD_SIZE)
-            .flat_map(|row| (0..BOARD_SIZE).zip(repeat(row)))
+        let mut any_passes = (0..board_state.board.num_rows())
+            .flat_map(|row| (0..board_state.board.num_cols()).zip(repeat(row)))
             .map(|dest| euclid.get_move(board_state.clone(), (0, 0), dest))
             .filter(|m| m.is_none());
         assert!(any_passes.next().is_none());
@@ -582,26 +582,38 @@ mod StrategyTests {
 
     #[test]
     fn test_get_alt_goals_reimann() {
-        let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1));
-        assert_eq!(reimann_alt_goals.len(), BOARD_SIZE.pow(2));
+        let board_state: PlayerBoardState = PlayerBoardState {
+            board: Board::default(),
+            players: vec![],
+            last: None,
+        };
+        let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1), &board_state);
+        let max_cells = board_state.board.num_rows() * board_state.board.num_cols();
+        assert_eq!(reimann_alt_goals.len(), max_cells);
         assert_eq!(reimann_alt_goals[0], (0, 0));
         assert_eq!(reimann_alt_goals[1], (1, 0));
         assert_eq!(reimann_alt_goals[2], (2, 0));
-        assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 2], (5, 6));
-        assert_eq!(reimann_alt_goals[BOARD_SIZE.pow(2) - 1], (6, 6));
+        assert_eq!(reimann_alt_goals[max_cells - 2], (5, 6));
+        assert_eq!(reimann_alt_goals[max_cells - 1], (6, 6));
     }
 
     #[test]
     fn test_get_alt_goals_euclid() {
-        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1));
-        assert_eq!(euclid_alt_goals.len(), BOARD_SIZE.pow(2));
+        let board_state: PlayerBoardState = PlayerBoardState {
+            board: Board::default(),
+            players: vec![],
+            last: None,
+        };
+        let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1), &board_state);
+        let max_cells = board_state.board.num_rows() * board_state.board.num_cols();
+        assert_eq!(euclid_alt_goals.len(), max_cells);
         assert_eq!(euclid_alt_goals[0], (1, 1));
         assert_eq!(euclid_alt_goals[1], (1, 0));
         assert_eq!(euclid_alt_goals[2], (0, 1));
         assert_eq!(euclid_alt_goals[3], (2, 1));
         assert_eq!(euclid_alt_goals[4], (1, 2));
-        assert_eq!(euclid_alt_goals[BOARD_SIZE.pow(2) - 2], (5, 6));
-        assert_eq!(euclid_alt_goals[BOARD_SIZE.pow(2) - 1], (6, 6));
+        assert_eq!(euclid_alt_goals[max_cells - 2], (5, 6));
+        assert_eq!(euclid_alt_goals[max_cells - 1], (6, 6));
     }
 
     #[test]

@@ -85,7 +85,7 @@ const CELL_SIZE_2D: Vec2 = Vec2::new(CELL_SIZE, CELL_SIZE);
 #[derive(Debug, Clone)]
 struct TileWidget {
     tile: Tile,
-    home_colors: Vec<Color>,
+    home_color: Option<Color>,
     player_colors: Vec<Color>,
 }
 
@@ -157,19 +157,10 @@ impl TileWidget {
     }
 
     /// Renders all homes in `self.home_colors` onto `ui`
-    fn render_homes(&self, ui: &mut egui::Ui, id: &str) {
-        Grid::new(format!("{} homes", id))
-            .min_col_width(0.0)
-            .min_row_height(0.0)
-            .spacing(Vec2::new(0.0, 0.0))
-            .show(ui, |ui| {
-                self.home_colors.iter().enumerate().for_each(|(idx, col)| {
-                    if idx != 0 && idx % 2 == 0 {
-                        ui.end_row();
-                    }
-                    ui.add(home_image_with_color(ui, col, CELL_SIZE_2D * 0.5));
-                })
-            });
+    fn render_homes(&self, ui: &mut egui::Ui) {
+        if let Some(col) = &self.home_color {
+            ui.add(home_image_with_color(ui, &col, CELL_SIZE_2D));
+        }
     }
 
     /// Renders all players in `self.player_colors` onto `ui`
@@ -217,7 +208,7 @@ fn render_tile(ui: &mut egui::Ui, widget: TileWidget, id: &str) {
         .show(ui, |ui| {
             ui.add_sized(CELL_SIZE_2D, gem1_img);
             widget.north_path().show(ui);
-            widget.render_homes(ui, id);
+            widget.render_homes(ui);
             ui.end_row();
 
             ui.add(west_path);
@@ -243,7 +234,7 @@ fn widget_grid(state: &State) -> CGrid<TileWidget> {
                 .map(|tile| TileWidget {
                     tile: tile.clone(),
                     player_colors: vec![],
-                    home_colors: vec![],
+                    home_color: None,
                 })
                 .collect::<Box<[TileWidget]>>()
         })
@@ -253,7 +244,7 @@ fn widget_grid(state: &State) -> CGrid<TileWidget> {
     // updates all `TileWidget`s to include player home and goal information
     state.player_info.iter().for_each(|pi| {
         tiles[pi.position].player_colors.push(pi.color.clone());
-        tiles[pi.home].home_colors.push(pi.color.clone());
+        tiles[pi.home].home_color = Some(pi.color.clone());
     });
 
     tiles
@@ -307,7 +298,7 @@ fn render_state_info(ui: &mut egui::Ui, state: &State) {
     let spare_tile_widget = TileWidget {
         tile: state.board.extra.clone(),
         player_colors: vec![],
-        home_colors: vec![],
+        home_color: None,
     };
 
     let spare_text = RichText::new("Spare Tile:").heading().strong();
