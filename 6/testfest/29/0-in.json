@@ -1,0 +1,40 @@
+[["stve","Euclid"],["abby","Euclid"],["lena","Riemann"], ["max", "Riemann"]]
+{"board": {"connectors": [
+    ["┐", "│", "─", "┐", "└", "┤", "┌"], 
+    ["└", "│", "┘", "│", "┌", "┘", "┬"], 
+    ["─", "─", "─", "│", "├", "┴", "┤"], 
+    ["┼", "│", "─", "┐", "└", "┌", "┘"], 
+    ["┬", "├", "┴", "┤", "┼", "│", "─"], 
+    ["┐", "└", "┌", "┘", "┬", "├", "┴"], 
+    ["┤", "┼", "│", "─", "┐", "└", "┌"]],
+
+    "treasures": [[["zircon", "peridot"], ["yellow-heart", "chrysolite"], ["yellow-heart", "carnelian"], ["yellow-heart", "bulls-eye"], ["yellow-heart", "blue-spinel-heart"], ["yellow-beryl-oval", "ammolite"], ["zircon", "pink-opal"]],
+     [["zircon", "padparadscha-sapphire"], ["zircon", "padparadscha-oval"], ["zircon", "orange-radiant"], ["yellow-heart", "chrysoberyl-cushion"], ["yellow-heart", "blue-pear-shape"], ["yellow-heart", "blue-cushion"], ["yellow-heart", "blue-ceylon-sapphire"]],
+     [["yellow-heart", "clinohumite"], ["yellow-heart", "citrine"], ["yellow-heart", "citrine-checkerboard"], ["yellow-heart", "chrome-diopside"], ["yellow-heart", "black-spinel-cushion"], ["yellow-heart", "black-onyx"], ["yellow-heart", "black-obsidian"]],
+     [["yellow-heart", "beryl"], ["yellow-heart", "azurite"], ["yellow-heart", "aventurine"], ["yellow-heart", "australian-marquise"], ["yellow-heart", "aquamarine"], ["yellow-heart", "apricot-square-radiant"], ["yellow-heart", "aplite"]],
+     [["yellow-heart", "apatite"], ["yellow-heart", "ammolite"], ["yellow-heart", "ametrine"], ["yellow-heart", "amethyst"], ["yellow-heart", "almandine-garnet"], ["yellow-heart", "alexandrite"], ["yellow-heart", "alexandrite-pear-shape"]],
+     [["yellow-beryl-oval", "zoisite"], ["yellow-beryl-oval", "zircon"], ["yellow-beryl-oval", "yellow-jasper"], ["yellow-beryl-oval", "yellow-heart"], ["yellow-beryl-oval", "yellow-beryl-oval"], ["yellow-beryl-oval", "yellow-baguette"], ["yellow-beryl-oval", "white-square"]],
+     [["yellow-beryl-oval", "unakite"], ["yellow-beryl-oval", "tourmaline"], ["yellow-beryl-oval", "tourmaline-laser-cut"], ["yellow-beryl-oval", "tigers-eye"], ["yellow-beryl-oval", "tanzanite-trillion"], ["yellow-beryl-oval", "super-seven"], ["yellow-beryl-oval", "sunstone"]]]}, 
+     
+    "last": [0, "LEFT"], 
+     
+    "plmt": [{
+        "color": "purple",
+            "current": {"row#": 0, "column#": 0},
+            "goto": {"row#": 1, "column#": 3},
+            "home": {"row#": 3, "column#": 5}},
+        {"color": "yellow",
+            "current": {"row#": 0, "column#": 1},
+            "goto": {"row#": 5, "column#": 1},
+            "home": {"row#": 5, "column#": 3}},
+        {"color": "white",
+            "current": {"row#": 5, "column#": 3},
+            "goto": {"row#": 1, "column#": 1},
+            "home": {"row#": 3, "column#": 3}},
+        {"color": "black",
+            "current": {"row#": 5, "column#": 1},
+            "goto": {"row#": 5, "column#": 5},
+            "home": {"row#": 1, "column#": 1}}], 
+            
+            
+    "spare": {"tilekey": "┌", "1-image": "zircon", "2-image": "pink-emerald-cut"}}

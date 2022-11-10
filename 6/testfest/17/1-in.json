@@ -1,0 +1,19 @@
+[["Blue", "Euclid"]]
+{ "board" : { "connectors" : [
+  ["┴", "│", "├", "│", "┤", "┤", "┐"],
+  ["├", "┴", "┘", "└", "┤", "┘", "┐"],
+  ["└", "─", "├", "┬", "└", "┼", "┘"],
+  ["┼", "─", "┌", "├", "└", "┴", "┐"],
+  ["└", "┐", "├", "┐", "└", "┼", "│"],
+  ["─", "┼", "│", "│", "─", "┌", "┌"],
+  ["│", "┐", "├", "┴", "┌", "┘", "└"]
+],
+  "treasures"  : [[["purple-square-cushion", "green-beryl-antique"], ["green-princess-cut", "purple-spinel-trillion"], ["zoisite", "garnet"], ["magnesite", "chrysoberyl-cushion"], ["white-square", "hematite"], ["sunstone", "yellow-beryl-oval"], ["dumortierite", "hackmanite"]], [["sunstone", "garnet"], ["yellow-baguette", "iolite-emerald-cut"], ["garnet", "padparadscha-oval"], ["hematite", "lemon-quartz-briolette"], ["kunzite-oval", "morganite-oval"], ["red-spinel-square-emerald-cut", "almandine-garnet"], ["purple-oval", "kunzite"]], [["beryl", "bulls-eye"], ["tigers-eye", "cordierite"], ["goldstone", "raw-beryl"], ["orange-radiant", "green-beryl"], ["jaspilite", "moss-agate"], ["tanzanite-trillion", "pink-opal"], ["purple-oval", "goldstone"]], [["blue-ceylon-sapphire", "emerald"], ["star-cabochon", "rose-quartz"], ["gray-agate", "pink-opal"], ["moss-agate", "tigers-eye"], ["green-princess-cut", "apatite"], ["pink-emerald-cut", "sunstone"], ["zircon", "kunzite"]], [["red-spinel-square-emerald-cut", "ammolite"], ["purple-spinel-trillion", "pink-round"], ["apricot-square-radiant", "apatite"], ["lemon-quartz-briolette", "aplite"], ["cordierite", "raw-beryl"], ["color-change-oval", "morganite-oval"], ["pink-spinel-cushion", "azurite"]], [["green-aventurine", "amethyst"], ["yellow-baguette", "black-onyx"], ["yellow-heart", "rhodonite"], ["purple-spinel-trillion", "garnet"], ["padparadscha-sapphire", "golden-diamond-cut"], ["garnet", "hematite"], ["kunzite", "diamond"]], [["stilbite", "prehnite"], ["dumortierite", "azurite"], ["sunstone", "pink-round"], ["sunstone", "jaspilite"], ["unakite", "yellow-heart"], ["red-spinel-square-emerald-cut", "black-obsidian"], ["garnet", "apricot-square-radiant"]]] },
+  "spare" : { "tilekey" : "┼", "1-image" : "moonstone", "2-image" : "mexican-opal" },
+  "plmt"  : [{
+    "current" : { "row#" : 4, "column#" : 0 },
+    "home" : { "row#" : 1, "column#" : 5 },
+    "goto" : { "row#" : 5, "column#" : 1 },
+    "color" : "blue" }],
+  "last"  : [3, "UP"] }
+

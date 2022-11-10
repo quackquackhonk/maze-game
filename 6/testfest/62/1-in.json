@@ -1,0 +1,27 @@
+[["ben", "Riemann"], ["bEn", "Riemann"]]
+
+{
+  "board": {
+    "connectors": [
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"],
+      ["│", "─", "│", "─", "│", "─", "│"]
+    ],
+    "treasures": [[["alexandrite-pear-shape","yellow-beryl-oval"],["chrome-diopside","garnet"],["golden-diamond-cut","yellow-heart"],["beryl","garnet"],["zircon","alexandrite-pear-shape"],["almandine-garnet","moss-agate"],["tanzanite-trillion","tigers-eye"]],[["beryl","yellow-beryl-oval"],["cordierite","raw-citrine"],["bulls-eye","star-cabochon"],["prehnite","australian-marquise"],["pink-spinel-cushion","fancy-spinel-marquise"],["aquamarine","pink-round"],["cordierite","azurite"]],[["beryl","jaspilite"],["rock-quartz","clinohumite"],["zircon","heliotrope"],["red-spinel-square-emerald-cut","tourmaline-laser-cut"],["black-onyx","yellow-heart"],["almandine-garnet","green-aventurine"],["spinel","gray-agate"]],[["green-beryl","aplite"],["star-cabochon","lemon-quartz-briolette"],["grandidierite","purple-square-cushion"],["raw-citrine","color-change-oval"],["iolite-emerald-cut","stilbite"],["yellow-heart","jasper"],["ammolite","morganite-oval"]],[["tanzanite-trillion","bulls-eye"],["mexican-opal","stilbite"],["purple-spinel-trillion","dumortierite"],["blue-cushion","blue-cushion"],["aquamarine","bulls-eye"],["green-beryl-antique","tanzanite-trillion"],["blue-pear-shape","padparadscha-oval"]],[["black-spinel-cushion","pink-spinel-cushion"],["hematite","tanzanite-trillion"],["pink-spinel-cushion","garnet"],["azurite","lapis-lazuli"],["rock-quartz","gray-agate"],["rose-quartz","bulls-eye"],["ruby","golden-diamond-cut"]],[["amethyst","padparadscha-oval"],["citrine","chrysoberyl-cushion"],["alexandrite-pear-shape","magnesite"],["alexandrite","tourmaline"],["mexican-opal","green-beryl-antique"],["goldstone","padparadscha-oval"],["dumortierite","alexandrite-pear-shape"]]]
+
+  },
+  "spare": {
+    "tilekey": "─",
+    "1-image": "kunzite-oval",
+    "2-image": "bulls-eye"
+  },
+  "plmt": [
+    {"color": "111111", "current": {"row#": 1, "column#": 1}, "home": {"row#": 1, "column#": 1}, "goto": {"row#": 1, "column#": 1}},
+    {"color": "111112", "current": {"row#": 1, "column#": 3}, "home": {"row#": 1, "column#": 3}, "goto": {"row#": 1, "column#": 3}}
+  ],
+  "last": [0, "LEFT"]
+}

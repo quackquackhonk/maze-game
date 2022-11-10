@@ -1,0 +1,23 @@
+[["Red", "Riemann"], ["White", "Euclid"]]
+{ "board" : { "connectors" : [
+  ["├", "┘", "┴", "┤", "┬", "┘", "│"],
+  ["└", "┴", "─", "┐", "┐", "┴", "┘"],
+  ["─", "┐", "─", "─", "┘", "┌", "├"],
+  ["├", "─", "├", "├", "┘", "├", "├"],
+  ["┘", "┤", "┴", "┘", "┤", "┴", "┐"],
+  ["┌", "┐", "─", "┌", "┬", "┴", "┼"],
+  ["┘", "┘", "┼", "┴", "┴", "┤", "┌"]
+],
+"treasures"  : [[["green-beryl", "aventurine"], ["ruby-diamond-profile", "apatite"], ["aquamarine", "rhodonite"], ["jaspilite", "pink-emerald-cut"], ["color-change-oval", "fancy-spinel-marquise"], ["green-aventurine", "dumortierite"], ["apricot-square-radiant", "padparadscha-oval"]], [["australian-marquise", "super-seven"], ["goldstone", "aplite"], ["alexandrite-pear-shape", "white-square"], ["chrysolite", "yellow-beryl-oval"], ["pink-round", "tourmaline"], ["apricot-square-radiant", "black-onyx"], ["blue-cushion", "alexandrite-pear-shape"]], [["purple-oval", "rock-quartz"], ["tigers-eye", "cordierite"], ["aventurine", "purple-oval"], ["raw-beryl", "pink-emerald-cut"], ["almandine-garnet", "ruby-diamond-profile"], ["citrine-checkerboard", "garnet"], ["super-seven", "blue-cushion"]], [["goldstone", "rhodonite"], ["emerald", "citrine-checkerboard"], ["magnesite", "unakite"], ["diamond", "purple-square-cushion"], ["green-beryl", "purple-oval"], ["white-square", "black-obsidian"], ["almandine-garnet", "hematite"]], [["grandidierite", "pink-emerald-cut"], ["star-cabochon", "pink-opal"], ["labradorite", "red-diamond"], ["color-change-oval", "stilbite"], ["emerald", "tigers-eye"], ["labradorite", "garnet"], ["raw-beryl", "mexican-opal"]], [["prehnite", "yellow-heart"], ["yellow-heart", "black-onyx"], ["prehnite", "purple-square-cushion"], ["kunzite-oval", "morganite-oval"], ["labradorite", "ruby-diamond-profile"], ["citrine-checkerboard", "blue-pear-shape"], ["green-princess-cut", "purple-spinel-trillion"]], [["hackmanite", "chrysolite"], ["diamond", "chrysolite"], ["pink-opal", "fancy-spinel-marquise"], ["apatite", "pink-emerald-cut"], ["spinel", "kunzite"], ["white-square", "blue-spinel-heart"], ["unakite", "black-obsidian"]]] },
+  "spare" : { "tilekey" : "┤", "1-image" : "aventurine", "2-image" : "blue-cushion" },
+  "plmt"  : [{
+    "current" : { "row#" : 2, "column#" : 3 },
+    "home" : { "row#" : 3, "column#" : 3 },
+    "goto" : { "row#" : 6, "column#" : 0 },
+    "color" : "red" }, {
+    "current" : { "row#" : 0, "column#" : 4 },
+    "home" : { "row#" : 1, "column#" : 5 },
+    "goto" : { "row#" : 1, "column#" : 5 },
+    "color" : "white" }],
+  "last"  : [2, "UP"] }
+
