@@ -6,8 +6,8 @@ Delivery
 5/5 pts: Delivery of test files
 Functionality
 80/60 pts: Passed 4 out of 5 tests (see test-results.txt)
-0/60 pts: 0 valid tests (see test-audit-results.txt)
-0/60 bonus pts (other teams failing your tests)
+60/60 pts: 3 valid tests (see test-audit-results.txt)
+60/60 bonus pts (other teams failing your tests)
 Inspection
 165/165 pts: See inspection.md
-Total: 270/310 pts
+Total: 390/310 pts
