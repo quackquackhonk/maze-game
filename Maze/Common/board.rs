@@ -234,33 +234,40 @@ pub struct Slide {
     pub direction: CompassDirection,
 }
 
-impl Slide {
+// For slide stuff
+impl Board {
     /// Attempts to create a slide command
     ///
     /// ```
-    /// # use common::board::Slide;
-    /// # use common::tile::CompassDirection;
-    /// Slide::new(3, CompassDirection::North);
+    /// use common::board::Slide;
+    /// use common::tile::CompassDirection;
+    /// use common::board::Board;
+    /// use common::board::DefaultBoard;
+    ///
+    /// let board: Board = DefaultBoard::<7,7>::default_board();
+    /// assert!(board.new_slide(3, CompassDirection::North).is_none());
+    /// assert!(board.new_slide(4, CompassDirection::East).is_some());
     /// ```
-    pub fn new(index: usize, direction: CompassDirection) -> Slide {
-        Self { index, direction }
-    }
-
-    #[must_use]
-    pub fn is_valid_slide(&self, rows: usize, cols: usize) -> bool {
-        match self.direction {
+    pub fn new_slide(&self, index: usize, direction: CompassDirection) -> Option<Slide> {
+        match direction {
             CompassDirection::North | CompassDirection::South
-                if self.index % 2 == 0 && self.index < rows =>
+                if self.slideable_rows().contains(&index) =>
             {
-                true
+                Some(Slide { index, direction })
             }
             CompassDirection::East | CompassDirection::West
-                if self.index % 2 == 0 && self.index < cols =>
+                if self.slideable_cols().contains(&index) =>
             {
-                true
+                Some(Slide { index, direction })
             }
-            _ => false,
+            _ => None,
         }
+    }
+}
+
+impl Slide {
+    pub fn new_unchecked(index: usize, direction: CompassDirection) -> Slide {
+        Self { index, direction }
     }
 
     #[must_use]
@@ -320,29 +327,32 @@ mod BoardTests {
 
     #[test]
     pub fn test_slide_new() {
-        assert!(Slide::new(0, North).is_valid_slide(1, 1));
-        assert!(!Slide::new(2, North).is_valid_slide(1, 1));
+        let one_by_one: Board = DefaultBoard::<1, 1>::default_board();
+        assert!(one_by_one.new_slide(0, North).is_some());
+        assert!(one_by_one.new_slide(1, North).is_none());
 
-        assert!(Slide::new(0, South).is_valid_slide(7, 7));
-        assert!(Slide::new(2, East).is_valid_slide(7, 7));
-        assert!(!Slide::new(5, West).is_valid_slide(7, 7));
+        let seven_by_seven: Board = DefaultBoard::<7, 7>::default_board();
+        assert!(seven_by_seven.new_slide(0, South).is_some());
+        assert!(seven_by_seven.new_slide(2, East).is_some());
+        assert!(seven_by_seven.new_slide(5, West).is_none());
     }
 
     #[test]
     fn test_slide_move_position() {
-        let north_slide = Slide::new(0, North);
+        let b: Board = DefaultBoard::<7, 7>::default_board();
+        let north_slide = b.new_slide(0, North).unwrap();
         assert_eq!(north_slide.move_position((1, 1), 7, 7), (1, 1));
         assert_eq!(north_slide.move_position((0, 0), 7, 7), (0, 6));
         assert_eq!(north_slide.move_position((0, 3), 7, 7), (0, 2));
-        let south_slide = Slide::new(4, South);
+        let south_slide = b.new_slide(4, South).unwrap();
         assert_eq!(south_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(south_slide.move_position((4, 0), 7, 7), (4, 1));
         assert_eq!(south_slide.move_position((4, 6), 7, 7), (4, 0));
-        let east_slide = Slide::new(2, East);
+        let east_slide = b.new_slide(2, East).unwrap();
         assert_eq!(east_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(east_slide.move_position((1, 2), 7, 7), (2, 2));
         assert_eq!(east_slide.move_position((6, 2), 7, 7), (0, 2));
-        let west_slide = Slide::new(6, West);
+        let west_slide = b.new_slide(6, West).unwrap();
         assert_eq!(west_slide.move_position((5, 1), 7, 7), (5, 1));
         assert_eq!(west_slide.move_position((0, 6), 7, 7), (6, 6));
         assert_eq!(west_slide.move_position((6, 6), 7, 7), (5, 6));
@@ -359,7 +369,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Crossroads);
 
-        b.slide_and_insert(Slide::new(0, South)).unwrap();
+        b.slide_and_insert(b.new_slide(0, South).unwrap()).unwrap();
         // Board after slide + insert
         // ┼│└
         // ─┐┘
@@ -369,7 +379,7 @@ mod BoardTests {
         dbg!(&b.grid);
         assert_eq!(b.extra.connector, Fork(North));
 
-        b.slide_and_insert(Slide::new(0, East)).unwrap();
+        b.slide_and_insert(b.new_slide(0, East).unwrap()).unwrap();
         // Board after insert
         // ┴┼│
         // ─┐┘
@@ -378,7 +388,7 @@ mod BoardTests {
         assert_eq!(b.grid[(0, 0)].connector, Fork(North));
         assert_eq!(b.extra.connector, Corner(North));
 
-        b.slide_and_insert(Slide::new(2, West)).unwrap();
+        b.slide_and_insert(b.new_slide(2, West).unwrap()).unwrap();
         dbg!(&b);
         // Board after slide + insert
         // ┴┼│

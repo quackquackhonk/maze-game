@@ -2,6 +2,7 @@
 
 use std::io::{stdin, stdout, Read, Write};
 
+use anyhow::anyhow;
 use common::board::Slide;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
@@ -18,31 +19,45 @@ pub enum ValidJson {
     // Degree(JsonDegree),
 }
 
-fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
+fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Result<()> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let mut state: State = match test_input.next().ok_or("No valid Board JSON found")? {
+    let mut state: State = match test_input
+        .next()
+        .ok_or(anyhow!("No valid State JSON found"))?
+    {
         ValidJson::State(state) => state.into(),
-        _ => Err("State was not the first JSON object sent")?,
+        _ => Err(anyhow!("State was not the first JSON object sent"))?,
     };
 
     let slide: Slide = {
-        let index: usize = match test_input.next().ok_or("No valid Index JSON found")? {
+        let index: usize = match test_input
+            .next()
+            .ok_or(anyhow!("No valid Index JSON found"))?
+        {
             ValidJson::Number(index) => index,
-            _ => Err("Index was not the second JSON object sent")?,
+            _ => Err(anyhow!("Index was not the second JSON object sent"))?,
         };
 
-        let dir: CompassDirection =
-            match test_input.next().ok_or("No valid Direction JSON found")? {
-                ValidJson::Direction(dir) => dir.into(),
-                _ => Err("Direction was not the third JSON object sent")?,
-            };
-        Slide::new(index, dir)
+        let dir: CompassDirection = match test_input
+            .next()
+            .ok_or(anyhow!("No valid Direction JSON found"))?
+        {
+            ValidJson::Direction(dir) => dir.into(),
+            _ => Err(anyhow!("Direction was not the third JSON object sent"))?,
+        };
+        state
+            .board
+            .new_slide(index, dir)
+            .ok_or(anyhow!("Slide is invalid"))?
     };
 
-    let num_rotations: usize = match test_input.next().ok_or("No valid Degree JSON found")? {
+    let num_rotations: usize = match test_input
+        .next()
+        .ok_or(anyhow!("No valid Degree JSON found"))?
+    {
         ValidJson::Number(deg) => JsonDegree(deg).try_into()?,
-        x => Err(format!(
+        x => Err(anyhow!(
             "Degree was not the fourth JSON object sent, got {:?}",
             x
         ))?,
@@ -50,7 +65,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
 
     // Perform the move requested by the player
     state.rotate_spare(num_rotations);
-    state.slide_and_insert(slide)?;
+    state.slide_and_insert(slide).map_err(|err| anyhow!(err))?;
 
     // Gets vector of reachable positions
     let mut reachable_pos = state
@@ -60,27 +75,20 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
         .collect::<Vec<Coordinate>>();
     reachable_pos.sort_by(cmp_coordinates);
 
-    writer
-        .write(
-            serde_json::to_string(&reachable_pos)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )
-        .map_err(|e| e.to_string())?;
+    writer.write(serde_json::to_string(&reachable_pos)?.as_bytes())?;
 
     Ok(())
 }
 /// Turn the STDIN Stream into A ValidJson Stream
-fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<Item = ValidJson>> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<ValidJson>()
-        .map(|x| x.map_err(|e| e.to_string()))
-        .collect::<Result<Vec<_>, String>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter())
 }
 
-fn main() -> Result<(), String> {
+fn main() -> anyhow::Result<()> {
     read_json_and_write_json(stdin().lock(), &mut stdout().lock())
 }
 

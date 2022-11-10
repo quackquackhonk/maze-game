@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::iter::repeat;
+use std::ops::{Deref, DerefMut};
 
 use common::board::Board;
 use common::tile::CompassDirection;
@@ -180,7 +181,7 @@ impl NaiveStrategy {
                             continue;
                         }
                     }
-                    let slide = Slide::new(row, direction);
+                    let slide = board_state.board.new_slide(row, direction).unwrap();
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -200,7 +201,7 @@ impl NaiveStrategy {
                             continue;
                         }
                     }
-                    let slide = Slide::new(col, direction);
+                    let slide = board_state.board.new_slide(col, direction).unwrap();
                     let player_move = PlayerMove {
                         slide,
                         rotations,
@@ -265,15 +266,16 @@ mod StrategyTests {
         //
         // extra = ┼
 
+        let slide = board_state.board.new_slide(2, East).unwrap();
         // what will Euclid do to go from (1, 1) -> (1, 3)
-        let euclid_move = euclid.get_move(board_state, (1, 1), (1, 3));
+        let euclid_move = euclid.get_move(board_state.clone(), (1, 1), (1, 3));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
         // slides row 2 east, inserts crossroads, goes to (1, 3)
         assert_eq!(
             euclid_move,
             PlayerMove {
-                slide: Slide::new(2, East),
+                slide,
                 rotations: 0,
                 destination: (1, 3),
             }
@@ -296,6 +298,7 @@ mod StrategyTests {
             ],
             last: None,
         };
+        let slide = board_state.board.new_slide(0, East).unwrap();
         let euclid_move = euclid.get_move(board_state, (0, 0), (2, 3));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
@@ -303,7 +306,7 @@ mod StrategyTests {
         assert_eq!(
             euclid_move,
             PlayerMove {
-                slide: Slide::new(0, East),
+                slide,
                 rotations: 0,
                 destination: (2, 2),
             }
@@ -326,6 +329,7 @@ mod StrategyTests {
             ],
             last: None,
         };
+        let slide = board_state.board.new_slide(4, East).unwrap();
         let euclid_move = euclid.get_move(board_state, (6, 4), (2, 0));
         assert!(euclid_move.is_some());
         let euclid_move = euclid_move.unwrap();
@@ -333,7 +337,7 @@ mod StrategyTests {
         assert_eq!(
             euclid_move,
             PlayerMove {
-                slide: Slide::new(4, East),
+                slide,
                 rotations: 0,
                 destination: (1, 2),
             }
@@ -394,6 +398,7 @@ mod StrategyTests {
         //
         // extra = ┼
 
+        let slide = board_state.board.new_slide(2, East).unwrap();
         // what will Reimann do to go from (1, 1) -> (1, 3)
         let reimann_move = reimann.get_move(board_state, (1, 1), (1, 3));
         assert!(reimann_move.is_some());
@@ -402,7 +407,7 @@ mod StrategyTests {
         assert_eq!(
             reimann_move,
             PlayerMove {
-                slide: Slide::new(2, East),
+                slide,
                 rotations: 0,
                 destination: (1, 3),
             }
@@ -425,6 +430,7 @@ mod StrategyTests {
             ],
             last: None,
         };
+        let slide = board_state.board.new_slide(0, East).unwrap();
         let reimann_move = reimann.get_move(board_state, (0, 0), (2, 3));
         assert!(reimann_move.is_some());
         let reimann_move = reimann_move.unwrap();
@@ -432,7 +438,7 @@ mod StrategyTests {
         assert_eq!(
             reimann_move,
             PlayerMove {
-                slide: Slide::new(0, East),
+                slide,
                 rotations: 0,
                 destination: (0, 0),
             }
@@ -455,6 +461,7 @@ mod StrategyTests {
             ],
             last: None,
         };
+        let slide = board_state.board.new_slide(4, East).unwrap();
         let reimann_move = reimann.get_move(board_state, (6, 4), (2, 0));
         assert!(reimann_move.is_some());
         let reimann_move = reimann_move.unwrap();
@@ -462,7 +469,7 @@ mod StrategyTests {
         assert_eq!(
             reimann_move,
             PlayerMove {
-                slide: Slide::new(4, East),
+                slide,
                 rotations: 0,
                 destination: (0, 2),
             }
@@ -507,7 +514,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: Slide::new(0, North),
+                slide: board_state.board.new_slide(0, North).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -517,7 +524,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: Slide::new(0, North),
+                slide: board_state.board.new_slide(0, North).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -528,7 +535,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: Slide::new(2, West),
+                slide: board_state.board.new_slide(2, West).unwrap(),
                 rotations: 0,
                 destination: (3, 2)
             })
@@ -538,7 +545,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: Slide::new(2, West),
+                slide: board_state.board.new_slide(2, West).unwrap(),
                 rotations: 0,
                 destination: (3, 0)
             })
@@ -550,7 +557,7 @@ mod StrategyTests {
         assert_eq!(
             euc_move,
             Some(PlayerMove {
-                slide: Slide::new(6, East),
+                slide: board_state.board.new_slide(6, East).unwrap(),
                 rotations: 0,
                 destination: (1, 5)
             })
@@ -560,7 +567,7 @@ mod StrategyTests {
         assert_eq!(
             rei_move,
             Some(PlayerMove {
-                slide: Slide::new(6, South),
+                slide: board_state.board.new_slide(6, South).unwrap(),
                 rotations: 0,
                 destination: (6, 1)
             })
@@ -652,7 +659,7 @@ mod StrategyTests {
         assert_eq!(
             euclid.find_move_to_reach(&board_state, start, destination),
             Some(PlayerMove {
-                slide: Slide::new(0, West),
+                slide: board_state.board.new_slide(0, West).unwrap(),
                 rotations: 0,
                 destination: (0, 1),
             })
@@ -660,7 +667,7 @@ mod StrategyTests {
         assert_eq!(
             reimann.find_move_to_reach(&board_state, start, destination),
             Some(PlayerMove {
-                slide: Slide::new(0, West),
+                slide: board_state.board.new_slide(0, West).unwrap(),
                 rotations: 0,
                 destination: (0, 1),
             })
@@ -699,7 +706,7 @@ mod StrategyTests {
         assert_eq!(
             euclid.find_move_to_reach(&board_state, start, destination),
             Some(PlayerMove {
-                slide: Slide::new(0, East),
+                slide: board_state.board.new_slide(0, East).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -707,7 +714,7 @@ mod StrategyTests {
         assert_eq!(
             reimann.find_move_to_reach(&board_state, start, destination),
             Some(PlayerMove {
-                slide: Slide::new(0, East),
+                slide: board_state.board.new_slide(0, East).unwrap(),
                 rotations: 0,
                 destination: (1, 1)
             })
@@ -746,7 +753,7 @@ mod StrategyTests {
         assert_eq!(board_state.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
         // slides the top row right, moves player to (1, 1)
         let player_move = PlayerMove {
-            slide: Slide::new(0, East),
+            slide: board_state.board.new_slide(0, East).unwrap(),
             rotations: 0,
             destination: (2, 2),
         };
@@ -771,7 +778,7 @@ mod StrategyTests {
 
         // slide the bottom row left
         let player_move = PlayerMove {
-            slide: Slide::new(6, West),
+            slide: board_state.board.new_slide(6, West).unwrap(),
             rotations: 0,
             destination: (1, 5),
         };

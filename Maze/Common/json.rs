@@ -1,7 +1,8 @@
-use std::{cmp::Ordering, fmt::Display};
+use std::cmp::Ordering;
 
 use aliri_braid::braid;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use unordered_pair::UnorderedPair;
 
 use crate::{
@@ -11,14 +12,9 @@ use crate::{
     Color, ColorName, PlayerInfo, State,
 };
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Error)]
+#[error("this name is invalid")]
 pub struct InvalidName;
-
-impl Display for InvalidName {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("InvalidName")
-    }
-}
 
 #[braid(serde, validator)]
 pub struct Name;
@@ -32,6 +28,12 @@ impl aliri_braid::Validator for Name {
             .then_some(())
             .ok_or(InvalidName)
     }
+}
+
+#[derive(Debug, Error)]
+#[error("this json is formed incorrectly: {msg}")]
+pub struct JsonError {
+    pub msg: String,
 }
 
 impl PartialEq<&str> for Name {
@@ -406,7 +408,7 @@ impl From<Option<Slide>> for JsonAction {
 /// or column. For example, "LEFT" means that the spare tile is inserted into the
 /// right side, such that the pieces move to the left, and the
 /// left-most tile of the row drops out.
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone, Copy)]
 pub enum JsonDirection {
     LEFT,
     RIGHT,
@@ -446,7 +448,7 @@ impl From<CompassDirection> for JsonDirection {
 pub struct JsonDegree(pub usize);
 
 impl TryFrom<JsonDegree> for usize {
-    type Error = String;
+    type Error = JsonError;
 
     fn try_from(d: JsonDegree) -> Result<Self, Self::Error> {
         match d.0 {
@@ -454,7 +456,9 @@ impl TryFrom<JsonDegree> for usize {
             90 => Ok(1),
             180 => Ok(2),
             270 => Ok(3),
-            _ => Err(format!("Invalid JsonDegree {}", d.0)),
+            _ => Err(JsonError {
+                msg: format!("Invalid JsonDegree {}", d.0),
+            }),
         }
     }
 }
