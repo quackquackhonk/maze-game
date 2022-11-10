@@ -303,6 +303,31 @@ impl<PInfo: PlayerInfo + Clone> State<PInfo> {
             .expect("Positions in `self.player_info` are never out of bounds")
     }
 
+    /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
+    /// `rotations` times, can the player go from `start` to `destination`
+    pub fn reachable_after_move(
+        &self,
+        slide: Slide,
+        rotations: usize,
+        destination: Position,
+        start: Position,
+    ) -> bool {
+        let mut state = self.clone();
+        (0..rotations).for_each(|_| state.board.rotate_spare());
+        state
+            .board
+            .slide_and_insert(slide)
+            .expect("Slides we create are always in bounds?");
+        let start = slide.move_position(start, state.board.grid[0].len(), state.board.grid.len());
+        state
+            .board
+            .reachable(start)
+            .expect("Start must be in bounds")
+            .into_iter()
+            .filter(|curr| curr != &start)
+            .any(|curr| curr == destination)
+    }
+
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
@@ -698,6 +723,67 @@ mod StateTests {
         state.next_player();
         let from_3_6 = state.reachable_by_player();
         assert_eq!(from_3_6.len(), 1);
+    }
+
+    #[test]
+    fn test_reachable_after_move() {
+        let mut state = State::<PubPlayerInfo>::default();
+        state.player_info = vec![
+            PubPlayerInfo {
+                current: (1, 1),
+                home: (1, 1),
+                color: ColorName::Red.into(),
+            },
+            PubPlayerInfo {
+                current: (2, 2),
+                home: (3, 1),
+                color: ColorName::Purple.into(),
+            },
+        ]
+        .into();
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+        assert_eq!(state.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
+        // board state after `player_move` is:
+        //   0123456
+        // 0 ┼─│└┌┐┘
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┴
+
+        // slides the top row right, moves player to (1, 1)
+        // can the player go from (0, 0) to (2, 2) after making the move?
+        assert!(state.reachable_after_move(
+            state.board.new_slide(0, East).unwrap(),
+            0,
+            (2, 2),
+            (0, 0)
+        ));
+
+        // slide the bottom row left
+        // starting at (2, 6) you can go to (1, 5)
+        assert!(state.board.reachable((2, 6)).unwrap().contains(&(1, 5)));
+        // If you start at (2, 6) can you go to (1, 5) after making move? no
+        assert!(!state.reachable_after_move(
+            state.board.new_slide(6, West).unwrap(),
+            0,
+            (1, 5),
+            (2, 6)
+        ));
     }
 
     #[test]

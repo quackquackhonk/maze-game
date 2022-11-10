@@ -105,33 +105,6 @@ impl NaiveStrategy {
         possible_goals
     }
 
-    /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
-    /// `rotations` times, can the player go from `start` to `destination`
-    fn reachable_after_move(
-        state: &State<PubPlayerInfo>,
-        PlayerMove {
-            slide,
-            rotations,
-            destination,
-        }: PlayerMove,
-        start: Position,
-    ) -> bool {
-        let mut state = state.clone();
-        (0..rotations).for_each(|_| state.board.rotate_spare());
-        state
-            .board
-            .slide_and_insert(slide)
-            .expect("Slides we create are always in bounds?");
-        let start = slide.move_position(start, state.board.grid[0].len(), state.board.grid.len());
-        state
-            .board
-            .reachable(start)
-            .expect("Start must be in bounds")
-            .into_iter()
-            .filter(|curr| curr != &start)
-            .any(|curr| curr == destination)
-    }
-
     fn find_move_to_reach(
         &self,
         state: &State<PubPlayerInfo>,
@@ -147,13 +120,12 @@ impl NaiveStrategy {
                         }
                     }
                     let slide = state.board.new_slide(row, direction).unwrap();
-                    let player_move = PlayerMove {
-                        slide,
-                        rotations,
-                        destination,
-                    };
-                    if NaiveStrategy::reachable_after_move(state, player_move, start) {
-                        return Some(player_move);
+                    if state.reachable_after_move(slide, rotations, destination, start) {
+                        return Some(PlayerMove {
+                            slide,
+                            rotations,
+                            destination,
+                        });
                     }
                 }
             }
@@ -167,13 +139,12 @@ impl NaiveStrategy {
                         }
                     }
                     let slide = state.board.new_slide(col, direction).unwrap();
-                    let player_move = PlayerMove {
-                        slide,
-                        rotations,
-                        destination,
-                    };
-                    if NaiveStrategy::reachable_after_move(state, player_move, start) {
-                        return Some(player_move);
+                    if state.reachable_after_move(slide, rotations, destination, start) {
+                        return Some(PlayerMove {
+                            slide,
+                            rotations,
+                            destination,
+                        });
                     }
                 }
             }
@@ -659,74 +630,5 @@ mod StrategyTests {
                 destination: (1, 1)
             })
         )
-    }
-
-    #[test]
-    fn test_reachable_after_move() {
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (1, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
-        // Default Board<7> is:
-        //   0123456
-        // 0 ─│└┌┐┘┴
-        // 1 ├┬┤┼─│└
-        // 2 ┌┐┘┴├┬┤
-        // 3 ┼─│└┌┐┘
-        // 4 ┴├┬┤┼─│
-        // 5 └┌┐┘┴├┬
-        // 6 ┤┼─│└┌┐
-        //
-        // extra = ┼
-        assert_eq!(state.board.reachable((0, 0)).unwrap(), vec![(0, 0)]);
-        // slides the top row right, moves player to (1, 1)
-        let player_move = PlayerMove {
-            slide: state.board.new_slide(0, East).unwrap(),
-            rotations: 0,
-            destination: (2, 2),
-        };
-        // board state after `player_move` is:
-        //   0123456
-        // 0 ┼─│└┌┐┘
-        // 1 ├┬┤┼─│└
-        // 2 ┌┐┘┴├┬┤
-        // 3 ┼─│└┌┐┘
-        // 4 ┴├┬┤┼─│
-        // 5 └┌┐┘┴├┬
-        // 6 ┤┼─│└┌┐
-        //
-        // extra = ┴
-
-        // can the player go from (0, 0) to (2, 2) after making the move?
-        assert!(NaiveStrategy::reachable_after_move(
-            &state,
-            player_move,
-            (0, 0)
-        ));
-
-        // slide the bottom row left
-        let player_move = PlayerMove {
-            slide: state.board.new_slide(6, West).unwrap(),
-            rotations: 0,
-            destination: (1, 5),
-        };
-        // starting at (2, 6) you can go to (1, 5)
-        assert!(state.board.reachable((2, 6)).unwrap().contains(&(1, 5)));
-        // If you start at (2, 6) can you go to (1, 5) after making move? no
-        assert!(!NaiveStrategy::reachable_after_move(
-            &state,
-            player_move,
-            (2, 6)
-        ));
     }
 }
