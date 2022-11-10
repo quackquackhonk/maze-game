@@ -4,7 +4,7 @@
     columns and rows. 
   - [ ] NaiveStrategy should be generic using these methods
 
-- [ ] Move `reachable_after_move` to a better position in the codebase? 
+- [X] Move `reachable_after_move` to a better position in the codebase? 
   Method:  
   https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/2dba8ec6e82bfd632018f0835971281cee90d663/Maze/Common/state.rs#L373-L397
   
