@@ -1,2 +1,13 @@
 **/target/
 **/ForStudents/
+
+B/xcollects
+C/xjson
+D/xgui
+E/xtcp
+
+3/xboard
+4/xstate
+5/xchoice
+6/xgames
+6/xgames-with-observer
