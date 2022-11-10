@@ -51,21 +51,11 @@ impl Referee {
     /// This will assign each player a Goal and a home tile, and set each `Player`'s current
     /// position to be their home tile.
     fn make_initial_state(&mut self, players: &[Box<dyn PlayerApi>], board: Board) -> State {
-        // This is done to prevent recreating the slidable rows iterator over and over again.
-        let slideable_cols = board.slideable_cols().collect::<Vec<_>>();
-        let slideable_rows = board.slideable_cols().collect::<Vec<_>>();
-
         // The possible locations for homes
-        let mut possible_homes = (0..board.num_cols())
-            .cartesian_product(0..board.num_rows())
-            .filter(|(col, row)| !slideable_cols.contains(col) && !slideable_rows.contains(row))
-            .collect::<Vec<_>>();
+        let mut possible_homes = board.possible_homes().collect::<Vec<_>>();
 
         // The possible locations for goals, remove the filter here if goals become movable tiles.
-        let possible_goals = (0..board.num_cols())
-            .cartesian_product(0..board.num_rows())
-            .filter(|(col, row)| !slideable_cols.contains(col) && !slideable_rows.contains(row))
-            .collect::<Vec<_>>();
+        let possible_goals = board.possible_goals().collect::<Vec<_>>();
 
         let player_info = players
             .iter()

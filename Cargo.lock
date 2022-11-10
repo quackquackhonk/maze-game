@@ -402,6 +402,7 @@ dependencies = [
  "hex",
  "image",
  "include_dir",
+ "itertools",
  "lazy_static",
  "regex",
  "serde",

@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::gem::Gem;
 use crate::grid::{Grid, Position};
 use crate::tile::{CompassDirection, ConnectorShape, Tile};
@@ -39,6 +41,20 @@ impl Board {
 
     pub fn slideable_cols(&self) -> impl Iterator<Item = usize> {
         (0..=self.num_cols()).step_by(2)
+    }
+
+    pub fn possible_homes(&self) -> impl Iterator<Item = Position> {
+        let slideable_cols = self.slideable_cols().collect::<Vec<_>>();
+        let slideable_rows = self.slideable_cols().collect::<Vec<_>>();
+        (0..self.num_cols())
+            .cartesian_product(0..self.num_rows())
+            .filter(move |(col, row)| {
+                !slideable_cols.contains(col) && !slideable_rows.contains(row)
+            })
+    }
+
+    pub fn possible_goals(&self) -> impl Iterator<Item = Position> {
+        self.possible_homes()
     }
 
     /// Slides the given Slide struct command and inserts the spare tile in the location of the
