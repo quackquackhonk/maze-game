@@ -103,6 +103,11 @@ pub trait PlayerInfo {
     fn color(&self) -> Color;
 }
 
+pub trait PrivatePlayerInfo: PlayerInfo {
+    fn reached_goal(&self) -> bool;
+    fn goal(&self) -> Position;
+}
+
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
 /// `Gem` and their `Color`.
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
@@ -153,6 +158,16 @@ impl PlayerInfo for FullPlayerInfo {
     }
 }
 
+impl PrivatePlayerInfo for FullPlayerInfo {
+    fn reached_goal(&self) -> bool {
+        self.goal == self.position
+    }
+
+    fn goal(&self) -> Position {
+        self.goal
+    }
+}
+
 #[derive(Debug, Default, Clone)]
 pub struct PubPlayerInfo {
     pub current: Position,
@@ -193,8 +208,8 @@ impl From<FullPlayerInfo> for PubPlayerInfo {
 }
 
 /// Represents the State of a single Maze Game.
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
-pub struct State<PInfo: PlayerInfo + Clone> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct State<PInfo: PlayerInfo> {
     pub board: Board,
     pub player_info: VecDeque<PInfo>,
     /// Invariant: active_player must be < player_info.len();
@@ -204,25 +219,12 @@ pub struct State<PInfo: PlayerInfo + Clone> {
 
 pub const BOARD_SIZE: usize = 7;
 
-impl<PInfo: PlayerInfo + Clone> State<PInfo> {
+impl<PInfo: PlayerInfo> State<PInfo> {
     pub fn new(board: Board, player_info: Vec<PInfo>) -> Self {
         State {
             board,
             player_info: player_info.into(),
             previous_slide: None,
-        }
-    }
-
-    /// Can the active player make the move represented by these arguments?
-    pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
-        let rows = self.board.grid.len();
-        let cols = self.board.grid[0].len();
-        let mut state = self.clone();
-        let start = slide.move_position(self.player_info[0].position(), cols, rows);
-        state.rotate_spare(rotations);
-        match state.slide_and_insert(slide) {
-            Ok(_) => destination != start && state.move_player(destination).is_ok(),
-            Err(_) => false,
         }
     }
 
@@ -303,31 +305,6 @@ impl<PInfo: PlayerInfo + Clone> State<PInfo> {
             .expect("Positions in `self.player_info` are never out of bounds")
     }
 
-    /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
-    /// `rotations` times, can the player go from `start` to `destination`
-    pub fn reachable_after_move(
-        &self,
-        slide: Slide,
-        rotations: usize,
-        destination: Position,
-        start: Position,
-    ) -> bool {
-        let mut state = self.clone();
-        (0..rotations).for_each(|_| state.board.rotate_spare());
-        state
-            .board
-            .slide_and_insert(slide)
-            .expect("Slides we create are always in bounds?");
-        let start = slide.move_position(start, state.board.grid[0].len(), state.board.grid.len());
-        state
-            .board
-            .reachable(start)
-            .expect("Start must be in bounds")
-            .into_iter()
-            .filter(|curr| curr != &start)
-            .any(|curr| curr == destination)
-    }
-
     /// Determines if the currently active `Player` can reach the `Tile` at the given `Position`
     #[must_use]
     pub fn can_reach_position(&self, target: Position) -> bool {
@@ -369,13 +346,73 @@ impl<PInfo: PlayerInfo + Clone> State<PInfo> {
     }
 }
 
+impl<Info: PlayerInfo + Clone> Clone for State<Info> {
+    fn clone(&self) -> Self {
+        Self {
+            board: self.board.clone(),
+            player_info: self.player_info.clone(),
+            previous_slide: self.previous_slide.clone(),
+        }
+    }
+}
+
+impl<Info: PlayerInfo + Clone> State<Info> {
+    /// Can the active player make the move represented by these arguments?
+    pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
+        let rows = self.board.grid.len();
+        let cols = self.board.grid[0].len();
+        let mut state = self.clone();
+        let start = slide.move_position(self.player_info[0].position(), cols, rows);
+        state.rotate_spare(rotations);
+        match state.slide_and_insert(slide) {
+            Ok(_) => destination != start && state.move_player(destination).is_ok(),
+            Err(_) => false,
+        }
+    }
+
+    /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
+    /// `rotations` times, can the player go from `start` to `destination`
+    pub fn reachable_after_move(
+        &self,
+        slide: Slide,
+        rotations: usize,
+        destination: Position,
+        start: Position,
+    ) -> bool {
+        let mut state = self.clone();
+        (0..rotations).for_each(|_| state.board.rotate_spare());
+        state
+            .board
+            .slide_and_insert(slide)
+            .expect("Slides we create are always in bounds?");
+        let start = slide.move_position(start, state.board.grid[0].len(), state.board.grid.len());
+        state
+            .board
+            .reachable(start)
+            .expect("Start must be in bounds")
+            .into_iter()
+            .filter(|curr| curr != &start)
+            .any(|curr| curr == destination)
+    }
+}
+
 /// Methods for `State<FullPlayerInfo>` types
-impl State<FullPlayerInfo> {
+impl<Info: PrivatePlayerInfo + Clone> State<Info> {
     /// Checks if the currently active `Player` has landed on its goal tile
     #[must_use]
     pub fn player_reached_goal(&self) -> bool {
         let player_info = &self.player_info[0];
         player_info.reached_goal()
+    }
+}
+
+impl<PInfo: PlayerInfo + Clone> Default for State<PInfo> {
+    fn default() -> Self {
+        Self {
+            board: Default::default(),
+            player_info: Default::default(),
+            previous_slide: Default::default(),
+        }
     }
 }
 

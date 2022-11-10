@@ -1,6 +1,8 @@
 use std::{
+    cell::RefCell,
     collections::HashSet,
     io::{Read, Write},
+    rc::Rc,
 };
 
 use common::{json::Name, FullPlayerInfo, State};
@@ -8,7 +10,7 @@ use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},
     observer::Observer,
-    referee::Referee,
+    referee::{Player, Referee},
 };
 use serde::{Deserialize, Serialize};
 /// Enumerated Valid JSON input for `xchoice`
@@ -64,19 +66,28 @@ pub fn read_and_write_json(
         _ => Err("")?,
     };
 
+    let mut state: State<Player> = State {
+        board: state.board,
+        player_info: state
+            .player_info
+            .into_iter()
+            .zip(players)
+            .map(|(info, api)| Player {
+                api: Rc::new(RefCell::new(api)),
+                info,
+            })
+            .collect(),
+        previous_slide: state.previous_slide,
+    };
+
     let r#ref = Referee::new(0);
     let mut reached_goal = HashSet::default();
 
     let mut kicked = Vec::default();
 
-    let gamewinner = r#ref.run_from_state(
-        &mut state,
-        &mut players,
-        &mut observers,
-        &mut reached_goal,
-        &mut kicked,
-    );
-    let (winners, _losers) = Referee::calculate_winners(gamewinner, players, &state, reached_goal);
+    let gamewinner =
+        r#ref.run_from_state(&mut state, &mut observers, &mut reached_goal, &mut kicked);
+    let (winners, _losers) = Referee::calculate_winners(gamewinner, &state, reached_goal);
     let mut winner_names: Vec<Name> = winners.into_iter().flat_map(|w| w.name()).collect();
     winner_names.sort();
 
