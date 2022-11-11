@@ -129,11 +129,6 @@ impl FullPlayerInfo {
             color,
         }
     }
-
-    /// Is the given `Gem` this `Player`'s goal?
-    fn reached_goal(&self) -> bool {
-        self.goal == self.position
-    }
 }
 
 impl PlayerInfo for FullPlayerInfo {

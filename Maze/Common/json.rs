@@ -9,7 +9,7 @@ use crate::{
     board::{Board, Slide},
     gem::Gem,
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
+    Color, ColorName, FullPlayerInfo, PubPlayerInfo, State,
 };
 
 #[derive(Debug, Error)]

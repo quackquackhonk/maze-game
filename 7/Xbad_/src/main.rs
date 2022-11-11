@@ -1,4 +1,3 @@
-use anyhow::Context;
 use std::io::{stdin, stdout};
 use xbad::*;
 
