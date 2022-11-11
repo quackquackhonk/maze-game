@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use thiserror::Error;
 
 use crate::gem::Gem;
 use crate::grid::{Grid, Position};
@@ -6,9 +7,15 @@ use crate::tile::{CompassDirection, ConnectorShape, Tile};
 use std::collections::HashSet;
 use std::ops::Index;
 
-type BoardError = String;
+#[derive(Debug, Error)]
+pub enum OutOfBounds {
+    #[error("{0} is out of bounds!")]
+    Index(usize),
+    #[error("{0:?} is out of bounds!")]
+    Position(Position),
+}
 
-pub type BoardResult<T> = Result<T, BoardError>;
+pub type BoardResult<T> = Result<T, OutOfBounds>;
 
 /// Describes one board for the game of Maze`.`com
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -64,7 +71,7 @@ impl Board {
         match direction {
             North => {
                 if index > self.grid.len() {
-                    return Err(format!("Row index: {} out of bounds", index));
+                    return Err(OutOfBounds::Index(index));
                 }
                 let col_num = index;
                 let row_num = self.grid.len() - 1;
@@ -74,7 +81,7 @@ impl Board {
             }
             South => {
                 if index > self.grid.len() {
-                    return Err(format!("Row index: {} out of bounds", index));
+                    return Err(OutOfBounds::Index(index));
                 }
                 let col_num = index;
                 self.grid.rotate_down(col_num);
@@ -83,7 +90,7 @@ impl Board {
             }
             East => {
                 if index > self.grid[0].len() {
-                    return Err(format!("Col index: {} out of bounds", index));
+                    return Err(OutOfBounds::Index(index));
                 }
                 let row_num = index;
                 self.grid.rotate_right(row_num);
@@ -92,7 +99,7 @@ impl Board {
             }
             West => {
                 if index > self.grid[0].len() {
-                    return Err(format!("Col index: {} out of bounds", index));
+                    return Err(OutOfBounds::Index(index));
                 }
                 let row_num = index;
                 let col_num = self.grid[0].len() - 1;
@@ -142,7 +149,7 @@ impl Board {
     /// `start.1` are negative.
     pub fn reachable(&self, start: Position) -> BoardResult<Vec<Position>> {
         if start.0 >= self.grid[0].len() || start.1 >= self.grid.len() {
-            return Err("Out-of-bounds Position".to_string());
+            return Err(OutOfBounds::Position(start));
         }
 
         // push start onto worklist

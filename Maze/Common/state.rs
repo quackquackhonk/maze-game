@@ -1,10 +1,10 @@
 use std::collections::VecDeque;
 
 use board::Board;
-use board::BoardResult;
 use board::Slide;
 use grid::Position;
 use hex::ToHex;
+use thiserror::Error;
 
 /// Contains all the types needed for the Board State and mutating the `Board`
 pub mod board;
@@ -16,6 +16,20 @@ pub mod grid;
 pub mod json;
 /// Contains the Tile type for use in the `Board`
 pub mod tile;
+
+#[derive(Debug, Error)]
+pub enum StateError {
+    #[error("{0:?} undoes the previous slide!")]
+    SlideUndo(Slide),
+    #[error("Player cannot go to {0:?}!")]
+    PositionUnreachable(Position),
+    #[error("No more players are in the game!")]
+    NoPlayersLeft,
+    #[error(transparent)]
+    BoardError(#[from] board::OutOfBounds),
+}
+
+pub type StateResult<T> = Result<T, StateError>;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Color {
@@ -265,11 +279,11 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     /// assert!(res.is_ok());
     ///
     /// ```
-    pub fn slide_and_insert(&mut self, slide: Slide) -> BoardResult<()> {
+    pub fn slide_and_insert(&mut self, slide: Slide) -> StateResult<()> {
         if let Some(prev) = self.previous_slide {
             if prev.direction.opposite() == slide.direction && prev.index == slide.index {
                 // Kicking player out code can go here
-                Err("Attempted to do a slide action that would undo the previous slide")?;
+                Err(StateError::SlideUndo(slide))?;
             }
         }
         self.board.slide_and_insert(slide)?;
@@ -283,11 +297,9 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     /// # Errors
     ///
     /// Errors if the active player is not able to reach `destination` from their current position.
-    pub fn move_player(&mut self, destination: Position) -> BoardResult<()> {
-        if !self.can_reach_position(destination) {
-            Err("Active player cannot reach the requested tile")?;
-        } else if self.player_info[0].position() == destination {
-            Err("Active player is already on that tile")?;
+    pub fn move_player(&mut self, destination: Position) -> StateResult<()> {
+        if !self.can_reach_position(destination) || self.player_info[0].position() == destination {
+            Err(StateError::PositionUnreachable(destination))?;
         }
         self.player_info[0].set_position(destination);
         Ok(())
@@ -329,10 +341,10 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     }
 
     /// Removes the currently active `Player` from game.
-    pub fn remove_player(&mut self) -> BoardResult<PInfo> {
+    pub fn remove_player(&mut self) -> StateResult<PInfo> {
         self.player_info
             .pop_front()
-            .ok_or_else(|| "No Players left".to_string())
+            .ok_or(StateError::NoPlayersLeft)
     }
 
     /// Returns a reference to the currently active `PlayerInfo`

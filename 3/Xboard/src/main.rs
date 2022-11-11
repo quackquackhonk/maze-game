@@ -3,6 +3,7 @@
 #![allow(dead_code)]
 use std::io::{stdin, stdout, Read, Write};
 
+use anyhow::anyhow;
 use common::board::Board;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonBoard};
@@ -16,18 +17,24 @@ pub enum ValidJson {
 }
 
 /// Read bytes (the JSON) from the reader and Write the results (the result JSON) to the writer
-fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
+fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Result<()> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let board: Board = match test_input.next().ok_or("No valid Board JSON found")? {
+    let board: Board = match test_input
+        .next()
+        .ok_or(anyhow!("No valid Board JSON found"))?
+    {
         ValidJson::Board(board) => board.into(),
-        _ => Err("Board was not the first JSON object sent")?,
+        _ => Err(anyhow!("Board was not the first JSON object sent"))?,
     };
 
     // Position is the tuple (usize, usize)
-    let from_pos: Position = match test_input.next().ok_or("No valid Coordinate JSON found")? {
+    let from_pos: Position = match test_input
+        .next()
+        .ok_or(anyhow!("No valid Coordinate JSON found"))?
+    {
         ValidJson::Coordinate(coord) => coord.into(),
-        _ => Err("Coordinate was not the second JSON object sent")?,
+        _ => Err(anyhow!("Coordinate was not the second JSON object sent"))?,
     };
 
     let mut reachable_pos = board
@@ -37,28 +44,21 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> Resul
         .collect::<Vec<Coordinate>>();
     reachable_pos.sort_by(cmp_coordinates);
 
-    writer
-        .write(
-            serde_json::to_string(&reachable_pos)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )
-        .map_err(|e| e.to_string())?;
+    writer.write_all(serde_json::to_string(&reachable_pos)?.as_bytes())?;
 
     Ok(())
 }
 
 /// Turn the STDIN Stream into A ValidJson Stream
-fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<Item = ValidJson>> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<crate::ValidJson>()
-        .map(|x| x.map_err(|e| e.to_string()))
-        .collect::<Result<Vec<_>, String>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter())
 }
 
-fn main() -> Result<(), String> {
+fn main() -> anyhow::Result<()> {
     read_json_and_write_json(stdin().lock(), &mut stdout().lock())?;
 
     Ok(())

@@ -35,6 +35,7 @@ dependencies = [
 name = "Xboard"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "common",
  "serde",
  "serde_json",
