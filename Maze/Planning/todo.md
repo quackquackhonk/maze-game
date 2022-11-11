@@ -48,6 +48,9 @@ Message: Makes both Referee and NaiveStrategy more generic over board size
   The observer rendering is also changed by: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/ca737bfab1b5db7197bd225f1ddf737ac7983e78  
   Message: Changes observer to respect the fact that homes are now on unique tiles
 
+- [X] Allow for non-7x7 boards.
+  This was already handled in previous milestones no changes were made :)
+
 - [X] Remove parallel data structure in Referee
   Fixed by: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/c133fb57cc251904b78ecb1f0e8c74a4b6bf0aed  
   Message: Refactors `Referee` to be cleaner ?  
