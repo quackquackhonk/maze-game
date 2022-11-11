@@ -48,14 +48,14 @@ mod tests {
         }
 
         for (input, output) in results {
-            let input = serde_json::Deserializer::from_str(&input.unwrap())
-                .into_iter::<serde_json::Value>()
-                .collect::<Result<Vec<_>, _>>()
-                .unwrap();
-            let output = serde_json::Deserializer::from_str(&output.unwrap())
-                .into_iter::<serde_json::Value>()
-                .collect::<Result<Vec<_>, _>>()
-                .unwrap();
+            let input = input
+                .iter()
+                .map(|str| serde_json::from_str(str).unwrap())
+                .collect::<Vec<serde_json::Value>>();
+            let output = output
+                .iter()
+                .map(|str| serde_json::from_str(str).unwrap())
+                .collect::<Vec<serde_json::Value>>();
             assert_eq!(input, output);
         }
     }

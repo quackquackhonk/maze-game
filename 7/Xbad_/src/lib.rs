@@ -37,7 +37,7 @@ fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<
 
 /// Writes the `impl Serialize` to the `impl Write`
 fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> anyhow::Result<()> {
-    writer.write(serde_json::to_string(&output)?.as_bytes())?;
+    writer.write_all(serde_json::to_string(&output)?.as_bytes())?;
     Ok(())
 }
 
@@ -109,8 +109,7 @@ pub fn read_and_write_json(
         .collect();
     kicked_names.sort();
 
-    write_json_out_to_writer(winner_names, writer)?;
-    write_json_out_to_writer(kicked_names, writer)?;
+    write_json_out_to_writer((winner_names, kicked_names), writer)?;
 
     Ok(())
 }
