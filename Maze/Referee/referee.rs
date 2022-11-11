@@ -494,8 +494,10 @@ mod tests {
 
     use common::{
         board::{Board, DefaultBoard},
-        grid::Position,
+        gem::Gem,
+        grid::{Grid, Position},
         json::Name,
+        tile::{CompassDirection, ConnectorShape, Tile},
         Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
     };
     use players::{
@@ -734,5 +736,51 @@ mod tests {
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
         assert!(kicked.is_empty());
+    }
+
+    #[test]
+    fn test_run_from_state() {
+        let referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+        };
+        let players = vec![
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 3), (0, 1), (3, 3), ColorName::Red.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 3), (0, 1), (3, 3), ColorName::Red.into()),
+            ),
+        ];
+        let mut state: State<Player> = State {
+            player_info: players.into(),
+            ..Default::default()
+        };
+        let mut idx = 0;
+        let corner = ConnectorShape::Corner(CompassDirection::West);
+        state.board.grid = Grid::from([[(); 7]; 7].map(|list| {
+            list.map(|_| {
+                let tile = Tile {
+                    connector: corner,
+                    gems: Gem::pair_from_num(idx),
+                };
+                idx += 1;
+                tile
+            })
+        }));
+        state.board.extra.connector = corner;
+        state.previous_slide = state.board.new_slide(0, CompassDirection::West);
+
+        let GameResult { winners, kicked } =
+            referee.run_from_state(&mut state, &mut vec![], HashSet::default(), vec![]);
+        assert_eq!(winners.len(), 2);
+        assert_eq!(kicked.len(), 0);
     }
 }
