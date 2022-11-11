@@ -2,8 +2,10 @@
 
 - [ ] Board should have methods for determining its width, height, and slidable
     columns and rows. 
-  - [ ] NaiveStrategy should be generic using these methods
- 
+  - [ ] NaiveStrategy should be generic using these methods  
+Fixed by: https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/461c6705df1fbeb32f41e685fc9195046a776404
+Message: Makes both Referee and NaiveStrategy more generic over board size 
+
 - [ ] Remove parallel data structure in Referee
 
 - [ ] Creating slides should be attached to an instance of board so that the
