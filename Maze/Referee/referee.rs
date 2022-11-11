@@ -8,6 +8,7 @@ use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
 use std::cell::RefCell;
 use std::collections::HashSet;
+use std::fmt::Debug;
 use std::hash::Hash;
 use std::rc::Rc;
 
@@ -32,6 +33,12 @@ pub type GameWinner = Option<Player>;
 pub struct Player {
     pub api: Rc<RefCell<Box<dyn PlayerApi>>>,
     pub info: FullPlayerInfo,
+}
+
+impl Debug for Player {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Player").field("info", &self.info).finish()
+    }
 }
 
 impl Player {
@@ -215,12 +222,26 @@ impl Referee {
 
     /// Communicates all public information of the current `state` and each `Player`'s private goal
     /// to all `Player`s in `players`.
-    pub fn broadcast_initial_state(&self, state: &mut State<Player>) {
+    pub fn broadcast_initial_state(&self, state: &mut State<Player>, kicked: &mut Vec<Player>) {
         let mut player_state = state.to_player_state();
-        for player in &mut state.player_info {
+        let mut kicked_idx = 0;
+        let total_players = state.player_info.len();
+        for idx in 0..total_players {
+            let player = state.current_player_info_mut();
             let goal = player.goal();
-            player.setup(Some(player_state.clone()), goal);
-            player_state.next_player();
+            match player.setup(Some(player_state.clone()), goal) {
+                Ok(_) => {
+                    state.next_player();
+                    player_state.next_player()
+                }
+                Err(_) => {
+                    kicked_idx += 1;
+                    kicked.push(state.remove_player().unwrap())
+                }
+            }
+            if idx + kicked_idx >= total_players {
+                break;
+            }
         }
     }
 
@@ -268,8 +289,12 @@ impl Referee {
                             .is_valid_move(slide, rotations, destination);
                     if valid_move {
                         state.rotate_spare(rotations);
-                        state.slide_and_insert(slide);
-                        state.move_player(destination);
+                        state
+                            .slide_and_insert(slide)
+                            .expect("move has already been validated");
+                        state
+                            .move_player(destination)
+                            .expect("move has already been validated");
 
                         if state.player_reached_home()
                             && reached_goal.contains(state.current_player_info())
@@ -282,10 +307,13 @@ impl Referee {
                             // player needs to go home
                             reached_goal.insert(state.current_player_info().clone());
                             let player = &mut state.player_info[0];
-                            player.setup(None, player.home());
+                            match player.setup(None, player.home()) {
+                                Ok(_) => false,
+                                Err(_) => true,
+                            }
+                        } else {
+                            false
                         }
-
-                        false
                     } else {
                         true
                     }
@@ -325,23 +353,30 @@ impl Referee {
         &self,
         state: &mut State<Player>,
         observers: &mut Vec<Box<dyn Observer>>,
-        reached_goal: &mut HashSet<Player>,
-        kicked: &mut Vec<Player>,
-    ) -> GameWinner {
+        mut reached_goal: HashSet<Player>,
+        mut kicked: Vec<Player>,
+    ) -> GameResult {
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won
-        self.broadcast_initial_state(state);
+        self.broadcast_initial_state(state, &mut kicked);
         self.broadcast_state_to_observers(state, observers);
 
         const ROUNDS: usize = 1000;
 
+        let mut result = None;
         for _ in 0..ROUNDS {
-            if let Some(game_winner) = self.run_round(state, observers, reached_goal, kicked) {
-                return game_winner;
+            if let Some(game_winner) =
+                self.run_round(state, observers, &mut reached_goal, &mut kicked)
+            {
+                result = game_winner;
+                break;
             };
         }
-        None
+        self.broadcast_game_over_to_observers(observers);
+        let (mut winners, losers) = Referee::calculate_winners(result, state, reached_goal);
+        Referee::broadcast_winners(&mut winners, losers, &mut kicked);
+        GameResult { winners, kicked }
     }
 
     /// Returns a tuple of two `Vec<Box<dyn Player>>`. The first of these vectors contains all
@@ -373,6 +408,8 @@ impl Referee {
                     .into_iter(),
             )
         };
+        let vec = players_to_check.collect::<Vec<_>>();
+        let players_to_check = vec.into_iter();
 
         match winner {
             Some(winner) => (vec![winner], state.player_info.clone().into()),
@@ -403,12 +440,29 @@ impl Referee {
     }
 
     /// Communicates if a player won to all `Player`s in the given tuple of winners and losers
-    fn broadcast_winners(winners: &mut Vec<Player>, mut losers: Vec<Player>) {
-        for player in winners {
-            player.won(true);
+    fn broadcast_winners(
+        winners: &mut Vec<Player>,
+        mut losers: Vec<Player>,
+        kicked: &mut Vec<Player>,
+    ) {
+        let mut kicked_winners = vec![];
+        for (idx, player) in winners.into_iter().enumerate() {
+            if let Err(_) = player.won(true) {
+                kicked_winners.push(idx);
+            }
         }
-        for player in &mut losers {
-            player.won(false);
+        for idx in kicked_winners.into_iter().rev() {
+            kicked.push(winners.remove(idx));
+        }
+
+        let mut kicked_losers = vec![];
+        for (idx, player) in losers.iter_mut().enumerate() {
+            if let Err(_) = player.won(false) {
+                kicked_losers.push(idx);
+            }
+        }
+        for idx in kicked_losers.into_iter().rev() {
+            kicked.push(losers.remove(idx));
         }
     }
 
@@ -427,23 +481,10 @@ impl Referee {
         // communicate initial state to all players
         let mut state = self.make_initial_state(players, board);
 
-        let mut game_result = GameResult::default();
-        let mut reached_goal: HashSet<Player> = HashSet::default();
-        let winner = self.run_from_state(
-            &mut state,
-            &mut observers,
-            &mut reached_goal,
-            &mut game_result.kicked,
-        );
+        let game_result = GameResult::default();
+        let reached_goal: HashSet<Player> = HashSet::default();
 
-        // Communicate winners to all players
-        let (mut winners, losers) = Referee::calculate_winners(winner, &state, reached_goal);
-        Referee::broadcast_winners(&mut winners, losers);
-        self.broadcast_game_over_to_observers(&mut observers);
-
-        // return GameResult
-        game_result.winners = winners;
-        game_result
+        self.run_from_state(&mut state, &mut observers, reached_goal, game_result.kicked)
     }
 }
 
@@ -561,7 +602,7 @@ mod tests {
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let mut state = referee.make_initial_state(players, DefaultBoard::<7, 7>::default_board());
         assert_eq!(player.goal.borrow().to_owned(), None);
-        referee.broadcast_initial_state(&mut state);
+        referee.broadcast_initial_state(&mut state, &mut vec![]);
         assert_eq!(
             state.current_player_info().goal(),
             player.goal.borrow().unwrap()
@@ -674,7 +715,6 @@ mod tests {
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
-        //dbg!(&player);
         assert_eq!(winners.len(), 1);
         assert!(kicked.is_empty());
 
@@ -691,7 +731,6 @@ mod tests {
             Box::new(mock.clone()),
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
-        dbg!(mock);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
         assert!(kicked.is_empty());

@@ -15,6 +15,8 @@ pub enum PlayerApiError {
     Timeout(#[from] io::Error),
     #[error("respnse has incorrect format")]
     WrongFormat(#[from] serde_json::Error),
+    #[error(transparent)]
+    Other(#[from] anyhow::Error),
 }
 
 /// Trait describing the methods that `Player`s must implement

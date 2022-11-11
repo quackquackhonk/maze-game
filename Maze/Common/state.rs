@@ -344,6 +344,10 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     pub fn current_player_info(&self) -> &PInfo {
         &self.player_info[0]
     }
+
+    pub fn current_player_info_mut(&mut self) -> &mut PInfo {
+        &mut self.player_info[0]
+    }
 }
 
 impl<Info: PlayerInfo + Clone> Clone for State<Info> {

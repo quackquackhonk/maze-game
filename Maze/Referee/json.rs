@@ -2,7 +2,7 @@ use common::{
     json::{Coordinate, JsonAction, JsonBoard, JsonColor, JsonTile, Name},
     FullPlayerInfo, PlayerInfo, State,
 };
-use players::strategy::NaiveStrategy;
+use players::{bad_player::BadFM, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
@@ -20,6 +20,22 @@ fn ps_parse_test() {
         serde_json::from_str::<PS>("[\"bob\", \"Riemann\"]").unwrap(),
         PS(Name::from_static("bob"), JsonStrategy::Riemann)
     );
+}
+
+#[derive(Debug, Deserialize, PartialEq, Eq)]
+pub struct BadPS(Name, JsonStrategy, BadFM);
+
+#[derive(Debug, Deserialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum PlayerSpec {
+    PS(PS),
+    BadPS(BadPS),
+}
+
+impl From<BadPS> for (Name, NaiveStrategy, BadFM) {
+    fn from(bad_ps: BadPS) -> Self {
+        (bad_ps.0, bad_ps.1.into(), bad_ps.2)
+    }
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]

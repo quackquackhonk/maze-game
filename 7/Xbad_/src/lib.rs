@@ -5,41 +5,39 @@ use std::{
     rc::Rc,
 };
 
+use anyhow::{anyhow, bail};
 use common::{json::Name, FullPlayerInfo, State};
-use players::player::{LocalPlayer, PlayerApi};
+use players::{
+    bad_player::BadPlayer,
+    player::{LocalPlayer, PlayerApi},
+};
 use referee::{
-    json::{JsonRefereeState, PS},
+    json::{JsonRefereeState, PlayerSpec},
     observer::Observer,
     referee::{Player, Referee},
 };
 use serde::{Deserialize, Serialize};
+
 /// Enumerated Valid JSON input for `xchoice`
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum ValidJson {
-    PlayerSpec(Vec<PS>),
+    PlayerSpec(Vec<PlayerSpec>),
     RefereeState(JsonRefereeState),
 }
 
 /// Turn the `impl Read` into A `ValidJson` Stream
-fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<Item = ValidJson>> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<ValidJson>()
-        .map(|x| x.map_err(|e| e.to_string()))
-        .collect::<Result<Vec<_>, String>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter())
 }
 
 /// Writes the `impl Serialize` to the `impl Write`
-fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> Result<(), String> {
-    writer
-        .write(
-            serde_json::to_string(&output)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )
-        .map_err(|e| e.to_string())?;
+fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> anyhow::Result<()> {
+    writer.write(serde_json::to_string(&output)?.as_bytes())?;
     Ok(())
 }
 
@@ -47,23 +45,34 @@ pub fn read_and_write_json(
     reader: impl Read,
     writer: &mut impl Write,
     mut observers: Vec<Box<dyn Observer>>,
-) -> Result<(), String> {
+) -> anyhow::Result<()> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let mut players: Vec<Box<dyn PlayerApi>> = match input.next().ok_or("asdasdas")? {
+    let players: Vec<Box<dyn PlayerApi>> = match input.next().ok_or(anyhow!("asdasdas"))? {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
             .map(|pss| -> Box<dyn PlayerApi> {
-                let (name, strategy) = pss.into();
-                Box::new(LocalPlayer::new(name, strategy))
+                match pss {
+                    PlayerSpec::PS(ps) => {
+                        let (name, strategy) = ps.into();
+                        Box::new(LocalPlayer::new(name, strategy))
+                    }
+                    PlayerSpec::BadPS(bad_ps) => {
+                        let (name, strategy, bad_fm) = bad_ps.into();
+                        Box::new(BadPlayer::new(
+                            Box::new(LocalPlayer::new(name, strategy)),
+                            bad_fm,
+                        ))
+                    }
+                }
             })
             .collect(),
-        _ => Err("")?,
+        _ => bail!(""),
     };
 
-    let mut state: State<FullPlayerInfo> = match input.next().ok_or("ehhhhhhh")? {
+    let state: State<FullPlayerInfo> = match input.next().ok_or(anyhow!("ehhhhhhh"))? {
         ValidJson::RefereeState(a) => a.into(),
-        _ => Err("")?,
+        _ => bail!(""),
     };
 
     let mut state: State<Player> = State {
@@ -93,7 +102,15 @@ pub fn read_and_write_json(
         .collect();
     winner_names.sort();
 
+    let mut kicked_names: Vec<Name> = game_result
+        .kicked
+        .into_iter()
+        .flat_map(|k| k.name())
+        .collect();
+    kicked_names.sort();
+
     write_json_out_to_writer(winner_names, writer)?;
+    write_json_out_to_writer(kicked_names, writer)?;
 
     Ok(())
 }

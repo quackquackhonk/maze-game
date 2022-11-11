@@ -1,11 +1,10 @@
 use std::cmp::Ordering;
 use std::iter::repeat;
 
-use common::board::Board;
 use common::tile::CompassDirection;
 use common::PubPlayerInfo;
+use common::State;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
-use common::{FullPlayerInfo, State};
 
 /// This trait represents getting a valid move from a given board state
 pub trait Strategy {

@@ -20,6 +20,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "Xbad_"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "players",
+ "referee",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "Xboard"
 version = "0.1.0"
 dependencies = [

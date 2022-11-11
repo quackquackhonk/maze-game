@@ -1,9 +1,8 @@
 //! Contains JSON definitions for data in the `player` module
 
-use common::board::{Board, Slide};
-use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonError, JsonState};
+use common::board::Board;
+use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonError};
 use common::tile::CompassDirection;
-use common::PubPlayerInfo;
 use serde::{Deserialize, Serialize};
 
 use crate::strategy::{NaiveStrategy, PlayerAction, PlayerMove};
