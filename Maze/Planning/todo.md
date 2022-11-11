@@ -28,6 +28,7 @@
 - [x] Player trait should return results. 
   https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/2d7cba85a331b10cce4268ccbc41baa5c3f7d282/Maze/Players/player.rs#L19-L32
 - [X] add a test case for when a `NaiveStrategy` is forced to pass
-  https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/blob/2dba8ec6e82bfd632018f0835971281cee90d663/Maze/Players/strategy.rs#L299-L351
+  Fixed by: [381d8d24bc95c82f1bfbb963ea2432eaa85e950a](https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/381d8d24bc95c82f1bfbb963ea2432eaa85e950a)  
+  Message: Closes #58
 
 
