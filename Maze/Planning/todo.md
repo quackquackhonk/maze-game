@@ -61,4 +61,6 @@ Message: Makes both Referee and NaiveStrategy more generic over board size
   1. https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/2d7cba85a331b10cce4268ccbc41baa5c3f7d282  
      Which changes the `PlayerApi` trait to always return a `Result` type indicating an error.  
   2. https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/7c2917c5ffb6ad54181758593f9460a330caff90#diff-f6b918a49f593a5e0edf5b8699ca96c6744a183767f7eef1cbb8f98db544273a  
-     This changes many of our `Common` components to use `anyhow` and `thiserror` for error handling, mainly `Common/json.rs`.  
+     This changes our `json` components to use `anyhow` and `thiserror` for error handling.
+  3. https://github.khoury.northeastern.edu/CS4500-F22/tankalav-lsoto/commit/74468b1989532aed50ff3222455e7c4ae0e85802
+     This commit changes our `Common/state.rs` and `Common/board.rs` to use `anyhow` and `thiserror` for better error handling.
