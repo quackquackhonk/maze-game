@@ -165,7 +165,7 @@ impl Strategy for NaiveStrategy {
 }
 
 #[cfg(test)]
-mod StrategyTests {
+mod strategy_tests {
     use self::itertools::Itertools;
 
     use super::*;

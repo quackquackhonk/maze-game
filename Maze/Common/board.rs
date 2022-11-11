@@ -320,7 +320,7 @@ impl Slide {
 }
 
 #[cfg(test)]
-mod BoardTests {
+mod board_tests {
     use super::*;
     use CompassDirection::*;
     use ConnectorShape::*;

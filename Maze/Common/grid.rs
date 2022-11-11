@@ -181,7 +181,7 @@ impl<T> IndexMut<Position> for Grid<T> {
 }
 
 #[cfg(test)]
-mod GridTests {
+mod grid_tests {
     use super::*;
 
     #[test]

@@ -431,7 +431,7 @@ impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
 }
 
 #[cfg(test)]
-mod StateTests {
+mod state_tests {
     use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
 
     use super::*;

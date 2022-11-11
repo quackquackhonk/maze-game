@@ -168,7 +168,7 @@ impl ConnectorShape {
 }
 
 #[cfg(test)]
-mod TileTests {
+mod tile_tests {
     use super::*;
     use CompassDirection::*;
     use ConnectorShape::*;
