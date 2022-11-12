@@ -3,7 +3,19 @@
 version = 3
 
 [[package]]
+name = "Client"
+version = "0.1.0"
+
+[[package]]
 name = "Other"
+version = "0.1.0"
+
+[[package]]
+name = "Remote"
+version = "0.1.0"
+
+[[package]]
+name = "Server"
 version = "0.1.0"
 
 [[package]]
