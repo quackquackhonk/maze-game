@@ -11,19 +11,16 @@ name = "Other"
 version = "0.1.0"
 
 [[package]]
-name = "Remote"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "common",
- "players",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "Server"
 version = "0.1.0"
+dependencies = [
+ "common",
+ "referee",
+ "remote",
+ "serde",
+ "serde_json",
+ "tokio",
+]
 
 [[package]]
 name = "XGame"
@@ -1950,6 +1947,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 
 [[package]]
+name = "remote"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "players",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "rfd"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2272,6 +2280,29 @@ name = "tinyvec_macros"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
+
+[[package]]
+name = "tokio"
+version = "1.21.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9e03c497dc955702ba729190dc4aac6f2a0ce97f913e5b1b5912fc5039d9099"
+dependencies = [
+ "autocfg",
+ "num_cpus",
+ "pin-project-lite",
+ "tokio-macros",
+]
+
+[[package]]
+name = "tokio-macros"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9724f9a975fb987ef7a3cd9be0350edcbe130698af5b8f7a631e23d42d052484"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "toml"

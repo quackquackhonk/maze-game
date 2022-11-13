@@ -6,6 +6,7 @@ use players::player::{PlayerApi, PlayerApiResult};
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
+use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::collections::HashSet;
 use std::fmt::Debug;

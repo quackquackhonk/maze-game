@@ -7,6 +7,6 @@ edition = "2021"
 
 [lib]
 name = "client"
-path = "lib.rs"
+path = "client.rs"
 
 [dependencies]

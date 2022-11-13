@@ -8,7 +8,7 @@ use serde::Deserialize;
 use serde_json::de::IoRead;
 use std::{
     cell::RefCell,
-    io::{Read, Write},
+    io::{self, Read, Write},
     net::TcpStream,
     time::Duration,
 };
@@ -31,6 +31,15 @@ impl PlayerProxy<TcpStream, TcpStream> {
         let out = RefCell::new(stream.try_clone().unwrap());
         let r#in = RefCell::new(serde_json::Deserializer::from_reader(stream));
         Self { name, out, r#in }
+    }
+
+    pub fn try_from_tcp(stream: TcpStream) -> io::Result<Self> {
+        stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+        let out = RefCell::new(stream.try_clone()?);
+        let mut deser = serde_json::Deserializer::from_reader(stream);
+        let name = Name::deserialize(&mut deser)?;
+        let r#in = RefCell::new(deser);
+        Ok(Self { name, out, r#in })
     }
 }
 

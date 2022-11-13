@@ -2,8 +2,10 @@ use common::{
     json::{Coordinate, JsonAction, JsonBoard, JsonColor, JsonTile, Name},
     FullPlayerInfo, PlayerInfo, State,
 };
-use players::{bad_player::BadFM, strategy::NaiveStrategy};
+use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};
+
+use crate::referee::GameResult;
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct PS(Name, JsonStrategy);
@@ -113,5 +115,17 @@ impl From<FullPlayerInfo> for JsonRefereePlayer {
             goto: pi.goal.into(),
             color: pi.color().into(),
         }
+    }
+}
+
+#[derive(Debug, Serialize)]
+pub struct JsonGameResult(Vec<Name>, Vec<Name>);
+
+impl From<GameResult> for JsonGameResult {
+    fn from(gr: GameResult) -> Self {
+        JsonGameResult(
+            gr.winners.into_iter().flat_map(|p| p.name()).collect(),
+            gr.kicked.into_iter().flat_map(|p| p.name()).collect(),
+        )
     }
 }
