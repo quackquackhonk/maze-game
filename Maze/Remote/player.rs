@@ -5,19 +5,22 @@ use players::{
     strategy::PlayerAction,
 };
 use serde::Deserialize;
-use std::{io::Write, net::TcpStream, time::Duration};
+use std::{cell::RefCell, io::Write, net::TcpStream, time::Duration};
 
 use crate::json::{JsonFunctionCall, JsonResult};
 
 /// Acts as a proxy for players across a network
 struct PlayerProxy {
     name: Name,
-    stream: TcpStream,
+    stream: RefCell<TcpStream>,
 }
 
 impl PlayerProxy {
-    fn new(name: Name, stream: TcpStream) -> Self {
-        Self { name, stream }
+    fn _new(name: Name, stream: TcpStream) -> Self {
+        Self {
+            name,
+            stream: RefCell::new(stream),
+        }
     }
 
     /// Reads a single `JsonResult` from `self.stream`
@@ -25,7 +28,7 @@ impl PlayerProxy {
     /// # Errors
     /// This will error if reading from the stream or deserializing the `JsonResult` fails
     fn read_result(&self) -> PlayerApiResult<JsonResult> {
-        let mut de = serde_json::Deserializer::from_reader(self.stream.try_clone()?);
+        let mut de = serde_json::Deserializer::from_reader(self.stream.borrow().try_clone()?);
         Ok(JsonResult::deserialize(&mut de)?)
     }
 
@@ -35,7 +38,7 @@ impl PlayerProxy {
     /// This will error if writing to `self.stream` or serializing `func` fails
     fn send_function_call(&self, func: &JsonFunctionCall) -> PlayerApiResult<()> {
         let msg = serde_json::to_string(func)?;
-        self.stream.try_clone()?.write_all(msg.as_bytes())?;
+        self.stream.borrow_mut().write_all(msg.as_bytes())?;
         Ok(())
     }
 }
@@ -58,7 +61,9 @@ impl PlayerApi for PlayerProxy {
         // create function call message
         self.send_function_call(&JsonFunctionCall::setup(state, goal))?;
         // TODO: what should this timeout actually be?
-        self.stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+        self.stream
+            .borrow()
+            .set_read_timeout(Some(Duration::from_secs(2)))?;
         match self.read_result()? {
             JsonResult::Void => Ok(()),
             _ => Err(PlayerApiError::Other(anyhow!(
@@ -70,7 +75,9 @@ impl PlayerApi for PlayerProxy {
     fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
         self.send_function_call(&JsonFunctionCall::take_turn(state.clone()))?;
         // TODO: what should this timeout actually be?
-        self.stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+        self.stream
+            .borrow()
+            .set_read_timeout(Some(Duration::from_secs(2)))?;
         match self.read_result()? {
             JsonResult::Choice(ch) => ch
                 .into_action(&state.board)
@@ -84,7 +91,9 @@ impl PlayerApi for PlayerProxy {
     fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
         self.send_function_call(&JsonFunctionCall::win(did_win))?;
         // TODO: what should this timeout actually be?
-        self.stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+        self.stream
+            .borrow()
+            .set_read_timeout(Some(Duration::from_secs(2)))?;
         match self.read_result()? {
             JsonResult::Void => Ok(()),
             _ => Err(PlayerApiError::Other(anyhow!(
