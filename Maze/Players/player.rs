@@ -3,7 +3,7 @@ use std::io;
 use crate::strategy::{PlayerAction, Strategy};
 use common::board::{Board, DefaultBoard};
 use common::grid::Position;
-use common::json::Name;
+use common::json::{JsonError, Name};
 use common::{PubPlayerInfo, State};
 use thiserror::Error;
 
@@ -13,8 +13,10 @@ pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
 pub enum PlayerApiError {
     #[error("timeout reached when attempting to recieve a response")]
     Timeout(#[from] io::Error),
+    #[error("response is not Json")]
+    NotJson(#[from] serde_json::Error),
     #[error("response has incorrect format")]
-    WrongFormat(#[from] serde_json::Error),
+    WrongJson(#[from] JsonError),
     #[error(transparent)]
     Other(#[from] anyhow::Error),
 }
