@@ -155,11 +155,7 @@ impl RefereeState for State<Player> {
     fn to_full_state(&self) -> State<FullPlayerInfo> {
         State {
             board: self.board.clone(),
-            player_info: self
-                .player_info
-                .iter()
-                .map(|pl| pl.info.clone().into())
-                .collect(),
+            player_info: self.player_info.iter().map(|pl| pl.info.clone()).collect(),
             previous_slide: self.previous_slide,
         }
     }
@@ -307,10 +303,7 @@ impl Referee {
                             // player needs to go home
                             reached_goal.insert(state.current_player_info().clone());
                             let player = &mut state.player_info[0];
-                            match player.setup(None, player.home()) {
-                                Ok(_) => false,
-                                Err(_) => true,
-                            }
+                            player.setup(None, player.home()).is_err()
                         } else {
                             false
                         }
@@ -408,8 +401,6 @@ impl Referee {
                     .into_iter(),
             )
         };
-        let vec = players_to_check.collect::<Vec<_>>();
-        let players_to_check = vec.into_iter();
 
         match winner {
             Some(winner) => (vec![winner], state.player_info.clone().into()),
@@ -446,8 +437,8 @@ impl Referee {
         kicked: &mut Vec<Player>,
     ) {
         let mut kicked_winners = vec![];
-        for (idx, player) in winners.into_iter().enumerate() {
-            if let Err(_) = player.won(true) {
+        for (idx, player) in winners.iter_mut().enumerate() {
+            if player.won(true).is_err() {
                 kicked_winners.push(idx);
             }
         }
@@ -457,7 +448,7 @@ impl Referee {
 
         let mut kicked_losers = vec![];
         for (idx, player) in losers.iter_mut().enumerate() {
-            if let Err(_) = player.won(false) {
+            if player.won(false).is_err() {
                 kicked_losers.push(idx);
             }
         }
@@ -730,7 +721,7 @@ mod tests {
                 Name::from_static("joe"),
                 NaiveStrategy::Euclid,
             )),
-            Box::new(mock.clone()),
+            Box::new(mock),
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners.len(), 1);

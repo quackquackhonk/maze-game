@@ -362,7 +362,7 @@ impl<Info: PlayerInfo + Clone> Clone for State<Info> {
         Self {
             board: self.board.clone(),
             player_info: self.player_info.clone(),
-            previous_slide: self.previous_slide.clone(),
+            previous_slide: self.previous_slide,
         }
     }
 }
@@ -643,7 +643,7 @@ mod state_tests {
         state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (1, 3),
-            goal: (1, 1).into(),
+            goal: (1, 1),
             color: ColorName::Red.into(),
         });
 
@@ -775,20 +775,22 @@ mod state_tests {
 
     #[test]
     fn test_reachable_after_move() {
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (1, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         // Default Board<7> is:
         //   0123456
         // 0 ─│└┌┐┘┴

@@ -24,7 +24,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
 
     let mut state: State<FullPlayerInfo> = match test_input
         .next()
-        .ok_or(anyhow!("No valid State JSON found"))?
+        .ok_or_else(|| anyhow!("No valid State JSON found"))?
     {
         ValidJson::State(state) => state.into(),
         _ => Err(anyhow!("State was not the first JSON object sent"))?,
@@ -33,7 +33,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
     let slide: Slide = {
         let index: usize = match test_input
             .next()
-            .ok_or(anyhow!("No valid Index JSON found"))?
+            .ok_or_else(|| anyhow!("No valid Index JSON found"))?
         {
             ValidJson::Number(index) => index,
             _ => Err(anyhow!("Index was not the second JSON object sent"))?,
@@ -41,7 +41,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
 
         let dir: CompassDirection = match test_input
             .next()
-            .ok_or(anyhow!("No valid Direction JSON found"))?
+            .ok_or_else(|| anyhow!("No valid Direction JSON found"))?
         {
             ValidJson::Direction(dir) => dir.into(),
             _ => Err(anyhow!("Direction was not the third JSON object sent"))?,
@@ -49,12 +49,12 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
         state
             .board
             .new_slide(index, dir)
-            .ok_or(anyhow!("Slide is invalid"))?
+            .ok_or_else(|| anyhow!("Slide is invalid"))?
     };
 
     let num_rotations: usize = match test_input
         .next()
-        .ok_or(anyhow!("No valid Degree JSON found"))?
+        .ok_or_else(|| anyhow!("No valid Degree JSON found"))?
     {
         ValidJson::Number(deg) => JsonDegree(deg).try_into()?,
         x => Err(anyhow!(

@@ -22,7 +22,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
 
     let board: Board = match test_input
         .next()
-        .ok_or(anyhow!("No valid Board JSON found"))?
+        .ok_or_else(|| anyhow!("No valid Board JSON found"))?
     {
         ValidJson::Board(board) => board.into(),
         _ => Err(anyhow!("Board was not the first JSON object sent"))?,
@@ -31,7 +31,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
     // Position is the tuple (usize, usize)
     let from_pos: Position = match test_input
         .next()
-        .ok_or(anyhow!("No valid Coordinate JSON found"))?
+        .ok_or_else(|| anyhow!("No valid Coordinate JSON found"))?
     {
         ValidJson::Coordinate(coord) => coord.into(),
         _ => Err(anyhow!("Coordinate was not the second JSON object sent"))?,

@@ -178,20 +178,22 @@ mod strategy_tests {
 
     #[test]
     fn test_get_move_euclid() {
-        let mut state: State<PubPlayerInfo> = State::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (1, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let euclid = NaiveStrategy::Euclid;
         // Default Board<7> is:
         //   0123456
@@ -221,20 +223,22 @@ mod strategy_tests {
         );
 
         // what will Euclid do to go from (0, 0) to (2, 3)?
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (0, 0),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (0, 0),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let slide = state.board.new_slide(0, East).unwrap();
         let euclid_move = euclid.get_move(state, (0, 0), (2, 3));
         assert!(euclid_move.is_some());
@@ -250,20 +254,22 @@ mod strategy_tests {
         );
 
         // what will Euclid do to go from (6, 4) to (2, 0)?
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (6, 4),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (6, 4),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let slide = state.board.new_slide(4, East).unwrap();
         let euclid_move = euclid.get_move(state, (6, 4), (2, 0));
         assert!(euclid_move.is_some());
@@ -279,20 +285,35 @@ mod strategy_tests {
         );
 
         // there are no moves that will pass starting from (0, 0) on this board
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (1, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
+        let slide = state.board.new_slide(4, East).unwrap();
+        let euclid_move = euclid.get_move(state, (6, 4), (2, 0));
+        assert!(euclid_move.is_some());
+        let euclid_move = euclid_move.unwrap();
+        // slides row 4 east to wrap around to (0, 4) then move to (1, 2)
+        assert_eq!(
+            euclid_move,
+            PlayerMove {
+                slide,
+                rotations: 0,
+                destination: (1, 2),
+            }
+        );
     }
 
     #[test]
@@ -351,20 +372,22 @@ mod strategy_tests {
 
     #[test]
     fn test_get_move_reimann() {
-        let mut state: State<PubPlayerInfo> = State::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (1, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (1, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let reimann = NaiveStrategy::Riemann;
         // Default Board<7> is:
         //   0123456
@@ -394,20 +417,22 @@ mod strategy_tests {
         );
 
         // what will Reimann do to go from (0, 0) to (2, 3)?
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (0, 0),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (0, 0),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let slide = state.board.new_slide(0, East).unwrap();
         let reimann_move = reimann.get_move(state, (0, 0), (2, 3));
         assert!(reimann_move.is_some());
@@ -423,20 +448,22 @@ mod strategy_tests {
         );
 
         // what will Reimann do to go from (6, 4) to (2, 0)?
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (6, 4),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (6, 4),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         let slide = state.board.new_slide(4, East).unwrap();
         let reimann_move = reimann.get_move(state.clone(), (6, 4), (2, 0));
         assert!(reimann_move.is_some());
@@ -600,20 +627,22 @@ mod strategy_tests {
 
     #[test]
     fn test_find_move_to_reach() {
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (4, 1),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (4, 1),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         // Default Board<7> is:
         //   0123456
         // 0 ─│└┌┐┘┴
@@ -651,20 +680,22 @@ mod strategy_tests {
         assert_eq!(euclid.find_move_to_reach(&state, start, destination), None);
         assert_eq!(reimann.find_move_to_reach(&state, start, destination), None);
 
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![
-            PubPlayerInfo {
-                current: (6, 0),
-                home: (1, 1),
-                color: ColorName::Red.into(),
-            },
-            PubPlayerInfo {
-                current: (2, 2),
-                home: (3, 1),
-                color: ColorName::Purple.into(),
-            },
-        ]
-        .into();
+        let state = State {
+            player_info: vec![
+                PubPlayerInfo {
+                    current: (6, 0),
+                    home: (1, 1),
+                    color: ColorName::Red.into(),
+                },
+                PubPlayerInfo {
+                    current: (2, 2),
+                    home: (3, 1),
+                    color: ColorName::Purple.into(),
+                },
+            ]
+            .into(),
+            ..Default::default()
+        };
         // you can go from (6, 0) -> (1, 1) by wrapping around the board
         let start = state.player_info[0].current;
         let destination = (1, 1);

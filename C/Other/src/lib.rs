@@ -3,15 +3,17 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "UPPERCASE")]
 enum Vertical {
-    UP,
-    DOWN,
+    Up,
+    Down,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "UPPERCASE")]
 enum Horizontal {
-    LEFT,
-    RIGHT,
+    Left,
+    Right,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,10 +28,10 @@ impl Display for Corner {
             f,
             "{}",
             match (self.vertical, self.horizontal) {
-                (Vertical::UP, Horizontal::LEFT) => "┘",
-                (Vertical::UP, Horizontal::RIGHT) => "└",
-                (Vertical::DOWN, Horizontal::LEFT) => "┐",
-                (Vertical::DOWN, Horizontal::RIGHT) => "┌",
+                (Vertical::Up, Horizontal::Left) => "┘",
+                (Vertical::Up, Horizontal::Right) => "└",
+                (Vertical::Down, Horizontal::Left) => "┐",
+                (Vertical::Down, Horizontal::Right) => "┌",
             }
         )?;
         Ok(())

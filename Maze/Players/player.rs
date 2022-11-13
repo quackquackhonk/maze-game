@@ -166,13 +166,15 @@ mod tests {
             .setup(state, (1, 1))
             .expect("LocalPlayers are infallible");
 
-        let mut state = State::<PubPlayerInfo>::default();
-        state.player_info = vec![PubPlayerInfo {
-            current: (0, 0),
-            home: (0, 0),
-            color: ColorName::Red.into(),
-        }]
-        .into();
+        let state = State {
+            player_info: vec![PubPlayerInfo {
+                current: (0, 0),
+                home: (0, 0),
+                color: ColorName::Red.into(),
+            }]
+            .into(),
+            ..Default::default()
+        };
 
         let turn = player.take_turn(state.clone()).unwrap();
         assert_eq!(turn, NaiveStrategy::Euclid.get_move(state, (0, 0), (1, 1)));

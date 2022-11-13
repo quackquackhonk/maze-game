@@ -43,7 +43,7 @@ impl PlayerApi for BadPlayer {
         if let BadFM::SetUp = self.bad_fm {
             let _ = 1_i32
                 .checked_div(0)
-                .ok_or(anyhow!("tried to divide by 0"))?;
+                .ok_or_else(|| anyhow!("tried to divide by 0"))?;
         }
         self.player.setup(state, goal)
     }
@@ -52,7 +52,7 @@ impl PlayerApi for BadPlayer {
         if let BadFM::TakeTurn = self.bad_fm {
             let _ = 1_i32
                 .checked_div(0)
-                .ok_or(anyhow!("tried to divide by 0"))?;
+                .ok_or_else(|| anyhow!("tried to divide by 0"))?;
         }
         self.player.take_turn(state)
     }
@@ -61,7 +61,7 @@ impl PlayerApi for BadPlayer {
         if let BadFM::Win = self.bad_fm {
             let _ = 1_i32
                 .checked_div(0)
-                .ok_or(anyhow!("tried to divide by 0"))?;
+                .ok_or_else(|| anyhow!("tried to divide by 0"))?;
         }
         self.player.won(did_win)
     }

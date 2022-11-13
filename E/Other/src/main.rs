@@ -28,7 +28,7 @@ fn main() -> std::io::Result<()> {
 
     let listener = TcpListener::bind(format!("127.0.0.1:{}", port))?;
 
-    if let Some(stream) = listener.incoming().nth(0) {
+    if let Some(stream) = listener.incoming().next() {
         let mut stream = stream?;
         let response = read_from_client(&mut stream)?;
         write_to_client(&mut stream, &format!("{response}\n"))?;
@@ -66,48 +66,37 @@ mod test {
 
     #[test]
     fn test_handle_client_from_file() {
-        enum Filetype {
-            INPUT,
-            OUTPUT,
-            INVALID,
-        }
-        use Filetype::*;
         let tests_path = Path::new("./../Tests/");
         let files = tests_path.read_dir().unwrap().collect::<Vec<_>>();
-        let file_count = files.iter().count() / 2;
+        let file_count = files.len() / 2;
         let mut results: Vec<(Option<String>, Option<String>)> = vec![(None, None); file_count];
-        for test in files {
-            if let Ok(dir_entry) = test {
-                let path = dir_entry.path();
-                let mut split_path = path.file_name().unwrap().to_str().unwrap().split("-");
-                if let Ok(num) = split_path.next().unwrap().parse::<usize>() {
-                    let is_input_file = match split_path.next() {
-                        Some("in.json") => INPUT,
-                        Some("out.json") => OUTPUT,
-                        _ => INVALID,
-                    };
-                    match is_input_file {
-                        INPUT => {
-                            results[num].0 = Some(
-                                read_from_client(&mut BufReader::new(File::open(&path).unwrap()))
-                                    .unwrap(),
-                            );
-                        }
-                        OUTPUT => results[num].1 = Some(std::fs::read_to_string(&path).unwrap()),
-                        INVALID => {}
-                    };
-                }
+        for test in files.into_iter().flatten() {
+            let path = test.path();
+            let mut split_path = path.file_name().unwrap().to_str().unwrap().split('-');
+            if let Ok(num) = split_path.next().unwrap().parse::<usize>() {
+                match split_path.next() {
+                    Some("in.json") => {
+                        results[num].0 = Some(
+                            read_from_client(&mut BufReader::new(File::open(&path).unwrap()))
+                                .unwrap(),
+                        );
+                    }
+                    Some("out.json") => {
+                        results[num].1 = Some(std::fs::read_to_string(&path).unwrap())
+                    }
+                    _ => {}
+                };
             }
         }
 
         for (input, output) in results {
             let input = input
                 .iter()
-                .map(|str| serde_json::from_str(&str).unwrap())
+                .map(|str| serde_json::from_str(str).unwrap())
                 .collect::<Vec<serde_json::Value>>();
             let output = output
                 .iter()
-                .map(|str| serde_json::from_str(&str).unwrap())
+                .map(|str| serde_json::from_str(str).unwrap())
                 .collect::<Vec<serde_json::Value>>();
             assert_eq!(input, output);
         }

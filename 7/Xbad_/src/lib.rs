@@ -48,7 +48,10 @@ pub fn read_and_write_json(
 ) -> anyhow::Result<()> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let players: Vec<Box<dyn PlayerApi>> = match input.next().ok_or(anyhow!("asdasdas"))? {
+    let players: Vec<Box<dyn PlayerApi>> = match input
+        .next()
+        .ok_or_else(|| anyhow!("Did not recieve JSON"))?
+    {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
             .map(|pss| -> Box<dyn PlayerApi> {
@@ -70,7 +73,10 @@ pub fn read_and_write_json(
         _ => bail!(""),
     };
 
-    let state: State<FullPlayerInfo> = match input.next().ok_or(anyhow!("ehhhhhhh"))? {
+    let state: State<FullPlayerInfo> = match input
+        .next()
+        .ok_or_else(|| anyhow!("Did not receive JSON"))?
+    {
         ValidJson::RefereeState(a) => a.into(),
         _ => bail!(""),
     };

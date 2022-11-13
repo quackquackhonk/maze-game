@@ -159,7 +159,7 @@ impl TileWidget {
     /// Renders all homes in `self.home_colors` onto `ui`
     fn render_homes(&self, ui: &mut egui::Ui) {
         if let Some(col) = &self.home_color {
-            ui.add(home_image_with_color(ui, &col, CELL_SIZE_2D));
+            ui.add(home_image_with_color(ui, col, CELL_SIZE_2D));
         }
     }
 
