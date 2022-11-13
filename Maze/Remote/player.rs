@@ -10,7 +10,7 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::time::Duration;
 
-use crate::json::{JsonArguments, JsonFunctionCall, JsonMName, JsonResult};
+use crate::json::{JsonFunctionCall, JsonResult};
 
 /// Acts as a proxy for players across a network
 struct PlayerProxy {
