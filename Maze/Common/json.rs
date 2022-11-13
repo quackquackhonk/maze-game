@@ -264,7 +264,7 @@ impl From<(JsonBoard, JsonTile)> for Board {
 /// # Constraints
 /// - `plmt` is a non-empty array
 /// - no two `JsonPlayer`s will have the same `JsonColor`
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonState {
     pub board: JsonBoard,
     #[allow(dead_code)]
@@ -293,6 +293,18 @@ impl From<JsonState> for State<PubPlayerInfo> {
             board: (jstate.board, jstate.spare).into(),
             player_info: player_info.into(),
             previous_slide: jstate.last.into(),
+        }
+    }
+}
+
+impl From<State<PubPlayerInfo>> for JsonState {
+    fn from(state: State<PubPlayerInfo>) -> Self {
+        let (board, spare) = state.board.into();
+        JsonState {
+            board,
+            spare,
+            plmt: state.player_info.into_iter().map(|i| i.into()).collect(),
+            last: state.previous_slide.into(),
         }
     }
 }
@@ -329,7 +341,7 @@ impl From<Tile> for JsonTile {
 
 /// Describes a player's current location, the
 /// location of its home, and the color of its avatar.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct JsonPlayer {
     pub current: Coordinate,
     pub home: Coordinate,
@@ -359,6 +371,16 @@ impl From<JsonPlayer> for PubPlayerInfo {
                 .color
                 .try_into()
                 .expect("Json Color values are always valid"),
+        }
+    }
+}
+
+impl From<PubPlayerInfo> for JsonPlayer {
+    fn from(ppi: PubPlayerInfo) -> Self {
+        JsonPlayer {
+            current: ppi.current.into(),
+            home: ppi.home.into(),
+            color: ppi.color.into(),
         }
     }
 }

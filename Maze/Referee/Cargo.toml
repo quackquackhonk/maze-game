@@ -11,9 +11,9 @@ path = "lib.rs"
 [dependencies]
 aliri_braid = "0.2.4"
 common = { path = "../Common/" }
+players = { path = "../Players/" }
 egui = "0.19.0"
 eframe = "0.19.0"
-players = { path = "../Players/" }
 rand = "0.8.5"
 rand_chacha = "0.3.1"
 regex = "1.6.0"

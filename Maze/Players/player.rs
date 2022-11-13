@@ -13,7 +13,7 @@ pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
 pub enum PlayerApiError {
     #[error("timeout reached when attempting to recieve a response")]
     Timeout(#[from] io::Error),
-    #[error("respnse has incorrect format")]
+    #[error("response has incorrect format")]
     WrongFormat(#[from] serde_json::Error),
     #[error(transparent)]
     Other(#[from] anyhow::Error),
