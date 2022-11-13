@@ -2,7 +2,7 @@ use common::grid::Position;
 use common::json::{Coordinate, JsonState};
 use common::{PubPlayerInfo, State};
 use players::json::JsonChoice;
-use serde::{Deserialize, Serialize};
+use serde::{de, Deserialize, Serialize};
 
 /// Contains all valid method names a Referee can send to a Player
 #[derive(Debug, Deserialize, Serialize)]
@@ -13,12 +13,52 @@ pub enum JsonMName {
     Win,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(untagged)]
+#[derive(Debug)]
 pub enum JsonFState {
-    #[serde(rename = "false")]
     False,
     State(JsonState),
+}
+
+impl<'de> Deserialize<'de> for JsonFState {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        #[derive(Deserialize)]
+        #[serde(untagged)]
+        enum MaybeState {
+            Bool(bool),
+            State(JsonState),
+        }
+
+        let value = MaybeState::deserialize(deserializer)?;
+        match value {
+            MaybeState::Bool(false) => Ok(JsonFState::False),
+            MaybeState::State(state) => Ok(JsonFState::State(state)),
+            MaybeState::Bool(true) => Err(de::Error::unknown_variant("true", &[])),
+        }
+    }
+}
+
+impl Serialize for JsonFState {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            JsonFState::False => Ok(bool::serialize(&false, serializer)?),
+            JsonFState::State(state) => Ok(JsonState::serialize(&state, serializer)?),
+        }
+    }
+}
+
+#[test]
+fn test_json_fstate() {
+    let mut deserializer = serde_json::Deserializer::from_str("false").into_iter();
+    let value = deserializer.next().unwrap().unwrap();
+    assert!(matches!(value, JsonFState::False));
+
+    assert_eq!("false", &serde_json::to_string(&JsonFState::False).unwrap());
 }
 
 impl From<JsonFState> for Option<State<PubPlayerInfo>> {
