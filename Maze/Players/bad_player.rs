@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use common::{board::Board, PubPlayerInfo, State};
+use common::{board::Board, json::Name, PubPlayerInfo, State};
 use serde::Deserialize;
 
 use crate::{
@@ -27,7 +27,7 @@ impl BadPlayer {
 }
 
 impl PlayerApi for BadPlayer {
-    fn name(&self) -> PlayerApiResult<common::json::Name> {
+    fn name(&self) -> PlayerApiResult<Name> {
         self.player.name()
     }
 
