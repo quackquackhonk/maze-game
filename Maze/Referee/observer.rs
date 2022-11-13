@@ -132,10 +132,10 @@ impl TileWidget {
     /// Returns the `RetainedImage` corresponding to `self.tile.connector`
     fn center_ret_img(&self) -> &RetainedImage {
         match self.tile.connector {
-            ConnectorShape::Path(_) => &*PATH_IMG,
-            ConnectorShape::Corner(_) => &*CORNER_IMG,
-            ConnectorShape::Fork(_) => &*FORK_IMG,
-            ConnectorShape::Crossroads => &*CROSSROADS_IMG,
+            ConnectorShape::Path(_) => &PATH_IMG,
+            ConnectorShape::Corner(_) => &CORNER_IMG,
+            ConnectorShape::Fork(_) => &FORK_IMG,
+            ConnectorShape::Crossroads => &CROSSROADS_IMG,
         }
     }
 
