@@ -63,7 +63,6 @@ impl JsonFunctionCall {
     }
 
     pub fn win(did_win: bool) -> Self {
-        Self(JsonMName::Win, vec![won.into()])
+        Self(JsonMName::Win, vec![did_win.into()])
     }
 }
-

@@ -1,14 +1,11 @@
 use anyhow::anyhow;
-use common::board::Board;
-use common::grid::Position;
-use common::json::Name;
-use common::{PubPlayerInfo, State};
-use players::player::{PlayerApi, PlayerApiError, PlayerApiResult};
-use players::strategy::PlayerAction;
+use common::{board::Board, grid::Position, json::Name, PubPlayerInfo, State};
+use players::{
+    player::{PlayerApi, PlayerApiError, PlayerApiResult},
+    strategy::PlayerAction,
+};
 use serde::Deserialize;
-use std::io::Write;
-use std::net::TcpStream;
-use std::time::Duration;
+use std::{io::Write, net::TcpStream, time::Duration};
 
 use crate::json::{JsonFunctionCall, JsonResult};
 
@@ -35,10 +32,10 @@ impl PlayerProxy {
     /// Writes a `JsonFunctionCall` to `self.stream`
     ///
     /// # Errors
-    /// This will error if writing to `self.stream` fails
+    /// This will error if writing to `self.stream` or serializing `func` fails
     fn send_function_call(&self, func: &JsonFunctionCall) -> PlayerApiResult<()> {
         let msg = serde_json::to_string(func)?;
-        self.stream.write_all(msg.as_bytes())?;
+        self.stream.try_clone()?.write_all(msg.as_bytes())?;
         Ok(())
     }
 }
@@ -48,7 +45,7 @@ impl PlayerApi for PlayerProxy {
         Ok(self.name.clone())
     }
 
-    fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board> {
+    fn propose_board0(&self, _cols: u32, _rows: u32) -> PlayerApiResult<Board> {
         // the spec doesn't say anything about calling propose_board0 on `PlayerProxy`s
         todo!()
     }
@@ -71,7 +68,7 @@ impl PlayerApi for PlayerProxy {
     }
 
     fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
-        self.send_function_call(&JsonFunctionCall::take_turn(state))?;
+        self.send_function_call(&JsonFunctionCall::take_turn(state.clone()))?;
         // TODO: what should this timeout actually be?
         self.stream.set_read_timeout(Some(Duration::from_secs(2)))?;
         match self.read_result()? {
