@@ -15,8 +15,26 @@ pub enum JsonMName {
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
+pub enum JsonFState {
+    #[serde(rename = "false")]
+    False,
+    State(JsonState),
+}
+
+impl From<JsonFState> for Option<State<PubPlayerInfo>> {
+    fn from(jfs: JsonFState) -> Self {
+        match jfs {
+            JsonFState::False => None,
+            JsonFState::State(st) => Some(st.into()),
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(untagged)]
 pub enum JsonArguments {
-    State(Option<JsonState>),
+    FState(JsonFState),
+    State(JsonState),
     Coordinate(Coordinate),
     Boolean(bool),
 }
@@ -24,9 +42,15 @@ pub enum JsonArguments {
 impl From<Option<State<PubPlayerInfo>>> for JsonArguments {
     fn from(st: Option<State<PubPlayerInfo>>) -> Self {
         match st {
-            Some(state) => JsonArguments::State(Some(state.into())),
-            None => JsonArguments::State(None),
+            Some(state) => JsonArguments::FState(JsonFState::State(state.into())),
+            None => JsonArguments::FState(JsonFState::False),
         }
+    }
+}
+
+impl From<State<PubPlayerInfo>> for JsonArguments {
+    fn from(st: State<PubPlayerInfo>) -> Self {
+        JsonArguments::State(st.into())
     }
 }
 

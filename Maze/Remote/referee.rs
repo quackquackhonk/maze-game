@@ -5,6 +5,7 @@ use std::{
 };
 
 use anyhow::anyhow;
+use common::{PubPlayerInfo, State};
 use players::player::PlayerApi;
 use serde::Deserialize;
 use serde_json::de::IoRead;
@@ -38,7 +39,7 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
                         _ => Err(anyhow!("Last argument was not a goal"))?,
                     };
                     let state = match command.1.pop() {
-                        Some(JsonArguments::State(state)) => state.map(|s| s.into()),
+                        Some(JsonArguments::FState(state)) => state.into(),
                         _ => Err(anyhow!("First argument was not an Option<State>"))?,
                     };
                     self.player.setup(state, goal)?;
@@ -47,7 +48,7 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
                 }
                 JsonMName::TakeTurn => {
                     let state = match command.1.pop() {
-                        Some(JsonArguments::State(Some(state))) => state.into(),
+                        Some(JsonArguments::State(state)) => state.into(),
                         _ => Err(anyhow!("Did not recieve a state"))?,
                     };
                     let choice = self.player.take_turn(state)?;
