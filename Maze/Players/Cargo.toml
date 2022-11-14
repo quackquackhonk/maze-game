@@ -10,6 +10,7 @@ path = "lib.rs"
 
 [dependencies]
 anyhow = "1.0.66"
+clap = { version = "4.0.23", features = ["derive"]}
 common = { path = "../Common/" }
 itertools = "0.10.5"
 serde = { version = "1.0.147", features = ["derive"] }

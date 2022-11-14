@@ -1,10 +1,10 @@
-use std::cmp::Ordering;
-use std::iter::repeat;
-
+use clap::ValueEnum;
 use common::tile::CompassDirection;
 use common::PubPlayerInfo;
 use common::State;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
+use std::cmp::Ordering;
+use std::iter::repeat;
 
 /// This trait represents getting a valid move from a given board state
 pub trait Strategy {
@@ -33,7 +33,7 @@ pub struct PlayerMove {
     pub destination: Position,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(ValueEnum, Debug, Clone, Copy)]
 /// Implements a strategy that after failing to find a move directly to the goal tile, checks
 /// every other board position as a location to move. The order in which it checks every location
 /// depends on the `NaiveStrategy` type.

@@ -38,7 +38,8 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
                         _ => Err(anyhow!("Last argument was not a goal"))?,
                     };
                     let state = match command.1.pop() {
-                        Some(JsonArguments::FState(state)) => state.into(),
+                        Some(JsonArguments::State(state)) => Some(state.into()),
+                        Some(JsonArguments::Boolean(b)) if !b => None,
                         _ => Err(anyhow!("First argument was not an Option<State>"))?,
                     };
                     self.player.setup(state, goal)?;

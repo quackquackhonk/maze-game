@@ -8,6 +8,8 @@ use std::net::TcpListener;
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
 
+const TIMEOUT: u64 = 10;
+
 #[derive(Parser)]
 struct Args {
     #[clap(value_parser = is_port)]
@@ -46,23 +48,28 @@ async fn recieve_connections(
 pub async fn main() -> io::Result<()> {
     let Args { port } = Args::parse();
     let listener = TcpListener::bind(format!("127.0.0.1:{port}"))?;
-    dbg!("bound to tcp");
+    eprintln!("bound to tcp");
     let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
     let time_out = timeout(
-        Duration::from_secs(20),
+        Duration::from_secs(TIMEOUT),
         recieve_connections(&listener, &mut player_connections),
     );
 
     if time_out.await.is_err() && player_connections.len() < 2 {
+        eprintln!("timed out with only {} players", player_connections.len());
         // We timed out once but did not have enough players
 
         let time_out = timeout(
-            Duration::from_secs(20),
+            Duration::from_secs(TIMEOUT),
             recieve_connections(&listener, &mut player_connections),
         );
 
         if time_out.await.is_err() && player_connections.len() < 2 {
+            eprintln!(
+                "timed out again with only {} players, ending the game",
+                player_connections.len()
+            );
             // We waited twice and there is not enough players
             let game_result = GameResult::default();
             println!("{}", serde_json::to_string(&game_result).unwrap());
