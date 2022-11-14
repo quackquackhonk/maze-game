@@ -1,38 +1,78 @@
-use common::json::Name;
-use referee::json::JsonGameResult;
-use referee::referee::GameResult;
+use clap::Parser;
+use players::player::PlayerApi;
+use referee::referee::{GameResult, Referee};
+use remote::is_port;
 use remote::player::PlayerProxy;
-use serde::Deserialize;
 use std::io;
-use std::net::{TcpListener, TcpStream};
+use std::net::TcpListener;
 use std::time::Duration;
-use tokio::time::timeout;
+use tokio::time::{sleep, timeout};
+
+#[derive(Parser)]
+struct Args {
+    #[clap(value_parser = is_port)]
+    port: usize,
+}
 
 async fn recieve_connections(
     listener: &TcpListener,
-    connections: &mut Vec<PlayerProxy<TcpStream, TcpStream>>,
+    connections: &mut Vec<Box<dyn PlayerApi>>,
 ) -> io::Result<()> {
-    loop {
-        let (stream, _) = listener.accept()?;
-        let player = PlayerProxy::try_from_tcp(stream)?;
-        connections.push(player);
-        if connections.len() == 6 {
-            break;
+    listener.set_nonblocking(true)?;
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(2)))
+                    .expect("We did not pass a 0 for duration");
+                if let Ok(player) = PlayerProxy::try_from_tcp(stream) {
+                    connections.push(Box::new(player));
+                    if connections.len() == 6 {
+                        break;
+                    }
+                }
+            }
+            Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
+                sleep(Duration::from_nanos(1)).await //We await here so that we give up execution
+                                                     //to tokio for it to decide if we have reached our timeout
+            }
+            Err(e) => Err(e)?,
         }
     }
     Ok(())
 }
 
 #[tokio::main]
-async fn main() -> io::Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:8080")?;
-    let mut player_connections: Vec<PlayerProxy<TcpStream, TcpStream>> = vec![];
+pub async fn main() -> io::Result<()> {
+    let Args { port } = Args::parse();
+    let listener = TcpListener::bind(format!("127.0.0.1:{port}"))?;
+    dbg!("bound to tcp");
+    let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
     let time_out = timeout(
         Duration::from_secs(20),
         recieve_connections(&listener, &mut player_connections),
     );
+
+    if time_out.await.is_err() && player_connections.len() < 2 {
+        // We timed out once but did not have enough players
+
+        let time_out = timeout(
+            Duration::from_secs(20),
+            recieve_connections(&listener, &mut player_connections),
+        );
+
+        if time_out.await.is_err() && player_connections.len() < 2 {
+            // We waited twice and there is not enough players
+            let game_result = GameResult::default();
+            println!("{}", serde_json::to_string(&game_result).unwrap());
+            return Ok(());
+        }
+    }
     // we have enough players :)
+    let mut referee = Referee::new(1);
+    let game_result = referee.run_game(player_connections, vec![]);
+    println!("{}", serde_json::to_string(&game_result).unwrap());
 
     Ok(())
 }

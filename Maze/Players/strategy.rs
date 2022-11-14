@@ -33,7 +33,7 @@ pub struct PlayerMove {
     pub destination: Position,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// Implements a strategy that after failing to find a move directly to the goal tile, checks
 /// every other board position as a location to move. The order in which it checks every location
 /// depends on the `NaiveStrategy` type.

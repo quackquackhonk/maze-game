@@ -106,12 +106,44 @@ impl From<bool> for JsonArguments {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(untagged)]
+#[derive(Debug)]
 pub enum JsonResult {
-    #[serde(rename = "void")]
     Void,
     Choice(JsonChoice),
+}
+
+impl<'de> Deserialize<'de> for JsonResult {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        #[derive(Deserialize)]
+        #[serde(untagged)]
+        enum MaybeResult {
+            Void(String),
+            Choice(JsonChoice),
+        }
+
+        match MaybeResult::deserialize(deserializer)? {
+            MaybeResult::Void(str) if str == String::from("void") => Ok(JsonResult::Void),
+            MaybeResult::Choice(choice) => Ok(JsonResult::Choice(choice)),
+            MaybeResult::Void(variant) => {
+                Err(de::Error::unknown_variant(&variant, &["void", "choice"]))
+            }
+        }
+    }
+}
+
+impl Serialize for JsonResult {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            JsonResult::Void => String::serialize(&String::from("void"), serializer),
+            JsonResult::Choice(choice) => JsonChoice::serialize(&choice, serializer),
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

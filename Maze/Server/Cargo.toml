@@ -5,18 +5,16 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-name = "server"
-path = "lib.rs"
-
 [[bin]]
 name = "server"
 path = "server.rs"
 
 [dependencies]
 referee = {path = "../Referee"}
+players = {path = "../Players"}
 common = {path = "../Common"}
 remote = {path = "../Remote"}
 serde_json = "1.0.87"
 serde = "1.0.147"
 tokio = { version = "1.21.2", features = ["rt-multi-thread", "rt", "time", "macros"] }
+clap = { version = "4.0.23", features = ["derive"] }
