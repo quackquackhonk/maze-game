@@ -1,4 +1,4 @@
-use std::{thread, time::Duration};
+use std::{cell::RefCell, thread, time::Duration};
 
 use anyhow::anyhow;
 use common::{board::Board, grid::Position, json::Name, PubPlayerInfo, State};
@@ -69,30 +69,29 @@ impl PlayerApi for BadPlayer {
     }
 }
 
-struct BadPlayerLoop {
+pub struct BadPlayerLoop {
     badfm: BadFM,
     times: u64,
-    times_called: u64,
+    times_called: RefCell<u64>,
     api: Box<dyn PlayerApi>,
 }
 
 impl BadPlayerLoop {
-    fn new(api: Box<dyn PlayerApi>, badfm: BadFM, times: u64) -> Self {
+    pub fn new(api: Box<dyn PlayerApi>, badfm: BadFM, times: u64) -> Self {
         Self {
             badfm,
             times,
             api,
-            times_called: 0,
+            times_called: RefCell::new(0),
         }
     }
-}
-
-impl BadPlayerLoop {
     /// If times_called
     fn inc_or_loop(&self) {
-        if self.times_called + 1 == self.times {
+        let mut tc = self.times_called.borrow_mut();
+        *tc += 1;
+        if *tc == self.times {
             loop {
-                thread::sleep(Duration::from_secs(1));
+                thread::sleep(Duration::from_secs(2));
             }
         }
     }

@@ -66,6 +66,7 @@ pub fn read_and_write_json(
                             bad_fm,
                         ))
                     }
+                    _ => panic!("BadPS2s are not valid input for xbad"),
                 }
             })
             .collect(),

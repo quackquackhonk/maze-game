@@ -5,5 +5,5 @@
 members = [
 	"Maze/Common","Maze/Players", "Maze/Referee", "Maze/Client", "Maze/Server", "Maze/Remote", "B/Other", "C/Other",
 	"D/Other", "E/Other", "3/Xboard", "4/Xstate", "5/Xchoice", "6/XGame",
-	"7/Xbad_"
+	"7/Xbad_", "8/Xbad2"
 ]

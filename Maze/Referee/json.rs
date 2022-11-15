@@ -28,15 +28,25 @@ fn ps_parse_test() {
 pub struct BadPS(Name, JsonStrategy, BadFM);
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
+pub struct BadPS2(Name, JsonStrategy, BadFM, u64);
+
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum PlayerSpec {
     PS(PS),
     BadPS(BadPS),
+    BadPS2(BadPS2),
 }
 
 impl From<BadPS> for (Name, NaiveStrategy, BadFM) {
     fn from(bad_ps: BadPS) -> Self {
         (bad_ps.0, bad_ps.1.into(), bad_ps.2)
+    }
+}
+
+impl From<BadPS2> for (Name, NaiveStrategy, BadFM, u64) {
+    fn from(bad_ps2: BadPS2) -> Self {
+        (bad_ps2.0, bad_ps2.1.into(), bad_ps2.2, bad_ps2.3)
     }
 }
 

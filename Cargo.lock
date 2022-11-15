@@ -1961,6 +1961,7 @@ name = "referee"
 version = "0.1.0"
 dependencies = [
  "aliri_braid",
+ "anyhow",
  "common",
  "eframe",
  "egui",
@@ -1975,6 +1976,7 @@ dependencies = [
  "rfd",
  "serde",
  "serde_json",
+ "thiserror",
 ]
 
 [[package]]
@@ -2900,6 +2902,18 @@ dependencies = [
  "nix 0.22.3",
  "winapi",
  "winapi-wsapoll",
+]
+
+[[package]]
+name = "xbad2"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "players",
+ "referee",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
