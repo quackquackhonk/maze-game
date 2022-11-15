@@ -3,18 +3,52 @@ use common::board::{Board, DefaultBoard};
 use common::grid::{squared_euclidian_distance, Position};
 use common::json::Name;
 use common::{Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State};
-use players::player::{PlayerApi, PlayerApiResult};
+use players::player::{PlayerApi, PlayerApiError, PlayerApiResult};
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
 use serde::Serialize;
-use std::cell::RefCell;
 use std::collections::HashSet;
 use std::fmt::Debug;
 use std::hash::Hash;
-use std::rc::Rc;
+use std::sync::mpsc::{self, RecvTimeoutError};
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+use thiserror::Error;
 
 use crate::observer::Observer;
+
+#[derive(Debug, Error)]
+#[error("Timed Out!")]
+struct TimeoutError;
+
+impl From<TimeoutError> for PlayerApiError {
+    fn from(_: TimeoutError) -> Self {
+        PlayerApiError::Timeout
+    }
+}
+
+/// Runs `f` in a separate thread, and has the child thread send the result of `f` through a
+/// channel. The main thread waits on the channel, and if no response is returned `timeout` passes,
+/// returns an `Err`.
+fn run_with_timeout<F, T>(f: F, timeout: Duration) -> Result<T, TimeoutError>
+where
+    F: FnOnce() -> T + Send + 'static,
+    T: Send + 'static,
+{
+    let (tx, rx) = mpsc::channel();
+    let _ = thread::spawn(move || {
+        let result = f();
+        if let Ok(()) = tx.send(result) {}
+    });
+
+    match rx.recv_timeout(timeout) {
+        Ok(result) => Ok(result),
+        Err(RecvTimeoutError::Timeout) => Err(TimeoutError),
+        Err(RecvTimeoutError::Disconnected) => unreachable!(),
+    }
+}
 
 /// The Result of calling `Referee::run_game(...)`.
 /// - The `winners` field contains all the winning players.
@@ -34,7 +68,7 @@ pub type GameWinner = Option<Player>;
 
 #[derive(Clone)]
 pub struct Player {
-    pub api: Rc<RefCell<Box<dyn PlayerApi>>>,
+    pub api: Arc<Mutex<Box<dyn PlayerApi>>>,
     pub info: FullPlayerInfo,
 }
 
@@ -47,7 +81,7 @@ impl Debug for Player {
 impl Player {
     fn new(api: Box<dyn PlayerApi>, info: FullPlayerInfo) -> Self {
         Player {
-            api: Rc::new(RefCell::new(api)),
+            api: Arc::new(Mutex::new(api)),
             info,
         }
     }
@@ -85,13 +119,20 @@ impl PrivatePlayerInfo for Player {
     }
 }
 
+const TIMEOUT: Duration = Duration::from_secs(2);
+
 impl PlayerApi for Player {
     fn name(&self) -> PlayerApiResult<Name> {
-        self.api.borrow().name()
+        let api = self.api.clone();
+        run_with_timeout(move || api.lock().unwrap().name(), TIMEOUT)?
     }
 
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board> {
-        self.api.borrow().propose_board0(cols, rows)
+        let api = self.api.clone();
+        run_with_timeout(
+            move || api.lock().unwrap().propose_board0(cols, rows),
+            TIMEOUT,
+        )?
     }
 
     fn setup(
@@ -99,15 +140,18 @@ impl PlayerApi for Player {
         state: Option<State<PubPlayerInfo>>,
         goal: Position,
     ) -> PlayerApiResult<()> {
-        self.api.borrow_mut().setup(state, goal)
+        let api = self.api.clone();
+        run_with_timeout(move || api.lock().unwrap().setup(state, goal), TIMEOUT)?
     }
 
     fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
-        self.api.borrow().take_turn(state)
+        let api = self.api.clone();
+        run_with_timeout(move || api.lock().unwrap().take_turn(state), TIMEOUT)?
     }
 
     fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
-        self.api.borrow_mut().won(did_win)
+        let api = self.api.clone();
+        run_with_timeout(move || api.lock().unwrap().won(did_win), TIMEOUT)?
     }
 }
 
@@ -486,7 +530,10 @@ impl Referee {
 
 #[cfg(test)]
 mod tests {
-    use std::{cell::RefCell, collections::HashSet, rc::Rc};
+    use std::{
+        collections::HashSet,
+        sync::{Arc, Mutex},
+    };
 
     use common::{
         board::{Board, DefaultBoard},
@@ -507,10 +554,10 @@ mod tests {
 
     #[derive(Debug, Default, Clone)]
     struct MockPlayer {
-        turns_taken: Rc<RefCell<usize>>,
-        state: Rc<RefCell<Option<State<PubPlayerInfo>>>>,
-        goal: Rc<RefCell<Option<Position>>>,
-        won: Rc<RefCell<Option<bool>>>,
+        turns_taken: Arc<Mutex<usize>>,
+        state: Arc<Mutex<Option<State<PubPlayerInfo>>>>,
+        goal: Arc<Mutex<Option<Position>>>,
+        won: Arc<Mutex<Option<bool>>>,
     }
 
     impl PlayerApi for MockPlayer {
@@ -527,31 +574,19 @@ mod tests {
             state: Option<State<PubPlayerInfo>>,
             goal: Position,
         ) -> PlayerApiResult<()> {
-            *self
-                .goal
-                .try_borrow_mut()
-                .expect("we are the only owners??") = Some(goal);
-            *self
-                .state
-                .try_borrow_mut()
-                .expect("we are the only owners?") = state;
+            *self.goal.lock().expect("we are the only owners??") = Some(goal);
+            *self.state.lock().expect("we are the only owners?") = state;
             Ok(())
         }
 
         fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
-            *self
-                .turns_taken
-                .try_borrow_mut()
-                .expect("we are the only owners?") += 1;
-            *self
-                .state
-                .try_borrow_mut()
-                .expect("we are the only owners?") = Some(state);
+            *self.turns_taken.lock().expect("we are the only owners?") += 1;
+            *self.state.lock().expect("we are the only owners?") = Some(state);
             Ok(None)
         }
 
         fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
-            *self.won.try_borrow_mut().expect("we are the only owners?") = Some(did_win);
+            *self.won.lock().expect("we are the only owners?") = Some(did_win);
             Ok(())
         }
     }
@@ -601,11 +636,11 @@ mod tests {
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let mut state = referee.make_initial_state(players, DefaultBoard::<7, 7>::default_board());
-        assert_eq!(player.goal.borrow().to_owned(), None);
+        assert_eq!(player.goal.lock().unwrap().to_owned(), None);
         referee.broadcast_initial_state(&mut state, &mut vec![]);
         assert_eq!(
             state.current_player_info().goal(),
-            player.goal.borrow().unwrap()
+            player.goal.lock().unwrap().unwrap()
         );
     }
 
@@ -641,7 +676,7 @@ mod tests {
     fn test_calculate_winners() {
         let mut state = State::default();
         state.add_player(Player {
-            api: Rc::new(RefCell::new(Box::new(MockPlayer::default()))),
+            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
             info: FullPlayerInfo::new((0, 0), (1, 0), (0, 5), Color::from(ColorName::Red)),
         });
         let won_player = Player::new(
@@ -675,9 +710,9 @@ mod tests {
 
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
-        assert_eq!(player.won.borrow().to_owned(), None);
+        assert_eq!(player.won.lock().unwrap().to_owned(), None);
         referee.run_game(players, vec![]);
-        assert_eq!(player.won.borrow().to_owned(), Some(true));
+        assert_eq!(player.won.lock().unwrap().to_owned(), Some(true));
 
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![
@@ -687,9 +722,9 @@ mod tests {
             )),
             player.clone(),
         ];
-        assert_eq!(player.won.borrow().to_owned(), None);
+        assert_eq!(player.won.lock().unwrap().to_owned(), None);
         referee.run_game(players, vec![]);
-        assert_eq!(player.won.borrow().to_owned(), Some(false));
+        assert_eq!(player.won.lock().unwrap().to_owned(), Some(false));
     }
 
     #[test]
@@ -702,7 +737,7 @@ mod tests {
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners[0].name().unwrap(), player.name().unwrap());
-        assert_eq!(player.turns_taken.borrow().to_owned(), 1);
+        assert_eq!(player.turns_taken.lock().unwrap().to_owned(), 1);
         assert!(kicked.is_empty());
 
         let player = Box::new(MockPlayer::default());

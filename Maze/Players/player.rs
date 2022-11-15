@@ -11,18 +11,20 @@ pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
 
 #[derive(Error, Debug)]
 pub enum PlayerApiError {
-    #[error("timeout reached when attempting to recieve a response")]
-    Timeout(#[from] io::Error),
+    #[error("IO error occured when communicating to player")]
+    IoError(#[from] io::Error),
     #[error("response is not Json")]
     NotJson(#[from] serde_json::Error),
     #[error("response has incorrect format")]
     WrongJson(#[from] JsonError),
+    #[error("timeout reached when attempting to recieve a response")]
+    Timeout,
     #[error(transparent)]
     Other(#[from] anyhow::Error),
 }
 
 /// Trait describing the methods that `Player`s must implement
-pub trait PlayerApi {
+pub trait PlayerApi: Send {
     /// Returns the name of this Player
     fn name(&self) -> PlayerApiResult<Name>;
     /// Returns a `Board` with at least `cols` columns and `rows` rows
@@ -38,7 +40,7 @@ pub trait PlayerApi {
 }
 
 /// Represents a Local AI Player
-pub struct LocalPlayer<S: Strategy> {
+pub struct LocalPlayer<S: Strategy + Send> {
     /// The name of the `LocalPlayer`
     name: Name,
     /// The `strategy::Strategy` that this `LocalPlayer` will use to make moves
@@ -47,7 +49,8 @@ pub struct LocalPlayer<S: Strategy> {
     /// will not know their goal until the `Referee` communicates it to them.
     goal: Option<Position>,
 }
-impl<S: Strategy> LocalPlayer<S> {
+
+impl<S: Strategy + Send> LocalPlayer<S> {
     pub fn new(name: Name, strategy: S) -> Self {
         Self {
             name,
@@ -57,7 +60,7 @@ impl<S: Strategy> LocalPlayer<S> {
     }
 }
 
-impl<S: Strategy> PlayerApi for LocalPlayer<S> {
+impl<S: Strategy + Send> PlayerApi for LocalPlayer<S> {
     fn name(&self) -> PlayerApiResult<Name> {
         Ok(self.name.clone())
     }

@@ -1,8 +1,7 @@
 use std::{
-    cell::RefCell,
     collections::HashSet,
     io::{Read, Write},
-    rc::Rc,
+    sync::{Arc, Mutex},
 };
 
 use anyhow::{anyhow, bail};
@@ -48,13 +47,13 @@ pub fn read_and_write_json(
 ) -> anyhow::Result<()> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let players: Vec<Box<dyn PlayerApi>> = match input
+    let players: Vec<Box<dyn PlayerApi + Send>> = match input
         .next()
         .ok_or_else(|| anyhow!("Did not recieve JSON"))?
     {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
-            .map(|pss| -> Box<dyn PlayerApi> {
+            .map(|pss| -> Box<dyn PlayerApi + Send> {
                 match pss {
                     PlayerSpec::PS(ps) => {
                         let (name, strategy) = ps.into();
@@ -88,7 +87,7 @@ pub fn read_and_write_json(
             .into_iter()
             .zip(players)
             .map(|(info, api)| Player {
-                api: Rc::new(RefCell::new(api)),
+                api: Arc::new(Mutex::new(api)),
                 info,
             })
             .collect(),

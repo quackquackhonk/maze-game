@@ -16,7 +16,7 @@ use std::{
 use crate::json::{JsonFunctionCall, JsonResult};
 
 /// Acts as a proxy for players across a network
-pub struct PlayerProxy<In: Read, Out: Write> {
+pub struct PlayerProxy<In: Read + Send, Out: Write + Send> {
     name: Name,
     r#in: RefCell<serde_json::Deserializer<IoRead<In>>>,
     out: RefCell<Out>,
@@ -43,7 +43,7 @@ impl PlayerProxy<TcpStream, TcpStream> {
     }
 }
 
-impl<In: Read, Out: Write> PlayerProxy<In, Out> {
+impl<In: Read + Send, Out: Write + Send> PlayerProxy<In, Out> {
     pub fn new(name: Name, r#in: In, out: Out) -> Self {
         Self {
             name,
@@ -71,7 +71,7 @@ impl<In: Read, Out: Write> PlayerProxy<In, Out> {
     }
 }
 
-impl<In: Read, Out: Write> PlayerApi for PlayerProxy<In, Out> {
+impl<In: Read + Send, Out: Write + Send> PlayerApi for PlayerProxy<In, Out> {
     fn name(&self) -> PlayerApiResult<Name> {
         Ok(self.name.clone())
     }

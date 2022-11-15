@@ -1,8 +1,7 @@
 use std::{
-    cell::RefCell,
     collections::HashSet,
     io::{Read, Write},
-    rc::Rc,
+    sync::{Arc, Mutex},
 };
 
 use common::{json::Name, FullPlayerInfo, State};
@@ -50,10 +49,10 @@ pub fn read_and_write_json(
 ) -> Result<(), String> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let players: Vec<Box<dyn PlayerApi>> = match input.next().ok_or("asdasdas")? {
+    let players: Vec<Box<dyn PlayerApi + Send>> = match input.next().ok_or("asdasdas")? {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
-            .map(|pss| -> Box<dyn PlayerApi> {
+            .map(|pss| -> Box<dyn PlayerApi + Send> {
                 let (name, strategy) = pss.into();
                 Box::new(LocalPlayer::new(name, strategy))
             })
@@ -73,7 +72,7 @@ pub fn read_and_write_json(
             .into_iter()
             .zip(players)
             .map(|(info, api)| Player {
-                api: Rc::new(RefCell::new(api)),
+                api: Arc::new(Mutex::new(api)),
                 info,
             })
             .collect(),
