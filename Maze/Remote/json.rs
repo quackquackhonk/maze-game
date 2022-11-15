@@ -1,5 +1,5 @@
 use common::grid::Position;
-use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonState};
+use common::json::{Coordinate, JsonState};
 use common::{PubPlayerInfo, State};
 use players::json::JsonChoice;
 use serde::{de, Deserialize, Serialize};
@@ -90,6 +90,7 @@ impl Serialize for JsonResult {
 
 #[test]
 fn test_parse_json_result() {
+    use common::json::{Index, JsonDegree, JsonDirection};
     let mut deserializer = serde_json::Deserializer::from_str("\"void\"").into_iter();
     assert!(matches!(
         deserializer.next().unwrap().unwrap(),

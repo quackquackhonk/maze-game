@@ -48,7 +48,7 @@ impl<'de> Deserialize<'de> for JsonChoice {
 
         let value = MaybeChoice::deserialize(deserializer)?;
         match value {
-            MaybeChoice::Pass(str) if String::from("PASS") == str => Ok(JsonChoice::Pass),
+            MaybeChoice::Pass(str) if *"PASS" == str => Ok(JsonChoice::Pass),
             MaybeChoice::Move(index, direction, degree, coordinate) => {
                 Ok(JsonChoice::Move(index, direction, degree, coordinate))
             }
