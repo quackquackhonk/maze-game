@@ -1,0 +1,23 @@
+[["First", "Euclid"], ["Second", "Riemann", "setUp"]]
+{ "board" : { "connectors" : [
+  ["└", "┴", "┤", "└", "┐", "│", "│"],
+  ["│", "┤", "├", "├", "└", "┴", "┘"],
+  ["┐", "┤", "┴", "┌", "┼", "├", "┼"],
+  ["┴", "┼", "─", "┤", "─", "│", "└"],
+  ["┤", "┘", "┘", "┴", "└", "└", "└"],
+  ["┤", "┌", "├", "┬", "─", "┬", "├"],
+  ["┴", "┐", "┤", "└", "└", "┐", "─"]
+],
+  "treasures"  : [[["black-obsidian", "diamond"], ["tourmaline-laser-cut", "green-aventurine"], ["purple-cabochon", "hematite"], ["grossular-garnet", "blue-ceylon-sapphire"], ["yellow-heart", "golden-diamond-cut"], ["orange-radiant", "green-beryl-antique"], ["clinohumite", "blue-spinel-heart"]], [["apricot-square-radiant", "rhodonite"], ["heliotrope", "jasper"], ["blue-ceylon-sapphire", "australian-marquise"], ["clinohumite", "magnesite"], ["moonstone", "dumortierite"], ["rhodonite", "star-cabochon"], ["golden-diamond-cut", "zoisite"]], [["yellow-heart", "labradorite"], ["red-diamond", "black-obsidian"], ["iolite-emerald-cut", "moonstone"], ["pink-spinel-cushion", "moss-agate"], ["black-spinel-cushion", "cordierite"], ["tigers-eye", "purple-spinel-trillion"], ["ruby", "tigers-eye"]], [["rose-quartz", "yellow-baguette"], ["green-beryl-antique", "lemon-quartz-briolette"], ["tigers-eye", "cordierite"], ["bulls-eye", "fancy-spinel-marquise"], ["kunzite", "black-onyx"], ["yellow-baguette", "cordierite"], ["orange-radiant", "yellow-beryl-oval"]], [["apricot-square-radiant", "magnesite"], ["clinohumite", "emerald"], ["lemon-quartz-briolette", "heliotrope"], ["purple-square-cushion", "diamond"], ["blue-cushion", "grandidierite"], ["golden-diamond-cut", "unakite"], ["australian-marquise", "pink-round"]], [["pink-emerald-cut", "labradorite"], ["tigers-eye", "black-onyx"], ["clinohumite", "zircon"], ["moonstone", "hackmanite"], ["lapis-lazuli", "heliotrope"], ["green-beryl", "red-diamond"], ["padparadscha-oval", "tigers-eye"]], [["sunstone", "diamond"], ["diamond", "tigers-eye"], ["green-aventurine", "cordierite"], ["magnesite", "jasper"], ["lemon-quartz-briolette", "citrine-checkerboard"], ["blue-ceylon-sapphire", "green-princess-cut"], ["green-beryl-antique", "pink-spinel-cushion"]]] },
+  "spare" : { "tilekey" : "┌", "1-image" : "clinohumite", "2-image" : "labradorite" },
+  "plmt"  : [{
+    "current" : { "row#" : 3, "column#" : 2 },
+    "home" : { "row#" : 1, "column#" : 1 },
+    "goto" : { "row#" : 3, "column#" : 5 },
+    "color" : "red" }, {
+    "current" : { "row#" : 5, "column#" : 1 },
+    "home" : { "row#" : 5, "column#" : 1 },
+    "goto" : { "row#" : 3, "column#" : 3 },
+    "color" : "green" }],
+  "last"  : [2, "UP"] }
+

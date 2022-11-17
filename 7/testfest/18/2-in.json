@@ -1,0 +1,57 @@
+[["dan", "Euclid", "win"], ["bob", "Euclid", "win"], ["al", "Euclid", "win"], ["guy", "Euclid", "win"], ["carl", "Euclid", "win"]]
+{
+  "board": {
+    "connectors": [
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"],
+      ["┐","┐","┐","┐","┐","┐","┐"]
+    ],
+    "treasures": [
+      [["cordierite","pink-emerald-cut"], ["cordierite","pink-opal"], ["cordierite","pink-round"], ["cordierite","pink-spinel-cushion"], ["cordierite","purple-cabochon"], ["cordierite","purple-oval"], ["cordierite","purple-spinel-trillion"]],
+      [["diamond","pink-emerald-cut"], ["diamond","pink-opal"], ["diamond","pink-round"], ["diamond","pink-spinel-cushion"], ["diamond","purple-cabochon"], ["diamond","purple-oval"], ["diamond","purple-spinel-trillion"]],
+      [["dumortierite","pink-emerald-cut"], ["dumortierite","pink-opal"], ["dumortierite","pink-round"], ["dumortierite","pink-spinel-cushion"], ["dumortierite","purple-cabochon"], ["dumortierite","purple-oval"], ["dumortierite","purple-spinel-trillion"]],
+      [["emerald","pink-emerald-cut"], ["emerald","pink-opal"], ["emerald","pink-round"], ["emerald","pink-spinel-cushion"], ["emerald","purple-cabochon"], ["emerald","purple-oval"], ["emerald","purple-spinel-trillion"]],
+      [["garnet","pink-emerald-cut"], ["garnet","pink-opal"], ["garnet","pink-round"], ["garnet","pink-spinel-cushion"], ["garnet","purple-cabochon"], ["garnet","purple-oval"], ["garnet","purple-spinel-trillion"]],
+      [["goldstone","pink-emerald-cut"], ["goldstone","pink-opal"], ["goldstone","pink-round"], ["goldstone","pink-spinel-cushion"], ["goldstone","purple-cabochon"], ["goldstone","purple-oval"], ["goldstone","purple-spinel-trillion"]],
+      [["grandidierite","pink-emerald-cut"], ["grandidierite","pink-opal"], ["grandidierite","pink-round"], ["grandidierite","pink-spinel-cushion"], ["grandidierite","purple-cabochon"], ["grandidierite","purple-oval"], ["grandidierite","purple-spinel-trillion"]]
+    ]
+  },
+  "last": [4, "DOWN"],
+  "plmt": [
+    {
+      "color":"000000",
+      "current":{"column#":0,"row#":0},
+      "home":{"column#":1,"row#":1},
+      "goto":{"column#":5,"row#":5}
+    },
+    {
+      "color":"444444",
+      "current":{"column#":1,"row#":1},
+      "home":{"column#":1,"row#":1},
+      "goto":{"column#":5,"row#":5}
+    },
+    {
+      "color":"888888",
+      "current":{"column#":2,"row#":2},
+      "home":{"column#":1,"row#":1},
+      "goto":{"column#":5,"row#":5}
+    },
+    {
+      "color":"CCCCCC",
+      "current":{"column#":3,"row#":3},
+      "home":{"column#":1,"row#":1},
+      "goto":{"column#":5,"row#":5}
+    },
+    {
+      "color":"ABCDEF",
+      "current":{"column#":4,"row#":4},
+      "home":{"column#":1,"row#":1},
+      "goto":{"column#":5,"row#":5}
+    }
+  ],
+  "spare":{"1-image":"citrine","2-image":"citrine","tilekey":"┼"}
+}

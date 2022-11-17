@@ -1,0 +1,37 @@
+[["Andre", "Riemann", "setUp"], ["Austin", "Euclid"], ["Bob", "Riemann", "takeTurn"], ["George", "Riemann"]]
+
+{"board":
+    {"connectors" : [["│", "├", "└", "└", "┼", "┬", "─"], ["┬", "─", "└", "┴", "┤", "┴", "┼"], ["│", "├", "┬", "┴", "┘", "┘", "┴"], ["┬", "┴", "┤", "┼", "├", "┤", "┐"], ["┤", "┌", "─", "┴", "┐", "┴", "└"], ["├", "┌", "┬", "│", "─", "─", "─"], ["│", "┐", "┐", "┐", "┘", "─", "┼"]],
+    "treasures":[[["grandidierite", "purple-oval"], ["pink-emerald-cut", "heliotrope"], ["pink-opal", "hackmanite"], ["yellow-jasper", "prehnite"], ["moonstone", "dumortierite"], ["jasper", "zoisite"], ["white-square", "raw-citrine"]], 
+    [["lemon-quartz-briolette", "morganite-oval"], ["almandine-garnet", "diamond"], ["star-cabochon", "green-beryl-antique"], ["ametrine", "green-beryl"], ["black-spinel-cushion", "jaspilite"], ["tanzanite-trillion", "azurite"], ["tourmaline", "goldstone"]], 
+    [["aventurine", "stilbite"], ["prasiolite", "moss-agate"], ["purple-cabochon", "blue-pear-shape"], ["fancy-spinel-marquise", "beryl"], ["carnelian", "clinohumite"], ["garnet", "aplite"], ["rose-quartz", "padparadscha-oval"]], 
+    [["kunzite-oval", "yellow-heart"], ["color-change-oval", "purple-square-cushion"], ["emerald", "cordierite"], ["amethyst", "mexican-opal"], ["black-onyx", "red-spinel-square-emerald-cut"], ["gray-agate", "raw-beryl"], ["blue-cushion", "ammolite"]], 
+    [["citrine", "green-princess-cut"], ["ruby-diamond-profile", "unakite"], ["iolite-emerald-cut", "grossular-garnet"], ["apricot-square-radiant", "zircon"], ["super-seven", "yellow-beryl-oval"], ["sunstone", "apatite"], ["golden-diamond-cut", "aquamarine"]], [["tigers-eye", "orange-radiant"], ["alexandrite-pear-shape", "rhodonite"], ["yellow-baguette", "pink-round"], ["red-diamond", "lapis-lazuli"], ["spinel", "bulls-eye"], ["labradorite", "magnesite"], ["rock-quartz", "padparadscha-sapphire"]], 
+    [["ruby", "black-obsidian"], ["tourmaline-laser-cut", "chrysolite"], ["chrome-diopside", "alexandrite"], ["hematite", "australian-marquise"], ["peridot", "chrysoberyl-cushion"], ["kunzite", "pink-spinel-cushion"], ["sphalerite", "citrine-checkerboard"]]]},
+
+    "last": null,
+    "spare": {"tilekey": "┤", "1-image": "chrysoberyl-cushion", "2-image": "kunzite"},
+    "plmt": [{
+        "color": "pink",
+        "current": {"row#": 2, "column#": 4},
+        "home": {"row#": 5, "column#": 1},
+        "goto": {"row#": 3,"column#": 3}},
+        {
+        "color": "red",
+        "current": {"row#": 3, "column#": 0},
+        "home": {"row#": 1, "column#": 3},
+        "goto": {"row#": 5,"column#": 5}},
+        {
+        "color": "blue",
+        "current": {"row#": 0, "column#": 1},
+        "home": {"row#": 1, "column#": 1},
+        "goto": {"row#": 1,"column#": 3}},
+        {
+        "color": "green",
+        "current": {"row#": 0, "column#": 5},
+        "home": {"row#": 5, "column#": 5},
+        "goto": {"row#": 1,"column#": 1}}
+
+    ]
+  }
+

@@ -1,0 +1,373 @@
+[
+  [
+    "Owen",
+    "Euclid"
+  ],
+  [
+    "Reilly",
+    "Euclid",
+    "setUp"
+  ],
+  [
+    "Jomas",
+    "Euclid"
+  ],
+  [
+    "Domas",
+    "Euclid"
+  ]
+]
+
+{
+  "board": {
+    "connectors": [
+      [
+        "┌",
+        "─",
+        "─",
+        "─",
+        "─",
+        "─",
+        "┐"
+      ],
+      [
+        "┴",
+        "┴",
+        "┼",
+        "┼",
+        "─",
+        "┴",
+        "│"
+      ],
+      [
+        "│",
+        "┼",
+        "┴",
+        "─",
+        "┼",
+        "┼",
+        "│"
+      ],
+      [
+        "│",
+        "┼",
+        "─",
+        "┴",
+        "┌",
+        "┤",
+        "│"
+      ],
+      [
+        "│",
+        "┴",
+        "┤",
+        "┼",
+        "┼",
+        "┤",
+        "│"
+      ],
+      [
+        "│",
+        "─",
+        "┌",
+        "┌",
+        "┴",
+        "─",
+        "│"
+      ],
+      [
+        "└",
+        "─",
+        "─",
+        "─",
+        "─",
+        "─",
+        "┘"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "alexandrite-pear-shape",
+          "blue-spinel-heart"
+        ],
+        [
+          "raw-citrine",
+          "white-square"
+        ],
+        [
+          "padparadscha-oval",
+          "yellow-jasper"
+        ],
+        [
+          "green-aventurine",
+          "chrysoberyl-cushion"
+        ],
+        [
+          "australian-marquise",
+          "cordierite"
+        ],
+        [
+          "hackmanite",
+          "kunzite"
+        ],
+        [
+          "ruby-diamond-profile",
+          "tigers-eye"
+        ]
+      ],
+      [
+        [
+          "bulls-eye",
+          "lemon-quartz-briolette"
+        ],
+        [
+          "tanzanite-trillion",
+          "zoisite"
+        ],
+        [
+          "ruby-diamond-profile",
+          "labradorite"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "australian-marquise"
+        ],
+        [
+          "apatite",
+          "almandine-garnet"
+        ],
+        [
+          "morganite-oval",
+          "prehnite"
+        ],
+        [
+          "purple-cabochon",
+          "white-square"
+        ]
+      ],
+      [
+        [
+          "yellow-beryl-oval",
+          "morganite-oval"
+        ],
+        [
+          "tourmaline-laser-cut",
+          "red-diamond"
+        ],
+        [
+          "raw-citrine",
+          "purple-square-cushion"
+        ],
+        [
+          "orange-radiant",
+          "kunzite-oval"
+        ],
+        [
+          "iolite-emerald-cut",
+          "super-seven"
+        ],
+        [
+          "australian-marquise",
+          "black-obsidian"
+        ],
+        [
+          "color-change-oval",
+          "cordierite"
+        ]
+      ],
+      [
+        [
+          "hackmanite",
+          "heliotrope"
+        ],
+        [
+          "hematite",
+          "iolite-emerald-cut"
+        ],
+        [
+          "jasper",
+          "jaspilite"
+        ],
+        [
+          "kunzite-oval",
+          "kunzite"
+        ],
+        [
+          "labradorite",
+          "lapis-lazuli"
+        ],
+        [
+          "lemon-quartz-briolette",
+          "magnesite"
+        ],
+        [
+          "mexican-opal",
+          "moonstone"
+        ]
+      ],
+      [
+        [
+          "morganite-oval",
+          "moss-agate"
+        ],
+        [
+          "orange-radiant",
+          "padparadscha-oval"
+        ],
+        [
+          "padparadscha-sapphire",
+          "peridot"
+        ],
+        [
+          "pink-emerald-cut",
+          "pink-opal"
+        ],
+        [
+          "pink-round",
+          "pink-spinel-cushion"
+        ],
+        [
+          "prasiolite",
+          "prehnite"
+        ],
+        [
+          "purple-cabochon",
+          "purple-oval"
+        ]
+      ],
+      [
+        [
+          "purple-spinel-trillion",
+          "purple-square-cushion"
+        ],
+        [
+          "raw-beryl",
+          "raw-citrine"
+        ],
+        [
+          "red-diamond",
+          "red-spinel-square-emerald-cut"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "labradorite"
+        ],
+        [
+          "rhodonite",
+          "rock-quartz"
+        ],
+        [
+          "rose-quartz",
+          "ruby-diamond-profile"
+        ],
+        [
+          "ruby",
+          "sphalerite"
+        ]
+      ],
+      [
+        [
+          "spinel",
+          "star-cabochon"
+        ],
+        [
+          "stilbite",
+          "sunstone"
+        ],
+        [
+          "super-seven",
+          "tanzanite-trillion"
+        ],
+        [
+          "tigers-eye",
+          "tourmaline-laser-cut"
+        ],
+        [
+          "tourmaline",
+          "unakite"
+        ],
+        [
+          "white-square",
+          "yellow-baguette"
+        ],
+        [
+          "yellow-beryl-oval",
+          "yellow-heart"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "┌",
+    "1-image": "tourmaline-laser-cut",
+    "2-image": "color-change-oval"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 0,
+        "column#": 0
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "06DCD1"
+    },
+    {
+      "current": {
+        "row#": 4,
+        "column#": 4
+      },
+      "home": {
+        "row#": 5,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 1
+      },
+      "color": "yellow"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 5,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 5
+      },
+      "color": "green"
+    },
+    {
+      "current": {
+        "row#": 2,
+        "column#": 2
+      },
+      "home": {
+        "row#": 3,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 5
+      },
+      "color": "purple"
+    }
+    ],
+
+
+
+"last": null
+
+}

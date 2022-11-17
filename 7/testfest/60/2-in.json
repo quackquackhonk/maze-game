@@ -1,0 +1,21 @@
+[["EuclidEnjoyer","Euclid"],["RiemannUser","Riemann","win"]]
+{"board":{"connectors":
+[["┬", "─", "┤", "┐", "─", "┬", "┬"],
+ ["┴", "┼", "└", "└", "│", "┴", "┴"],
+ ["└", "┐", "│", "┼", "│", "└", "┤"],
+ ["│", "─", "┘", "┴", "└", "─", "┐"],
+ ["─", "┬", "┼", "┤", "─", "┴", "┤"],
+ ["┼", "─", "┐", "└", "┬", "─", "┐"],
+ ["┴", "┐", "└", "│", "└", "└", "┬"]],
+ "treasures": 
+[[["beryl", "alexandrite-pear-shape"],["beryl", "alexandrite"],["beryl", "almandine-garnet"],["beryl", "amethyst"],["beryl", "ametrine"],["beryl", "ammolite"],["beryl", "apatite"]],
+ [["beryl", "aplite"],["beryl", "apricot-square-radiant"],["beryl", "aquamarine"],["beryl", "australian-marquise"],["beryl", "aventurine"],["beryl", "azurite"],["beryl", "black-obsidian"]],
+ [["beryl", "black-onyx"],["beryl", "black-spinel-cushion"],["beryl", "blue-ceylon-sapphire"],["beryl", "blue-cushion"],["beryl", "blue-pear-shape"],["beryl", "blue-spinel-heart"],["beryl", "bulls-eye"]],
+ [["beryl", "carnelian"],["beryl", "chrome-diopside"],["beryl", "chrysoberyl-cushion"],["beryl", "chrysolite"],["beryl", "citrine-checkerboard"],["beryl", "citrine"],["beryl", "clinohumite"]],
+ [["beryl", "color-change-oval"],["beryl", "cordierite"],["beryl", "diamond"],["beryl", "dumortierite"],["beryl", "emerald"],["beryl", "fancy-spinel-marquise"],["beryl", "garnet"]],
+ [["beryl", "golden-diamond-cut"],["beryl", "goldstone"],["beryl", "grandidierite"],["beryl", "gray-agate"],["beryl", "green-aventurine"],["beryl", "green-beryl-antique"],["beryl", "green-beryl"]],
+ [["beryl", "green-princess-cut"],["beryl", "grossular-garnet"],["beryl", "hackmanite"],["beryl", "heliotrope"],["beryl", "hematite"],["beryl", "iolite-emerald-cut"],["beryl", "jasper"]]]},
+"last":[6,"DOWN"],
+"plmt":[{"color":"AAABBA","current":{"column#":3,"row#":5},"goto":{"column#":1,"row#":5},"home":{"column#":5,"row#":1}},
+        {"color":"AAABBB","current":{"column#":0,"row#":0},"goto":{"column#":5,"row#":3},"home":{"column#":3,"row#":3}}],
+"spare":{"1-image":"beryl","2-image":"kunzite","tilekey":"─"}}

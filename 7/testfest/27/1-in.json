@@ -1,0 +1,20 @@
+[["George", "Riemann", "setUp"], ["Bob", "Riemann", "setUp"]]
+
+{"board":
+{"connectors" :[["┬", "┐", "─", "┘", "└", "─", "┘"], ["─", "┬", "┤", "│", "┴", "┤", "├"], ["┐", "┌", "┌", "┤", "┼", "│", "┼"], ["┐", "┬", "┐", "└", "─", "┬", "┐"], ["├", "┘", "┌", "─", "─", "┌", "┼"], ["┼", "─", "│", "┬", "┌", "┴", "┘"], ["┬", "┴", "┤", "─", "┬", "┤", "┤"]],
+"treasures":[[["azurite", "alexandrite-pear-shape"], ["rhodonite", "ruby"], ["fancy-spinel-marquise", "padparadscha-oval"], ["rose-quartz", "aquamarine"], ["zircon", "cordierite"], ["golden-diamond-cut", "hackmanite"], ["green-beryl", "aventurine"]], [["heliotrope", "blue-ceylon-sapphire"], ["yellow-heart", "goldstone"], ["yellow-jasper", "moss-agate"], ["dumortierite", "apatite"], ["chrysolite", "emerald"], ["sphalerite", "green-beryl-antique"], ["magnesite", "black-spinel-cushion"]], [["grossular-garnet", "raw-beryl"], ["unakite", "apricot-square-radiant"], ["pink-round", "red-spinel-square-emerald-cut"], ["spinel", "mexican-opal"], ["pink-emerald-cut", "citrine-checkerboard"], ["aplite", "diamond"], ["lapis-lazuli", "almandine-garnet"]], [["purple-spinel-trillion", "gray-agate"], ["purple-square-cushion", "grandidierite"], ["carnelian", "bulls-eye"], ["morganite-oval", "ruby-diamond-profile"], ["purple-oval", "moonstone"], ["super-seven", "prasiolite"], ["citrine", "pink-spinel-cushion"]], [["lemon-quartz-briolette", "raw-citrine"], ["tigers-eye", "rock-quartz"], ["jaspilite", "black-onyx"], ["green-aventurine", "orange-radiant"], ["kunzite", "alexandrite"], ["stilbite", "chrome-diopside"], ["black-obsidian", "red-diamond"]], [["star-cabochon", "yellow-baguette"], ["labradorite", "amethyst"], ["blue-cushion", "beryl"], ["yellow-beryl-oval", "tanzanite-trillion"], ["pink-opal", "peridot"], ["green-princess-cut", "blue-pear-shape"], ["ametrine", "clinohumite"]], [["hematite", "chrysoberyl-cushion"], ["tourmaline-laser-cut", "purple-cabochon"], ["australian-marquise", "kunzite-oval"], ["ammolite", "garnet"], ["tourmaline", "prehnite"], ["blue-spinel-heart", "iolite-emerald-cut"], ["padparadscha-sapphire", "sunstone"]]]},
+"last": null,
+    "spare": {"tilekey": "┌", "1-image": "rhodonite", "2-image": "yellow-jasper"},
+    "plmt": [{
+        "color": "blue",
+        "current": {"row#": 5, "column#": 4},
+        "home": {"row#": 3, "column#": 1},
+        "goto": {"row#": 3,"column#": 3}},
+        {
+        "color": "red",
+        "current": {"row#": 1, "column#": 0},
+        "home": {"row#": 5, "column#": 3},
+        "goto": {"row#": 1,"column#": 5}}
+
+    ]
+  }

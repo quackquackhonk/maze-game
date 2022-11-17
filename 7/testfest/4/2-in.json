@@ -1,0 +1,23 @@
+[["Max", "Riemann"], ["Kenny", "Euclid", "win"]]
+{ "board" : { "connectors" : [
+  ["│", "│", "│", "│", "│", "│", "│"],
+  ["│", "│", "│", "│", "│", "│", "│"],
+  ["│", "│", "│", "│", "│", "│", "│"],
+  ["│", "│", "│", "─", "│", "│", "│"],
+  ["│", "│", "│", "│", "│", "│", "│"],
+  ["│", "│", "│", "│", "│", "│", "│"],
+  ["│", "│", "│", "│", "│", "│", "│"]
+],
+  "treasures"  : [[["pink-emerald-cut", "red-spinel-square-emerald-cut"], ["blue-cushion", "emerald"], ["labradorite", "chrome-diopside"], ["white-square", "aquamarine"], ["kunzite", "yellow-heart"], ["purple-oval", "purple-square-cushion"], ["blue-pear-shape", "australian-marquise"]], [["labradorite", "orange-radiant"], ["kunzite-oval", "rhodonite"], ["peridot", "ruby"], ["sphalerite", "labradorite"], ["sphalerite", "citrine"], ["morganite-oval", "aventurine"], ["amethyst", "kunzite"]], [["rhodonite", "zircon"], ["garnet", "prasiolite"], ["prehnite", "clinohumite"], ["garnet", "padparadscha-oval"], ["green-aventurine", "hematite"], ["aplite", "chrome-diopside"], ["unakite", "fancy-spinel-marquise"]], [["alexandrite", "emerald"], ["apricot-square-radiant", "ammolite"], ["jasper", "yellow-beryl-oval"], ["garnet", "cordierite"], ["blue-cushion", "pink-spinel-cushion"], ["blue-spinel-heart", "rose-quartz"], ["tourmaline", "moss-agate"]], [["unakite", "hackmanite"], ["citrine-checkerboard", "cordierite"], ["kunzite", "yellow-beryl-oval"], ["tanzanite-trillion", "hackmanite"], ["australian-marquise", "cordierite"], ["goldstone", "sunstone"], ["pink-spinel-cushion", "orange-radiant"]], [["raw-beryl", "blue-cushion"], ["purple-cabochon", "garnet"], ["magnesite", "lapis-lazuli"], ["raw-citrine", "green-aventurine"], ["green-princess-cut", "orange-radiant"], ["white-square", "green-beryl"], ["rock-quartz", "blue-cushion"]], [["unakite", "aventurine"], ["moss-agate", "almandine-garnet"], ["red-diamond", "bulls-eye"], ["chrysoberyl-cushion", "goldstone"], ["cordierite", "dumortierite"], ["citrine", "diamond"], ["raw-beryl", "purple-cabochon"]]] },
+  "spare" : { "tilekey" : "┌", "1-image" : "clinohumite", "2-image" : "labradorite" },
+  "plmt"  : [{
+    "current" : { "row#" : 3, "column#" : 3 },
+    "home" : { "row#" : 1, "column#" : 1 },
+    "goto" : { "row#" : 3, "column#" : 5 },
+    "color" : "red" }, {
+    "current" : { "row#" : 3, "column#" : 3 },
+    "home" : { "row#" : 5, "column#" : 1 },
+    "goto" : { "row#" : 3, "column#" : 0 },
+    "color" : "green" }],
+  "last"  : null }
+

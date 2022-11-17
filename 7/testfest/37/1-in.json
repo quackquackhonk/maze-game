@@ -1,0 +1,64 @@
+[
+  [
+    "aRiemannPlayer",
+    "Riemann"
+  ],
+  [
+    "aBad",
+    "Euclid",
+    "setUp"
+  ],
+  [
+    "AEuclidPlayer",
+    "Euclid"
+  ]
+]
+
+{
+    "board":
+      {
+        "connectors":
+        [["┘","─","└","┐","┼","┤","┤"],
+        ["│","─","│","├","┌","─","└"],
+        ["┘","─","┌","│","┴","├","─"],
+        ["┘","┼","┬","┘","┼","─","├"],
+        ["┐","├","─","┌","┘","─","└"],
+        ["┤","┬","├","└","│","─","│"],
+        ["┴","─","┬","│","┘","─","┌"]],
+        "treasures":
+          [[["zoisite","zircon"],["zircon","yellow-jasper"],["yellow-jasper","yellow-heart"],["yellow-heart","yellow-beryl-oval"],["yellow-beryl-oval","yellow-baguette"],["yellow-baguette","white-square"],["white-square","unakite"]],
+          [["unakite","tourmaline"],["tourmaline","tourmaline-laser-cut"],["tourmaline-laser-cut","tigers-eye"],["tigers-eye","tanzanite-trillion"],["tanzanite-trillion","super-seven"],["super-seven","sunstone"],["sunstone","stilbite"]],
+          [["stilbite","star-cabochon"],["star-cabochon","spinel"],["spinel","sphalerite"],["sphalerite","ruby"],["ruby","ruby-diamond-profile"],["ruby-diamond-profile","rose-quartz"],["rose-quartz","rock-quartz"]],
+          [["rock-quartz","rhodonite"],["rhodonite","red-spinel-square-emerald-cut"],["red-spinel-square-emerald-cut","red-diamond"],["red-diamond","raw-citrine"],["raw-citrine","raw-beryl"],["raw-beryl","purple-square-cushion"],["purple-square-cushion","purple-spinel-trillion"]],
+          [["purple-spinel-trillion","purple-oval"],["purple-oval","purple-cabochon"],["purple-cabochon","prehnite"],["prehnite","prasiolite"],["prasiolite","pink-spinel-cushion"],["pink-spinel-cushion","pink-round"],["pink-round","pink-opal"]],
+          [["pink-opal","pink-emerald-cut"],["pink-emerald-cut","peridot"],["peridot","padparadscha-sapphire"],["padparadscha-sapphire","padparadscha-oval"],["padparadscha-oval","orange-radiant"],["orange-radiant","moss-agate"],["moss-agate","morganite-oval"]],
+          [["morganite-oval","moonstone"],["moonstone","mexican-opal"],["mexican-opal","magnesite"],["magnesite","lemon-quartz-briolette"],["lemon-quartz-briolette","lapis-lazuli"],["lapis-lazuli","labradorite"],["labradorite","kunzite"]]]
+      },
+    "spare":
+      { "tilekey": "┘",
+        "1-image": "zoisite",
+        "2-image": "rose-quartz"
+      },
+    "plmt": [
+      {
+        "current" : { "row#": 1, "column#" : 1 },
+        "home"    : { "row#": 1, "column#" : 1 },
+        "goto"    : { "row#": 5, "column#" : 1 },
+        "color"   : "yellow"
+      },
+      {
+        "current" : { "row#": 2, "column#" : 5 },
+        "home"    : { "row#": 2, "column#" : 5 },
+        "goto"    : { "row#": 1, "column#" : 3 },
+        "color"   : "blue"
+      },
+      {
+        "current" : { "row#": 5, "column#" : 5 },
+        "home"    : { "row#": 5, "column#" : 5 },
+        "goto"    : { "row#": 1, "column#" : 5 },
+        "color"   : "green"
+      }
+    ],
+    "last": null
+}
+

@@ -1,0 +1,24 @@
+[["Dylan", "Euclid", "setUp"], ["Brian", "Riemann", "takeTurn"], ["Sam", "Euclid", "win"]]
+
+{
+  "board": {
+    "connectors": [["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"],
+      ["┌","┌","┌","┌","┌","┌","┌"]],
+    "treasures":[[["alexandrite","diamond"],["alexandrite","emerald"],["alexandrite","garnet"],["alexandrite","goldstone"],["alexandrite","heliotrope"],["alexandrite","jaspilite"],["alexandrite","kunzite"]],
+      [["amethyst","diamond"],["amethyst","emerald"],["amethyst","garnet"],["amethyst","goldstone"],["amethyst","heliotrope"],["amethyst","jaspilite"],["amethyst","kunzite"]],
+      [["ametrine","diamond"],["ametrine","emerald"],["ametrine","garnet"],["ametrine","goldstone"],["ametrine","heliotrope"],["ametrine","jaspilite"],["ametrine","kunzite"]],
+      [["azurite","diamond"],["azurite","emerald"],["azurite","garnet"],["azurite","goldstone"],["azurite","heliotrope"],["azurite","jaspilite"],["azurite","kunzite"]],
+      [["carnelian","diamond"],["carnelian","emerald"],["carnelian","garnet"],["carnelian","goldstone"],["carnelian","heliotrope"],["carnelian","jaspilite"],["carnelian","kunzite"]],
+      [["citrine","diamond"],["citrine","emerald"],["citrine","garnet"],["citrine","goldstone"],["citrine","heliotrope"],["citrine","jaspilite"],["citrine","kunzite"]],
+      [["cordierite","diamond"],["cordierite","emerald"],["cordierite","garnet"],["cordierite","goldstone"],["cordierite","heliotrope"],["cordierite","jaspilite"],["cordierite","kunzite"]]]},
+  "spare" :  {"tilekey": "┌", "1-image": "ruby", "2-image": "zircon"},
+  "plmt": [{"current": {"row#": 1,"column#": 1},"home": {"row#": 5,"column#": 3},"goto": {"row#":  3, "column#": 5 },"color": "purple"},
+    {"current": {"row#": 1,"column#": 1},"home": {"row#": 1,"column#": 1},"goto": {"row#":  5, "column#":  3},"color": "D1675A"},
+    {"current": {"row#": 1,"column#": 1},"home": {"row#": 1,"column#": 5},"goto": {"row#":  5, "column#":  5},"color": "blue"}],
+  "last": [0, "LEFT"]
+}

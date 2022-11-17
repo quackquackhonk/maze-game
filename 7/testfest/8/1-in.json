@@ -1,0 +1,112 @@
+[
+  ["Adam", "Riemann", "setUp"],
+  ["Carl", "Euclid", "takeTurn"],
+  ["Betty", "Euclid", "win"]
+]
+
+{
+
+
+  "board" :
+    {"connectors" :
+
+[["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"],
+ ["┘", "┘", "┘", "┘", "┘", "┘", "┘"]],
+
+     "treasures" :
+
+[[["ammolite", "lemon-quartz-briolette"],
+  ["azurite", "jasper"],
+  ["citrine-checkerboard", "orange-radiant"],
+  ["chrome-diopside", "pink-spinel-cushion"],
+  ["white-square", "raw-citrine"],
+  ["green-beryl", "goldstone"],
+  ["tigers-eye", "cordierite"]],
+  [["heliotrope", "fancy-spinel-marquise"],
+  ["chrome-diopside", "zircon"],
+  ["purple-spinel-trillion", "yellow-beryl-oval"],
+  ["stilbite", "emerald"],
+  ["jaspilite", "pink-opal"],
+  ["prehnite", "dumortierite"],
+  ["blue-ceylon-sapphire", "grossular-garnet"]],
+ [["sunstone", "magnesite"],
+  ["black-obsidian", "australian-marquise"],
+  ["prasiolite", "purple-cabochon"],
+  ["zoisite", "orange-radiant"],
+  ["black-spinel-cushion", "blue-ceylon-sapphire"],
+  ["stilbite", "blue-cushion"],
+  ["red-diamond", "citrine"]],
+ [["unakite", "padparadscha-sapphire"],
+  ["green-aventurine", "gray-agate"],
+  ["lemon-quartz-briolette", "diamond"],
+  ["prasiolite", "ruby"],
+  ["padparadscha-oval", "sunstone"],
+  ["dumortierite", "purple-spinel-trillion"],
+  ["jaspilite", "zoisite"]],
+ [["red-diamond", "lemon-quartz-briolette"],
+  ["unakite", "green-beryl"],
+  ["chrysolite", "alexandrite-pear-shape"],
+  ["lapis-lazuli", "chrysoberyl-cushion"],
+  ["labradorite", "lapis-lazuli"],
+  ["black-onyx", "purple-spinel-trillion"],
+  ["azurite", "goldstone"]],
+ [["dumortierite", "garnet"],
+  ["super-seven", "green-princess-cut"],
+  ["tourmaline", "ametrine"],
+  ["kunzite-oval", "heliotrope"],
+  ["pink-spinel-cushion", "padparadscha-sapphire"],
+  ["blue-spinel-heart", "beryl"],
+  ["aplite", "pink-spinel-cushion"]],
+ [["tourmaline-laser-cut", "zircon"],
+  ["aquamarine", "raw-beryl"],
+  ["emerald", "yellow-baguette"],
+  ["alexandrite", "zircon"],
+  ["hackmanite", "zircon"],
+  ["iolite-emerald-cut", "grandidierite"],
+  ["grandidierite", "fancy-spinel-marquise"]]]},
+
+
+
+
+  "spare" :
+    {
+      "tilekey" : "┘",
+      "1-image" : "emerald",
+      "2-image" : "diamond"
+    },
+
+
+
+
+  "plmt" :
+    [
+      {
+        "current" : {"row#" : 1, "column#" : 1},
+        "home" : {"row#" : 1, "column#" : 1},
+        "goto" : {"row#" : 3, "column#" : 5},
+        "color" : "red"
+      },
+      {
+        "current" : {"row#" : 1, "column#" : 1},
+        "home" : {"row#" : 1, "column#" : 3},
+        "goto" : {"row#" : 5, "column#" : 3},
+        "color" : "green"
+      },
+      {
+        "current" : {"row#" : 1, "column#" : 5},
+        "home" : {"row#" : 1, "column#" : 5},
+        "goto" : {"row#" : 5, "column#" : 1},
+        "color" : "blue"
+      }
+    ],
+
+
+
+
+  "last" : null
+}

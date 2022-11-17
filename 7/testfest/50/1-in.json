@@ -1,0 +1,31 @@
+[["1238109283901823", "Euclid", "takeTurn"], ["ABC", "Euclid", "setUp"], ["123123123", "Riemann"]]
+{
+	"board" :
+		{
+			 "connectors" :[
+      ["─", "─", "─", "─", "─", "─", "─"],
+      ["│", "│", "│", "│", "│", "│", "│"],
+      ["│", "└", "│", "┼", "│", "│", "│"],
+      ["│", "│", "┐", "│", "│", "┌", "│"],
+      ["│", "│", "│", "│", "┼", "│", "└"],
+      ["│", "┬", "│", "│", "│", "│", "│"],
+      ["│", "│", "│", "┐", "│", "│", "│"]
+    ] ,
+
+			"treasures" : [[["green-beryl-antique","aventurine"],["green-beryl-antique","black-obsidian"],["tourmaline-laser-cut","magnesite"],["rhodonite","pink-round"],["white-square","raw-citrine"],["grossular-garnet","red-diamond"],["green-aventurine","citrine-checkerboard"]],[["white-square","carnelian"],["diamond","dumortierite"],["pink-spinel-cushion","lapis-lazuli"],["super-seven","kunzite"],["cordierite","ammolite"],["clinohumite","chrysoberyl-cushion"],["aquamarine","sunstone"]],[["spinel","chrome-diopside"],["citrine-checkerboard","kunzite"],["pink-emerald-cut","kunzite"],["australian-marquise","aquamarine"],["diamond","goldstone"],["white-square","blue-ceylon-sapphire"],["chrome-diopside","iolite-emerald-cut"]],[["green-beryl-antique","kunzite"],["aplite","purple-oval"],["aplite","blue-cushion"],["ammolite","purple-oval"],["rock-quartz","sunstone"],["green-princess-cut","sunstone"],["padparadscha-sapphire","raw-citrine"]],[["stilbite","rock-quartz"],["grossular-garnet","stilbite"],["tigers-eye","pink-round"],["unakite","unakite"],["yellow-heart","moonstone"],["goldstone","blue-cushion"],["prehnite","padparadscha-oval"]],[["peridot","prehnite"],["peridot","bulls-eye"],["blue-spinel-heart","gray-agate"],["golden-diamond-cut","clinohumite"],["chrome-diopside","green-beryl-antique"],["sphalerite","moss-agate"],["tourmaline","cordierite"]],[["black-onyx","heliotrope"],["sunstone","diamond"],["yellow-baguette","tigers-eye"],["raw-beryl","diamond"],["blue-pear-shape","heliotrope"],["unakite","tourmaline-laser-cut"],["almandine-garnet","mexican-opal"]]]
+
+		},
+	"spare" :
+		{
+			"tilekey" : "┐",
+			"1-image" : "jaspilite",
+			"2-image" : "lapis-lazuli"
+		},
+	"plmt" :
+		[
+			{"color": "FFFFFF", "current": {"row#": 1, "column#": 1}, "home": {"row#": 1, "column#": 1}, "goto": {"row#": 1, "column#": 5}},
+			{"color": "ABCEDE", "current": {"row#": 2, "column#": 5}, "home": {"row#": 1, "column#": 3}, "goto": {"row#": 3, "column#": 3}},
+			{"color": "716412", "current": {"row#": 5, "column#": 3}, "home": {"row#": 3, "column#": 3}, "goto": {"row#": 5, "column#": 5}}
+		],
+	"last": [0, "LEFT"]
+}

@@ -1,0 +1,35 @@
+[["0000","Euclid","setUp"],["00a0","Riemann"],["00A0","Riemann"],["0090","Riemann"]]
+{  "board":
+ {"treasures":
+ [
+     [
+	 ["zircon",
+	  "ruby-diamond-profile"]
+	 ,
+	 ["zircon","rose-quartz"],
+
+	 ["zoisite",
+
+	  "yellow-jasper"],["zoisite","yellow-baguette"],["zoisite","white-square"],["zoisite","unakite"],["zoisite","tourmaline"]],[["zircon","rock-quartz"],["zircon","rhodonite"],["zoisite","yellow-heart"],["zoisite","tourmaline-laser-cut"],["zoisite","tigers-eye"],["zoisite",
+
+																																		       "tanzanite-trillion"],["zoisite","super-seven"]],[["heliotrope","green-beryl"],["zoisite","zircon"],["zoisite","yellow-beryl-oval"],["zoisite","sunstone"],["zoisite","stilbite"],["zoisite","star-cabochon"],["zoisite","spinel"]],[["zoisite","sphalerite"],["zoisite","ruby"],["zoisite","ruby-diamond-profile"],
+																																																														     ["zoisite","rose-quartz"],["alexandrite","rock-quartz"],["zoisite","rhodonite"],["zoisite","red-spinel-square-emerald-cut"]],[["zoisite","red-diamond"],["zoisite","raw-citrine"],["zoisite","raw-beryl"],["zoisite","purple-square-cushion"],["zoisite","purple-spinel-trillion"],["zoisite","purple-oval"],["zoisite","purple-cabochon"]],[["zoisite","prehnite"],["zoisite","prasiolite"],["zoisite","pink-spinel-cushion"],["zoisite","pink-round"],["zoisite","pink-opal"],["zoisite","pink-emerald-cut"],["zoisite","peridot"]],
+     [["zoisite","padparadscha-sapphire"],
+      ["zoisite","padparadscha-oval"],["zoisite","orange-radiant"],["zoisite","moss-agate"],["zoisite","morganite-oval"],["zoisite","moonstone"],["zoisite","mexican-opal"]]]
+  ,
+  "connectors":[["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"],
+		["┼","┼","┼","┼","┼","┼","┼"]]},
+
+ "last":[0, "RIGHT"],
+ "plmt":[{"color":"purple","current":{"column#":0,"row#":0},"goto":{"column#":5,"row#":3},"home":{"column#":5,"row#":1}},
+	 {"color":"orange","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":1,"row#":3}},
+	 {"color":"pink","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":5},"home":{"column#":3,"row#":3}},
+	 {"color":"red","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":1},"home":{"column#":3,"row#":3}}],
+   "spare":{"1-image":"pink-round","2-image":"heliotrope","tilekey":"┼"}
+}
+
