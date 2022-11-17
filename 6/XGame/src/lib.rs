@@ -1,10 +1,11 @@
 use std::{
     collections::HashSet,
     io::{Read, Write},
-    sync::{Arc, Mutex},
+    sync::Arc,
 };
 
 use common::{json::Name, FullPlayerInfo, State};
+use parking_lot::Mutex;
 use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},

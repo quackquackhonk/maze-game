@@ -3,6 +3,7 @@ use common::board::{Board, DefaultBoard};
 use common::grid::{squared_euclidian_distance, Position};
 use common::json::Name;
 use common::{Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State};
+use parking_lot::Mutex;
 use players::player::{PlayerApi, PlayerApiError, PlayerApiResult};
 use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
@@ -12,7 +13,7 @@ use std::collections::HashSet;
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::sync::mpsc::{self, RecvTimeoutError};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
 use thiserror::Error;
@@ -127,15 +128,20 @@ const TIMEOUT: Duration = Duration::from_secs(2);
 impl PlayerApi for Player {
     fn name(&self) -> PlayerApiResult<Name> {
         let api = self.api.clone();
-        run_with_timeout(move || api.lock().unwrap().name(), TIMEOUT)?
+        run_with_timeout(
+            move || {
+                if api.is_locked() {
+                    unsafe { api.force_unlock() }
+                };
+                api.lock().name()
+            },
+            TIMEOUT,
+        )?
     }
 
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board> {
         let api = self.api.clone();
-        run_with_timeout(
-            move || api.lock().unwrap().propose_board0(cols, rows),
-            TIMEOUT,
-        )?
+        run_with_timeout(move || api.lock().propose_board0(cols, rows), TIMEOUT)?
     }
 
     fn setup(
@@ -144,17 +150,17 @@ impl PlayerApi for Player {
         goal: Position,
     ) -> PlayerApiResult<()> {
         let api = self.api.clone();
-        run_with_timeout(move || api.lock().unwrap().setup(state, goal), TIMEOUT)?
+        run_with_timeout(move || api.lock().setup(state, goal), TIMEOUT)?
     }
 
     fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
         let api = self.api.clone();
-        run_with_timeout(move || api.lock().unwrap().take_turn(state), TIMEOUT)?
+        run_with_timeout(move || api.lock().take_turn(state), TIMEOUT)?
     }
 
     fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
         let api = self.api.clone();
-        run_with_timeout(move || api.lock().unwrap().won(did_win), TIMEOUT)?
+        run_with_timeout(move || api.lock().won(did_win), TIMEOUT)?
     }
 }
 
@@ -533,10 +539,7 @@ impl Referee {
 
 #[cfg(test)]
 mod tests {
-    use std::{
-        collections::HashSet,
-        sync::{Arc, Mutex},
-    };
+    use std::{collections::HashSet, sync::Arc};
 
     use common::{
         board::{Board, DefaultBoard},
@@ -546,6 +549,7 @@ mod tests {
         tile::{CompassDirection, ConnectorShape, Tile},
         Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
     };
+    use parking_lot::Mutex;
     use players::{
         player::{LocalPlayer, PlayerApi, PlayerApiResult},
         strategy::{NaiveStrategy, PlayerAction},
@@ -577,19 +581,19 @@ mod tests {
             state: Option<State<PubPlayerInfo>>,
             goal: Position,
         ) -> PlayerApiResult<()> {
-            *self.goal.lock().expect("we are the only owners??") = Some(goal);
-            *self.state.lock().expect("we are the only owners?") = state;
+            *self.goal.lock() = Some(goal);
+            *self.state.lock() = state;
             Ok(())
         }
 
         fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
-            *self.turns_taken.lock().expect("we are the only owners?") += 1;
-            *self.state.lock().expect("we are the only owners?") = Some(state);
+            *self.turns_taken.lock() += 1;
+            *self.state.lock() = Some(state);
             Ok(None)
         }
 
         fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
-            *self.won.lock().expect("we are the only owners?") = Some(did_win);
+            *self.won.lock() = Some(did_win);
             Ok(())
         }
     }
@@ -639,11 +643,11 @@ mod tests {
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let mut state = referee.make_initial_state(players, DefaultBoard::<7, 7>::default_board());
-        assert_eq!(player.goal.lock().unwrap().to_owned(), None);
+        assert_eq!(*player.goal.lock(), None);
         referee.broadcast_initial_state(&mut state, &mut vec![]);
         assert_eq!(
             state.current_player_info().goal(),
-            player.goal.lock().unwrap().unwrap()
+            player.goal.lock().unwrap()
         );
     }
 
@@ -713,9 +717,9 @@ mod tests {
 
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
-        assert_eq!(player.won.lock().unwrap().to_owned(), None);
+        assert_eq!(*player.won.lock(), None);
         referee.run_game(players, vec![]);
-        assert_eq!(player.won.lock().unwrap().to_owned(), Some(true));
+        assert_eq!(*player.won.lock(), Some(true));
 
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![
@@ -725,9 +729,9 @@ mod tests {
             )),
             player.clone(),
         ];
-        assert_eq!(player.won.lock().unwrap().to_owned(), None);
+        assert_eq!(*player.won.lock(), None);
         referee.run_game(players, vec![]);
-        assert_eq!(player.won.lock().unwrap().to_owned(), Some(false));
+        assert_eq!(*player.won.lock(), Some(false));
     }
 
     #[test]
@@ -740,7 +744,7 @@ mod tests {
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners[0].name().unwrap(), player.name().unwrap());
-        assert_eq!(player.turns_taken.lock().unwrap().to_owned(), 1);
+        assert_eq!(*player.turns_taken.lock(), 1);
         assert!(kicked.is_empty());
 
         let player = Box::new(MockPlayer::default());

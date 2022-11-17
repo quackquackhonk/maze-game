@@ -39,6 +39,7 @@ dependencies = [
  "common",
  "eframe",
  "egui",
+ "parking_lot",
  "players",
  "referee",
  "serde",
@@ -51,6 +52,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "common",
+ "parking_lot",
  "players",
  "referee",
  "serde",
@@ -1969,6 +1971,8 @@ dependencies = [
  "image",
  "itertools",
  "lazy_static",
+ "libc",
+ "parking_lot",
  "players",
  "rand",
  "rand_chacha",
@@ -2910,6 +2914,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "common",
+ "parking_lot",
  "players",
  "referee",
  "serde",

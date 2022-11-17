@@ -1,11 +1,12 @@
 use std::{
     collections::HashSet,
     io::{Read, Write},
-    sync::{Arc, Mutex},
+    sync::Arc,
 };
 
 use anyhow::{anyhow, bail};
 use common::{json::Name, FullPlayerInfo, State};
+use parking_lot::Mutex;
 use players::{
     bad_player::{BadPlayer, BadPlayerLoop},
     player::{LocalPlayer, PlayerApi},

@@ -8,7 +8,7 @@ use std::net::TcpListener;
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
 
-const TIMEOUT: u64 = 10;
+const TIMEOUT: Duration = Duration::from_secs(20);
 
 #[derive(Parser)]
 struct Args {
@@ -52,7 +52,7 @@ pub async fn main() -> io::Result<()> {
     let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
     let time_out = timeout(
-        Duration::from_secs(TIMEOUT),
+        TIMEOUT,
         recieve_connections(&listener, &mut player_connections),
     );
 
@@ -61,7 +61,7 @@ pub async fn main() -> io::Result<()> {
         // We timed out once but did not have enough players
 
         let time_out = timeout(
-            Duration::from_secs(TIMEOUT),
+            TIMEOUT,
             recieve_connections(&listener, &mut player_connections),
         );
 
