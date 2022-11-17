@@ -111,14 +111,12 @@ pub fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow
         .collect();
     winner_names.sort();
 
-    dbg!(&game_result.kicked);
     let mut kicked_names: Vec<Name> = game_result
         .kicked
         .into_iter()
         .flat_map(|k| k.name())
         .collect();
     kicked_names.sort();
-    dbg!(&kicked_names);
 
     write_json_out_to_writer((winner_names, kicked_names), writer)?;
 
