@@ -122,7 +122,13 @@ mod tests {
 
     use std::ops::Deref;
 
-    use common::ColorName;
+    use common::{
+        board::Slide,
+        json::{Coordinate, Index, JsonDegree, JsonDirection},
+        tile::CompassDirection,
+        ColorName,
+    };
+    use players::{json::JsonChoice, strategy::PlayerMove};
     use serde_json::json;
 
     use super::*;
@@ -134,7 +140,7 @@ mod tests {
     }
 
     #[test]
-    fn test_new() {
+    fn test_name() {
         let player = PlayerProxy::new(Name::from_static("john"), "".as_bytes(), Vec::new());
 
         assert_eq!(player.name().unwrap(), Name::from_static("john"));
@@ -220,5 +226,92 @@ mod tests {
         // test no response
         let mut player = PlayerProxy::new(Name::from_static("joe"), "".as_bytes(), vec![]);
         assert!(player.setup(None, (0, 0)).is_err());
+
+        // test wrong response
+        let mut player = PlayerProxy::new(Name::from_static("joe"), "wrong".as_bytes(), vec![]);
+        assert!(player.setup(None, (0, 0)).is_err());
+    }
+
+    #[test]
+    fn test_take_turn() {
+        let choice = serde_json::to_string(&JsonChoice::Move(
+            Index(0),
+            JsonDirection::UP,
+            JsonDegree(90),
+            Coordinate {
+                row: Index(2),
+                column: Index(3),
+            },
+        ))
+        .unwrap();
+        let player = PlayerProxy::new(Name::from_static("joe"), choice.as_bytes(), vec![]);
+        let state = State::default();
+
+        let r#move = player.take_turn(state).unwrap();
+        assert_eq!(
+            r#move,
+            Some(PlayerMove {
+                slide: Slide {
+                    index: 0,
+                    direction: CompassDirection::North
+                },
+                rotations: 1,
+                destination: (3, 2)
+            })
+        );
+
+        let choice = serde_json::to_string(&JsonResult::Choice(JsonChoice::Pass)).unwrap();
+        dbg!(&choice);
+        let player = PlayerProxy::new(Name::from_static("joe"), choice.as_bytes(), vec![]);
+        let state = State::default();
+
+        let r#move = player.take_turn(state).unwrap();
+        assert_eq!(r#move, None);
+
+        // test no response
+        let player = PlayerProxy::new(Name::from_static("joe"), "".as_bytes(), vec![]);
+        assert!(player.take_turn(State::default()).is_err());
+
+        // test wrong response
+        let player = PlayerProxy::new(Name::from_static("joe"), "wrong".as_bytes(), vec![]);
+        assert!(player.take_turn(State::default()).is_err());
+    }
+
+    #[test]
+    fn test_win() {
+        let mut player = PlayerProxy::new(Name::from_static("joe"), "\"void\"".as_bytes(), vec![]);
+
+        player.won(false).expect("Sending win should not fail");
+        assert_eq!(
+            serde_json::to_string(&JsonFunctionCall::win(false))
+                .unwrap()
+                .as_bytes(),
+            &*player.get_output()
+        );
+        assert_eq!(
+            serde_json::to_value(&JsonFunctionCall::win(false)).unwrap(),
+            json!(["win", [false]])
+        );
+
+        let mut player = PlayerProxy::new(Name::from_static("joe"), "\"void\"".as_bytes(), vec![]);
+        player.won(true).expect("Sending win should not fail");
+        assert_eq!(
+            serde_json::to_string(&JsonFunctionCall::win(true))
+                .unwrap()
+                .as_bytes(),
+            &*player.get_output()
+        );
+        assert_eq!(
+            serde_json::to_value(&JsonFunctionCall::win(true)).unwrap(),
+            json!(["win", [true]])
+        );
+
+        // test no response
+        let mut player = PlayerProxy::new(Name::from_static("joe"), "".as_bytes(), vec![]);
+        assert!(player.won(true).is_err());
+
+        // test wrong response
+        let mut player = PlayerProxy::new(Name::from_static("joe"), "wrong".as_bytes(), vec![]);
+        assert!(player.won(true).is_err());
     }
 }
