@@ -62,8 +62,8 @@ impl<'de> Deserialize<'de> for JsonResult {
         #[derive(Deserialize)]
         #[serde(untagged)]
         enum MaybeResult {
-            Void(String),
             Choice(JsonChoice),
+            Void(String), // This must go second!!! otherwise "\"PASS\"" is serialized like void
         }
 
         match MaybeResult::deserialize(deserializer)? {
@@ -114,6 +114,11 @@ fn test_parse_json_result() {
             }
         ))
     ));
+
+    let mut deserializer = serde_json::Deserializer::from_str("\"PASS\"").into_iter();
+    let r#move = deserializer.next().unwrap().unwrap();
+    dbg!(&r#move);
+    assert!(matches!(r#move, JsonResult::Choice(JsonChoice::Pass)));
 
     assert_eq!(
         "\"void\"",
