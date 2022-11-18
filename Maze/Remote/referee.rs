@@ -28,7 +28,15 @@ impl RefereeProxy<TcpStream, TcpStream> {
 }
 
 impl<In: Read, Out: Write> RefereeProxy<In, Out> {
-    pub fn listen(mut self) -> anyhow::Result<()> {
+    pub fn new(player: Box<dyn PlayerApi>, r#in: In, out: Out) -> Self {
+        Self {
+            player,
+            out,
+            r#in: serde_json::Deserializer::from_reader(r#in),
+        }
+    }
+
+    pub fn listen(&mut self) -> anyhow::Result<()> {
         // TODO: Send name when connecting to the server + connecting to the server
         while let Ok(mut command) = JsonFunctionCall::deserialize(&mut self.r#in) {
             match command.0 {
@@ -68,5 +76,112 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use common::json::Name;
+    use common::{ColorName, PubPlayerInfo, State};
+    use players::player::LocalPlayer;
+    use players::strategy::NaiveStrategy;
+
+    use crate::json::JsonFunctionCall;
+
+    use super::RefereeProxy;
+
+    #[test]
+    fn test_listen() {
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+        let state = State {
+            player_info: vec![PubPlayerInfo {
+                current: (0, 1),
+                home: (1, 1),
+                color: ColorName::Red.into(),
+            }]
+            .into(),
+            ..Default::default()
+        };
+        let setup_cmd = JsonFunctionCall::setup(Some(state.clone()), (3, 1));
+        let take_turn = JsonFunctionCall::take_turn(state);
+        let home_setup_cmd = JsonFunctionCall::setup(None, (1, 1));
+        let win_cmd = JsonFunctionCall::win(true);
+
+        let mut commands = String::new();
+        commands.push_str(&serde_json::to_string(&setup_cmd).unwrap());
+        commands.push_str(&serde_json::to_string(&take_turn).unwrap());
+        commands.push_str(&serde_json::to_string(&home_setup_cmd).unwrap());
+        commands.push_str(&serde_json::to_string(&take_turn).unwrap());
+        commands.push_str(&serde_json::to_string(&win_cmd).unwrap());
+
+        let referee_output = String::from("\"void\"")
+            + "[0,\"LEFT\",0,{\"row#\":1,\"column#\":3}]"
+            + "\"void\""
+            + "[0,\"LEFT\",0,{\"row#\":1,\"column#\":1}]"
+            + "\"void\"";
+        let mut ref_proxy = RefereeProxy::new(player, commands.as_bytes(), vec![]);
+        assert!(ref_proxy.listen().is_ok());
+        let ref_out = String::from_utf8(ref_proxy.out);
+        assert!(ref_out.is_ok());
+        assert_eq!(ref_out.unwrap(), referee_output);
+    }
+
+    #[test]
+    fn test_listen_none() {
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+        let mut ref_proxy = RefereeProxy::new(player, "".as_bytes(), vec![]);
+        assert!(ref_proxy.listen().is_ok());
+        assert!(ref_proxy.out.is_empty());
+        assert!(ref_proxy.r#in.end().is_ok());
+    }
+
+    #[test]
+    fn test_listen_fail() {
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+
+        // invalid win call
+        let mut ref_proxy = RefereeProxy::new(player, "[\"win\", []]".as_bytes(), vec![]);
+        assert!(ref_proxy.listen().is_err());
+
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+        // invalid take-turn call
+        let mut ref_proxy = RefereeProxy::new(player, "[\"take-turn\", []]".as_bytes(), vec![]);
+        assert!(ref_proxy.listen().is_err());
+
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+        // invalid setup call
+        let mut ref_proxy = RefereeProxy::new(
+            player,
+            "[\"setup\", [{\"row#\": 1, \"column#\": 0}]]".as_bytes(),
+            vec![],
+        );
+        assert!(ref_proxy.listen().is_err());
+
+        let player = Box::new(LocalPlayer::new(
+            Name::from_static("bob"),
+            NaiveStrategy::Riemann,
+        ));
+        // invalid setup call again!
+        let mut ref_proxy = RefereeProxy::new(
+            player,
+            "[\"setup\", [{\"row#\": 1, \"column#\": 0}, false]]".as_bytes(),
+            vec![],
+        );
+        assert!(ref_proxy.listen().is_err());
     }
 }

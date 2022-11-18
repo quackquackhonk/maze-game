@@ -37,7 +37,7 @@ fn main() -> anyhow::Result<()> {
     let mut stream = TcpStream::connect(format!("127.0.0.1:{}", port))?;
     stream.write_all(serde_json::to_string(&name)?.as_bytes())?;
     let player = Box::new(LocalPlayer::new(name, strategy));
-    let referee = RefereeProxy::from_tcp(player, stream);
+    let mut referee = RefereeProxy::from_tcp(player, stream);
     referee.listen()?;
     Ok(())
 }
