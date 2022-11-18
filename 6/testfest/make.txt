@@ -21,6 +21,6 @@ warning: unused import: `Label`
    Compiling XGame v0.1.0 (/course/cs4500f22/ta/github/tankalav-lsoto/6/XGame)
 warning: `common` (lib) generated 1 warning
 warning: `referee` (lib) generated 1 warning
-    Finished release [optimized] target(s) in 40.57s
+    Finished release [optimized] target(s) in 33.07s
 cp XGame/target/release/xgames xgames
 cp XGame/target/release/xgames-with-observer xgames-with-observer
