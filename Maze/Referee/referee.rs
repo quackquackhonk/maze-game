@@ -342,8 +342,19 @@ impl Referee {
                             .to_full_state()
                             .is_valid_move(slide, rotations, destination);
                     if !valid_move {
+                        eprintln!(
+                            "received invalid move from {}",
+                            state.current_player_info().name().unwrap()
+                        );
                         true
                     } else {
+                        eprintln!(
+                            "received [{:?}, {:?}, {:?}] from {}",
+                            slide,
+                            rotations,
+                            destination,
+                            state.current_player_info().name().expect("valid")
+                        );
                         state.rotate_spare(rotations);
                         state
                             .slide_and_insert(slide)
@@ -371,6 +382,10 @@ impl Referee {
                     }
                 }
                 Ok(None) => {
+                    eprintln!(
+                        "received PASS from {}",
+                        state.current_player_info().name().expect("valid")
+                    );
                     num_passed += 1;
                     false
                 }

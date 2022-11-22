@@ -624,7 +624,7 @@ mod state_tests {
 
         assert_eq!(state.board.extra.connector, Fork(East));
         state.rotate_spare(1);
-        assert_eq!(state.board.extra.connector, Fork(South));
+        assert_eq!(state.board.extra.connector, Fork(North));
         state.rotate_spare(3);
         assert_eq!(state.board.extra.connector, Fork(East));
         state.rotate_spare(8);

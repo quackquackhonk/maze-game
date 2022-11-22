@@ -60,6 +60,22 @@ impl CompassDirection {
         }
     }
 
+    /// Returns a rotated direction 90 degrees counter clockwise.
+    /// ```
+    /// # use common::tile::CompassDirection;
+    /// assert_eq!(CompassDirection::North.rotate_counter_clockwise(), CompassDirection::West);
+    /// ```
+    #[must_use]
+    pub fn rotate_counter_clockwise(self) -> Self {
+        use CompassDirection::*;
+        match self {
+            North => West,
+            South => East,
+            East => North,
+            West => South,
+        }
+    }
+
     /// Returns the opposite direction of the given direction
     /// ```
     ///# use common::tile::CompassDirection;
@@ -114,8 +130,8 @@ impl ConnectorShape {
         match self {
             Path(Horizontal) => Path(Vertical),
             Path(Vertical) => Path(Horizontal),
-            Corner(dir) => Corner(dir.rotate_clockwise()),
-            Fork(dir) => Fork(dir.rotate_clockwise()),
+            Corner(dir) => Corner(dir.rotate_counter_clockwise()),
+            Fork(dir) => Fork(dir.rotate_counter_clockwise()),
             Crossroads => Crossroads,
         }
     }
@@ -192,9 +208,9 @@ mod tile_tests {
         assert_eq!(Path(Horizontal).rotate(), Path(Vertical));
         assert_eq!(Path(Horizontal).rotate().rotate(), Path(Horizontal));
 
-        assert_eq!(Corner(North).rotate(), Corner(East));
+        assert_eq!(Corner(North).rotate(), Corner(West));
         assert_eq!(Corner(North).rotate().rotate(), Corner(South));
-        assert_eq!(Corner(North).rotate().rotate().rotate(), Corner(West));
+        assert_eq!(Corner(North).rotate().rotate().rotate(), Corner(East));
         assert_eq!(
             Corner(North).rotate().rotate().rotate().rotate(),
             Corner(North)
@@ -210,11 +226,11 @@ mod tile_tests {
         };
 
         tile.rotate();
-        assert_eq!(tile.connector, Fork(East));
+        assert_eq!(tile.connector, Fork(West));
         tile.rotate();
         assert_eq!(tile.connector, Fork(South));
         tile.rotate();
-        assert_eq!(tile.connector, Fork(West));
+        assert_eq!(tile.connector, Fork(East));
         tile.rotate();
         assert_eq!(tile.connector, Fork(North));
     }
