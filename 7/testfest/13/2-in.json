@@ -1,0 +1,12 @@
+[["rchester","Riemann","takeTurn"], ["eleonard","Euclid","takeTurn"], ["efrank","Euclid","takeTurn"]]
+{"board":{"connectors":[["┼","┼","┼","┼","┼","┼","┼"],["│","│","│","│","│","│","│"],["│","│","│","│","│","│","│"],["│","│","│","│","│","│","│"], 
+["│","│","│","│","│","│","│"],["│","│","│","│","│","│","│"],["┼","┼","┼","┼","┼","┼","┼"]], 
+"treasures": [[["ruby","beryl"],["labradorite","star-cabochon"],["citrine-checkerboard","mexican-opal"],["black-spinel-cushion","citrine"],["diamond","ruby"],["golden-diamond-cut","prehnite"],["hematite","color-change-oval"]],[["white-square","aplite"],["rhodonite","prehnite"],["azurite","chrysolite"],["hackmanite","citrine-checkerboard"],["apricot-square-radiant","labradorite"],["color-change-oval","cordierite"],["blue-spinel-heart","padparadscha-oval"]],[["sphalerite","rhodonite"],["jasper","chrysolite"],["tourmaline-laser-cut","citrine"],["australian-marquise","unakite"],["pink-emerald-cut","orange-radiant"],["jasper","heliotrope"],["apricot-square-radiant","ruby-diamond-profile"]],[["morganite-oval","fancy-spinel-marquise"],["golden-diamond-cut","black-spinel-cushion"],["star-cabochon","padparadscha-sapphire"],["golden-diamond-cut","sunstone"],["pink-opal","unakite"],["goldstone","aplite"],["ruby-diamond-profile","ametrine"]],[["citrine-checkerboard","hematite"],["purple-oval","magnesite"],["purple-spinel-trillion","pink-round"],["red-spinel-square-emerald-cut","tanzanite-trillion"],["beryl","purple-cabochon"],["black-obsidian","rock-quartz"],["ruby-diamond-profile","yellow-beryl-oval"]],[["aquamarine","diamond"],["azurite","hematite"],["ruby","zoisite"],["moonstone","apatite"],["ametrine","stilbite"],["orange-radiant","zoisite"],["cordierite","blue-cushion"]],[["magnesite","clinohumite"],["gray-agate","spinel"],["orange-radiant","almandine-garnet"],["garnet","pink-opal"],["blue-pear-shape","diamond"],["apatite","star-cabochon"],["iolite-emerald-cut","aventurine"]]]},"last":null,
+"plmt":[{"color":"orange","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":5,"row#":3}},
+{"color":"purple","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":3},"home":{"column#":3,"row#":5}},
+{"color":"white","current":{"column#":0,"row#":0},"goto":{"column#":5,"row#":5},"home":{"column#":1,"row#":5}}],
+"spare":{"1-image":"jaspilite","2-image":"pink-round","tilekey":"─"}}
+
+
+
+
