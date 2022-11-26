@@ -1,3 +1,4 @@
+use crate::config::Config;
 use crate::json::JsonGameResult;
 use common::board::{Board, DefaultBoard};
 use common::grid::{squared_euclidian_distance, Position};
@@ -9,9 +10,7 @@ use players::strategy::{PlayerAction, PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
 use serde::Serialize;
-use std::collections::HashSet;
 use std::fmt::Debug;
-use std::hash::Hash;
 use std::sync::mpsc::{self, RecvTimeoutError};
 use std::sync::Arc;
 use std::thread;
@@ -118,8 +117,20 @@ impl PrivatePlayerInfo for Player {
         self.info.reached_goal()
     }
 
+    fn set_goal(&mut self, goal: Position) {
+        self.info.set_goal(goal)
+    }
+
     fn goal(&self) -> Position {
-        self.info.goal
+        self.info.goal()
+    }
+
+    fn get_goals_reached(&self) -> u64 {
+        self.info.get_goals_reached()
+    }
+
+    fn inc_goals_reached(&mut self) {
+        self.info.inc_goals_reached()
     }
 }
 
@@ -184,12 +195,6 @@ impl PartialEq<Player> for Color {
 
 impl Eq for Player {}
 
-impl Hash for Player {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.info.color().hash(state);
-    }
-}
-
 trait RefereeState {
     fn to_player_state(&self) -> State<PubPlayerInfo>;
     fn to_full_state(&self) -> State<FullPlayerInfo>;
@@ -218,6 +223,7 @@ impl RefereeState for State<Player> {
 }
 
 pub struct Referee {
+    config: Config,
     rand: Box<dyn RngCore>,
 }
 
@@ -225,6 +231,7 @@ impl Referee {
     pub fn new(seed: u64) -> Self {
         Self {
             rand: Box::new(ChaChaRng::seed_from_u64(seed)),
+            config: Config::default(),
         }
     }
 
@@ -253,23 +260,44 @@ impl Referee {
 
         // The possible locations for goals, remove the filter here if goals become movable tiles.
         let possible_goals = board.possible_goals().collect::<Vec<_>>();
+        let player_info = if let Some(goals) = self.config.multiple_goals_mut() {
+            goals.clear(); // In case Config is malformed
+            goals.extend(possible_goals);
 
-        let player_info = players
-            .into_iter()
-            .map(|player| {
-                let home: Position =
-                    possible_homes.remove(self.rand.gen_range(0..possible_homes.len()));
-                let goal: Position = possible_goals[self.rand.gen_range(0..possible_goals.len())];
-                let info = FullPlayerInfo::new(
-                    home,
-                    home, /* players start on their home tile */
-                    goal,
-                    (self.rand.gen(), self.rand.gen(), self.rand.gen()).into(),
-                );
+            players
+                .into_iter()
+                .map(|player| {
+                    let home: Position =
+                        possible_homes.remove(self.rand.gen_range(0..possible_homes.len()));
+                    let goal: Position = goals.pop_front().expect("Did not have enough goals");
+                    let info = FullPlayerInfo::new(
+                        home,
+                        home, /* players start on their home tile */
+                        goal,
+                        (self.rand.gen(), self.rand.gen(), self.rand.gen()).into(),
+                    );
+                    Player::new(player, info)
+                })
+                .collect()
+        } else {
+            players
+                .into_iter()
+                .map(|player| {
+                    let home: Position =
+                        possible_homes.remove(self.rand.gen_range(0..possible_homes.len()));
+                    let goal: Position =
+                        possible_goals[self.rand.gen_range(0..possible_goals.len())];
+                    let info = FullPlayerInfo::new(
+                        home,
+                        home, /* players start on their home tile */
+                        goal,
+                        (self.rand.gen(), self.rand.gen(), self.rand.gen()).into(),
+                    );
 
-                Player::new(player, info)
-            })
-            .collect();
+                    Player::new(player, info)
+                })
+                .collect()
+        };
 
         State::new(board, player_info)
     }
@@ -318,10 +346,9 @@ impl Referee {
     }
 
     fn run_round(
-        &self,
+        &mut self,
         state: &mut State<Player>,
         observers: &mut Vec<Box<dyn Observer>>,
-        reached_goal: &mut HashSet<Player>,
         kicked: &mut Vec<Player>,
     ) -> Option<GameWinner> {
         let mut num_kicked = 0;
@@ -363,19 +390,39 @@ impl Referee {
                             .move_player(destination)
                             .expect("move has already been validated");
 
-                        if state.player_reached_home()
-                            && reached_goal.contains(state.current_player_info())
-                        {
-                            self.broadcast_state_to_observers(state, observers);
-                            // this player wins
-                            return Some(Some(state.remove_player().unwrap()));
+                        if state.player_reached_home() {
+                            if let Some(goals) = self.config.multiple_goals_mut() {
+                                if goals.is_empty() {
+                                    self.broadcast_state_to_observers(state, observers);
+                                    // this player wins
+                                    return Some(Some(state.remove_player().unwrap()));
+                                }
+                            } else if state.current_player_info().get_goals_reached() == 1 {
+                                self.broadcast_state_to_observers(state, observers);
+                                // this player wins
+                                return Some(Some(state.remove_player().unwrap()));
+                            }
                         }
 
                         if state.to_full_state().player_reached_goal() {
                             // player needs to go home
-                            reached_goal.insert(state.current_player_info().clone());
-                            let player = &mut state.player_info[0];
-                            player.setup(None, player.home()).is_err()
+                            state.current_player_info_mut().inc_goals_reached();
+                            let multiple_goals = self.config.multiple_goals_mut();
+                            if multiple_goals.is_some()
+                                && !multiple_goals.as_ref().unwrap().is_empty()
+                            {
+                                let goal = multiple_goals
+                                    .as_mut()
+                                    .unwrap()
+                                    .pop_front()
+                                    .expect("We checked it is not empty");
+                                state.current_player_info_mut().set_goal(goal);
+                                state.current_player_info_mut().setup(None, goal).is_err()
+                            } else {
+                                let home = state.current_player_info().home();
+                                state.current_player_info_mut().set_goal(home);
+                                state.current_player_info_mut().setup(None, home).is_err()
+                            }
                         } else {
                             false
                         }
@@ -417,10 +464,9 @@ impl Referee {
     }
 
     pub fn run_from_state(
-        &self,
+        &mut self,
         state: &mut State<Player>,
         observers: &mut Vec<Box<dyn Observer>>,
-        mut reached_goal: HashSet<Player>,
         mut kicked: Vec<Player>,
     ) -> GameResult {
         // loop until game is over
@@ -433,15 +479,13 @@ impl Referee {
 
         let mut result = None;
         for _ in 0..ROUNDS {
-            if let Some(game_winner) =
-                self.run_round(state, observers, &mut reached_goal, &mut kicked)
-            {
+            if let Some(game_winner) = self.run_round(state, observers, &mut kicked) {
                 result = game_winner;
                 break;
             };
         }
         self.broadcast_game_over_to_observers(observers);
-        let (mut winners, losers) = Referee::calculate_winners(result, state, reached_goal);
+        let (mut winners, losers) = Referee::calculate_winners(result, state);
         Referee::broadcast_winners(&mut winners, losers, &mut kicked);
         GameResult { winners, kicked }
     }
@@ -452,54 +496,58 @@ impl Referee {
     pub fn calculate_winners(
         winner: GameWinner,
         state: &State<Player>,
-        reached_goal: HashSet<Player>,
     ) -> (Vec<Player>, Vec<Player>) {
         let mut losers = vec![];
 
-        let players_to_check: Box<dyn Iterator<Item = Player>> = if reached_goal.is_empty() {
-            Box::new(state.player_info.iter().cloned())
-        } else {
-            Box::new(
-                state
-                    .player_info
-                    .iter()
-                    .cloned()
-                    .fold(vec![], |mut acc, player| {
-                        if reached_goal.contains(&player) {
-                            acc.push(player);
-                        } else {
-                            losers.push(player);
-                        }
-                        acc
-                    })
-                    .into_iter(),
-            )
+        let players_to_check = {
+            let max_goals = state
+                .player_info
+                .iter()
+                .map(|pi| pi.get_goals_reached())
+                .max()
+                .unwrap_or(0);
+            state
+                .player_info
+                .iter()
+                .cloned()
+                .fold(vec![], |mut acc, player| {
+                    if player.get_goals_reached() == max_goals {
+                        acc.push(player);
+                    } else {
+                        losers.push(player);
+                    }
+                    acc
+                })
         };
 
         match winner {
             Some(winner) => (vec![winner], state.player_info.clone().into()),
             None => {
-                let min_dist = state.player_info.iter().fold(usize::MAX, |prev, player| {
-                    usize::min(
-                        prev,
-                        squared_euclidian_distance(&player.position(), &player.goal()),
-                    )
-                });
+                let min_dist = players_to_check
+                    .iter()
+                    .map(|pi| squared_euclidian_distance(&pi.position(), &pi.goal()))
+                    .min()
+                    .unwrap_or(usize::MAX);
+                dbg!(min_dist);
 
-                players_to_check.fold((vec![], losers), |(mut winners, mut losers), player| {
-                    let goal_to_measure = if reached_goal.is_empty() {
-                        player.goal()
-                    } else {
-                        player.home()
-                    };
-                    if min_dist == squared_euclidian_distance(&player.position(), &goal_to_measure)
-                    {
-                        winners.push(player);
-                    } else {
-                        losers.push(player);
-                    }
-                    (winners, losers)
-                })
+                players_to_check.into_iter().fold(
+                    (vec![], losers),
+                    |(mut winners, mut losers), player| {
+                        let goal_to_measure = player.goal();
+
+                        if min_dist
+                            == dbg!(squared_euclidian_distance(
+                                &player.position(),
+                                &goal_to_measure
+                            ))
+                        {
+                            winners.push(player);
+                        } else {
+                            losers.push(player);
+                        }
+                        (winners, losers)
+                    },
+                )
             }
         }
     }
@@ -546,15 +594,13 @@ impl Referee {
         // communicate initial state to all players
         let mut state = self.make_initial_state(players, board);
 
-        let reached_goal: HashSet<Player> = HashSet::default();
-
-        self.run_from_state(&mut state, &mut observers, reached_goal, vec![])
+        self.run_from_state(&mut state, &mut observers, vec![])
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::{collections::HashSet, sync::Arc};
+    use std::sync::Arc;
 
     use common::{
         board::{Board, DefaultBoard},
@@ -572,7 +618,10 @@ mod tests {
     use rand::SeedableRng;
     use rand_chacha::ChaChaRng;
 
-    use crate::referee::{GameResult, Player, PrivatePlayerInfo, Referee};
+    use crate::{
+        config::Config,
+        referee::{GameResult, Player, PrivatePlayerInfo, Referee},
+    };
 
     #[derive(Debug, Default, Clone)]
     struct MockPlayer {
@@ -617,6 +666,7 @@ mod tests {
     fn test_get_player_boards() {
         let referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
+            config: Config::default(),
         };
         let mut players: Vec<Box<dyn PlayerApi>> = vec![Box::new(LocalPlayer::new(
             Name::from_static("bill"),
@@ -636,7 +686,8 @@ mod tests {
     fn test_make_initial_state() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)), // Seed 0 makes the first player have the
-                                                         // same home and goal tile
+            config: Config::default(),
+            // same home and goal tile
         };
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player, Box::new(MockPlayer::default())];
@@ -654,6 +705,7 @@ mod tests {
     fn test_broadcast_inital_state() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
+            config: Config::default(),
         };
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
@@ -697,10 +749,12 @@ mod tests {
     #[test]
     fn test_calculate_winners() {
         let mut state = State::default();
-        state.add_player(Player {
+        let mut reached_goal = Player {
             api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
             info: FullPlayerInfo::new((0, 0), (1, 0), (0, 5), Color::from(ColorName::Red)),
-        });
+        };
+        reached_goal.inc_goals_reached();
+        state.add_player(reached_goal);
         let won_player = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
@@ -709,16 +763,12 @@ mod tests {
             FullPlayerInfo::new((1, 0), (1, 6), (6, 1), Color::from(ColorName::Blue)),
         );
 
-        let (winners, losers) = Referee::calculate_winners(
-            Some(won_player.clone()),
-            &state,
-            vec![won_player.clone()].into_iter().collect(),
-        );
+        let (winners, losers) = Referee::calculate_winners(Some(won_player.clone()), &state);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "jill");
         assert_eq!(losers.len(), 1);
         state.add_player(won_player);
-        let (winners, losers) = Referee::calculate_winners(None, &state, HashSet::default());
+        let (winners, losers) = Referee::calculate_winners(None, &state);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
@@ -728,6 +778,7 @@ mod tests {
     fn test_broadcast_winners() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
+            config: Config::default(),
         };
 
         let player = Box::new(MockPlayer::default());
@@ -753,6 +804,7 @@ mod tests {
     fn test_run_game() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config::default(),
         };
 
         let player = Box::new(MockPlayer::default());
@@ -803,8 +855,9 @@ mod tests {
 
     #[test]
     fn test_run_from_state() {
-        let referee = Referee {
+        let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config::default(),
         };
         let players = vec![
             Player::new(
@@ -842,7 +895,7 @@ mod tests {
         state.previous_slide = state.board.new_slide(0, CompassDirection::West);
 
         let GameResult { winners, kicked } =
-            referee.run_from_state(&mut state, &mut vec![], HashSet::default(), vec![]);
+            referee.run_from_state(&mut state, &mut vec![], vec![]);
         assert_eq!(winners.len(), 2);
         assert_eq!(kicked.len(), 0);
     }

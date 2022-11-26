@@ -1,5 +1,4 @@
 use std::{
-    collections::HashSet,
     io::{Read, Write},
     sync::Arc,
 };
@@ -98,12 +97,11 @@ pub fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow
         previous_slide: state.previous_slide,
     };
 
-    let r#ref = Referee::new(0);
-    let reached_goal = HashSet::default();
+    let mut r#ref = Referee::new(0);
 
     let kicked = Vec::default();
 
-    let game_result = r#ref.run_from_state(&mut state, &mut vec![], reached_goal, kicked);
+    let game_result = r#ref.run_from_state(&mut state, &mut vec![], kicked);
     let mut winner_names: Vec<Name> = game_result
         .winners
         .into_iter()

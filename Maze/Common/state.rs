@@ -119,7 +119,10 @@ pub trait PlayerInfo {
 
 pub trait PrivatePlayerInfo: PlayerInfo {
     fn reached_goal(&self) -> bool;
+    fn set_goal(&mut self, goal: Position);
     fn goal(&self) -> Position;
+    fn get_goals_reached(&self) -> u64;
+    fn inc_goals_reached(&mut self);
 }
 
 /// Represents a Player and the `Position` of their home and themselves. Also holds their goal
@@ -131,6 +134,7 @@ pub struct FullPlayerInfo {
     pub goal: Position,
     // Invariant: Every Player should have their own color
     color: Color,
+    goals_reached: u64,
 }
 
 impl FullPlayerInfo {
@@ -141,6 +145,7 @@ impl FullPlayerInfo {
             position,
             goal,
             color,
+            goals_reached: 0,
         }
     }
 }
@@ -172,8 +177,20 @@ impl PrivatePlayerInfo for FullPlayerInfo {
         self.goal == self.position
     }
 
+    fn set_goal(&mut self, goal: Position) {
+        self.goal = goal;
+    }
+
     fn goal(&self) -> Position {
         self.goal
+    }
+
+    fn get_goals_reached(&self) -> u64 {
+        self.goals_reached
+    }
+
+    fn inc_goals_reached(&mut self) {
+        self.goals_reached += 1;
     }
 }
 
@@ -459,6 +476,7 @@ mod state_tests {
             position: (0, 0),
             goal: (1, 1),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
 
         assert!(!state.player_info.is_empty());
@@ -639,12 +657,14 @@ mod state_tests {
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Yellow.into(),
+            goals_reached: 0,
         });
         state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (1, 1),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
 
         // Default Board<7> is:
@@ -712,18 +732,21 @@ mod state_tests {
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Green.into(),
+            goals_reached: 0,
         });
         state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (1, 3),
             goal: (1, 1),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
         state.player_info.push_back(FullPlayerInfo {
             home: (5, 1),
             position: (3, 6),
             goal: (1, 1),
             color: ColorName::Purple.into(),
+            goals_reached: 0,
         });
         // Default Board<7> is:
         //   0123456
@@ -844,18 +867,21 @@ mod state_tests {
             position: (1, 1),
             goal: (1, 1),
             color: ColorName::Yellow.into(),
+            goals_reached: 0,
         });
         state.player_info.push_back(FullPlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (1, 3),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
         state.player_info.push_back(FullPlayerInfo {
             home: (5, 1),
             position: (0, 4),
             goal: (1, 5),
             color: ColorName::Blue.into(),
+            goals_reached: 0,
         });
 
         // Default Board<7> is:
@@ -906,6 +932,7 @@ mod state_tests {
             position: (2, 3),
             goal: (1, 1),
             color: ColorName::Blue.into(),
+            goals_reached: 0,
         });
         assert!(!state.player_reached_home());
 
@@ -916,6 +943,7 @@ mod state_tests {
             position: (0, 1),
             goal: (1, 3),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
         state.next_player();
         assert!(!state.player_reached_home());
@@ -928,12 +956,14 @@ mod state_tests {
             position: (2, 3),
             goal: (1, 1),
             color: ColorName::Green.into(),
+            goals_reached: 0,
         });
         state.player_info.push_front(FullPlayerInfo {
             home: (3, 1),
             position: (3, 1),
             goal: (1, 3),
             color: ColorName::Blue.into(),
+            goals_reached: 0,
         });
         assert!(state.player_reached_home());
         state.next_player();
@@ -949,6 +979,7 @@ mod state_tests {
             position: (2, 3),
             goal: (1, 3),
             color: ColorName::Red.into(),
+            goals_reached: 0,
         });
         assert!(!state.player_reached_goal());
 
@@ -958,6 +989,7 @@ mod state_tests {
             position: (2, 3),
             goal: (2, 3),
             color: ColorName::Green.into(),
+            goals_reached: 0,
         });
         state.next_player();
         assert!(state.player_reached_goal());
