@@ -9,7 +9,8 @@ use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},
     observer::Observer,
-    referee::{Player, Referee},
+    player::Player,
+    referee::Referee,
 };
 use serde::{Deserialize, Serialize};
 /// Enumerated Valid JSON input for `xchoice`

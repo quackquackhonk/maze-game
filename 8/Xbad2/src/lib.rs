@@ -12,7 +12,8 @@ use players::{
 };
 use referee::{
     json::{JsonRefereeState, PlayerSpec},
-    referee::{Player, Referee},
+    player::Player,
+    referee::Referee,
 };
 use serde::{Deserialize, Serialize};
 

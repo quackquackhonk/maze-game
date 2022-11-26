@@ -1,57 +1,16 @@
 use crate::config::Config;
 use crate::json::JsonGameResult;
+use crate::player::Player;
 use common::board::{Board, DefaultBoard};
 use common::grid::{squared_euclidian_distance, Position};
-use common::json::Name;
-use common::{Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State};
-use parking_lot::Mutex;
-use players::player::{PlayerApi, PlayerApiError, PlayerApiResult};
-use players::strategy::{PlayerAction, PlayerMove};
+use common::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State};
+use players::player::PlayerApi;
+use players::strategy::PlayerMove;
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
 use serde::Serialize;
-use std::fmt::Debug;
-use std::sync::mpsc::{self, RecvTimeoutError};
-use std::sync::Arc;
-use std::thread;
-use std::time::Duration;
-use thiserror::Error;
 
 use crate::observer::Observer;
-
-#[derive(Debug, Error)]
-#[error("Timed Out!")]
-struct TimeoutError;
-
-impl From<TimeoutError> for PlayerApiError {
-    fn from(_: TimeoutError) -> Self {
-        PlayerApiError::Timeout
-    }
-}
-
-/// Runs `f` in a separate thread, and has the child thread send the result of `f` through a
-/// channel. The main thread waits on the channel, and if no response is returned `timeout` passes,
-/// returns an `Err`.
-fn run_with_timeout<F, T>(f: F, timeout: Duration) -> Result<T, TimeoutError>
-where
-    F: FnOnce() -> T + Send + 'static,
-    T: Send + 'static,
-{
-    let (tx, rx) = mpsc::channel();
-    let _ = thread::spawn(move || {
-        let result = f();
-        match tx.send(result) {
-            Ok(()) => {}
-            Err(_) => (),
-        }
-    });
-
-    match rx.recv_timeout(timeout) {
-        Ok(result) => Ok(result),
-        Err(RecvTimeoutError::Timeout) => Err(TimeoutError),
-        Err(RecvTimeoutError::Disconnected) => unreachable!(),
-    }
-}
 
 /// The Result of calling `Referee::run_game(...)`.
 /// - The `winners` field contains all the winning players.
@@ -68,132 +27,6 @@ pub struct GameResult {
 /// home.
 /// None -> The game ended without a single winner, the Referee will calculate winners another way.
 pub type GameWinner = Option<Player>;
-
-#[derive(Clone)]
-pub struct Player {
-    pub api: Arc<Mutex<Box<dyn PlayerApi>>>,
-    pub info: FullPlayerInfo,
-}
-
-impl Debug for Player {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("Player").field("info", &self.info).finish()
-    }
-}
-
-impl Player {
-    fn new(api: Box<dyn PlayerApi>, info: FullPlayerInfo) -> Self {
-        Player {
-            api: Arc::new(Mutex::new(api)),
-            info,
-        }
-    }
-}
-
-impl PlayerInfo for Player {
-    fn position(&self) -> Position {
-        self.info.position()
-    }
-
-    fn set_position(&mut self, dest: Position) {
-        self.info.set_position(dest);
-    }
-
-    fn home(&self) -> Position {
-        self.info.home()
-    }
-
-    fn reached_home(&self) -> bool {
-        self.info.reached_home()
-    }
-
-    fn color(&self) -> Color {
-        self.info.color()
-    }
-}
-
-impl PrivatePlayerInfo for Player {
-    fn reached_goal(&self) -> bool {
-        self.info.reached_goal()
-    }
-
-    fn set_goal(&mut self, goal: Position) {
-        self.info.set_goal(goal)
-    }
-
-    fn goal(&self) -> Position {
-        self.info.goal()
-    }
-
-    fn get_goals_reached(&self) -> u64 {
-        self.info.get_goals_reached()
-    }
-
-    fn inc_goals_reached(&mut self) {
-        self.info.inc_goals_reached()
-    }
-}
-
-const TIMEOUT: Duration = Duration::from_secs(2);
-
-impl PlayerApi for Player {
-    fn name(&self) -> PlayerApiResult<Name> {
-        let api = self.api.clone();
-        run_with_timeout(
-            move || {
-                if api.is_locked() {
-                    unsafe { api.force_unlock() }
-                };
-                api.lock().name()
-            },
-            TIMEOUT,
-        )?
-    }
-
-    fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board> {
-        let api = self.api.clone();
-        run_with_timeout(move || api.lock().propose_board0(cols, rows), TIMEOUT)?
-    }
-
-    fn setup(
-        &mut self,
-        state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
-        let api = self.api.clone();
-        run_with_timeout(move || api.lock().setup(state, goal), TIMEOUT)?
-    }
-
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
-        let api = self.api.clone();
-        run_with_timeout(move || api.lock().take_turn(state), TIMEOUT)?
-    }
-
-    fn won(&mut self, did_win: bool) -> PlayerApiResult<()> {
-        let api = self.api.clone();
-        run_with_timeout(move || api.lock().won(did_win), TIMEOUT)?
-    }
-}
-
-impl PartialEq for Player {
-    fn eq(&self, other: &Self) -> bool {
-        self.info.color() == other.info.color()
-    }
-}
-
-impl PartialEq<Color> for Player {
-    fn eq(&self, other: &Color) -> bool {
-        &self.info.color() == other
-    }
-}
-
-impl PartialEq<Player> for Color {
-    fn eq(&self, other: &Player) -> bool {
-        self == &other.color()
-    }
-}
-
-impl Eq for Player {}
 
 trait RefereeState {
     fn to_player_state(&self) -> State<PubPlayerInfo>;
