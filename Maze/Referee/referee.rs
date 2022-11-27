@@ -300,8 +300,8 @@ impl Referee {
         &mut self,
         state: &mut State<Player>,
         observers: &mut Vec<Box<dyn Observer>>,
-        mut kicked: Vec<Player>,
     ) -> GameResult {
+        let mut kicked = vec![];
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won
@@ -427,7 +427,7 @@ impl Referee {
         // communicate initial state to all players
         let mut state = self.make_initial_state(players, board);
 
-        self.run_from_state(&mut state, &mut observers, vec![])
+        self.run_from_state(&mut state, &mut observers)
     }
 }
 
@@ -727,8 +727,7 @@ mod tests {
         state.board.extra.connector = corner;
         state.previous_slide = state.board.new_slide(0, CompassDirection::West);
 
-        let GameResult { winners, kicked } =
-            referee.run_from_state(&mut state, &mut vec![], vec![]);
+        let GameResult { winners, kicked } = referee.run_from_state(&mut state, &mut vec![]);
         assert_eq!(winners.len(), 2);
         assert_eq!(kicked.len(), 0);
     }

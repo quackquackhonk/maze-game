@@ -10,6 +10,7 @@ dependencies = [
  "clap 4.0.23",
  "common",
  "players",
+ "referee",
  "remote",
  "serde_json",
 ]

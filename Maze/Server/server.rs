@@ -1,19 +1,23 @@
 use clap::Parser;
+use common::{FullPlayerInfo, State};
 use players::player::PlayerApi;
+use referee::json::JsonRefereeState;
+use referee::player::Player;
 use referee::referee::{GameResult, Referee};
 use remote::is_port;
 use remote::player::PlayerProxy;
-use std::io;
-use std::net::TcpListener;
+use std::io::{self, stdin};
+use std::net::{SocketAddr, TcpListener};
 use std::time::Duration;
-use tokio::time::{sleep, timeout};
+use tokio::task::yield_now;
+use tokio::time::timeout;
 
 const TIMEOUT: Duration = Duration::from_secs(20);
 
 #[derive(Parser)]
 struct Args {
     #[clap(value_parser = is_port)]
-    port: usize,
+    port: u16,
 }
 
 async fn recieve_connections(
@@ -29,14 +33,15 @@ async fn recieve_connections(
                     .expect("We did not pass a 0 for duration");
                 if let Ok(player) = PlayerProxy::try_from_tcp(stream) {
                     connections.push(Box::new(player));
+                    eprintln!("Player #{} connected", connections.len());
                     if connections.len() == 6 {
                         break;
                     }
                 }
             }
             Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
-                sleep(Duration::from_nanos(1)).await //We await here so that we give up execution
-                                                     //to tokio for it to decide if we have reached our timeout
+                yield_now().await //We await here so that we give up execution
+                                  //to tokio for it to decide if we have reached our timeout
             }
             Err(e) => Err(e)?,
         }
@@ -47,8 +52,15 @@ async fn recieve_connections(
 #[tokio::main]
 pub async fn main() -> io::Result<()> {
     let Args { port } = Args::parse();
-    let listener = TcpListener::bind(format!("127.0.0.1:{port}"))?;
-    eprintln!("bound to tcp");
+
+    eprintln!("Parsing JsonRefereeState");
+    let state_info: State<FullPlayerInfo> = {
+        let jsonstate: JsonRefereeState = serde_json::from_reader(stdin())?;
+        jsonstate.into()
+    };
+
+    let listener = TcpListener::bind(SocketAddr::from(([127, 0, 0, 1], port)))?;
+    eprintln!("Bound to port: {port}");
     let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
     let time_out = timeout(
@@ -76,9 +88,21 @@ pub async fn main() -> io::Result<()> {
             return Ok(());
         }
     }
+
+    let mut state = State {
+        board: state_info.board,
+        player_info: state_info
+            .player_info
+            .into_iter()
+            .zip(player_connections)
+            .map(|(info, api)| Player::new(api, info))
+            .collect(),
+        previous_slide: state_info.previous_slide,
+    };
+
     // we have enough players :)
     let mut referee = Referee::new(1);
-    let game_result = referee.run_game(player_connections, vec![]);
+    let game_result = referee.run_from_state(&mut state, &mut vec![]);
     println!("{}", serde_json::to_string(&game_result).unwrap());
 
     Ok(())

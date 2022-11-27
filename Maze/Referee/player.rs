@@ -32,7 +32,7 @@ impl Debug for Player {
 }
 
 impl Player {
-    pub(crate) fn new(api: Box<dyn PlayerApi>, info: FullPlayerInfo) -> Self {
+    pub fn new(api: Box<dyn PlayerApi>, info: FullPlayerInfo) -> Self {
         Player {
             api: Arc::new(Mutex::new(api)),
             info,
