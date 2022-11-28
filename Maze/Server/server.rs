@@ -7,9 +7,9 @@ use referee::referee::{GameResult, Referee};
 use remote::is_port;
 use remote::player::PlayerProxy;
 use std::io::{self, stdin};
-use std::net::{SocketAddr, TcpListener};
+use std::net::SocketAddr;
 use std::time::Duration;
-use tokio::task::yield_now;
+use tokio::net::TcpListener;
 use tokio::time::timeout;
 
 const TIMEOUT: Duration = Duration::from_secs(20);
@@ -23,28 +23,25 @@ struct Args {
 async fn recieve_connections(
     listener: &TcpListener,
     connections: &mut Vec<Box<dyn PlayerApi>>,
+    num_players: usize,
 ) -> io::Result<()> {
-    listener.set_nonblocking(true)?;
-    for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => {
-                stream
-                    .set_read_timeout(Some(Duration::from_secs(2)))
-                    .expect("We did not pass a 0 for duration");
-                if let Ok(player) = PlayerProxy::try_from_tcp(stream) {
-                    connections.push(Box::new(player));
-                    eprintln!("Player #{} connected", connections.len());
-                    if connections.len() == 6 {
-                        break;
-                    }
-                }
+    while connections.len() < num_players {
+        if let Ok((stream, _)) = listener.accept().await {
+            let stream = stream
+                .into_std()
+                .expect("could not convert async stream to sync");
+            stream
+                .set_nonblocking(false)
+                .expect("set set_nonblocking call failed");
+            stream
+                .set_read_timeout(Some(Duration::from_secs(2)))
+                .expect("We did not pass a 0 for duration");
+
+            if let Ok(player) = PlayerProxy::try_from_tcp(stream) {
+                connections.push(Box::new(player));
+                eprintln!("Player #{} connected", connections.len());
             }
-            Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
-                yield_now().await //We await here so that we give up execution
-                                  //to tokio for it to decide if we have reached our timeout
-            }
-            Err(e) => Err(e)?,
-        }
+        };
     }
     Ok(())
 }
@@ -58,28 +55,29 @@ pub async fn main() -> io::Result<()> {
         let jsonstate: JsonRefereeState = serde_json::from_reader(stdin())?;
         jsonstate.into()
     };
+    let num_players = state_info.player_info.len();
 
-    let listener = TcpListener::bind(SocketAddr::from(([127, 0, 0, 1], port)))?;
+    let listener = TcpListener::bind(SocketAddr::from(([127, 0, 0, 1], port))).await?;
     eprintln!("Bound to port: {port}");
     let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
     let time_out = timeout(
         TIMEOUT,
-        recieve_connections(&listener, &mut player_connections),
+        recieve_connections(&listener, &mut player_connections, num_players),
     );
 
-    if time_out.await.is_err() && player_connections.len() < 2 {
-        eprintln!("timed out with only {} players", player_connections.len());
+    if time_out.await.is_err() {
+        eprintln!("Timed out with only {} players", player_connections.len());
         // We timed out once but did not have enough players
 
         let time_out = timeout(
             TIMEOUT,
-            recieve_connections(&listener, &mut player_connections),
+            recieve_connections(&listener, &mut player_connections, num_players),
         );
 
-        if time_out.await.is_err() && player_connections.len() < 2 {
+        if time_out.await.is_err() {
             eprintln!(
-                "timed out again with only {} players, ending the game",
+                "Timed out again with only {} players, ending the game",
                 player_connections.len()
             );
             // We waited twice and there is not enough players
