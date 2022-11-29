@@ -84,7 +84,7 @@ impl PrivatePlayerInfo for Player {
     }
 }
 
-const TIMEOUT: Duration = Duration::from_secs(2);
+const TIMEOUT: Duration = Duration::from_secs(4);
 
 impl PlayerApi for Player {
     fn name(&self) -> PlayerApiResult<Name> {
