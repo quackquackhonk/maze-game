@@ -14,6 +14,8 @@ use tokio::time::timeout;
 
 const TIMEOUT: Duration = Duration::from_secs(20);
 
+const NUM_WAITING_PERIODS: u64 = 2;
+
 #[derive(Parser)]
 struct Args {
     #[clap(value_parser = is_port)]
@@ -61,30 +63,21 @@ pub async fn main() -> io::Result<()> {
     eprintln!("Bound to port: {port}");
     let mut player_connections: Vec<Box<dyn PlayerApi>> = vec![];
 
-    let time_out = timeout(
-        TIMEOUT,
-        recieve_connections(&listener, &mut player_connections, num_players),
-    );
-
-    if time_out.await.is_err() {
-        eprintln!("Timed out with only {} players", player_connections.len());
-        // We timed out once but did not have enough players
-
+    for _ in 0..NUM_WAITING_PERIODS {
         let time_out = timeout(
             TIMEOUT,
             recieve_connections(&listener, &mut player_connections, num_players),
         );
-
-        if time_out.await.is_err() {
-            eprintln!(
-                "Timed out again with only {} players, ending the game",
-                player_connections.len()
-            );
-            // We waited twice and there is not enough players
-            let game_result = GameResult::default();
-            println!("{}", serde_json::to_string(&game_result).unwrap());
-            return Ok(());
+        if (time_out.await).is_ok() {
+            break;
         }
+    }
+
+    if player_connections.len() < num_players {
+        // We waited twice and there is not enough players
+        let game_result = GameResult::default();
+        println!("{}", serde_json::to_string(&game_result).unwrap());
+        return Ok(());
     }
 
     let mut state = State {
