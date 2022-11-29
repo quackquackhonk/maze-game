@@ -1,0 +1,36 @@
+[
+    ["shannon","Riemann","takeTurn", 1],
+    ["abby","Riemann", "setUp"],
+    ["iwanttosleep", "Euclid"]
+]
+
+{
+    "board":{
+        "connectors":[
+            ["┤", "┼", "┌", "┐", "┬", "┴", "│", "┼"],
+            ["┬", "┼", "┼", "┼", "─", "─", "┘", "┌"],
+            ["┼", "┼", "┼", "┼", "┘", "┌", "─", "┘"],
+            ["┤", "┼", "├", "─", "┬", "│", "┘", "┼"],
+            ["└", "┼", "┼", "┼", "├", "─", "│", "─"],
+            ["┌", "┼", "┼", "└", "┼", "┴", "┼", "┘"],
+            ["─", "│", "└", "┤", "─", "─", "┬", "├"]
+        ],
+        "treasures": [
+            [["pink-emerald-cut", "iolite-emerald-cut"], ["labradorite", "stilbite"], ["purple-cabochon", "moonstone"], ["clinohumite", "garnet"], ["purple-oval", "kunzite"], ["green-beryl", "citrine"], ["raw-beryl", "ruby-diamond-profile"], ["sphalerite", "morganite-oval"]],
+            [["green-princess-cut", "citrine-checkerboard"], ["kunzite-oval", "blue-pear-shape"], ["ruby", "chrysoberyl-cushion"], ["prehnite", "kunzite"], ["black-spinel-cushion", "bulls-eye"], ["rose-quartz", "red-diamond"], ["apatite", "diamond"], ["purple-cabochon", "bulls-eye"]],
+            [["tigers-eye", "rhodonite"], ["carnelian", "grandidierite"], ["grossular-garnet", "pink-emerald-cut"], ["chrysoberyl-cushion", "green-beryl-antique"], ["rose-quartz", "alexandrite-pear-shape"], ["peridot", "blue-pear-shape"], ["moonstone", "raw-beryl"], ["ammolite", "aplite"]],
+            [["unakite", "unakite"], ["raw-beryl", "aquamarine"], ["jaspilite", "ammolite"], ["green-beryl-antique", "mexican-opal"], ["golden-diamond-cut", "aventurine"], ["purple-square-cushion", "orange-radiant"], ["lemon-quartz-briolette", "super-seven"], ["padparadscha-oval", "purple-oval"]],
+            [["amethyst", "tigers-eye"], ["color-change-oval", "apricot-square-radiant"], ["kunzite-oval", "almandine-garnet"], ["clinohumite", "green-aventurine"], ["blue-pear-shape", "red-spinel-square-emerald-cut"], ["blue-cushion", "purple-square-cushion"], ["jaspilite", "jaspilite"], ["blue-pear-shape", "chrysolite"]],
+            [["chrysolite", "pink-emerald-cut"], ["grandidierite", "mexican-opal"], ["australian-marquise", "purple-square-cushion"], ["alexandrite", "super-seven"], ["blue-spinel-heart", "fancy-spinel-marquise"], ["peridot", "chrysoberyl-cushion"], ["green-princess-cut", "rhodonite"], ["tourmaline-laser-cut", "stilbite"]],
+            [["jaspilite", "citrine-checkerboard"], ["prehnite", "pink-round"], ["australian-marquise", "magnesite"], ["tanzanite-trillion", "hackmanite"], ["almandine-garnet", "grandidierite"], ["hackmanite", "rhodonite"], ["yellow-jasper", "beryl"], ["rhodonite", "blue-cushion"]]
+        ]
+    },
+    "last": [7, "DOWN"],
+    "plmt":[
+        {"color":"blue","current":{"row#":6,"column#":3},"goto":{"row#":5,"column#":7},"home":{"row#":1,"column#":7}},
+        {"color":"yellow","current":{"row#":2,"column#":5},"goto":{"row#":3,"column#":5},"home":{"row#":1,"column#":5}},
+        {"color":"red","current":{"row#":3,"column#":0},"goto":{"row#":1,"column#":1},"home":{"row#":5,"column#":5}}
+    ],
+    "spare":{"1-image":"yellow-beryl-oval","2-image":"apatite","tilekey":"│"}
+}
+

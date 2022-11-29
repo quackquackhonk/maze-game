@@ -1,0 +1,24 @@
+[["Andre", "Riemann", "setUp"], ["Austin", "Euclid"], ["Banana", "Euclid", "setUp", 1]]
+
+{"board": {"connectors": [["┐", "┤", "─", "┌", "┬", "│", "┬"], ["┐", "┴", "│", "┐", "┘", "└", "┌"], ["├", "├", "┤", "├", "─", "┼", "┐"], ["┐", "┐", "│", "│", "┘", "┐", "┼"], ["┬", "├", "┬", "├", "├", "┬", "┘"], ["┤", "┴", "┴", "└", "┐", "┌", "┼"], ["└", "└", "├", "─", "┘", "├", "┌"]], "treasures":
+[[["beryl", "yellow-beryl-oval"], ["kunzite", "green-princess-cut"], ["purple-spinel-trillion", "purple-square-cushion"], ["stilbite", "alexandrite"], ["labradorite", "tigers-eye"], ["dumortierite", "hackmanite"], ["emerald", "sphalerite"]], [["blue-ceylon-sapphire", "lapis-lazuli"], ["white-square", "moonstone"], ["amethyst", "padparadscha-oval"], ["spinel", "apricot-square-radiant"], ["pink-opal", "sunstone"], ["blue-spinel-heart", "yellow-baguette"], ["garnet", "padparadscha-sapphire"]], [["grossular-garnet", "peridot"], ["orange-radiant", "iolite-emerald-cut"], ["star-cabochon", "ruby"], ["pink-emerald-cut", "red-diamond"], ["unakite", "azurite"], ["morganite-oval", "mexican-opal"], ["gray-agate", "rose-quartz"]], [["goldstone", "black-obsidian"], ["prasiolite", "pink-spinel-cushion"], ["yellow-heart", "pink-round"], ["golden-diamond-cut", "kunzite-oval"], ["grandidierite", "bulls-eye"], ["apatite", "blue-pear-shape"], ["green-beryl", "purple-cabochon"]], [["carnelian", "citrine-checkerboard"], ["hematite", "super-seven"], ["rhodonite", "green-beryl-antique"], ["raw-beryl", "prehnite"], ["ametrine", "chrysolite"], ["zoisite", "almandine-garnet"], ["purple-oval", "tourmaline"]], [["tanzanite-trillion", "magnesite"], ["aquamarine", "green-aventurine"], ["clinohumite", "ruby-diamond-profile"], ["jaspilite", "heliotrope"], ["blue-cushion", "alexandrite-pear-shape"], ["chrome-diopside", "chrysoberyl-cushion"], ["color-change-oval", "aventurine"]], [["rock-quartz", "australian-marquise"], ["black-spinel-cushion", "yellow-jasper"], ["lemon-quartz-briolette", "moss-agate"], ["cordierite", "diamond"], ["black-onyx", "zircon"], ["citrine", "tourmaline-laser-cut"], ["ammolite", "jasper"]]]},
+"last": null,
+    "spare": {"tilekey": "┼", "1-image": "gray-agate", "2-image": "citrine"},
+    "plmt": [{
+        "color": "green",
+        "current": {"row#": 5, "column#": 4},
+        "home": {"row#": 5, "column#": 1},
+        "goto": {"row#": 3,"column#": 3}},
+        {
+        "color": "red",
+        "current": {"row#": 1, "column#": 0},
+        "home": {"row#": 1, "column#": 3},
+        "goto": {"row#": 5,"column#": 5}},
+        {
+        "color": "blue",
+        "current": {"row#": 3, "column#": 0},
+        "home": {"row#": 5, "column#": 5},
+        "goto": {"row#": 3,"column#": 3}}
+
+    ]
+  }

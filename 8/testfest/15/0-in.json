@@ -1,0 +1,281 @@
+[["player1", "Euclid", "setUp"], ["player2", "Riemann"]]
+{
+  "board": {
+    "connectors": [
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ],
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ],
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ],
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ],
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ],
+      [
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼",
+        "┼"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "tourmaline",
+          "yellow-jasper"
+        ],
+        [
+          "tourmaline",
+          "black-onyx"
+        ],
+        [
+          "tourmaline",
+          "black-spinel-cushion"
+        ],
+        [
+          "tourmaline",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "tourmaline",
+          "blue-cushion"
+        ],
+        [
+          "tourmaline",
+          "blue-pear-shape"
+        ],
+        [
+          "tourmaline",
+          "blue-spinel-heart"
+        ]
+      ],
+      [
+        [
+          "rock-quartz",
+          "yellow-jasper"
+        ],
+        [
+          "rock-quartz",
+          "black-onyx"
+        ],
+        [
+          "rock-quartz",
+          "black-spinel-cushion"
+        ],
+        [
+          "rock-quartz",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "rock-quartz",
+          "blue-cushion"
+        ],
+        [
+          "rock-quartz",
+          "blue-pear-shape"
+        ],
+        [
+          "rock-quartz",
+          "blue-spinel-heart"
+        ]
+      ],
+      [
+        [
+          "ruby-diamond-profile",
+          "yellow-jasper"
+        ],
+        [
+          "ruby-diamond-profile",
+          "black-onyx"
+        ],
+        [
+          "ruby-diamond-profile",
+          "black-spinel-cushion"
+        ],
+        [
+          "ruby-diamond-profile",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "ruby-diamond-profile",
+          "blue-cushion"
+        ],
+        [
+          "ruby-diamond-profile",
+          "blue-pear-shape"
+        ],
+        [
+          "ruby-diamond-profile",
+          "blue-spinel-heart"
+        ]
+      ],
+      [
+        [
+          "star-cabochon",
+          "yellow-jasper"
+        ],
+        [
+          "star-cabochon",
+          "black-onyx"
+        ],
+        [
+          "star-cabochon",
+          "black-spinel-cushion"
+        ],
+        [
+          "star-cabochon",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "star-cabochon",
+          "blue-cushion"
+        ],
+        [
+          "star-cabochon",
+          "blue-pear-shape"
+        ],
+        [
+          "star-cabochon",
+          "blue-spinel-heart"
+        ]
+      ],
+      [
+        [
+          "tanzanite-trillion",
+          "yellow-jasper"
+        ],
+        [
+          "tanzanite-trillion",
+          "black-onyx"
+        ],
+        [
+          "tanzanite-trillion",
+          "black-spinel-cushion"
+        ],
+        [
+          "tanzanite-trillion",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "tanzanite-trillion",
+          "blue-cushion"
+        ],
+        [
+          "tanzanite-trillion",
+          "blue-pear-shape"
+        ],
+        [
+          "tanzanite-trillion",
+          "blue-spinel-heart"
+        ]
+      ],
+      [
+        [
+          "white-square",
+          "yellow-jasper"
+        ],
+        [
+          "white-square",
+          "black-onyx"
+        ],
+        [
+          "white-square",
+          "black-spinel-cushion"
+        ],
+        [
+          "white-square",
+          "blue-ceylon-sapphire"
+        ],
+        [
+          "white-square",
+          "blue-cushion"
+        ],
+        [
+          "white-square",
+          "blue-pear-shape"
+        ],
+        [
+          "white-square",
+          "blue-spinel-heart"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "┘",
+    "1-image": "star-cabochon",
+    "2-image": "ammolite"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 0,
+        "column#": 0
+      },
+      "home": {
+        "row#": 5,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 5
+      },
+      "color": "red"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 3
+      },
+      "color": "FFFFFF"
+    }
+  ],
+  "last": null
+}

@@ -1,0 +1,153 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/61/Tests/0-in.json /course/cs4500f22/ta/github/8/61/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/8/61/Tests/1-in.json /course/cs4500f22/ta/github/8/61/Tests/1-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("a1ic3" "Riemann" "takeTurn" 2)
+   ("Bob2121" "Euclid" "takeTurn")
+   ("xxxxxxCharx1esxxxxxx" "Euclid" "win" 1)
+   ("pLaYeR4" "Riemann" "setUp"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┌" "─" "┌" "─")
+                     ("┌" "─" "┌" "─")
+                     ("┌" "─" "┌" "─")
+                     ("┌" "─" "┌" "─")
+                     ("┌" "─" "┌" "─")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "alexandrite")
+                      ("alexandrite-pear-shape" "almandine-garnet")
+                      ("alexandrite-pear-shape" "amethyst")
+                      ("alexandrite-pear-shape" "ametrine"))
+                     (("alexandrite-pear-shape" "apricot-square-radiant")
+                      ("alexandrite-pear-shape" "aquamarine")
+                      ("alexandrite-pear-shape" "australian-marquise")
+                      ("alexandrite-pear-shape" "aventurine"))
+                     (("alexandrite-pear-shape" "black-onyx")
+                      ("alexandrite-pear-shape" "black-spinel-cushion")
+                      ("alexandrite-pear-shape" "blue-ceylon-sapphire")
+                      ("alexandrite-pear-shape" "blue-cushion"))
+                     (("alexandrite-pear-shape" "carnelian")
+                      ("alexandrite-pear-shape" "chrome-diopside")
+                      ("alexandrite-pear-shape" "chrysoberyl-cushion")
+                      ("alexandrite-pear-shape" "chrysolite"))
+                     (("alexandrite-pear-shape" "color-change-oval")
+                      ("alexandrite-pear-shape" "cordierite")
+                      ("alexandrite-pear-shape" "diamond")
+                      ("alexandrite-pear-shape" "dumortierite"))))))
+          (last . (4 "UP"))
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 2) (row# . 1)))
+                    (goto . #hasheq((column# . 3) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "1AD3C2")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 3) (row# . 1))))
+            #hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 3)))
+                    (goto . #hasheq((column# . 3) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 3))))
+            #hasheq((color . "333ABC")
+                    (current . #hasheq((column# . 4) (row# . 4)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "super-seven")
+                   (2-image . "white-square")
+                   (tilekey . "┌")))))
+(*** expected)
+'((() ("Bob2121" "a1ic3" "pLaYeR4" "xxxxxxCharx1esxxxxxx")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/61/Tests/3-in.json /course/cs4500f22/ta/github/8/61/Tests/3-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("a1ic3" "Riemann" "takeTurn")
+   ("Bob2121" "Euclid" "takeTurn" 2)
+   ("xxxxxxCharx1esxxxxxx" "Euclid"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┼" "┌" "┼")
+                     ("┌" "┼" "┌")
+                     ("┼" "┌" "┼")
+                     ("┌" "┼" "┌")
+                     ("┼" "┌" "┼")
+                     ("┌" "┼" "┌")
+                     ("┼" "┌" "┼")
+                     ("┌" "┼" "┌")
+                     ("┼" "┌" "┼")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "alexandrite")
+                      ("alexandrite-pear-shape" "almandine-garnet")
+                      ("alexandrite-pear-shape" "amethyst"))
+                     (("alexandrite-pear-shape" "beryl")
+                      ("alexandrite-pear-shape" "black-obsidian")
+                      ("alexandrite-pear-shape" "black-onyx"))
+                     (("alexandrite-pear-shape" "chrysolite")
+                      ("alexandrite-pear-shape" "citrine-checkerboard")
+                      ("alexandrite-pear-shape" "citrine"))
+                     (("alexandrite-pear-shape" "goldstone")
+                      ("alexandrite-pear-shape" "grandidierite")
+                      ("alexandrite-pear-shape" "gray-agate"))
+                     (("alexandrite-pear-shape" "jasper")
+                      ("alexandrite-pear-shape" "jaspilite")
+                      ("alexandrite-pear-shape" "kunzite-oval"))
+                     (("alexandrite-pear-shape" "orange-radiant")
+                      ("alexandrite-pear-shape" "padparadscha-oval")
+                      ("alexandrite-pear-shape" "padparadscha-sapphire"))
+                     (("alexandrite-pear-shape" "purple-spinel-trillion")
+                      ("alexandrite-pear-shape" "purple-square-cushion")
+                      ("alexandrite-pear-shape" "raw-beryl"))
+                     (("alexandrite-pear-shape" "spinel")
+                      ("alexandrite-pear-shape" "star-cabochon")
+                      ("alexandrite-pear-shape" "stilbite"))
+                     (("alexandrite-pear-shape" "yellow-beryl-oval")
+                      ("alexandrite-pear-shape" "yellow-heart")
+                      ("alexandrite-pear-shape" "yellow-jasper"))))))
+          (last . (0 "LEFT"))
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 1) (row# . 3)))
+                    (goto . #hasheq((column# . 1) (row# . 5)))
+                    (home . #hasheq((column# . 1) (row# . 3))))
+            #hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 5)))
+                    (goto . #hasheq((column# . 1) (row# . 7)))
+                    (home . #hasheq((column# . 1) (row# . 5))))))
+          (spare
+           .
+           #hasheq((1-image . "super-seven")
+                   (2-image . "white-square")
+                   (tilekey . "┼")))))
+(*** expected)
+'((("xxxxxxCharx1esxxxxxx") ("Bob2121" "a1ic3")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/61/Tests/0-in.json /course/cs4500f22/ta/github/8/61/Tests/0-out.json))
+((passed 1) (total 3) (partial-score 1))
+

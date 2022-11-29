@@ -1,0 +1,51 @@
+[["bob", "Riemann"], ["Matthias", "Riemann", "setUp"], ["Jack", "Riemann", "takeTurn", 2], ["Jamie", "Riemann", "win", 1]]
+{
+  "board" : {
+    "connectors": [
+      ["│", "│", "│", "│", "│"],
+      ["│", "│", "│", "─", "│"],
+      ["│", "│", "│", "│", "│"],
+      ["│", "─", "│", "│", "│"],
+      ["│", "│", "│", "│", "│"]
+    ],
+    "treasures": [
+      [["alexandrite-pear-shape", "alexandrite"],["alexandrite", "almandine-garnet"],["almandine-garnet", "amethyst"],["amethyst", "ametrine"],["ametrine", "ammolite"]],
+      [["aplite", "apricot-square-radiant"],["apricot-square-radiant", "aquamarine"],["aquamarine", "australian-marquise"],["australian-marquise", "aventurine"],["aventurine", "azurite"]],
+      [["black-obsidian", "black-onyx"],["black-onyx", "black-spinel-cushion"],["black-spinel-cushion", "blue-ceylon-sapphire"],["blue-ceylon-sapphire", "blue-cushion"],["blue-cushion", "blue-pear-shape"]],
+      [["bulls-eye", "carnelian"],["carnelian", "chrome-diopside"],["chrome-diopside", "chrysoberyl-cushion"],["chrysoberyl-cushion", "chrysolite"],["chrysolite", "citrine-checkerboard"]],
+      [["clinohumite", "color-change-oval"],["color-change-oval", "cordierite"],["cordierite", "diamond"],["diamond", "dumortierite"],["dumortierite", "emerald"]]
+      ]
+  },
+  "spare": {
+    "tilekey": "│",
+    "1-image": "green-princess-cut",
+    "2-image": "zircon"
+  },
+  "plmt": [
+    {
+      "goto": { "row#": 3, "column#": 3 },
+      "current": { "row#": 3, "column#": 1 },
+      "home": { "row#": 3, "column#": 1 },
+      "color": "white"
+    },
+    {
+      "current": { "row#": 3, "column#": 3 },
+      "home": { "row#": 3, "column#": 3 },
+      "goto": { "row#": 3, "column#": 3 },
+      "color": "black"
+    },
+    {
+      "current": { "row#": 1, "column#": 1 },
+      "home": { "row#": 1, "column#": 1 },
+      "goto": { "row#": 3, "column#": 3 },
+      "color": "red"
+    },
+    {
+      "current": { "row#": 1, "column#": 3 },
+      "home": { "row#": 1, "column#": 3 },
+      "goto": { "row#": 3, "column#": 3 },
+      "color": "blue"
+    }
+  ],
+  "last": null
+}

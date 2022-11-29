@@ -1,0 +1,32 @@
+[
+  [
+    "aRiemannPlayer",
+    "Riemann"
+  ]
+]
+
+{
+  "board":
+  {
+    "connectors":
+    [["┼","┼"],
+      ["┼","┼"]],
+    "treasures":
+    [[["zoisite","zircon"],["zircon","yellow-jasper"]],
+      [["unakite","tourmaline"],["tourmaline","tourmaline-laser-cut"]]]
+  },
+  "spare":
+  { "tilekey": "┼",
+    "1-image": "zoisite",
+    "2-image": "rose-quartz"
+  },
+  "plmt": [
+    {
+      "current" : { "row#": 0, "column#" : 0 },
+      "home"    : { "row#": 1, "column#" : 1 },
+      "goto"    : { "row#": 1, "column#" : 1 },
+      "color"   : "yellow"
+    }
+  ],
+  "last": null
+}

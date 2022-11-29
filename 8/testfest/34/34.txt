@@ -1,0 +1,5 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/34/Tests/3-in.json /course/cs4500f22/ta/github/8/34/Tests/3-out.json)
+((/course/cs4500f22/ta/github/8/34/Tests/3-in.json /course/cs4500f22/ta/github/8/34/Tests/3-out.json))
+((passed 1) (total 1) (partial-score 1))
+

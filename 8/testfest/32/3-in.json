@@ -1,0 +1,142 @@
+[["Kate", "Euclid", "win", 1],["Jim","Riemann"]]
+{
+  "board": {
+    "connectors": [
+      [
+        "│",
+        "┴",
+        "│"
+      ],
+      [
+        "├",
+        "┌",
+        "┬"
+      ],
+      [
+        "┘",
+        "┌",
+        "┐"
+      ],
+      [
+        "├",
+        "┌",
+        "┌"
+      ],
+      [
+        "┴",
+        "└",
+        "┼"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "yellow-heart",
+          "tourmaline"
+        ],
+        [
+          "blue-spinel-heart",
+          "alexandrite-pear-shape"
+        ],
+        [
+          "carnelian",
+          "yellow-jasper"
+        ]
+      ],
+      [
+        [
+          "stilbite",
+          "bulls-eye"
+        ],
+        [
+          "black-obsidian",
+          "blue-cushion"
+        ],
+        [
+          "blue-ceylon-sapphire",
+          "zircon"
+        ]
+      ],
+      [
+        [
+          "padparadscha-oval",
+          "tanzanite-trillion"
+        ],
+        [
+          "mexican-opal",
+          "grossular-garnet"
+        ],
+        [
+          "ammolite",
+          "golden-diamond-cut"
+        ]
+      ],
+      [
+        [
+          "yellow-jasper",
+          "citrine"
+        ],
+        [
+          "green-beryl-antique",
+          "citrine-checkerboard"
+        ],
+        [
+          "stilbite",
+          "green-princess-cut"
+        ]
+      ],
+      [
+        [
+          "rock-quartz",
+          "ruby"
+        ],
+        [
+          "citrine",
+          "ruby-diamond-profile"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "unakite"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "┘",
+    "1-image": "hematite",
+    "2-image": "goldstone"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "green"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 1
+      },
+      "color": "black"
+    }
+  ],
+  "last": null
+}

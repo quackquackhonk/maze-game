@@ -1,0 +1,7 @@
+[["roliver", "Riemann", "win", 1]]
+{"board":{"connectors":[["┼","┘"],["└","┼"]], 
+"treasures":[[["grandidierite","jasper"],["carnelian","chrysolite"]],[["alexandrite","lapis-lazuli"],["zoisite","yellow-baguette"]]]
+},"last":null,
+"plmt":[{"color":"red","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":0},"home":{"column#":1,"row#":1}}],
+"spare":{"1-image":"super-seven","2-image":"rhodonite","tilekey":"┼"}}
+

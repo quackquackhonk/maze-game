@@ -1,0 +1,19 @@
+[["abe","Riemann"], ["beatrice","Riemann", "takeTurn", 2], ["carol","Riemann", "takeTurn", 4], ["dirk","Riemann", "takeTurn", 6], ["eleni","Riemann", "setUp"]]
+{"board":{
+    "connectors":[
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"],
+        ["─","─","─","─","─","─","─"]],
+    "treasures":[[["ammolite","yellow-baguette"],["goldstone","yellow-beryl-oval"],["amethyst","yellow-heart"],["yellow-heart","zoisite"],["unakite","zoisite"],["tourmaline","zoisite"],["tourmaline-laser-cut","zoisite"]],[["alexandrite-pear-shape","zoisite"],["aplite","unakite"],["golden-diamond-cut","zoisite"],["yellow-beryl-oval","zoisite"],["tigers-eye","zoisite"],["tanzanite-trillion","zoisite"],["super-seven","zoisite"]],[["almandine-garnet","yellow-jasper"],["ametrine","yellow-beryl-oval"],["alexandrite","zircon"],["yellow-baguette","zoisite"],["sunstone","zoisite"],["stilbite","zoisite"],["star-cabochon","zoisite"]],[["zoisite","zoisite"],["zircon","zoisite"],["yellow-jasper","zoisite"],["white-square","zoisite"],["spinel","zoisite"],["sphalerite","zoisite"],["ruby","zoisite"]],[["ruby-diamond-profile","zoisite"],["rose-quartz","zoisite"],["rock-quartz","zoisite"],["rhodonite","zoisite"],["red-spinel-square-emerald-cut","zoisite"],["red-diamond","zoisite"],["raw-citrine","zoisite"]],[["raw-beryl","zoisite"],["purple-square-cushion","zoisite"],["purple-spinel-trillion","zoisite"],["purple-oval","zoisite"],["purple-cabochon","zoisite"],["prehnite","zoisite"],["prasiolite","zoisite"]],[["pink-spinel-cushion","zoisite"],["pink-round","zoisite"],["pink-opal","zoisite"],["pink-emerald-cut","zoisite"],["peridot","zoisite"],["padparadscha-sapphire","zoisite"],["padparadscha-oval","zoisite"]]]},
+    "last":[6, "RIGHT"],
+    "plmt":[
+        {"color":"pink","current":{"column#":0,"row#":0},"home":{"column#":3,"row#":5},"goto":{"column#":3,"row#":3}},
+        {"color":"blue","current":{"column#":0,"row#":0},"home":{"column#":5,"row#":5},"goto":{"column#":1,"row#":5}},
+        {"color":"red","current":{"column#":0,"row#":0},"home":{"column#":5,"row#":3},"goto":{"column#":3,"row#":3}},
+        {"color":"green","current":{"column#":0,"row#":0},"home":{"column#":3,"row#":1},"goto":{"column#":3,"row#":3}},
+        {"color":"yellow","current":{"column#":0,"row#":0},"home":{"column#":5,"row#":1},"goto":{"column#":3,"row#":3}}],
+    "spare":{"1-image":"apatite","2-image":"white-square","tilekey":"─"}}

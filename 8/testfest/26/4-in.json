@@ -1,0 +1,91 @@
+[  ["John", "Euclid", "takeTurn", 7]
+]
+    {
+      "board": {
+        "connectors": [
+          [
+            "├",
+            "├",
+            "┘"
+          ],
+          [
+            "│",
+            "└",
+            "┤"
+          ],
+          [
+            "┤",
+            "│",
+            "│"
+          ]
+        ],
+        "treasures": [
+          [
+            [
+              "prehnite",
+              "tigers-eye"
+            ],
+            [
+              "tourmaline",
+              "lapis-lazuli"
+            ],
+            [
+              "chrysolite",
+              "alexandrite-pear-shape"
+            ]
+          ],
+          [
+            [
+              "yellow-baguette",
+              "rhodonite"
+            ],
+            [
+              "jaspilite",
+              "fancy-spinel-marquise"
+            ],
+            [
+              "green-aventurine",
+              "fancy-spinel-marquise"
+            ]
+          ],
+          [
+            [
+              "yellow-baguette",
+              "goldstone"
+            ],
+            [
+              "labradorite",
+              "azurite"
+            ],
+            [
+              "jasper",
+              "zircon"
+            ]
+          ]
+        ]
+      },
+      "spare": {
+        "tilekey": "┼",
+        "1-image": "ruby",
+        "2-image": "jasper"
+      },
+      "plmt": [
+        {
+          "current": {
+            "row#": 0,
+            "column#": 0
+          },
+          "home": {
+            "row#": 1,
+            "column#": 1
+          },
+          "goto": {
+            "row#": 1,
+            "column#": 1
+          },
+          "color": "FFFFFF"
+        }
+      ],
+      "last": null
+    }
+

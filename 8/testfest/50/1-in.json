@@ -1,0 +1,39 @@
+[["zzzzac","Riemann"],["zzzzab","Riemann"],["zzzzaa", "Riemann"]]
+
+{"board":
+{"connectors":[
+    ["┌","┌","┌","┌","┌","┌"],
+    ["┌","┌","┌","┌","┌","┌"],
+    ["┌","┌","┌","┌","┌","┌"],
+    ["┌","┌","┌","┌","┌","┌"],
+    ["┌","┌","┌","┌","┌","┌"],
+    ["┌","┌","┌","┌","┌","┌"]],
+    
+    "treasures":[
+        [["ruby","ruby-diamond-profile"],["ruby","rose-quartz"],["ruby","rock-quartz"],["ruby","rhodonite"],["ruby","red-spinel-square-emerald-cut"],["ruby","red-diamond"]],
+        [["ruby","raw-beryl"],["ruby","purple-square-cushion"],["ruby","purple-spinel-trillion"],["ruby","purple-oval"],["ruby","purple-cabochon"],["ruby","prehnite"]],
+        [["diamond","kunzite-oval"],["diamond","jaspilite"],["diamond","jasper"],["ruby","yellow-heart"],["ruby","unakite"],["ruby","tourmaline"]],
+        [["diamond","iolite-emerald-cut"],["diamond","hematite"],["diamond","heliotrope"],["ruby","yellow-beryl-oval"],["ruby","tigers-eye"],["ruby","tanzanite-trillion"]],
+        [["diamond","hackmanite"],["diamond","grossular-garnet"],["diamond","green-princess-cut"],["ruby","yellow-baguette"],["ruby","sunstone"],["ruby","stilbite"]],
+        [["ruby","jasper"],["ruby","diamond"],["ruby","yellow-jasper"],["ruby","white-square"],["ruby","spinel"],["ruby","sphalerite"]]]},
+
+        
+        "last":null,
+        "plmt":[
+            {"color":"red",
+            "current":{"column#":2,"row#":2},
+            "goto":{"column#":5,"row#":5},
+            "home":{"column#":3,"row#":3}},
+            
+            {"color":"black",
+            "current":{"column#":2,"row#":2},
+            "goto":{"column#":5,"row#":5},
+            "home":{"column#":5,"row#":5}},
+            
+            {"color":"yellow",
+            "current":{"column#":2,"row#":2},
+            "goto":{"column#":5,"row#":5},
+            "home":{"column#":1,"row#":1}}],
+        
+        "spare":{"1-image":"zoisite","2-image":"blue-cushion","tilekey":"┌"}}
+

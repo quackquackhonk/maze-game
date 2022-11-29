@@ -1,0 +1,14 @@
+Delivery
+5/5 pts: Deliverable Maze/Remote/referee.PP exists
+5/5 pts: Deliverable Maze/Server/server.PP exists
+5/5 pts: Deliverable Maze/Remote/player.PP exists
+5/5 pts: Deliverable Maze/Client/client.PP exists
+5/5 pts: Deliverable 8/xbad2 exists with the right permissions
+5/5 pts: Delivery of test files
+Functionality
+100/100 pts: Passed 5 out of 5 tests (see test-results.txt)
+40/100 pts: 2 valid tests (see test-audit-results.txt)
+40/60 bonus pts (other teams failing your tests)
+Inspection
+110/110 pts: See inspection.md
+Total: 320/340 pts

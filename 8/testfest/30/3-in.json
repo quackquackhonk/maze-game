@@ -1,0 +1,22 @@
+[["shannon","Riemann", "win"],["abby","Riemann", "win", 1]]
+{
+    "board":{
+        "connectors":[
+            ["┤", "┌", "├", "┼", "┼"], 
+            ["┼", "│", "│", "├", "┘"], 
+            ["┼", "┌", "┼", "┼", "┘"]
+        ],
+        "treasures":[
+            [["unakite", "purple-square-cushion"], ["tourmaline", "morganite-oval"], ["citrine-checkerboard", "rock-quartz"], ["color-change-oval", "sunstone"], ["hematite", "zoisite"]], 
+            [["emerald", "bulls-eye"], ["tanzanite-trillion", "blue-ceylon-sapphire"], ["jaspilite", "blue-spinel-heart"], ["unakite", "garnet"], ["kunzite", "purple-oval"]], 
+            [["black-onyx", "rock-quartz"], ["prasiolite", "ruby"], ["chrome-diopside", "stilbite"], ["bulls-eye", "australian-marquise"], ["morganite-oval", "ammolite"]]
+        ]
+    },
+    "last":null,
+    "plmt":[
+        {"color":"blue","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":1},"home":{"column#":1,"row#":1}},
+        {"color":"yellow","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":3,"row#":1}}
+    ],
+    "spare":{"1-image":"yellow-beryl-oval","2-image":"apatite","tilekey":"│"}
+}
+

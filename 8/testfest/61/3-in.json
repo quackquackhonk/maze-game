@@ -1,0 +1,88 @@
+[["a1ic3", "Riemann", "takeTurn"], ["Bob2121", "Euclid", "takeTurn", 2], ["xxxxxxCharx1esxxxxxx", "Euclid"]]
+
+
+{
+    "board": {
+        "connectors": [
+            ["┼", "┌", "┼"],
+            ["┌", "┼", "┌"],
+            ["┼", "┌", "┼"],
+            ["┌", "┼", "┌"],
+            ["┼", "┌", "┼"],
+            ["┌", "┼", "┌"],
+            ["┼", "┌", "┼"],
+            ["┌", "┼", "┌"],
+            ["┼", "┌", "┼"]
+        ],
+        "treasures": [
+            [
+                ["alexandrite-pear-shape", "alexandrite"],
+                ["alexandrite-pear-shape", "almandine-garnet"],
+                ["alexandrite-pear-shape", "amethyst"]
+            ],
+            [
+                ["alexandrite-pear-shape", "beryl"],
+                ["alexandrite-pear-shape", "black-obsidian"],
+                ["alexandrite-pear-shape", "black-onyx"]
+            ],
+            [
+                ["alexandrite-pear-shape", "chrysolite"],
+                ["alexandrite-pear-shape", "citrine-checkerboard"],
+                ["alexandrite-pear-shape", "citrine"]
+            ],
+            [
+                ["alexandrite-pear-shape", "goldstone"],
+                ["alexandrite-pear-shape", "grandidierite"],
+                ["alexandrite-pear-shape", "gray-agate"]
+            ],
+            [  
+                ["alexandrite-pear-shape", "jasper"],
+                ["alexandrite-pear-shape", "jaspilite"],
+                ["alexandrite-pear-shape", "kunzite-oval"]
+            ],
+            [
+                ["alexandrite-pear-shape", "orange-radiant"],
+                ["alexandrite-pear-shape", "padparadscha-oval"],
+                ["alexandrite-pear-shape", "padparadscha-sapphire"]
+            ],
+            [
+                ["alexandrite-pear-shape", "purple-spinel-trillion"],
+                ["alexandrite-pear-shape", "purple-square-cushion"],
+                ["alexandrite-pear-shape", "raw-beryl"]
+            ],
+            [
+                ["alexandrite-pear-shape", "spinel"],
+                ["alexandrite-pear-shape", "star-cabochon"],
+                ["alexandrite-pear-shape", "stilbite"]
+            ],
+            [
+                ["alexandrite-pear-shape", "yellow-beryl-oval"],
+                ["alexandrite-pear-shape", "yellow-heart"],
+                ["alexandrite-pear-shape", "yellow-jasper"]
+            ]
+        ]
+    },
+    "spare": {"tilekey": "┼", "1-image": "super-seven", "2-image": "white-square"},
+    "plmt": [
+        {
+            "current": {"row#": 1, "column#": 1},
+            "home": {"row#": 1, "column#": 1},
+            "color": "orange",
+            "goto": {"row#": 3, "column#": 1}
+        },
+        {
+            "current": {"row#": 3, "column#": 1},
+            "home": {"row#": 3, "column#": 1},
+            "color": "blue",
+            "goto": {"row#": 5, "column#": 1}
+        },
+        {
+            "current": {"row#": 5, "column#": 1},
+            "home": {"row#": 5, "column#": 1},
+            "color": "red",
+            "goto": {"row#": 7, "column#": 1}
+        }
+    ],
+    "last": [0, "LEFT"]
+}
+

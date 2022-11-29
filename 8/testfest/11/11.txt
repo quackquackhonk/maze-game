@@ -1,0 +1,46 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/11/Tests/0-in.json /course/cs4500f22/ta/github/8/11/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/8/11/Tests/1-in.json /course/cs4500f22/ta/github/8/11/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/8/11/Tests/2-in.json /course/cs4500f22/ta/github/8/11/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/8/11/Tests/4-in.json /course/cs4500f22/ta/github/8/11/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("thomas" "Riemann" "setUp" 2))
+  #hasheq((board
+           .
+           #hasheq((connectors . (("┬" "┐" "─") ("└" "│" "─") ("─" "│" "│")))
+                   (treasures
+                    .
+                    ((("zircon" "red-spinel-square-emerald-cut")
+                      ("zircon" "red-diamond")
+                      ("zircon" "raw-citrine"))
+                     (("yellow-heart" "pink-spinel-cushion")
+                      ("yellow-heart" "pink-emerald-cut")
+                      ("yellow-heart" "peridot"))
+                     (("yellow-heart" "padparadscha-sapphire")
+                      ("zircon" "raw-beryl")
+                      ("zircon" "purple-square-cushion"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "pink")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "yellow-beryl-oval")
+                   (2-image . "apatite")
+                   (tilekey . "┬")))))
+(*** expected)
+'((() ("thomas")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/11/Tests/0-in.json /course/cs4500f22/ta/github/8/11/Tests/0-out.json) (/course/cs4500f22/ta/github/8/11/Tests/1-in.json /course/cs4500f22/ta/github/8/11/Tests/1-out.json) (/course/cs4500f22/ta/github/8/11/Tests/2-in.json /course/cs4500f22/ta/github/8/11/Tests/2-out.json))
+((passed 3) (total 4) (partial-score 3))
+

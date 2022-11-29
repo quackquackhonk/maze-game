@@ -1,0 +1,49 @@
+[
+  [
+    "FourMoveDerek",
+    "Euclid"
+  ],
+  [
+    "TwoMoveKickedNick",
+    "Euclid",
+    "setUp",
+    2
+  ]
+]
+
+{
+    "board":
+      {
+        "connectors":
+       [["┼","┼","┼","┼"],
+        ["┼","┼","┼","┼"],
+        ["┼","┼","┼","┼"],
+        ["┼","┼","┼","┼"]],
+        "treasures":
+          [[["zoisite","zircon"],["zircon","yellow-jasper"],["yellow-jasper","yellow-heart"],["yellow-heart","yellow-beryl-oval"]],
+          [["unakite","tourmaline"],["tourmaline","tourmaline-laser-cut"],["tourmaline-laser-cut","tigers-eye"],["tigers-eye","tanzanite-trillion"]],
+          [["stilbite","star-cabochon"],["star-cabochon","spinel"],["spinel","sphalerite"],["sphalerite","ruby"]],
+          [["rock-quartz","rhodonite"],["rhodonite","red-spinel-square-emerald-cut"],["red-spinel-square-emerald-cut","red-diamond"],["red-diamond","raw-citrine"]]]
+      },
+    "spare":
+      { "tilekey": "┼",
+        "1-image": "zoisite",
+        "2-image": "rose-quartz"
+      },
+    "plmt": [
+      {
+        "current" : { "row#": 1, "column#" : 1 },
+        "home"    : { "row#": 1, "column#" : 1 },
+        "goto"    : { "row#": 1, "column#" : 1 },
+        "color"   : "green"
+      },
+      {
+        "current" : { "row#": 3, "column#" : 3 },
+        "home"    : { "row#": 3, "column#" : 3 },
+        "goto"    : { "row#": 3, "column#" : 3 },
+        "color"   : "red"
+      }
+    ],
+    "last": null
+}
+

@@ -1,0 +1,24 @@
+[["Andre", "Riemann", "setUp", 1], ["James", "Euclid", "setUp", 1], ["Banana", "Euclid", "setUp", 1]]
+
+{"board": {"connectors":[["│", "─", "│", "└", "┬", "┐", "├"], ["┼", "│", "┐", "┐", "├", "┴", "┼"], ["├", "─", "┴", "┐", "┤", "┴", "┬"], ["├", "┴", "┌", "└", "┼", "┘", "│"], ["┼", "├", "┬", "│", "┤", "┌", "┘"], ["┘", "│", "│", "┴", "└", "┬", "└"], ["┤", "├", "┤", "─", "┤", "├", "├"]], "treasures":
+[[["chrysolite", "kunzite"], ["carnelian", "green-princess-cut"], ["goldstone", "apatite"], ["aplite", "tourmaline"], ["raw-citrine", "emerald"], ["zircon", "red-spinel-square-emerald-cut"], ["almandine-garnet", "amethyst"]], [["purple-spinel-trillion", "rhodonite"], ["australian-marquise", "green-aventurine"], ["tigers-eye", "pink-emerald-cut"], ["stilbite", "kunzite-oval"], ["yellow-jasper", "lapis-lazuli"], ["heliotrope", "chrome-diopside"], ["white-square", "peridot"]], [["color-change-oval", "padparadscha-sapphire"], ["fancy-spinel-marquise", "morganite-oval"], ["jasper", "green-beryl"], ["alexandrite", "apricot-square-radiant"], ["cordierite", "black-onyx"], ["rock-quartz", "mexican-opal"], ["diamond", "pink-spinel-cushion"]], [["hematite", "blue-ceylon-sapphire"], ["citrine-checkerboard", "black-obsidian"], ["orange-radiant", "hackmanite"], ["blue-cushion", "ametrine"], ["magnesite", "purple-oval"], ["ammolite", "raw-beryl"], ["iolite-emerald-cut", "purple-square-cushion"]], [["black-spinel-cushion", "ruby"], ["padparadscha-oval", "blue-spinel-heart"], ["yellow-beryl-oval", "purple-cabochon"], ["prehnite", "super-seven"], ["alexandrite-pear-shape", "grossular-garnet"], ["golden-diamond-cut", "chrysoberyl-cushion"], ["aventurine", "green-beryl-antique"]], [["lemon-quartz-briolette", "jaspilite"], ["bulls-eye", "ruby-diamond-profile"], ["prasiolite", "moonstone"], ["gray-agate", "labradorite"], ["tourmaline-laser-cut", "spinel"], ["star-cabochon", "aquamarine"], ["dumortierite", "yellow-baguette"]], [["pink-opal", "red-diamond"], ["unakite", "blue-pear-shape"], ["citrine", "garnet"], ["zoisite", "tanzanite-trillion"], ["sphalerite", "clinohumite"], ["rose-quartz", "azurite"], ["sunstone", "beryl"]]]},
+"last": null,
+    "spare": {"tilekey": "┬", "1-image": "beryl", "2-image": "moonstone"},
+    "plmt": [{
+        "color": "green",
+        "current": {"row#": 2, "column#": 3},
+        "home": {"row#": 5, "column#": 5},
+        "goto": {"row#": 1,"column#": 1}},
+        {
+        "color": "red",
+        "current": {"row#": 3, "column#": 6},
+        "home": {"row#": 1, "column#": 5},
+        "goto": {"row#": 3,"column#": 1}},
+        {
+        "color": "blue",
+        "current": {"row#": 1, "column#": 0},
+        "home": {"row#": 5, "column#": 1},
+        "goto": {"row#": 3,"column#": 3}}
+
+    ]
+  }

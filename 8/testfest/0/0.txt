@@ -1,0 +1,156 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/0/Tests/0-in.json /course/cs4500f22/ta/github/8/0/Tests/0-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("oli" "Riemann")
+   ("eadam" "Euclid")
+   ("ebob" "Euclid")
+   ("joselyn" "Euclid" "setUp" 1))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┐" "─" "└" "│" "─")
+                     ("│" "┼" "│" "│" "┌")
+                     ("┐" "─" "┌" "│" "├")
+                     ("─" "─" "─" "│" "┼")
+                     ("┐" "└" "┌" "┘" "┬")))
+                   (treasures
+                    .
+                    ((("sphalerite" "tigers-eye")
+                      ("sphalerite" "tanzanite-trillion")
+                      ("sphalerite" "super-seven")
+                      ("purple-cabochon" "tanzanite-trillion")
+                      ("purple-cabochon" "star-cabochon"))
+                     (("sphalerite" "sunstone")
+                      ("sphalerite" "stilbite")
+                      ("sphalerite" "star-cabochon")
+                      ("purple-cabochon" "super-seven")
+                      ("purple-cabochon" "ruby"))
+                     (("sphalerite" "spinel")
+                      ("sphalerite" "sphalerite")
+                      ("ruby" "zoisite")
+                      ("purple-cabochon" "sunstone")
+                      ("purple-cabochon" "rock-quartz"))
+                     (("purple-cabochon" "tourmaline")
+                      ("purple-cabochon" "tourmaline-laser-cut")
+                      ("purple-cabochon" "tigers-eye")
+                      ("purple-cabochon" "stilbite")
+                      ("purple-cabochon" "red-diamond"))
+                     (("purple-cabochon" "purple-square-cushion")
+                      ("purple-cabochon" "purple-spinel-trillion")
+                      ("purple-cabochon" "purple-oval")
+                      ("purple-cabochon" "purple-cabochon")
+                      ("prehnite" "zoisite"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 1))))
+            #hasheq((color . "red")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 3))))
+            #hasheq((color . "green")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "prehnite")
+                   (2-image . "sphalerite")
+                   (tilekey . "┤")))))
+(*** expected)
+'((("oli") ("joselyn")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/0/Tests/1-in.json /course/cs4500f22/ta/github/8/0/Tests/1-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("oli" "Riemann" "win")
+   ("eadam" "Euclid" "takeTurn")
+   ("ebob" "Euclid" "takeTurn" 2)
+   ("joselyn" "Euclid" "setUp" 1))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┐" "─" "└" "│" "─")
+                     ("│" "┼" "│" "│" "┌")
+                     ("┐" "─" "┌" "│" "├")
+                     ("─" "─" "─" "│" "┼")
+                     ("┐" "└" "┌" "┘" "┬")))
+                   (treasures
+                    .
+                    ((("sphalerite" "tigers-eye")
+                      ("sphalerite" "tanzanite-trillion")
+                      ("sphalerite" "super-seven")
+                      ("purple-cabochon" "tanzanite-trillion")
+                      ("purple-cabochon" "star-cabochon"))
+                     (("sphalerite" "sunstone")
+                      ("sphalerite" "stilbite")
+                      ("sphalerite" "star-cabochon")
+                      ("purple-cabochon" "super-seven")
+                      ("purple-cabochon" "ruby"))
+                     (("sphalerite" "spinel")
+                      ("sphalerite" "sphalerite")
+                      ("ruby" "zoisite")
+                      ("purple-cabochon" "sunstone")
+                      ("purple-cabochon" "rock-quartz"))
+                     (("purple-cabochon" "tourmaline")
+                      ("purple-cabochon" "tourmaline-laser-cut")
+                      ("purple-cabochon" "tigers-eye")
+                      ("purple-cabochon" "stilbite")
+                      ("purple-cabochon" "red-diamond"))
+                     (("purple-cabochon" "purple-square-cushion")
+                      ("purple-cabochon" "purple-spinel-trillion")
+                      ("purple-cabochon" "purple-oval")
+                      ("purple-cabochon" "purple-cabochon")
+                      ("prehnite" "zoisite"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 1))))
+            #hasheq((color . "red")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 3))))
+            #hasheq((color . "green")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "prehnite")
+                   (2-image . "sphalerite")
+                   (tilekey . "┤")))))
+(*** expected)
+'((() ("eadam" "ebob" "joselyn" "oli")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+()
+((passed 0) (total 2) (partial-score 0))
+

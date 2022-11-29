@@ -1,0 +1,85 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/50/Tests/1-in.json /course/cs4500f22/ta/github/8/50/Tests/1-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("zzzzac" "Riemann") ("zzzzab" "Riemann") ("zzzzaa" "Riemann"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┌" "┌" "┌" "┌" "┌" "┌")
+                     ("┌" "┌" "┌" "┌" "┌" "┌")
+                     ("┌" "┌" "┌" "┌" "┌" "┌")
+                     ("┌" "┌" "┌" "┌" "┌" "┌")
+                     ("┌" "┌" "┌" "┌" "┌" "┌")
+                     ("┌" "┌" "┌" "┌" "┌" "┌")))
+                   (treasures
+                    .
+                    ((("ruby" "ruby-diamond-profile")
+                      ("ruby" "rose-quartz")
+                      ("ruby" "rock-quartz")
+                      ("ruby" "rhodonite")
+                      ("ruby" "red-spinel-square-emerald-cut")
+                      ("ruby" "red-diamond"))
+                     (("ruby" "raw-beryl")
+                      ("ruby" "purple-square-cushion")
+                      ("ruby" "purple-spinel-trillion")
+                      ("ruby" "purple-oval")
+                      ("ruby" "purple-cabochon")
+                      ("ruby" "prehnite"))
+                     (("diamond" "kunzite-oval")
+                      ("diamond" "jaspilite")
+                      ("diamond" "jasper")
+                      ("ruby" "yellow-heart")
+                      ("ruby" "unakite")
+                      ("ruby" "tourmaline"))
+                     (("diamond" "iolite-emerald-cut")
+                      ("diamond" "hematite")
+                      ("diamond" "heliotrope")
+                      ("ruby" "yellow-beryl-oval")
+                      ("ruby" "tigers-eye")
+                      ("ruby" "tanzanite-trillion"))
+                     (("diamond" "hackmanite")
+                      ("diamond" "grossular-garnet")
+                      ("diamond" "green-princess-cut")
+                      ("ruby" "yellow-baguette")
+                      ("ruby" "sunstone")
+                      ("ruby" "stilbite"))
+                     (("ruby" "jasper")
+                      ("ruby" "diamond")
+                      ("ruby" "yellow-jasper")
+                      ("ruby" "white-square")
+                      ("ruby" "spinel")
+                      ("ruby" "sphalerite"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 2) (row# . 2)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 3) (row# . 3))))
+            #hasheq((color . "black")
+                    (current . #hasheq((column# . 2) (row# . 2)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 5) (row# . 5))))
+            #hasheq((color . "yellow")
+                    (current . #hasheq((column# . 2) (row# . 2)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 1) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "zoisite")
+                   (2-image . "blue-cushion")
+                   (tilekey . "┌")))))
+(*** expected)
+'((("zzzzaa" "zzzzab" "zzzzac") ()))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+()
+((passed 0) (total 1) (partial-score 0))
+

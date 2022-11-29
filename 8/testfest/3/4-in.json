@@ -1,0 +1,18 @@
+[["Roxy","Riemann", "takeTurn", 3],["Toby","Riemann"],["Scuba","Euclid"]]
+{"board":{"connectors":
+[["┬", "└", "│", "│", "│", "┬"],
+ ["┴", "┴", "┤", "└", "│", "┴"],
+ ["─", "─", "┘", "│", "└", "─"],
+ ["─", "└", "─", "┼", "─", "─"],
+ ["─", "─", "┐", "│", "┌", "─"]],
+ "treasures": 
+[[["beryl", "alexandrite-pear-shape"],["beryl", "alexandrite"],["beryl", "almandine-garnet"],["beryl", "amethyst"],["beryl", "ametrine"],["beryl", "ammolite"]],
+ [["beryl", "aplite"],["beryl", "apricot-square-radiant"],["beryl", "aquamarine"],["beryl", "australian-marquise"],["beryl", "aventurine"],["beryl", "azurite"]],
+ [["beryl", "black-onyx"],["beryl", "black-spinel-cushion"],["beryl", "blue-ceylon-sapphire"],["beryl", "blue-cushion"],["beryl", "blue-pear-shape"],["beryl", "blue-spinel-heart"]],
+ [["beryl", "carnelian"],["beryl", "chrome-diopside"],["beryl", "chrysoberyl-cushion"],["beryl", "chrysolite"],["beryl", "citrine-checkerboard"],["beryl", "citrine"]],
+ [["beryl", "color-change-oval"],["beryl", "cordierite"],["beryl", "diamond"],["beryl", "dumortierite"],["beryl", "emerald"],["beryl", "fancy-spinel-marquise"]]]},
+"last":[4,"DOWN"],
+"plmt":[{"color":"pink","current":{"column#":4,"row#":4},"goto":{"column#":1,"row#":3},"home":{"column#":1,"row#":1}},
+        {"color":"yellow","current":{"column#":2,"row#":0},"goto":{"column#":5,"row#":3},"home":{"column#":3,"row#":3}},
+        {"color":"CABBAC","current":{"column#":1,"row#":0},"goto":{"column#":1,"row#":3},"home":{"column#":5,"row#":3}}],
+"spare":{"1-image":"beryl","2-image":"kunzite","tilekey":"─"}}

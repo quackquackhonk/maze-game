@@ -1,0 +1,16 @@
+[["roliver", "Riemann", "setUp", 1], ["ebrett", "Euclid", "takeTurn", 1], ["rcarl", "Riemann", "win", 1]]
+{"board":{"connectors":[
+    ["┘","┘","┘","┘","┘","┘","┘"],
+    ["│","│","│","│","│","│","│"],
+    ["┘","┘","┘","┘","┘","┘","┘"],
+    ["┘","┘","┘","┘","┘","┘","┘"],
+    ["┘","┘","┘","┘","┘","┘","┘"],
+    ["│","│","│","│","│","│","│"],
+    ["┘","┘","┘","┘","┘","┘","┘"]], 
+"treasures":[[["jasper","kunzite-oval"],["aplite","orange-radiant"],["mexican-opal","clinohumite"],["unakite","pink-opal"],["golden-diamond-cut","raw-citrine"],["almandine-garnet","aventurine"],["green-princess-cut","gray-agate"]],[["yellow-jasper","zircon"],["golden-diamond-cut","alexandrite"],["tourmaline-laser-cut","spinel"],["mexican-opal","padparadscha-sapphire"],["iolite-emerald-cut","black-obsidian"],["green-beryl-antique","green-beryl"],["super-seven","white-square"]],[["yellow-jasper","green-aventurine"],["ametrine","lemon-quartz-briolette"],["unakite","amethyst"],["blue-pear-shape","red-spinel-square-emerald-cut"],["padparadscha-sapphire","kunzite-oval"],["blue-cushion","citrine"],["blue-ceylon-sapphire","green-beryl"]],[["zoisite","green-beryl-antique"],["tourmaline","purple-square-cushion"],["golden-diamond-cut","beryl"],["australian-marquise","bulls-eye"],["ametrine","padparadscha-sapphire"],["ruby-diamond-profile","australian-marquise"],["black-spinel-cushion","citrine-checkerboard"]],[["chrome-diopside","kunzite-oval"],["tanzanite-trillion","black-spinel-cushion"],["raw-beryl","heliotrope"],["ruby","sunstone"],["apatite","morganite-oval"],["blue-cushion","red-spinel-square-emerald-cut"],["ruby","peridot"]],[["purple-oval","zircon"],["purple-spinel-trillion","diamond"],["goldstone","rock-quartz"],["citrine","diamond"],["pink-round","hackmanite"],["grossular-garnet","grossular-garnet"],["white-square","sunstone"]],[["yellow-heart","clinohumite"],["red-diamond","prehnite"],["ruby","red-diamond"],["citrine-checkerboard","purple-spinel-trillion"],["chrome-diopside","blue-ceylon-sapphire"],["red-spinel-square-emerald-cut","pink-round"],["blue-cushion","padparadscha-sapphire"]]]
+},"last":null,
+"plmt":[{"color":"orange","current":{"column#":2,"row#":4},"goto":{"column#":5,"row#":5},"home":{"column#":5,"row#":5}},
+{"color":"purple","current":{"column#":5,"row#":4},"goto":{"column#":5,"row#":1},"home":{"column#":1,"row#":1}},
+{"color":"black","current":{"column#":2,"row#":3},"goto":{"column#":3,"row#":1},"home":{"column#":5,"row#":3}}],
+"spare":{"1-image":"super-seven","2-image":"peridot","tilekey":"┘"}}
+

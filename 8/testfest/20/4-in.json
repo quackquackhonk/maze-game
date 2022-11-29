@@ -1,0 +1,37 @@
+
+[
+    ["C","Euclid", "takeTurn", 3]
+]
+
+
+{
+    "board": {
+        "connectors" :  [   ["┼", "┼"],
+                            ["┼", "┼"]
+                        ],
+        "treasures" :  [
+                            [
+                                [ "pink-emerald-cut", "mexican-opal" ],
+                                [ "green-aventurine", "ruby-diamond-profile" ]
+                            ],
+                            [
+                                [ "ammolite", "hematite" ],
+                                [ "jasper", "sphalerite" ]
+                            ]
+                        ]
+    },
+    "spare": {
+        "tilekey": "┼",
+        "1-image": "cordierite",
+        "2-image": "green-aventurine"
+    },
+    "plmt": [
+        {
+            "current": { "row#": 0, "column#": 1 },
+            "home": { "row#": 1, "column#": 1 },
+            "goto": { "row#": 1, "column#": 1 },
+            "color": "red"
+        }
+    ],
+    "last": null
+}

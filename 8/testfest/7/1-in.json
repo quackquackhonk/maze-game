@@ -1,0 +1,52 @@
+[
+    ["Zoe", "Riemann"],
+    ["Xena", "Euclid", "win", 1]
+]
+  {
+    "board": {
+      "connectors": [
+        ["│", "│", "│", "│"],
+        ["│", "│", "│", "│"],
+        ["│", "│", "│", "│"]
+      ],
+      "treasures": [ [ [ "alexandrite", "almandine-garnet" ], [ "alexandrite", "amethyst" ], [ "alexandrite", "ametrine" ], [ "alexandrite", "ammolite" ] ], [ [ "alexandrite", "aquamarine" ], [ "alexandrite", "australian-marquise" ], [ "alexandrite", "aventurine" ], [ "alexandrite", "azurite" ] ], [ [ "alexandrite", "blue-ceylon-sapphire" ], [ "alexandrite", "blue-cushion" ], [ "alexandrite", "blue-pear-shape" ], [ "alexandrite", "blue-spinel-heart" ] ] ]
+    },
+    "plmt": [
+      {
+        "current": {
+          "row#": 1,
+          "column#": 1
+        },
+        "home": {
+          "row#": 1,
+          "column#": 1
+        },
+        "goto": {
+          "row#": 1,
+          "column#": 3
+        },
+        "color": "red"
+      },
+      {
+        "current": {
+          "row#": 1,
+          "column#": 3
+        },
+        "home": {
+          "row#": 1,
+          "column#": 3
+        },
+        "goto": {
+          "row#": 1,
+          "column#": 1
+        },
+        "color": "blue"
+      }
+    ],
+    "spare": {
+      "tilekey": "┌",
+      "1-image": "ruby",
+      "2-image": "diamond"
+    },
+    "last": null
+  }

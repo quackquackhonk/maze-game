@@ -1,0 +1,19 @@
+[["Hello", "Riemann"], ["Banana", "Euclid", "setUp", 1]]
+
+{"board": {"connectors":[["┬", "┴", "│", "┘", "┘", "└", "├"], ["┐", "┼", "┤", "┼", "└", "┴", "─"], ["┼", "┌", "┤", "┐", "─", "┴", "┴"], ["┌", "└", "─", "─", "└", "└", "─"], ["┐", "┐", "┌", "┴", "│", "└", "─"], ["┬", "│", "┘", "┼", "└", "┼", "└"], ["┤", "└", "─", "┌", "├", "┤", "└"]], "treasures":
+[[["kunzite-oval", "purple-oval"], ["goldstone", "chrysolite"], ["black-spinel-cushion", "moonstone"], ["apricot-square-radiant", "diamond"], ["jaspilite", "dumortierite"], ["yellow-jasper", "tanzanite-trillion"], ["apatite", "zircon"]], [["aquamarine", "sphalerite"], ["beryl", "azurite"], ["hematite", "purple-cabochon"], ["unakite", "yellow-heart"], ["australian-marquise", "sunstone"], ["mexican-opal", "purple-spinel-trillion"], ["citrine", "magnesite"]], [["yellow-beryl-oval", "grossular-garnet"], ["red-diamond", "orange-radiant"], ["raw-beryl", "green-princess-cut"], ["almandine-garnet", "tigers-eye"], ["prehnite", "blue-cushion"], ["green-aventurine", "padparadscha-sapphire"], ["chrysoberyl-cushion", "tourmaline"]], [["rose-quartz", "amethyst"], ["color-change-oval", "alexandrite"], ["star-cabochon", "spinel"], ["blue-spinel-heart", "ruby-diamond-profile"], ["blue-ceylon-sapphire", "prasiolite"], ["raw-citrine", "ruby"], ["lemon-quartz-briolette", "yellow-baguette"]], [["alexandrite-pear-shape", "labradorite"], ["kunzite", "peridot"], ["citrine-checkerboard", "zoisite"], ["golden-diamond-cut", "green-beryl"], ["bulls-eye", "aplite"], ["green-beryl-antique", "pink-spinel-cushion"], ["pink-opal", "lapis-lazuli"]], [["iolite-emerald-cut", "emerald"], ["ametrine", "stilbite"], ["aventurine", "cordierite"], ["white-square", "heliotrope"], ["black-obsidian", "hackmanite"], ["purple-square-cushion", "rock-quartz"], ["gray-agate", "grandidierite"]], [["garnet", "ammolite"], ["chrome-diopside", "pink-round"], ["moss-agate", "blue-pear-shape"], ["fancy-spinel-marquise", "rhodonite"], ["black-onyx", "morganite-oval"], ["clinohumite", "jasper"], ["tourmaline-laser-cut", "pink-emerald-cut"]]]},
+"last": null,
+    "spare": {"tilekey": "─", "1-image": "beryl", "2-image": "sphalerite"},
+    "plmt": [{
+        "color": "green",
+        "current": {"row#": 1, "column#": 3},
+        "home": {"row#": 5, "column#": 3},
+        "goto": {"row#": 1,"column#": 1}},
+        {
+        "color": "red",
+        "current": {"row#": 4, "column#": 6},
+        "home": {"row#": 1, "column#": 1},
+        "goto": {"row#": 3,"column#": 1}}
+
+    ]
+  }

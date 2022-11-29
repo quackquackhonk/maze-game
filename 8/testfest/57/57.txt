@@ -1,0 +1,86 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/57/Tests/0-in.json /course/cs4500f22/ta/github/8/57/Tests/0-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("roliver" "Riemann" "takeTurn" 2) ("ebrett" "Euclid" "win"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("│" "│" "│" "│") ("─" "─" "─" "─") ("─" "─" "─" "─")))
+                   (treasures
+                    .
+                    ((("almandine-garnet" "golden-diamond-cut")
+                      ("ametrine" "zoisite")
+                      ("prasiolite" "moss-agate")
+                      ("blue-pear-shape" "bulls-eye"))
+                     (("aventurine" "padparadscha-sapphire")
+                      ("moonstone" "amethyst")
+                      ("green-beryl" "blue-cushion")
+                      ("blue-pear-shape" "australian-marquise"))
+                     (("tourmaline" "aplite")
+                      ("ametrine" "orange-radiant")
+                      ("alexandrite-pear-shape" "alexandrite-pear-shape")
+                      ("morganite-oval" "aquamarine"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "pink")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 3) (row# . 0)))
+                    (home . #hasheq((column# . 1) (row# . 2))))
+            #hasheq((color . "black")
+                    (current . #hasheq((column# . 0) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 2) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "ruby-diamond-profile")
+                   (2-image . "alexandrite-pear-shape")
+                   (tilekey . "┼")))))
+(*** expected)
+'((() ("ebrett" "roliver")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/57/Tests/3-in.json /course/cs4500f22/ta/github/8/57/Tests/3-out.json)
+(testing /course/cs4500f22/ta/github/8/57/Tests/4-in.json /course/cs4500f22/ta/github/8/57/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("roliver" "Riemann" "win" 1))
+  #hasheq((board
+           .
+           #hasheq((connectors . (("┼" "┘") ("└" "┼")))
+                   (treasures
+                    .
+                    ((("grandidierite" "jasper") ("carnelian" "chrysolite"))
+                     (("alexandrite" "lapis-lazuli")
+                      ("zoisite" "yellow-baguette"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 0)))
+                    (home . #hasheq((column# . 1) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "super-seven")
+                   (2-image . "rhodonite")
+                   (tilekey . "┼")))))
+(*** expected)
+'((() ("roliver")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/57/Tests/3-in.json /course/cs4500f22/ta/github/8/57/Tests/3-out.json))
+((passed 1) (total 3) (partial-score 1))
+

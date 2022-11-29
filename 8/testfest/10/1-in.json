@@ -1,0 +1,68 @@
+[
+  ["Adam", "Riemann"],
+  ["David", "Euclid", "takeTurn", 2]
+]
+
+{
+
+
+  "board" :
+  {"connectors" :
+
+  [["┌", "┐", "┘", "┘", "┘"],
+    ["┘", "└", "┐", "┘", "┘"],
+    ["┘", "┘", "└", "┘", "┘"]],
+
+    "treasures" :
+
+    [[["ammolite", "lemon-quartz-briolette"],
+      ["azurite", "jasper"],
+      ["citrine-checkerboard", "orange-radiant"],
+      ["chrome-diopside", "pink-spinel-cushion"],
+      ["white-square", "raw-citrine"]],
+      [["heliotrope", "fancy-spinel-marquise"],
+        ["chrome-diopside", "zircon"],
+        ["purple-spinel-trillion", "yellow-beryl-oval"],
+        ["stilbite", "emerald"],
+        ["jaspilite", "pink-opal"]],
+      [["sunstone", "magnesite"],
+        ["black-obsidian", "australian-marquise"],
+        ["prasiolite", "purple-cabochon"],
+        ["zoisite", "orange-radiant"],
+        ["black-spinel-cushion", "blue-ceylon-sapphire"]]
+      ]},
+
+
+
+
+  "spare" :
+  {
+    "tilekey" : "┼",
+    "1-image" : "emerald",
+    "2-image" : "diamond"
+  },
+
+
+
+
+  "plmt" :
+  [
+    {
+      "current" : {"row#" : 1, "column#" : 1},
+      "home" : {"row#" : 1, "column#" : 1},
+      "goto" : {"row#" : 1, "column#" : 3},
+      "color" : "red"
+    },
+    {
+      "current" : {"row#" : 1, "column#" : 3},
+      "home" : {"row#" : 1, "column#" : 3},
+      "goto" : {"row#" : 1, "column#" : 1},
+      "color" : "green"
+    }
+  ],
+
+
+
+
+  "last" : null
+}

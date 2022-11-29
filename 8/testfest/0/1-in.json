@@ -1,0 +1,117 @@
+[[ "oli", "Riemann", "win"],[ "eadam", "Euclid", "takeTurn"],[ "ebob", "Euclid", "takeTurn", 2],[ "joselyn", "Euclid", "setUp", 1]]
+{
+    "board": {
+        "connectors": [
+            [ "┐", "─", "└", "│", "─"],
+            [ "│", "┼", "│", "│", "┌"],
+            [ "┐", "─", "┌", "│", "├"],
+            [ "─", "─", "─", "│", "┼"],
+            [ "┐", "└", "┌", "┘", "┬"]
+        ],
+        "treasures": [
+            [
+                [ "sphalerite", "tigers-eye" ],
+                [ "sphalerite", "tanzanite-trillion" ],
+                [ "sphalerite", "super-seven" ],
+                [ "purple-cabochon", "tanzanite-trillion" ],
+                [ "purple-cabochon", "star-cabochon" ]
+            ],
+            [
+                [ "sphalerite", "sunstone" ],
+                [ "sphalerite", "stilbite" ],
+                [ "sphalerite", "star-cabochon" ],
+                [ "purple-cabochon", "super-seven" ],
+                [ "purple-cabochon", "ruby" ]
+            ],
+            [
+                [ "sphalerite", "spinel" ],
+                [ "sphalerite", "sphalerite" ],
+                [ "ruby", "zoisite" ],
+                [ "purple-cabochon", "sunstone" ],
+                [ "purple-cabochon", "rock-quartz" ]
+            ],
+            [
+                [ "purple-cabochon", "tourmaline" ],
+                [ "purple-cabochon", "tourmaline-laser-cut" ],
+                [ "purple-cabochon", "tigers-eye" ],
+                [ "purple-cabochon", "stilbite" ],
+                [ "purple-cabochon", "red-diamond" ]
+            ],
+            [
+                [ "purple-cabochon", "purple-square-cushion" ],
+                [ "purple-cabochon", "purple-spinel-trillion" ],
+                [ "purple-cabochon", "purple-oval" ],
+                [ "purple-cabochon", "purple-cabochon" ],
+                [ "prehnite", "zoisite" ]
+            ]
+        ]
+    },
+    "last": null,
+    "plmt": [
+        {
+            "color": "orange",
+            "current": {
+                "column#": 0,
+                "row#": 0
+            },
+            "goto": {
+                "column#": 1,
+                "row#": 1
+            },
+            "home": {
+                "column#": 1,
+                "row#": 1
+            }
+        },
+        {
+            "color": "blue",
+            "current": {
+                "column#": 0,
+                "row#": 0
+            },
+            "goto": {
+                "column#": 1,
+                "row#": 1
+            },
+            "home": {
+                "column#": 3,
+                "row#": 1
+            }
+        },
+        {
+            "color": "red",
+            "current": {
+                "column#": 0,
+                "row#": 0
+            },
+            "goto": {
+                "column#": 1,
+                "row#": 1
+            },
+            "home": {
+                "column#": 1,
+                "row#": 3
+            }
+        },
+        {
+            "color": "green",
+            "current": {
+                "column#": 0,
+                "row#": 0
+            },
+            "goto": {
+                "column#": 1,
+                "row#": 1
+            },
+            "home": {
+                "column#": 3,
+                "row#": 3
+            }
+        }
+    ],
+    "spare": {
+        "1-image": "prehnite",
+        "2-image": "sphalerite",
+        "tilekey": "┤"
+    }
+}

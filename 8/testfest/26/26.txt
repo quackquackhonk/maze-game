@@ -1,0 +1,45 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/26/Tests/0-in.json /course/cs4500f22/ta/github/8/26/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/8/26/Tests/1-in.json /course/cs4500f22/ta/github/8/26/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/8/26/Tests/2-in.json /course/cs4500f22/ta/github/8/26/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/8/26/Tests/3-in.json /course/cs4500f22/ta/github/8/26/Tests/3-out.json)
+(testing /course/cs4500f22/ta/github/8/26/Tests/4-in.json /course/cs4500f22/ta/github/8/26/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("John" "Euclid" "takeTurn" 7))
+  #hasheq((board
+           .
+           #hasheq((connectors . (("├" "├" "┘") ("│" "└" "┤") ("┤" "│" "│")))
+                   (treasures
+                    .
+                    ((("prehnite" "tigers-eye")
+                      ("tourmaline" "lapis-lazuli")
+                      ("chrysolite" "alexandrite-pear-shape"))
+                     (("yellow-baguette" "rhodonite")
+                      ("jaspilite" "fancy-spinel-marquise")
+                      ("green-aventurine" "fancy-spinel-marquise"))
+                     (("yellow-baguette" "goldstone")
+                      ("labradorite" "azurite")
+                      ("jasper" "zircon"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "FFFFFF")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "ruby") (2-image . "jasper") (tilekey . "┼")))))
+(*** expected)
+'((("John") ()))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/26/Tests/0-in.json /course/cs4500f22/ta/github/8/26/Tests/0-out.json) (/course/cs4500f22/ta/github/8/26/Tests/1-in.json /course/cs4500f22/ta/github/8/26/Tests/1-out.json) (/course/cs4500f22/ta/github/8/26/Tests/2-in.json /course/cs4500f22/ta/github/8/26/Tests/2-out.json) (/course/cs4500f22/ta/github/8/26/Tests/3-in.json /course/cs4500f22/ta/github/8/26/Tests/3-out.json))
+((passed 4) (total 5) (partial-score 4))
+

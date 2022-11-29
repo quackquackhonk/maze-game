@@ -1,0 +1,341 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+[
+
+
+
+  ["John", "Euclid", "takeTurn"],
+  ["peter", "Riemann", "win"
+]]
+    {
+      "board": {
+        "connectors": [
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ],
+          [
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼",
+            "┼"
+          ]
+        ],
+        "treasures": [
+          [
+            [
+              "blue-ceylon-sapphire",
+              "kunzite-oval"
+            ],
+            [
+              "pink-opal",
+              "pink-emerald-cut"
+            ],
+            [
+              "alexandrite-pear-shape",
+              "goldstone"
+            ],
+            [
+              "prasiolite",
+              "orange-radiant"
+            ],
+            [
+              "super-seven",
+              "stilbite"
+            ],
+            [
+              "raw-citrine",
+              "kunzite"
+            ],
+            [
+              "prehnite",
+              "sphalerite"
+            ]
+          ],
+          [
+            [
+              "black-onyx",
+              "orange-radiant"
+            ],
+            [
+              "jaspilite",
+              "clinohumite"
+            ],
+            [
+              "blue-spinel-heart",
+              "mexican-opal"
+            ],
+            [
+              "grandidierite",
+              "fancy-spinel-marquise"
+            ],
+            [
+              "gray-agate",
+              "zircon"
+            ],
+            [
+              "zircon",
+              "azurite"
+            ],
+            [
+              "zoisite",
+              "fancy-spinel-marquise"
+            ]
+          ],
+          [
+            [
+              "alexandrite-pear-shape",
+              "almandine-garnet"
+            ],
+            [
+              "ruby",
+              "padparadscha-oval"
+            ],
+            [
+              "magnesite",
+              "diamond"
+            ],
+            [
+              "blue-pear-shape",
+              "ruby-diamond-profile"
+            ],
+            [
+              "lapis-lazuli",
+              "chrysoberyl-cushion"
+            ],
+            [
+              "apatite",
+              "fancy-spinel-marquise"
+            ],
+            [
+              "stilbite",
+              "peridot"
+            ]
+          ],
+          [
+            [
+              "unakite",
+              "alexandrite-pear-shape"
+            ],
+            [
+              "cordierite",
+              "gray-agate"
+            ],
+            [
+              "garnet",
+              "star-cabochon"
+            ],
+            [
+              "amethyst",
+              "morganite-oval"
+            ],
+            [
+              "rose-quartz",
+              "magnesite"
+            ],
+            [
+              "chrysolite",
+              "chrysolite"
+            ],
+            [
+              "raw-beryl",
+              "super-seven"
+            ]
+          ],
+          [
+            [
+              "jasper",
+              "tigers-eye"
+            ],
+            [
+              "color-change-oval",
+              "sunstone"
+            ],
+            [
+              "prasiolite",
+              "pink-emerald-cut"
+            ],
+            [
+              "pink-spinel-cushion",
+              "blue-pear-shape"
+            ],
+            [
+              "pink-opal",
+              "gray-agate"
+            ],
+            [
+              "yellow-baguette",
+              "red-diamond"
+            ],
+            [
+              "chrome-diopside",
+              "pink-spinel-cushion"
+            ]
+          ],
+          [
+            [
+              "ruby-diamond-profile",
+              "apricot-square-radiant"
+            ],
+            [
+              "tourmaline",
+              "golden-diamond-cut"
+            ],
+            [
+              "prehnite",
+              "yellow-jasper"
+            ],
+            [
+              "moonstone",
+              "padparadscha-sapphire"
+            ],
+            [
+              "jaspilite",
+              "red-diamond"
+            ],
+            [
+              "emerald",
+              "fancy-spinel-marquise"
+            ],
+            [
+              "heliotrope",
+              "green-beryl"
+            ]
+          ],
+          [
+            [
+              "tigers-eye",
+              "garnet"
+            ],
+            [
+              "almandine-garnet",
+              "prehnite"
+            ],
+            [
+              "jasper",
+              "blue-spinel-heart"
+            ],
+            [
+              "green-beryl-antique",
+              "jaspilite"
+            ],
+            [
+              "yellow-beryl-oval",
+              "star-cabochon"
+            ],
+            [
+              "chrysolite",
+              "alexandrite"
+            ],
+            [
+              "padparadscha-sapphire",
+              "peridot"
+            ]
+          ]
+        ]
+      },
+      "spare": {
+        "tilekey": "┼",
+        "1-image": "ruby",
+        "2-image": "jasper"
+      },
+      "plmt": [
+        {
+          "current": {
+            "row#": 0,
+            "column#": 0
+          },
+          "home": {
+            "row#": 3,
+            "column#": 5
+          },
+          "goto": {
+            "row#": 5,
+            "column#": 1
+          },
+          "color": "FFFFFF"
+        },
+        {
+          "current": {
+            "row#": 0,
+            "column#": 0
+          },
+          "home": {
+            "row#": 3,
+            "column#": 1
+          },
+          "goto": {
+            "row#": 3,
+            "column#": 3
+          },
+          "color": "red"
+        }
+      ],
+      "last": null
+    }
+
+

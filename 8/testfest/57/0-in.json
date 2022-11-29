@@ -1,0 +1,11 @@
+[["roliver", "Riemann", "takeTurn", 2], ["ebrett", "Euclid", "win"]]
+{"board":{"connectors":[
+    ["│","│","│","│"],
+    ["─","─","─","─"], 
+    ["─","─","─","─"]], 
+"treasures":[[["almandine-garnet","golden-diamond-cut"],["ametrine","zoisite"],["prasiolite","moss-agate"],["blue-pear-shape","bulls-eye"]],[["aventurine","padparadscha-sapphire"],["moonstone","amethyst"],["green-beryl","blue-cushion"],["blue-pear-shape","australian-marquise"]],[["tourmaline","aplite"],["ametrine","orange-radiant"],["alexandrite-pear-shape","alexandrite-pear-shape"],["morganite-oval","aquamarine"]]]
+},"last":null,
+"plmt":[{"color":"pink","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":0},"home":{"column#":1,"row#":2}},
+{"color":"black","current":{"column#":0,"row#":1},"goto":{"column#":1,"row#":1},"home":{"column#":2,"row#":1}}],
+"spare":{"1-image":"ruby-diamond-profile","2-image":"alexandrite-pear-shape","tilekey":"┼"}}
+

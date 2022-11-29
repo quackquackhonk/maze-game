@@ -1,0 +1,34 @@
+[["rcarl","Riemann"],["shannon","Riemann"],["abby","Riemann", "takeTurn", 2], ["matthias", "Riemann", "setUp"]]
+{
+    "board":{
+        "connectors":[
+            ["─", "│", "┼", "─", "┼", "┘", "└", "│", "┬", "┴"], 
+            ["└", "┼", "│", "─", "│", "┬", "┤", "┼", "┤", "│"], 
+            ["┼", "┐", "│", "│", "┼", "┐", "├", "└", "┐", "┬"], 
+            ["│", "┼", "│", "┐", "├", "─", "┼", "├", "┘", "├"], 
+            ["│", "┤", "┤", "─", "├", "─", "┐", "┐", "┘", "│"], 
+            ["─", "└", "│", "└", "┼", "├", "─", "┴", "─", "─"], 
+            ["┤", "┼", "┌", "┼", "┼", "┌", "┘", "┼", "┼", "┤"], 
+            ["┼", "│", "└", "┼", "┼", "┼", "│", "┼", "┼", "┼"], 
+            ["┼", "│", "┼", "┼", "┐", "│", "┼", "┴", "┼", "│"]],
+        "treasures":[
+            [["tigers-eye", "lapis-lazuli"], ["purple-oval", "ametrine"], ["pink-spinel-cushion", "padparadscha-sapphire"], ["orange-radiant", "kunzite-oval"], ["rose-quartz", "diamond"], ["pink-opal", "rose-quartz"], ["golden-diamond-cut", "red-diamond"], ["pink-spinel-cushion", "spinel"], ["tourmaline", "lapis-lazuli"], ["rock-quartz", "yellow-heart"]], 
+            [["magnesite", "magnesite"], ["padparadscha-oval", "emerald"], ["aplite", "orange-radiant"], ["lapis-lazuli", "blue-pear-shape"], ["mexican-opal", "rock-quartz"], ["yellow-heart", "dumortierite"], ["apricot-square-radiant", "sphalerite"], ["star-cabochon", "mexican-opal"], ["ammolite", "citrine-checkerboard"], ["unakite", "aventurine"]], 
+            [["ammolite", "tanzanite-trillion"], ["padparadscha-oval", "orange-radiant"], ["red-diamond", "purple-square-cushion"], ["gray-agate", "cordierite"], ["purple-spinel-trillion", "citrine"], ["carnelian", "kunzite-oval"], ["padparadscha-oval", "green-beryl-antique"], ["kunzite-oval", "aplite"], ["rose-quartz", "pink-emerald-cut"], ["pink-spinel-cushion", "carnelian"]], 
+            [["super-seven", "chrysolite"], ["iolite-emerald-cut", "lapis-lazuli"], ["golden-diamond-cut", "ruby-diamond-profile"], ["pink-emerald-cut", "pink-opal"], ["goldstone", "grossular-garnet"], ["star-cabochon", "prehnite"], ["clinohumite", "blue-pear-shape"], ["yellow-heart", "tourmaline-laser-cut"], ["yellow-heart", "rose-quartz"], ["fancy-spinel-marquise", "gray-agate"]], 
+            [["star-cabochon", "sphalerite"], ["zircon", "pink-round"], ["aventurine", "citrine-checkerboard"], ["tourmaline-laser-cut", "tourmaline-laser-cut"], ["red-diamond", "blue-spinel-heart"], ["chrysoberyl-cushion", "purple-oval"], ["red-diamond", "moonstone"], ["spinel", "chrysoberyl-cushion"], ["blue-pear-shape", "orange-radiant"], ["raw-beryl", "jaspilite"]], 
+            [["green-princess-cut", "chrome-diopside"], ["grossular-garnet", "azurite"], ["hackmanite", "cordierite"], ["tourmaline-laser-cut", "hackmanite"], ["white-square", "super-seven"], ["hematite", "iolite-emerald-cut"], ["blue-pear-shape", "zircon"], ["spinel", "sphalerite"], ["alexandrite-pear-shape", "green-princess-cut"], ["kunzite-oval", "zoisite"]], 
+            [["diamond", "purple-cabochon"], ["amethyst", "yellow-heart"], ["rose-quartz", "alexandrite-pear-shape"], ["mexican-opal", "purple-cabochon"], ["padparadscha-oval", "tourmaline-laser-cut"], ["pink-spinel-cushion", "blue-ceylon-sapphire"], ["pink-round", "cordierite"], ["raw-citrine", "purple-cabochon"], ["blue-spinel-heart", "orange-radiant"], ["apricot-square-radiant", "diamond"]], 
+            [["green-beryl", "almandine-garnet"], ["rock-quartz", "unakite"], ["chrome-diopside", "pink-opal"], ["apricot-square-radiant", "moss-agate"], ["unakite", "cordierite"], ["jasper", "black-spinel-cushion"], ["super-seven", "green-beryl-antique"], ["purple-square-cushion", "green-beryl-antique"], ["golden-diamond-cut", "bulls-eye"], ["rose-quartz", "blue-cushion"]], 
+            [["iolite-emerald-cut", "jaspilite"], ["tanzanite-trillion", "almandine-garnet"], ["gray-agate", "pink-opal"], ["stilbite", "hackmanite"], ["tourmaline-laser-cut", "zoisite"], ["mexican-opal", "blue-pear-shape"], ["heliotrope", "purple-cabochon"], ["citrine-checkerboard", "mexican-opal"], ["dumortierite", "beryl"], ["lemon-quartz-briolette", "red-diamond"]]]
+    },
+    "last":null,
+    "plmt":[
+        {"color":"blue","current":{"column#":0,"row#":0},"goto":{"column#":5,"row#":5},"home":{"column#":3,"row#":3}},
+        {"color":"yellow","current":{"column#":0,"row#":0},"goto":{"column#":9,"row#":7},"home":{"column#":9,"row#":9}},
+        {"color":"pink","current":{"column#":2,"row#":3},"goto":{"column#":3,"row#":2},"home":{"column#":5,"row#":3}},
+        {"color":"purple","current":{"column#":3,"row#":3},"goto":{"column#":5,"row#":7},"home":{"column#":1,"row#":1}}
+    ],
+    "spare":{"1-image":"yellow-beryl-oval","2-image":"apatite","tilekey":"│"}
+}
+

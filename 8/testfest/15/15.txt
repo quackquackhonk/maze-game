@@ -1,0 +1,88 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/15/Tests/0-in.json /course/cs4500f22/ta/github/8/15/Tests/0-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("player1" "Euclid" "setUp") ("player2" "Riemann"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┼" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("┼" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("┼" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("┼" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("┼" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("┼" "┼" "┼" "┼" "┼" "┼" "┼")))
+                   (treasures
+                    .
+                    ((("tourmaline" "yellow-jasper")
+                      ("tourmaline" "black-onyx")
+                      ("tourmaline" "black-spinel-cushion")
+                      ("tourmaline" "blue-ceylon-sapphire")
+                      ("tourmaline" "blue-cushion")
+                      ("tourmaline" "blue-pear-shape")
+                      ("tourmaline" "blue-spinel-heart"))
+                     (("rock-quartz" "yellow-jasper")
+                      ("rock-quartz" "black-onyx")
+                      ("rock-quartz" "black-spinel-cushion")
+                      ("rock-quartz" "blue-ceylon-sapphire")
+                      ("rock-quartz" "blue-cushion")
+                      ("rock-quartz" "blue-pear-shape")
+                      ("rock-quartz" "blue-spinel-heart"))
+                     (("ruby-diamond-profile" "yellow-jasper")
+                      ("ruby-diamond-profile" "black-onyx")
+                      ("ruby-diamond-profile" "black-spinel-cushion")
+                      ("ruby-diamond-profile" "blue-ceylon-sapphire")
+                      ("ruby-diamond-profile" "blue-cushion")
+                      ("ruby-diamond-profile" "blue-pear-shape")
+                      ("ruby-diamond-profile" "blue-spinel-heart"))
+                     (("star-cabochon" "yellow-jasper")
+                      ("star-cabochon" "black-onyx")
+                      ("star-cabochon" "black-spinel-cushion")
+                      ("star-cabochon" "blue-ceylon-sapphire")
+                      ("star-cabochon" "blue-cushion")
+                      ("star-cabochon" "blue-pear-shape")
+                      ("star-cabochon" "blue-spinel-heart"))
+                     (("tanzanite-trillion" "yellow-jasper")
+                      ("tanzanite-trillion" "black-onyx")
+                      ("tanzanite-trillion" "black-spinel-cushion")
+                      ("tanzanite-trillion" "blue-ceylon-sapphire")
+                      ("tanzanite-trillion" "blue-cushion")
+                      ("tanzanite-trillion" "blue-pear-shape")
+                      ("tanzanite-trillion" "blue-spinel-heart"))
+                     (("white-square" "yellow-jasper")
+                      ("white-square" "black-onyx")
+                      ("white-square" "black-spinel-cushion")
+                      ("white-square" "blue-ceylon-sapphire")
+                      ("white-square" "blue-cushion")
+                      ("white-square" "blue-pear-shape")
+                      ("white-square" "blue-spinel-heart"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 5) (row# . 3)))
+                    (home . #hasheq((column# . 5) (row# . 5))))
+            #hasheq((color . "FFFFFF")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 3) (row# . 5)))
+                    (home . #hasheq((column# . 1) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "star-cabochon")
+                   (2-image . "ammolite")
+                   (tilekey . "┘")))))
+(*** expected)
+'((("player2") ("player1")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/15/Tests/4-in.json /course/cs4500f22/ta/github/8/15/Tests/4-out.json)
+((/course/cs4500f22/ta/github/8/15/Tests/4-in.json /course/cs4500f22/ta/github/8/15/Tests/4-out.json))
+((passed 1) (total 2) (partial-score 1))
+

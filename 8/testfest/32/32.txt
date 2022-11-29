@@ -1,0 +1,61 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/32/Tests/1-in.json /course/cs4500f22/ta/github/8/32/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/8/32/Tests/2-in.json /course/cs4500f22/ta/github/8/32/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/8/32/Tests/3-in.json /course/cs4500f22/ta/github/8/32/Tests/3-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("Kate" "Euclid" "win" 1) ("Jim" "Riemann"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("│" "┴" "│")
+                     ("├" "┌" "┬")
+                     ("┘" "┌" "┐")
+                     ("├" "┌" "┌")
+                     ("┴" "└" "┼")))
+                   (treasures
+                    .
+                    ((("yellow-heart" "tourmaline")
+                      ("blue-spinel-heart" "alexandrite-pear-shape")
+                      ("carnelian" "yellow-jasper"))
+                     (("stilbite" "bulls-eye")
+                      ("black-obsidian" "blue-cushion")
+                      ("blue-ceylon-sapphire" "zircon"))
+                     (("padparadscha-oval" "tanzanite-trillion")
+                      ("mexican-opal" "grossular-garnet")
+                      ("ammolite" "golden-diamond-cut"))
+                     (("yellow-jasper" "citrine")
+                      ("green-beryl-antique" "citrine-checkerboard")
+                      ("stilbite" "green-princess-cut"))
+                     (("rock-quartz" "ruby")
+                      ("citrine" "ruby-diamond-profile")
+                      ("fancy-spinel-marquise" "unakite"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "green")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "black")
+                    (current . #hasheq((column# . 1) (row# . 3)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "hematite")
+                   (2-image . "goldstone")
+                   (tilekey . "┘")))))
+(*** expected)
+'((() ("Kate")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/32/Tests/1-in.json /course/cs4500f22/ta/github/8/32/Tests/1-out.json) (/course/cs4500f22/ta/github/8/32/Tests/2-in.json /course/cs4500f22/ta/github/8/32/Tests/2-out.json))
+((passed 2) (total 3) (partial-score 2))
+

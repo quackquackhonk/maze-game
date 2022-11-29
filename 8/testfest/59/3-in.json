@@ -1,0 +1,17 @@
+[["bill","Euclid", "setUp", 3],["max","Euclid", "win"],["matthias","Riemann", "takeTurn"]]
+{"board":{
+    "connectors":[
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"],
+        ["┼","┼","┼","┼","┼","┼","┼"]],
+    "treasures":[[["diamond","red-spinel-square-emerald-cut"],["diamond","red-diamond"],["zircon","diamond"],["garnet","pink-spinel-cushion"],["garnet","pink-emerald-cut"],["garnet","peridot"],["garnet","padparadscha-sapphire"]],[["zircon","raw-beryl"],["zircon","purple-square-cushion"],["zircon","purple-spinel-trillion"],["garnet","pink-round"],["garnet","padparadscha-oval"],["garnet","orange-radiant"],["garnet","moss-agate"]],[["garnet","purple-cabochon"],["garnet","prehnite"],["garnet","prasiolite"],["garnet","pink-opal"],["garnet","morganite-oval"],["garnet","moonstone"],["garnet","mexican-opal"]],[["garnet","magnesite"],["garnet","lemon-quartz-briolette"],["garnet","lapis-lazuli"],["garnet","labradorite"],["garnet","kunzite"],["garnet","kunzite-oval"],["garnet","jaspilite"]],[["garnet","jasper"],["garnet","iolite-emerald-cut"],["garnet","hematite"],["garnet","heliotrope"],["garnet","hackmanite"],["garnet","grossular-garnet"],["garnet","green-princess-cut"]],[["garnet","green-beryl"],["garnet","green-beryl-antique"],["garnet","green-aventurine"],["garnet","gray-agate"],["garnet","grandidierite"],["garnet","goldstone"],["garnet","golden-diamond-cut"]],[["garnet","yellow-heart"],["garnet","fancy-spinel-marquise"],["garnet","emerald"],["garnet","dumortierite"],["garnet","diamond"],["garnet","cordierite"],["garnet","color-change-oval"]]]},
+    "last":null,
+    "plmt":[{"color":"red","current":{"column#":1,"row#":1},"goto":{"column#":5,"row#":5},"home":{"column#":1,"row#":1}},
+            {"color":"green","current":{"column#":2,"row#":2},"goto":{"column#":1,"row#":5},"home":{"column#":3,"row#":5}},
+            {"color":"blue","current":{"column#":3,"row#":3},"goto":{"column#":5,"row#":3},"home":{"column#":3,"row#":3}}],
+    "spare":{"1-image":"apatite","2-image":"yellow-beryl-oval","tilekey":"┼"}}
+

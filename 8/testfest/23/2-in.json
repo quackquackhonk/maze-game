@@ -1,0 +1,86 @@
+[["velocity","Euclid", "takeTurn"],
+ ["speed","Euclid"],
+ ["energy","Euclid", "takeTurn", 7]]
+{"board":
+ {"connectors":
+  [["─", "─", "─", "─", "┤", "─", "─"],
+   ["─", "─", "─", "─", "─", "│", "─"],
+   ["┐", "┌", "─", "─", "┼", "─", "─"],
+   ["─", "│", "─", "─", "─", "─", "─"],
+   ["─", "─", "─", "─", "─", "─", "─"],
+   ["─", "─", "─", "─", "─", "─", "─"],
+   ["─", "─", "─", "─", "─", "─", "─"]],
+  "treasures":
+  [
+			[
+				["aplite", "alexandrite-pear-shape"],
+				["aplite", "alexandrite"],
+				["aplite", "almandine-garnet"],
+				["aplite", "amethyst"],
+				["aplite", "ametrine"],
+				["aplite", "ammolite"],
+				["aplite", "apatite"]
+			],
+			[
+				["aplite", "apricot-square-radiant"],
+				["aplite", "aquamarine"],
+				["aplite", "australian-marquise"],
+				["aplite", "aventurine"],
+				["aplite", "azurite"],
+				["aplite", "beryl"],
+				["aplite", "black-obsidian"]
+			],
+			[
+				["aplite", "black-onyx"],
+				["aplite", "black-spinel-cushion"],
+				["aplite", "blue-ceylon-sapphire"],
+				["aplite", "blue-cushion"],
+				["aplite", "blue-pear-shape"],
+				["aplite", "blue-spinel-heart"],
+				["aplite", "bulls-eye"]
+			],
+			[
+				["aplite", "carnelian"],
+				["aplite", "chrome-diopside"],
+				["aplite", "chrysoberyl-cushion"],
+				["aplite", "chrysolite"],
+				["aplite", "citrine-checkerboard"],
+				["aplite", "citrine"],
+				["aplite", "clinohumite"]
+			],
+			[
+				["aplite", "color-change-oval"],
+				["aplite", "cordierite"],
+				["aplite", "diamond"],
+				["aplite", "dumortierite"],
+				["aplite", "emerald"],
+				["aplite", "fancy-spinel-marquise"],
+				["aplite", "garnet"]
+			],
+			[
+				["aplite", "golden-diamond-cut"],
+				["aplite", "goldstone"],
+				["aplite", "grandidierite"],
+				["aplite", "gray-agate"],
+				["aplite", "green-aventurine"],
+				["aplite", "green-beryl-antique"],
+				["aplite", "green-beryl"]
+			],
+			[
+				["aplite", "green-princess-cut"],
+				["aplite", "grossular-garnet"],
+				["aplite", "hackmanite"],
+				["aplite", "heliotrope"],
+				["aplite", "hematite"],
+				["aplite", "iolite-emerald-cut"],
+				["aplite", "jasper"]
+			]
+		]
+	},
+  
+  "last":null,
+ "plmt":[{"color":"blue","current":{"column#":6,"row#":6},"goto":{"column#":1,"row#":3},"home":{"column#":1,"row#":1}},
+         {"color":"red","current":{"column#":2,"row#":0},"goto":{"column#":3,"row#":1},"home":{"column#":3,"row#":5}},
+         {"color":"green","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":5},"home":{"column#":3,"row#":3}}],
+ "spare":{"1-image":"tourmaline-laser-cut","2-image":"white-square","tilekey":"┼"}}
+

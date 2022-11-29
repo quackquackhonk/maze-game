@@ -1,0 +1,718 @@
+[
+  [
+    "Aromas",
+    "Riemann",
+    "setUp",
+    1
+
+  ],
+  [
+    "Bromas",
+    "Riemann",
+    "setUp",
+    2
+  ],
+  [
+    "Cromas",
+    "Euclid",
+    "setUp",
+    1
+  ],
+  [
+    "Domas",
+    "Euclid",
+    "setUp",
+    2
+  ],
+  [
+    "Eromas",
+    "Riemann",
+    "setUp",
+    1
+  ],
+  [
+    "Fromas",
+    "Riemann",
+    "setUp"
+  ],
+  [
+    "Gromas",
+    "Riemann",
+    "setUp",
+    1
+  ],
+  [
+    "Hromas",
+    "Euclid",
+    "setUp",
+    2
+  ],
+  [
+    "Iromas",
+    "Euclid",
+    "setUp"
+  ],
+    [
+    "Jomas",
+    "Riemann",
+    "setUp",
+    1
+
+  ],
+  [
+    "Kromas",
+    "Riemann",
+    "setUp",
+    2
+  ],
+  [
+    "Lomas",
+    "Euclid",
+    "setUp",
+    1
+  ],
+  [
+    "Momas",
+    "Euclid",
+    "setUp",
+    2
+  ],
+  [
+    "Nomas",
+    "Riemann",
+    "setUp",
+    1
+  ],
+  [
+    "Oromas",
+    "Riemann",
+    "setUp",
+    2
+  ],
+  [
+    "Promas",
+    "Riemann",
+    "setUp"
+  ]
+]
+
+{
+  "board": {
+    "connectors": [
+      [
+        "┌",
+        "─",
+        "─",
+        "─",
+        "─",
+        "─",
+        "┐",
+        "┼"
+      ],
+      [
+        "┴",
+        "┴",
+        "┼",
+        "┼",
+        "─",
+        "┴",
+        "│",
+        "┼"
+      ],
+      [
+        "│",
+        "┼",
+        "┴",
+        "─",
+        "┼",
+        "┼",
+        "│",
+        "┼"
+      ],
+      [
+        "│",
+        "┼",
+        "─",
+        "┴",
+        "┌",
+        "┤",
+        "│",
+        "┼"
+      ],
+      [
+        "│",
+        "┴",
+        "┤",
+        "┼",
+        "┼",
+        "┤",
+        "│",
+        "┼"
+      ],
+      [
+        "│",
+        "─",
+        "┌",
+        "┌",
+        "┴",
+        "─",
+        "│",
+        "┼"
+      ],
+      [
+        "└",
+        "─",
+        "─",
+        "─",
+        "─",
+        "─",
+        "┘",
+        "┼"
+      ],
+      [
+        "└",
+        "─",
+        "─",
+        "─",
+        "─",
+        "─",
+        "┘",
+        "┼"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "alexandrite-pear-shape",
+          "blue-spinel-heart"
+        ],
+        [
+          "raw-citrine",
+          "white-square"
+        ],
+        [
+          "padparadscha-oval",
+          "yellow-jasper"
+        ],
+        [
+          "green-aventurine",
+          "chrysoberyl-cushion"
+        ],
+        [
+          "australian-marquise",
+          "cordierite"
+        ],
+        [
+          "hackmanite",
+          "kunzite"
+        ],
+        [
+          "ruby-diamond-profile",
+          "tigers-eye"
+        ],
+        [
+          "sunstone",
+          "raw-beryl"
+        ]
+      ],
+      [
+        [
+          "bulls-eye",
+          "lemon-quartz-briolette"
+        ],
+        [
+          "tanzanite-trillion",
+          "sunstone"
+        ],
+        [
+          "tanzanite-trillion",
+          "zoisite"
+        ],
+        [
+          "ruby-diamond-profile",
+          "labradorite"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "australian-marquise"
+        ],
+        [
+          "apatite",
+          "almandine-garnet"
+        ],
+        [
+          "morganite-oval",
+          "prehnite"
+        ],
+        [
+          "purple-cabochon",
+          "white-square"
+        ]
+      ],
+      [
+        [
+          "yellow-beryl-oval",
+          "morganite-oval"
+        ],
+        [
+          "sunstone",
+          "red-diamond"
+        ],
+        [
+          "tourmaline-laser-cut",
+          "red-diamond"
+        ],
+        [
+          "raw-citrine",
+          "purple-square-cushion"
+        ],
+        [
+          "orange-radiant",
+          "kunzite-oval"
+        ],
+        [
+          "iolite-emerald-cut",
+          "super-seven"
+        ],
+        [
+          "australian-marquise",
+          "black-obsidian"
+        ],
+        [
+          "color-change-oval",
+          "cordierite"
+        ]
+      ],
+      [
+        [
+          "hackmanite",
+          "heliotrope"
+        ],
+        [
+          "hematite",
+          "iolite-emerald-cut"
+        ],
+        [
+          "hematite",
+          "sunstone"
+        ],
+        [
+          "jasper",
+          "jaspilite"
+        ],
+        [
+          "kunzite-oval",
+          "kunzite"
+        ],
+        [
+          "labradorite",
+          "lapis-lazuli"
+        ],
+        [
+          "lemon-quartz-briolette",
+          "magnesite"
+        ],
+        [
+          "mexican-opal",
+          "moonstone"
+        ]
+      ],
+      [
+        [
+          "morganite-oval",
+          "moss-agate"
+        ],[
+          "sunstone",
+          "moss-agate"
+        ],
+        [
+          "orange-radiant",
+          "padparadscha-oval"
+        ],
+        [
+          "padparadscha-sapphire",
+          "peridot"
+        ],
+        [
+          "pink-emerald-cut",
+          "pink-opal"
+        ],
+        [
+          "pink-round",
+          "pink-spinel-cushion"
+        ],
+        [
+          "prasiolite",
+          "prehnite"
+        ],
+        [
+          "purple-cabochon",
+          "purple-oval"
+        ]
+      ],
+      [
+        [
+          "purple-spinel-trillion",
+          "purple-square-cushion"
+        ],
+        [
+          "raw-beryl",
+          "raw-citrine"
+        ],
+        [
+          "red-diamond",
+          "red-spinel-square-emerald-cut"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "labradorite"
+        ],
+        [
+          "sunstone",
+          "labradorite"
+        ],
+        [
+          "rhodonite",
+          "rock-quartz"
+        ],
+        [
+          "rose-quartz",
+          "ruby-diamond-profile"
+        ],
+        [
+          "ruby",
+          "sphalerite"
+        ]
+      ],
+      [
+        [
+          "spinel",
+          "star-cabochon"
+        ],
+        [
+          "stilbite",
+          "sunstone"
+        ],
+        [
+          "super-seven",
+          "tanzanite-trillion"
+        ],
+        [
+          "super-seven",
+          "sunstone"
+        ],
+        [
+          "tigers-eye",
+          "tourmaline-laser-cut"
+        ],
+        [
+          "tourmaline",
+          "unakite"
+        ],
+        [
+          "white-square",
+          "yellow-baguette"
+        ],
+        [
+          "yellow-beryl-oval",
+          "yellow-heart"
+        ]
+      ],
+            [
+        [
+          "zircon",
+          "star-cabochon"
+        ],
+        [
+          "zircon",
+          "sunstone"
+        ],
+        [
+          "zircon",
+          "tanzanite-trillion"
+        ],
+        [
+          "zircon",
+          "kunzite"
+        ],
+        [
+          "zircon",
+          "tourmaline-laser-cut"
+        ],
+        [
+          "zircon",
+          "unakite"
+        ],
+        [
+          "zircon",
+          "yellow-baguette"
+        ],
+        [
+          "zircon",
+          "yellow-heart"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "┌",
+    "1-image": "tourmaline-laser-cut",
+    "2-image": "color-change-oval"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 7,
+        "column#": 7
+      },
+      "color": "06DCD1"
+    },
+    {
+      "current": {
+        "row#": 5,
+        "column#": 5
+      },
+      "home": {
+        "row#": 1,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 7,
+        "column#": 5
+      },
+      "color": "yellow"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 5
+      },
+      "home": {
+        "row#": 1,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 7,
+        "column#": 3
+      },
+      "color": "green"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 3
+      },
+      "home": {
+        "row#": 1,
+        "column#": 7
+      },
+      "goto": {
+        "row#": 7,
+        "column#": 1
+      },
+      "color": "purple"
+    },
+    {
+      "current": {
+        "row#": 5,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 7
+      },
+      "color": "DD00FF"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 5
+      },
+      "color": "red"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 3
+      },
+      "home": {
+        "row#": 3,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 3
+      },
+      "color": "pink"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 5
+      },
+      "home": {
+        "row#": 3,
+        "column#": 7
+      },
+      "goto": {
+        "row#": 5,
+        "column#": 1
+      },
+      "color": "FF00DD"
+    },
+    {
+      "current": {
+        "row#": 5,
+        "column#": 3
+      },
+      "home": {
+        "row#": 5,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 7
+      },
+      "color": "00FF0F"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+        {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 5,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 5
+      },
+      "color": "16DCD1"
+    },
+    {
+      "current": {
+        "row#": 5,
+        "column#": 5
+      },
+      "home": {
+        "row#": 5,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 3
+      },
+      "color": "26DCD1"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 5
+      },
+      "home": {
+        "row#": 5,
+        "column#": 7
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "36DCD1"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 3
+      },
+      "home": {
+        "row#": 7,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 7
+      },
+      "color": "46DCD1"
+    },
+    {
+      "current": {
+        "row#": 5,
+        "column#": 1
+      },
+      "home": {
+        "row#": 7,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 5
+      },
+      "color": "56DCD1"
+    },
+    {
+      "current": {
+        "row#": 3,
+        "column#": 1
+      },
+      "home": {
+        "row#": 7,
+        "column#": 5
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 3
+      },
+      "color": "66DCD1"
+    },
+    {
+      "current": {
+        "row#": 1,
+        "column#": 3
+      },
+      "home": {
+        "row#": 7,
+        "column#": 7
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 1
+      },
+      "color": "76DCD1"
+    }
+
+  ],
+  "last": null
+}

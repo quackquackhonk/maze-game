@@ -1,0 +1,74 @@
+[["a1ic3", "Riemann", "takeTurn", 2], ["Bob2121", "Euclid", "takeTurn"], ["xxxxxxCharx1esxxxxxx", "Euclid", "win", 1], ["pLaYeR4", "Riemann", "setUp"]]
+
+{
+    "board": {
+        "connectors": [
+            ["┌", "─", "┌", "─"],
+            ["┌", "─", "┌", "─"],
+            ["┌", "─", "┌", "─"],
+            ["┌", "─", "┌", "─"],
+            ["┌", "─", "┌", "─"]
+        ],
+        "treasures": [
+            [
+                ["alexandrite-pear-shape", "alexandrite"],
+                ["alexandrite-pear-shape", "almandine-garnet"],
+                ["alexandrite-pear-shape", "amethyst"],
+                ["alexandrite-pear-shape", "ametrine"]
+            ],
+            [
+                ["alexandrite-pear-shape", "apricot-square-radiant"],
+                ["alexandrite-pear-shape", "aquamarine"],
+                ["alexandrite-pear-shape", "australian-marquise"],
+                ["alexandrite-pear-shape", "aventurine"]
+            ],
+            [
+                ["alexandrite-pear-shape", "black-onyx"],
+                ["alexandrite-pear-shape", "black-spinel-cushion"],
+                ["alexandrite-pear-shape", "blue-ceylon-sapphire"],
+                ["alexandrite-pear-shape", "blue-cushion"]
+            ],
+            [
+                ["alexandrite-pear-shape", "carnelian"],
+                ["alexandrite-pear-shape", "chrome-diopside"],
+                ["alexandrite-pear-shape", "chrysoberyl-cushion"],
+                ["alexandrite-pear-shape", "chrysolite"]
+            ],
+            [
+                ["alexandrite-pear-shape", "color-change-oval"],
+                ["alexandrite-pear-shape", "cordierite"],
+                ["alexandrite-pear-shape", "diamond"],
+                ["alexandrite-pear-shape", "dumortierite"]
+            ]
+        ]
+    },
+    "spare": {"tilekey": "┌", "1-image": "super-seven", "2-image": "white-square"},
+    "plmt": [
+        {
+            "current": {"row#": 1, "column#": 2},
+            "home": {"row#": 1, "column#": 1},
+            "color": "orange",
+            "goto": {"row#": 1, "column#": 3}
+        },
+        {
+            "current": {"row#": 0, "column#": 0},
+            "home": {"row#": 1, "column#": 3},
+            "color": "1AD3C2",
+            "goto": {"row#": 3, "column#": 1}
+        },
+        {
+            "current": {"row#": 3, "column#": 1},
+            "home": {"row#": 3, "column#": 1},
+            "color": "red",
+            "goto": {"row#": 3, "column#": 3}
+        },
+        {
+            "current": {"row#": 4, "column#": 4},
+            "home": {"row#": 3, "column#": 3},
+            "color": "333ABC",
+            "goto": {"row#": 1, "column#": 1}
+        }
+    ],
+    "last": [4, "UP"]
+}
+

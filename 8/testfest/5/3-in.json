@@ -1,0 +1,27 @@
+[["bob", "Riemann", "takeTurn", 1]]
+{
+  "board" : {
+    "connectors": [
+      ["│", "│"],
+      ["│", "│"]
+    ],
+    "treasures": [
+      [["alexandrite-pear-shape", "alexandrite"],["alexandrite", "almandine-garnet"]],
+        [["aplite", "apricot-square-radiant"],["apricot-square-radiant", "aquamarine"]]
+    ]
+  },
+  "spare": {
+    "tilekey": "│",
+    "1-image": "green-princess-cut",
+    "2-image": "zircon"
+  },
+  "plmt": [
+    {
+      "current": { "row#": 1, "column#": 0 },
+      "home": { "row#": 1, "column#": 1 },
+      "goto": { "row#": 0, "column#": 1 },
+      "color": "black"
+    }
+  ],
+  "last": [ 0, "LEFT" ]
+}

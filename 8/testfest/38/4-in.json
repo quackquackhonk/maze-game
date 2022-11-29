@@ -1,0 +1,51 @@
+[
+  [
+    "aEuclidOtherPlayer",
+    "Euclid"
+  ],
+  [
+    "aBad",
+    "Euclid",
+    "setUp",
+    1
+  ],
+  [
+    "AEuclidPlayer",
+    "Euclid"
+  ]
+]
+
+
+{
+    "board":
+    {
+      "connectors":[["┘","└","┼","┐","├","├","┬","┘","├","┤","┬","─"],["└","│","│","┘","└","┌","┼","┐","┬","┼","└","─"],["─","┐","├","└","┌","┼","┌","└","┘","├","┬","└"],["┴","┬","┌","│","├","┘","┌","┌","│","┴","┴","┤"],["┴","┘","┐","│","┐","─","└","┌","┬","┌","┐","┘"],["┌","├","┌","│","┘","─","│","┼","┐","┴","┴","┘"],["┴","┴","┘","┼","└","─","┬","┌","┐","┼","├","┴"],["┼","┐","└","┬","┐","└","┴","└","─","┴","┬","─"],["┼","├","┼","├","┐","┌","├","├","┤","┐","┐","┤"],["┤","┐","┬","├","─","┴","├","┐","┼","┤","┌","┘"],["├","└","┴","┤","│","─","┐","─","┼","┬","┌","─"],["┼","┬","┬","─","┬","┴","┘","┐","┤","┘","┴","┬"]],"treasures":[[["alexandrite-pear-shape","alexandrite-pear-shape"],["alexandrite-pear-shape","alexandrite"],["alexandrite-pear-shape","almandine-garnet"],["alexandrite-pear-shape","amethyst"],["alexandrite-pear-shape","ametrine"],["alexandrite-pear-shape","ammolite"],["alexandrite-pear-shape","apatite"],["alexandrite-pear-shape","aplite"],["alexandrite-pear-shape","apricot-square-radiant"],["alexandrite-pear-shape","aquamarine"],["alexandrite-pear-shape","australian-marquise"],["alexandrite-pear-shape","aventurine"]],[["alexandrite-pear-shape","azurite"],["alexandrite-pear-shape","beryl"],["alexandrite-pear-shape","black-obsidian"],["alexandrite-pear-shape","black-onyx"],["alexandrite-pear-shape","black-spinel-cushion"],["alexandrite-pear-shape","blue-ceylon-sapphire"],["alexandrite-pear-shape","blue-cushion"],["alexandrite-pear-shape","blue-pear-shape"],["alexandrite-pear-shape","blue-spinel-heart"],["alexandrite-pear-shape","bulls-eye"],["alexandrite-pear-shape","carnelian"],["alexandrite-pear-shape","chrome-diopside"]],[["alexandrite-pear-shape","chrysoberyl-cushion"],["alexandrite-pear-shape","chrysolite"],["alexandrite-pear-shape","citrine-checkerboard"],["alexandrite-pear-shape","citrine"],["alexandrite-pear-shape","clinohumite"],["alexandrite-pear-shape","color-change-oval"],["alexandrite-pear-shape","cordierite"],["alexandrite-pear-shape","diamond"],["alexandrite-pear-shape","dumortierite"],["alexandrite-pear-shape","emerald"],["alexandrite-pear-shape","fancy-spinel-marquise"],["alexandrite-pear-shape","garnet"]],[["alexandrite-pear-shape","golden-diamond-cut"],["alexandrite-pear-shape","goldstone"],["alexandrite-pear-shape","grandidierite"],["alexandrite-pear-shape","gray-agate"],["alexandrite-pear-shape","green-aventurine"],["alexandrite-pear-shape","green-beryl-antique"],["alexandrite-pear-shape","green-beryl"],["alexandrite-pear-shape","green-princess-cut"],["alexandrite-pear-shape","grossular-garnet"],["alexandrite-pear-shape","hackmanite"],["alexandrite-pear-shape","heliotrope"],["alexandrite-pear-shape","hematite"]],[["alexandrite-pear-shape","iolite-emerald-cut"],["alexandrite-pear-shape","jasper"],["alexandrite-pear-shape","jaspilite"],["alexandrite-pear-shape","kunzite-oval"],["alexandrite-pear-shape","kunzite"],["alexandrite-pear-shape","labradorite"],["alexandrite-pear-shape","lapis-lazuli"],["alexandrite-pear-shape","lemon-quartz-briolette"],["alexandrite-pear-shape","magnesite"],["alexandrite-pear-shape","mexican-opal"],["alexandrite-pear-shape","moonstone"],["alexandrite-pear-shape","morganite-oval"]],[["alexandrite-pear-shape","moss-agate"],["alexandrite-pear-shape","orange-radiant"],["alexandrite-pear-shape","padparadscha-oval"],["alexandrite-pear-shape","padparadscha-sapphire"],["alexandrite-pear-shape","peridot"],["alexandrite-pear-shape","pink-emerald-cut"],["alexandrite-pear-shape","pink-opal"],["alexandrite-pear-shape","pink-round"],["alexandrite-pear-shape","pink-spinel-cushion"],["alexandrite-pear-shape","prasiolite"],["alexandrite-pear-shape","prehnite"],["alexandrite-pear-shape","purple-cabochon"]],[["alexandrite-pear-shape","purple-oval"],["alexandrite-pear-shape","purple-spinel-trillion"],["alexandrite-pear-shape","purple-square-cushion"],["alexandrite-pear-shape","raw-beryl"],["alexandrite-pear-shape","raw-citrine"],["alexandrite-pear-shape","red-diamond"],["alexandrite-pear-shape","red-spinel-square-emerald-cut"],["alexandrite-pear-shape","rhodonite"],["alexandrite-pear-shape","rock-quartz"],["alexandrite-pear-shape","rose-quartz"],["alexandrite-pear-shape","ruby-diamond-profile"],["alexandrite-pear-shape","ruby"]],[["alexandrite-pear-shape","sphalerite"],["alexandrite-pear-shape","spinel"],["alexandrite-pear-shape","star-cabochon"],["alexandrite-pear-shape","stilbite"],["alexandrite-pear-shape","sunstone"],["alexandrite-pear-shape","super-seven"],["alexandrite-pear-shape","tanzanite-trillion"],["alexandrite-pear-shape","tigers-eye"],["alexandrite-pear-shape","tourmaline-laser-cut"],["alexandrite-pear-shape","tourmaline"],["alexandrite-pear-shape","unakite"],["alexandrite-pear-shape","white-square"]],[["alexandrite-pear-shape","yellow-baguette"],["alexandrite-pear-shape","yellow-beryl-oval"],["alexandrite-pear-shape","yellow-heart"],["alexandrite-pear-shape","yellow-jasper"],["alexandrite-pear-shape","zircon"],["alexandrite-pear-shape","zoisite"],["alexandrite","alexandrite"],["alexandrite","almandine-garnet"],["alexandrite","amethyst"],["alexandrite","ametrine"],["alexandrite","ammolite"],["alexandrite","apatite"]],[["alexandrite","aplite"],["alexandrite","apricot-square-radiant"],["alexandrite","aquamarine"],["alexandrite","australian-marquise"],["alexandrite","aventurine"],["alexandrite","azurite"],["alexandrite","beryl"],["alexandrite","black-obsidian"],["alexandrite","black-onyx"],["alexandrite","black-spinel-cushion"],["alexandrite","blue-ceylon-sapphire"],["alexandrite","blue-cushion"]],[["alexandrite","blue-pear-shape"],["alexandrite","blue-spinel-heart"],["alexandrite","bulls-eye"],["alexandrite","carnelian"],["alexandrite","chrome-diopside"],["alexandrite","chrysoberyl-cushion"],["alexandrite","chrysolite"],["alexandrite","citrine-checkerboard"],["alexandrite","citrine"],["alexandrite","clinohumite"],["alexandrite","color-change-oval"],["alexandrite","cordierite"]],[["alexandrite","diamond"],["alexandrite","dumortierite"],["alexandrite","emerald"],["alexandrite","fancy-spinel-marquise"],["alexandrite","garnet"],["alexandrite","golden-diamond-cut"],["alexandrite","goldstone"],["alexandrite","grandidierite"],["alexandrite","gray-agate"],["alexandrite","green-aventurine"],["alexandrite","green-beryl-antique"],["alexandrite","green-beryl"]]]
+    },
+    "spare":
+      { "tilekey": "┘",
+        "1-image": "zoisite",
+        "2-image": "rose-quartz"
+      },
+    "plmt": [
+      {
+        "current" : { "row#": 1, "column#" : 1 },
+        "home"    : { "row#": 1, "column#" : 1 },
+        "goto"    : { "row#": 11, "column#" : 11 },
+        "color"   : "yellow"
+      },
+      {
+        "current" : { "row#": 3, "column#" : 5 },
+        "home"    : { "row#": 3, "column#" : 5 },
+        "goto"    : { "row#": 11, "column#" : 11 },
+        "color"   : "blue"
+      },
+      {
+        "current" : { "row#": 5, "column#" : 5 },
+        "home"    : { "row#": 5, "column#" : 5 },
+        "goto"    : { "row#": 11, "column#" : 11 },
+        "color"   : "green"
+      }
+    ],
+    "last": null
+}
+

@@ -1,0 +1,81 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/3/Tests/0-in.json /course/cs4500f22/ta/github/8/3/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/8/3/Tests/1-in.json /course/cs4500f22/ta/github/8/3/Tests/1-out.json)
+(testing /course/cs4500f22/ta/github/8/3/Tests/2-in.json /course/cs4500f22/ta/github/8/3/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/8/3/Tests/4-in.json /course/cs4500f22/ta/github/8/3/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("Roxy" "Riemann" "takeTurn" 3) ("Toby" "Riemann") ("Scuba" "Euclid"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┬" "└" "│" "│" "│" "┬")
+                     ("┴" "┴" "┤" "└" "│" "┴")
+                     ("─" "─" "┘" "│" "└" "─")
+                     ("─" "└" "─" "┼" "─" "─")
+                     ("─" "─" "┐" "│" "┌" "─")))
+                   (treasures
+                    .
+                    ((("beryl" "alexandrite-pear-shape")
+                      ("beryl" "alexandrite")
+                      ("beryl" "almandine-garnet")
+                      ("beryl" "amethyst")
+                      ("beryl" "ametrine")
+                      ("beryl" "ammolite"))
+                     (("beryl" "aplite")
+                      ("beryl" "apricot-square-radiant")
+                      ("beryl" "aquamarine")
+                      ("beryl" "australian-marquise")
+                      ("beryl" "aventurine")
+                      ("beryl" "azurite"))
+                     (("beryl" "black-onyx")
+                      ("beryl" "black-spinel-cushion")
+                      ("beryl" "blue-ceylon-sapphire")
+                      ("beryl" "blue-cushion")
+                      ("beryl" "blue-pear-shape")
+                      ("beryl" "blue-spinel-heart"))
+                     (("beryl" "carnelian")
+                      ("beryl" "chrome-diopside")
+                      ("beryl" "chrysoberyl-cushion")
+                      ("beryl" "chrysolite")
+                      ("beryl" "citrine-checkerboard")
+                      ("beryl" "citrine"))
+                     (("beryl" "color-change-oval")
+                      ("beryl" "cordierite")
+                      ("beryl" "diamond")
+                      ("beryl" "dumortierite")
+                      ("beryl" "emerald")
+                      ("beryl" "fancy-spinel-marquise"))))))
+          (last . (4 "DOWN"))
+          (plmt
+           .
+           (#hasheq((color . "pink")
+                    (current . #hasheq((column# . 4) (row# . 4)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "yellow")
+                    (current . #hasheq((column# . 2) (row# . 0)))
+                    (goto . #hasheq((column# . 5) (row# . 3)))
+                    (home . #hasheq((column# . 3) (row# . 3))))
+            #hasheq((color . "CABBAC")
+                    (current . #hasheq((column# . 1) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 5) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "beryl")
+                   (2-image . "kunzite")
+                   (tilekey . "─")))))
+(*** expected)
+'((("Scuba") ("Roxy")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/3/Tests/0-in.json /course/cs4500f22/ta/github/8/3/Tests/0-out.json) (/course/cs4500f22/ta/github/8/3/Tests/1-in.json /course/cs4500f22/ta/github/8/3/Tests/1-out.json) (/course/cs4500f22/ta/github/8/3/Tests/2-in.json /course/cs4500f22/ta/github/8/3/Tests/2-out.json))
+((passed 3) (total 4) (partial-score 3))
+

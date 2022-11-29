@@ -1,0 +1,24 @@
+[["Bob", "Euclid", "setUp", 1], ["Hello", "Riemann", "setUp", 1], ["Banana", "Euclid", "setUp", 1]]
+
+{"board": {"connectors":[["┤", "┬", "┬", "└", "┼", "└", "─"], ["├", "┼", "┌", "├", "┌", "┼", "┬"], ["└", "├", "┼", "┌", "─", "─", "┼"], ["┬", "└", "┌", "─", "┐", "┬", "┬"], ["└", "┬", "┘", "└", "┴", "┘", "┬"], ["─", "┐", "┌", "┼", "┼", "│", "┤"], ["│", "┼", "├", "┐", "┌", "│", "┤"]], "treasures":
+[[["rose-quartz", "padparadscha-sapphire"], ["apatite", "peridot"], ["moss-agate", "yellow-heart"], ["grandidierite", "aquamarine"], ["citrine-checkerboard", "garnet"], ["red-diamond", "hackmanite"], ["morganite-oval", "emerald"]], [["ruby-diamond-profile", "amethyst"], ["apricot-square-radiant", "goldstone"], ["green-aventurine", "tourmaline"], ["lemon-quartz-briolette", "mexican-opal"], ["stilbite", "alexandrite"], ["sunstone", "zoisite"], ["grossular-garnet", "rhodonite"]], [["hematite", "ruby"], ["cordierite", "pink-round"], ["lapis-lazuli", "black-spinel-cushion"], ["purple-spinel-trillion", "carnelian"], ["alexandrite-pear-shape", "kunzite"], ["labradorite", "yellow-jasper"], ["golden-diamond-cut", "kunzite-oval"]], [["pink-opal", "padparadscha-oval"], ["pink-spinel-cushion", "zircon"], ["beryl", "orange-radiant"], ["australian-marquise", "chrysoberyl-cushion"], ["iolite-emerald-cut", "purple-cabochon"], ["yellow-beryl-oval", "bulls-eye"], ["spinel", "pink-emerald-cut"]], [["jasper", "blue-spinel-heart"], ["gray-agate", "black-obsidian"], ["tigers-eye", "green-beryl"], ["black-onyx", "white-square"], ["azurite", "clinohumite"], ["raw-beryl", "raw-citrine"], ["star-cabochon", "prasiolite"]], [["purple-square-cushion", "heliotrope"], ["magnesite", "rock-quartz"], ["blue-pear-shape", "chrysolite"], ["chrome-diopside", "aplite"], ["ametrine", "dumortierite"], ["tourmaline-laser-cut", "yellow-baguette"], ["prehnite", "color-change-oval"]], [["citrine", "blue-ceylon-sapphire"], ["moonstone", "unakite"], ["blue-cushion", "fancy-spinel-marquise"], ["super-seven", "green-beryl-antique"], ["diamond", "ammolite"], ["tanzanite-trillion", "green-princess-cut"], ["aventurine", "sphalerite"]]]},
+"last": null,
+    "spare": {"tilekey": "┬", "1-image": "beryl", "2-image": "sphalerite"},
+    "plmt": [{
+        "color": "blue",
+        "current": {"row#": 2, "column#": 3},
+        "home": {"row#": 3, "column#": 3},
+        "goto": {"row#": 1,"column#": 1}},
+        {
+        "color": "yellow",
+        "current": {"row#": 3, "column#": 6},
+        "home": {"row#": 5, "column#": 5},
+        "goto": {"row#": 3,"column#": 1}},
+        {
+        "color": "orange",
+        "current": {"row#": 1, "column#": 0},
+        "home": {"row#": 1, "column#": 1},
+        "goto": {"row#": 3,"column#": 3}}
+
+    ]
+  }

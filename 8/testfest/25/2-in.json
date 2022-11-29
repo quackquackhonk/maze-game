@@ -1,0 +1,108 @@
+[
+    ["P1", "Riemann", "setUp", 2],
+    ["P2", "Euclid", "setUp", 3],
+    ["P3", "Euclid", "takeTurn", 1],
+    ["P4", "Euclid", "takeTurn"]
+]
+
+{
+	
+	    "spare": {
+        "tilekey": "┐",
+        "1-image": "black-onyx",
+        "2-image": "peridot"
+    },
+    "board": {
+        "connectors": [
+            ["┌","─","─","┐","─","─","─"],
+            ["├","─","┐","├","┐","─","─"],
+            ["│","─","│","│","│","─","─"],
+            ["├","─","┘","│","│","─","─"],
+            ["│","─","─","│","│","─","─"],
+            ["│","┌","┐","│","┘","─","─"],
+            ["└","┘","└","┘","─","─","─"]
+        ],
+        "treasures": [
+            [["unakite", "alexandrite-pear-shape"], ["unakite", "alexandrite"], ["unakite", "almandine-garnet"], ["unakite", "amethyst"], ["unakite", "ametrine"], ["unakite", "ammolite"], ["unakite", "apatite"]],
+
+            [["unakite", "aplite"], ["unakite", "apricot-square-radiant"], ["unakite", "aquamarine"], ["unakite", "australian-marquise"], ["unakite", "aventurine"], ["unakite", "azurite"], ["unakite", "beryl"]],
+            
+            [["unakite", "black-obsidian"], ["unakite", "black-onyx"], ["unakite", "black-spinel-cushion"], ["unakite", "blue-ceylon-sapphire"], ["unakite", "blue-cushion"], ["unakite", "blue-pear-shape"], ["unakite", "blue-spinel-heart"]],
+            
+            [["unakite", "bulls-eye"], ["unakite", "carnelian"], ["unakite", "chrome-diopside"], ["unakite", "chrysoberyl-cushion"], ["unakite", "chrysolite"], ["unakite", "citrine-checkerboard"], ["unakite", "citrine"]],
+            
+            [["unakite", "clinohumite"], ["unakite", "color-change-oval"], ["unakite", "cordierite"], ["unakite", "diamond"], ["unakite", "dumortierite"], ["unakite", "emerald"], ["unakite", "fancy-spinel-marquise"]],
+            
+            [["unakite", "garnet"], ["unakite", "golden-diamond-cut"], ["unakite", "goldstone"], ["unakite", "grandidierite"], ["unakite", "gray-agate"], ["unakite", "green-aventurine"], ["unakite", "green-beryl-antique"]],
+            
+            [["unakite", "green-beryl"], ["unakite", "green-princess-cut"], ["unakite", "grossular-garnet"], ["unakite", "hackmanite"], ["unakite", "heliotrope"], ["unakite", "hematite"], ["unakite", "iolite-emerald-cut"]]
+        ]
+    },
+
+    "plmt": [
+        {
+            "current": {
+                "row#": 1,
+                "column#": 1
+            },
+            "home": {
+                "row#": 1,
+                "column#": 1
+            },
+            "goto": {
+                "row#": 5,
+                "column#": 5
+            },
+            "color": "blue"
+
+        },
+        {
+            "current": {
+                "row#": 2,
+                "column#": 4
+            },
+            "home": {
+                "row#": 3,
+                "column#": 5
+            },
+            "goto": {
+                "row#": 3,
+                "column#": 5
+            },
+            "color": "red"
+        },
+        {
+            "current": {
+                "row#": 4,
+                "column#": 2
+            },
+            "home": {
+                "row#": 5,
+                "column#": 3
+            },
+            "goto": {
+                "row#": 5,
+                "column#": 3
+            },
+            "color": "yellow"
+
+        },
+        {
+            "current": {
+                "row#": 5,
+                "column#": 1
+            },
+            "home": {
+                "row#": 3,
+                "column#": 3
+            },
+            "goto": {
+                "row#": 3,
+                "column#": 3
+            },
+            "color": "green"
+        }
+    
+    ],
+    "last": [2, "DOWN"]
+}

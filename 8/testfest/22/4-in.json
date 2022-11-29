@@ -1,0 +1,83 @@
+[
+  ["player1", "Riemann", "win", 1],
+  ["player2", "Euclid", "setUp", 2],
+  ["player3", "Riemann", "setUp", 1]
+]
+{
+  "board":
+    {"connectors":
+    [
+      ["└","└","└","└","└"],
+      ["└","└","└","└","└"],
+      ["└","└","└","└","└"],
+      ["└","└","└","└","└"],
+      ["└","└","└","└","└"]],
+    "treasures":
+    [
+      [["red-diamond", "citrine-checkerboard"], ["prehnite", "chrysoberyl-cushion"], ["dumortierite", "padparadscha-sapphire"], ["yellow-baguette", "citrine"], ["chrome-diopside", "yellow-baguette"]],
+      [["diamond", "citrine-checkerboard"], ["tanzanite-trillion", "grandidierite"], ["yellow-beryl-oval", "blue-pear-shape"], ["hackmanite", "iolite-emerald-cut"], ["hematite", "mexican-opal"]],
+      [["raw-beryl", "super-seven"], ["zoisite", "yellow-baguette"], ["stilbite", "super-seven"], ["citrine-checkerboard", "unakite"], ["black-obsidian", "sunstone"]],
+      [["sphalerite", "morganite-oval"], ["aplite", "rhodonite"], ["lemon-quartz-briolette", "almandine-garnet"], ["purple-square-cushion", "bulls-eye"], ["lemon-quartz-briolette", "apatite"]],
+      [["star-cabochon", "blue-ceylon-sapphire"], ["pink-round", "dumortierite"], ["aquamarine", "diamond"], ["beryl", "green-beryl-antique"], ["magnesite", "amethyst"]]]
+    },
+
+  "spare" : {
+    "tilekey": "─",
+    "1-image": "red-diamond",
+    "2-image": "red-diamond"
+  },
+
+  "plmt": [
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 3
+      },
+      "color": "FFFFFF"
+    },
+
+    {
+      "current": {
+        "row#": 1,
+        "column#": 3
+      },
+      "home": {
+        "row#": 1,
+        "column#": 3
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 1
+      },
+      "color": "blue"
+    },
+
+    {
+      "current": {
+        "row#": 3,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 3
+      },
+      "color": "red"
+    }
+
+  ],
+
+  "last": [0, "LEFT"]
+}
+

@@ -1,0 +1,95 @@
+[["Alex", "Riemann", "takeTurn"], ["Angel", "Euclid"]]
+{
+  "spare": {
+    "1-image": "jasper",
+    "2-image": "jaspilite",
+    "tilekey": "│"
+  },
+  "board": {
+    "connectors": [
+      ["│", "│", "│", "│", "│", "│", "│"],
+      ["─", "─", "─", "─", "─", "─", "─"],
+      ["│", "│", "│", "│", "│", "│", "│"],
+      ["─", "─", "─", "─", "─", "─", "─"],
+      ["│", "│", "│", "│", "│", "│", "│"],
+      ["─", "─", "─", "─", "─", "─", "─"],
+      ["│", "│", "│", "│", "│", "│", "│"]
+    ],
+    "treasures": [
+      [[  "jasper", "alexandrite-pear-shape"],
+        [  "jasper", "alexandrite"],
+        [  "jasper", "almandine-garnet"],
+        [  "jasper", "amethyst"],
+        [  "jasper", "ametrine"],
+        [  "jasper", "ammolite"],
+        [  "jasper", "apatite"]
+      ],
+      [[  "jasper", "aplite"],
+        [  "jasper", "apricot-square-radiant"],
+        [  "jasper", "aquamarine"],
+        [  "jasper", "australian-marquise"],
+        [  "jasper", "aventurine"],
+        [  "jasper", "azurite"],
+        [  "jasper", "beryl"]
+      ],
+      [[  "jasper", "black-obsidian"],
+        [  "jasper", "black-onyx"],
+        [  "jasper", "black-spinel-cushion"],
+        [  "jasper", "blue-ceylon-sapphire"],
+        [  "jasper", "blue-cushion"],
+        [  "jasper", "blue-pear-shape"],
+        [  "jasper", "blue-spinel-heart"]
+      ],
+      [[  "jasper", "bulls-eye"],
+        [  "jasper", "carnelian"],
+        [  "jasper", "chrome-diopside"],
+        [  "jasper", "chrysoberyl-cushion"],
+        [  "jasper", "chrysolite"],
+        [  "jasper", "citrine-checkerboard"],
+        [  "jasper", "citrine"]
+      ],
+      [[  "jasper", "clinohumite"],
+        [  "jasper", "color-change-oval"],
+        [  "jasper", "cordierite"],
+        [  "jasper", "diamond"],
+        [  "jasper", "dumortierite"],
+        [  "jasper", "emerald"],
+        [  "jasper", "fancy-spinel-marquise"]
+      ],
+      [[  "jasper", "garnet"],  
+        [  "jasper", "golden-diamond-cut"],
+        [  "jasper", "goldstone"],
+        [  "jasper", "grandidierite"],
+        [  "jasper", "gray-agate"],
+        [  "jasper", "green-aventurine"],
+        [  "jasper", "green-beryl-antique"]
+      ],
+      [[  "jasper", "green-beryl"],
+        [  "jasper", "green-princess-cut"],
+        [  "jasper", "grossular-garnet"],
+        [  "jasper", "hackmanite"],
+        [  "jasper", "heliotrope"],
+        [  "jasper", "hematite"],
+        [  "jasper", "iolite-emerald-cut"]
+      ]
+    ]
+  },
+  "last": [
+    0,
+    "DOWN"],
+  "plmt": [
+    {
+      "current": {"row#": 1, "column#": 3},
+      "home": {"row#": 1, "column#": 1},
+      "goto": {"row#": 1, "column#": 3},
+      "color": "FFFFFF"
+    },
+    {
+      "current": {"row#": 1, "column#": 1},
+      "home": {"row#": 1, "column#": 3},
+      "goto": {"row#": 1, "column#": 5},
+      "color": "red"
+    }
+  ]
+}
+

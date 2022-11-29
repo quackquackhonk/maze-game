@@ -1,0 +1,142 @@
+(testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/20/Tests/0-in.json /course/cs4500f22/ta/github/8/20/Tests/0-out.json)
+---------------------------------
+(*** score 0)
+(*** on)
+'((("RiemannPlayer2" "Riemann" "setUp" 2)
+   ("RiemannPlayer" "Riemann")
+   ("EuclidPlayer" "Euclid" "setUp"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("│" "┼" "┐" "└" "┌" "┘" "┬")
+                     ("│" "┼" "┼" "┼" "┼" "┼" "┬")
+                     ("└" "┼" "┼" "┼" "┼" "┼" "┼")
+                     ("│" "┼" "┼" "┼" "┼" "┼" "┬")
+                     ("│" "┼" "┼" "┼" "┼" "┼" "┬")
+                     ("│" "─" "┼" "└" "┼" "┼" "┬")
+                     ("│" "─" "┐" "│" "┌" "┘" "┬")
+                     ("│" "─" "┐" "│" "┌" "┘" "┬")))
+                   (treasures
+                    .
+                    ((("rose-quartz" "yellow-heart")
+                      ("pink-emerald-cut" "mexican-opal")
+                      ("green-aventurine" "ruby-diamond-profile")
+                      ("rose-quartz" "labradorite")
+                      ("color-change-oval" "star-cabochon")
+                      ("green-princess-cut" "dumortierite")
+                      ("diamond" "chrome-diopside"))
+                     (("raw-citrine" "clinohumite")
+                      ("ammolite" "hematite")
+                      ("jasper" "sphalerite")
+                      ("super-seven" "green-beryl")
+                      ("green-beryl-antique" "aventurine")
+                      ("diamond" "moonstone")
+                      ("unakite" "dumortierite"))
+                     (("tanzanite-trillion" "kunzite")
+                      ("chrysoberyl-cushion" "goldstone")
+                      ("kunzite" "goldstone")
+                      ("garnet" "jasper")
+                      ("australian-marquise" "sphalerite")
+                      ("green-beryl-antique" "black-onyx")
+                      ("ruby-diamond-profile" "pink-round"))
+                     (("apricot-square-radiant" "zircon")
+                      ("cordierite" "bulls-eye")
+                      ("jaspilite" "padparadscha-oval")
+                      ("rose-quartz" "dumortierite")
+                      ("prehnite" "pink-spinel-cushion")
+                      ("purple-square-cushion" "carnelian")
+                      ("black-spinel-cushion" "zoisite"))
+                     (("green-aventurine" "chrome-diopside")
+                      ("citrine" "black-spinel-cushion")
+                      ("chrysoberyl-cushion" "moss-agate")
+                      ("heliotrope" "blue-ceylon-sapphire")
+                      ("tourmaline" "lapis-lazuli")
+                      ("green-princess-cut" "gray-agate")
+                      ("almandine-garnet" "citrine-checkerboard"))
+                     (("moonstone" "chrysolite")
+                      ("ametrine" "yellow-beryl-oval")
+                      ("prasiolite" "green-aventurine")
+                      ("lapis-lazuli" "blue-spinel-heart")
+                      ("pink-round" "beryl")
+                      ("red-diamond" "red-diamond")
+                      ("citrine-checkerboard" "grandidierite"))
+                     (("kunzite" "grossular-garnet")
+                      ("red-spinel-square-emerald-cut"
+                       "red-spinel-square-emerald-cut")
+                      ("aplite" "beryl")
+                      ("green-aventurine" "alexandrite-pear-shape")
+                      ("zoisite" "blue-cushion")
+                      ("diamond" "ametrine")
+                      ("australian-marquise" "iolite-emerald-cut"))
+                     (("kunzite" "jasper")
+                      ("red-spinel-square-emerald-cut" "jasper")
+                      ("aplite" "jasper")
+                      ("green-aventurine" "jasper")
+                      ("zoisite" "jasper")
+                      ("diamond" "jasper")
+                      ("australian-marquise" "jasper"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 5) (row# . 7)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "green")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 5) (row# . 7)))
+                    (home . #hasheq((column# . 3) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 5) (row# . 7)))
+                    (home . #hasheq((column# . 5) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "cordierite")
+                   (2-image . "green-aventurine")
+                   (tilekey . "│")))))
+(*** expected)
+'((("RiemannPlayer") ("EuclidPlayer" "RiemannPlayer2")))
+(*** but received)
+'(((plain fast with-newline plain-unicode)
+   ((("RiemannPlayer2") ("EuclidPlayer")))))
+
+
+(testing /course/cs4500f22/ta/github/8/20/Tests/4-in.json /course/cs4500f22/ta/github/8/20/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("C" "Euclid" "takeTurn" 3))
+  #hasheq((board
+           .
+           #hasheq((connectors . (("┼" "┼") ("┼" "┼")))
+                   (treasures
+                    .
+                    ((("pink-emerald-cut" "mexican-opal")
+                      ("green-aventurine" "ruby-diamond-profile"))
+                     (("ammolite" "hematite") ("jasper" "sphalerite"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "cordierite")
+                   (2-image . "green-aventurine")
+                   (tilekey . "┼")))))
+(*** expected)
+'((() ("C")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+()
+((passed 0) (total 2) (partial-score 0))
+
