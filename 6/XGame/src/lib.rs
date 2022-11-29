@@ -82,9 +82,7 @@ pub fn read_and_write_json(
 
     let mut r#ref = Referee::new(0);
 
-    let kicked = Vec::default();
-
-    let game_result = r#ref.run_from_state(&mut state, &mut observers, kicked);
+    let game_result = r#ref.run_from_state(&mut state, &mut observers);
     let mut winner_names: Vec<Name> = game_result
         .winners
         .into_iter()
