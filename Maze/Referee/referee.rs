@@ -17,7 +17,7 @@ use crate::observer::Observer;
 /// The Result of calling `Referee::run_game(...)`.
 /// - The `winners` field contains all the winning players.
 /// - The `kicked` field contains all the players who misbehaved during the game.
-#[derive(Default, Clone, Serialize)]
+#[derive(Debug, Default, Clone, Serialize)]
 #[serde(into = "JsonGameResult")]
 pub struct GameResult {
     pub winners: Vec<Player>,
@@ -813,5 +813,44 @@ mod tests {
         let GameResult { winners, kicked } = referee.run_from_state(&mut state, &mut vec![]);
         assert_eq!(winners.len(), 2);
         assert_eq!(kicked.len(), 0);
+    }
+
+    #[test]
+    fn test_run_from_state_multiple_goals() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config {
+                multiple_goals: true,
+            },
+        };
+        let players = vec![
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (5, 3), ColorName::Red.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("joe"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Blue.into()),
+            ),
+        ];
+        let mut state: State<Player> = State {
+            player_info: players.into(),
+            ..Default::default()
+        };
+        let GameResult { winners, kicked } = dbg!(referee.run_from_state(&mut state, &mut vec![]));
+        let (calculated_winners, losers) = dbg!(Referee::calculate_winners(&state));
+
+        assert_eq!(winners.len(), 1);
+        assert_eq!(calculated_winners.len(), 1);
+        assert_eq!(losers.len(), 1);
+        assert_eq!(kicked.len(), 0);
+        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(losers[0].name().unwrap(), "joe");
     }
 }
