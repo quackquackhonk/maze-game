@@ -22,12 +22,13 @@ pub struct PlayerProxy<In: Read + Send, Out: Write + Send> {
     out: RefCell<Out>,
 }
 
+const TIMEOUT: Duration = Duration::from_secs(4);
+
 impl PlayerProxy<TcpStream, TcpStream> {
-    pub fn try_from_tcp(stream: TcpStream) -> io::Result<Self> {
-        stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+    pub fn try_from_tcp(name: Name, stream: TcpStream) -> io::Result<Self> {
+        stream.set_read_timeout(Some(TIMEOUT))?;
         let out = RefCell::new(stream.try_clone()?);
-        let mut deser = serde_json::Deserializer::from_reader(stream);
-        let name = Name::deserialize(&mut deser)?;
+        let deser = serde_json::Deserializer::from_reader(stream);
         let r#in = RefCell::new(deser);
         Ok(Self { name, out, r#in })
     }

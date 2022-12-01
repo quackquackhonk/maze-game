@@ -23,6 +23,7 @@ version = "0.1.0"
 name = "Server"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "clap 4.0.23",
  "common",
  "players",

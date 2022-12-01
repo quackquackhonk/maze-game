@@ -1,4 +1,5 @@
 use clap::Parser;
+use common::json::Name;
 use common::{FullPlayerInfo, State};
 use players::player::PlayerApi;
 use referee::json::JsonRefereeState;
@@ -6,8 +7,9 @@ use referee::player::Player;
 use referee::referee::{GameResult, Referee};
 use remote::is_port;
 use remote::player::PlayerProxy;
+use serde::Deserialize;
 use std::io::{self, stdin};
-use std::net::SocketAddr;
+use std::net::{SocketAddr, TcpStream};
 use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::time::timeout;
@@ -22,6 +24,23 @@ struct Args {
     port: u16,
 }
 
+/// Given a tokio TcpStream, attempts to create a `PlayerProxy` from that stream.
+fn create_player(
+    stream: tokio::net::TcpStream,
+) -> anyhow::Result<PlayerProxy<TcpStream, TcpStream>> {
+    let stream = stream.into_std()?;
+
+    stream.set_nonblocking(false)?;
+    stream
+        .set_read_timeout(Some(Duration::from_secs(2)))
+        .expect("We did not pass a 0 for duration");
+
+    let name_stream = stream.try_clone()?;
+    let name = Name::deserialize(&mut serde_json::Deserializer::from_reader(name_stream))?;
+
+    Ok(PlayerProxy::try_from_tcp(name, stream)?)
+}
+
 async fn recieve_connections(
     listener: &TcpListener,
     connections: &mut Vec<Box<dyn PlayerApi>>,
@@ -29,20 +48,7 @@ async fn recieve_connections(
 ) {
     while connections.len() < num_players {
         if let Ok((stream, _)) = listener.accept().await {
-            let stream = match stream.into_std() {
-                Ok(s) => s,
-                Err(_) => continue,
-            };
-
-            if stream.set_nonblocking(false).is_err() {
-                continue;
-            }
-
-            stream
-                .set_read_timeout(Some(Duration::from_secs(2)))
-                .expect("We did not pass a 0 for duration");
-
-            if let Ok(player) = PlayerProxy::try_from_tcp(stream) {
+            if let Ok(player) = create_player(stream) {
                 connections.push(Box::new(player));
                 eprintln!("Player #{} connected", connections.len());
             }
