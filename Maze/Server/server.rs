@@ -26,15 +26,18 @@ async fn recieve_connections(
     listener: &TcpListener,
     connections: &mut Vec<Box<dyn PlayerApi>>,
     num_players: usize,
-) -> io::Result<()> {
+) {
     while connections.len() < num_players {
         if let Ok((stream, _)) = listener.accept().await {
-            let stream = stream
-                .into_std()
-                .expect("could not convert async stream to sync");
-            stream
-                .set_nonblocking(false)
-                .expect("set set_nonblocking call failed");
+            let stream = match stream.into_std() {
+                Ok(s) => s,
+                Err(_) => continue,
+            };
+
+            if stream.set_nonblocking(false).is_err() {
+                continue;
+            }
+
             stream
                 .set_read_timeout(Some(Duration::from_secs(2)))
                 .expect("We did not pass a 0 for duration");
@@ -45,7 +48,6 @@ async fn recieve_connections(
             }
         };
     }
-    Ok(())
 }
 
 #[tokio::main]
@@ -79,7 +81,6 @@ pub async fn main() -> io::Result<()> {
         println!("{}", serde_json::to_string(&game_result).unwrap());
         return Ok(());
     }
-
     let mut state = State {
         board: state_info.board,
         player_info: state_info
