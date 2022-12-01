@@ -602,25 +602,92 @@ mod tests {
     #[test]
     fn test_calculate_winners() {
         let mut state = State::default();
-        let mut reached_goal = Player {
+        let bob = Player {
             api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
-            info: FullPlayerInfo::new((0, 0), (1, 0), (0, 5), Color::from(ColorName::Red)),
+            info: FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
         };
-        reached_goal.inc_goals_reached();
-        state.add_player(reached_goal);
-        let won_player = Player::new(
+        let jill = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
                 NaiveStrategy::Riemann,
             )),
-            FullPlayerInfo::new((1, 0), (1, 6), (6, 1), Color::from(ColorName::Blue)),
+            FullPlayerInfo::new((1, 5), (1, 0), (1, 1), Color::from(ColorName::Blue)),
         );
-        state.add_player(won_player);
+        state.add_player(bob);
+        state.add_player(jill);
 
+        // as is, jill wins because it is closer to 1, 1
+        let (winners, losers) = Referee::calculate_winners(&state);
+        assert_eq!(winners.len(), 1);
+        assert_eq!(winners[0].name().unwrap(), "jill");
+        assert_eq!(losers.len(), 1);
+
+        let mut state = State::default();
+        let mut bob = Player {
+            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
+            info: FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
+        };
+        let jill = Player::new(
+            Box::new(LocalPlayer::new(
+                Name::from_static("jill"),
+                NaiveStrategy::Riemann,
+            )),
+            FullPlayerInfo::new((1, 5), (1, 0), (1, 1), Color::from(ColorName::Blue)),
+        );
+        bob.inc_goals_reached();
+        state.add_player(bob);
+        state.add_player(jill);
+        // if bob has collected a goal, bob wins
         let (winners, losers) = Referee::calculate_winners(&state);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
+
+        let mut state = State::default();
+        let mut bob = Player {
+            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
+            info: FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
+        };
+        let mut jill = Player::new(
+            Box::new(LocalPlayer::new(
+                Name::from_static("jill"),
+                NaiveStrategy::Riemann,
+            )),
+            FullPlayerInfo::new((1, 5), (1, 1), (5, 5), Color::from(ColorName::Blue)),
+        );
+        bob.inc_goals_reached();
+        bob.inc_goals_reached();
+        jill.inc_goals_reached();
+        jill.inc_goals_reached();
+        state.add_player(bob);
+        state.add_player(jill);
+        // bob wins because it is closer
+        let (winners, losers) = Referee::calculate_winners(&state);
+        assert_eq!(winners.len(), 1);
+        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(losers.len(), 1);
+
+        let mut state = State::default();
+        let mut bob = Player {
+            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
+            info: FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
+        };
+        let mut jill = Player::new(
+            Box::new(LocalPlayer::new(
+                Name::from_static("jill"),
+                NaiveStrategy::Riemann,
+            )),
+            FullPlayerInfo::new((1, 5), (1, 1), (3, 3), Color::from(ColorName::Blue)),
+        );
+        bob.inc_goals_reached();
+        jill.inc_goals_reached();
+        state.add_player(bob);
+        state.add_player(jill);
+        // both players win
+        let (winners, losers) = Referee::calculate_winners(&state);
+        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(winners.len(), 2);
+        assert_eq!(losers.len(), 0);
     }
 
     #[test]
@@ -714,14 +781,14 @@ mod tests {
                     Name::from_static("bob"),
                     NaiveStrategy::Riemann,
                 )),
-                FullPlayerInfo::new((1, 3), (0, 1), (3, 3), ColorName::Red.into()),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Red.into()),
             ),
             Player::new(
                 Box::new(LocalPlayer::new(
-                    Name::from_static("bob"),
+                    Name::from_static("joe"),
                     NaiveStrategy::Riemann,
                 )),
-                FullPlayerInfo::new((1, 3), (0, 1), (3, 3), ColorName::Red.into()),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Blue.into()),
             ),
         ];
         let mut state: State<Player> = State {
