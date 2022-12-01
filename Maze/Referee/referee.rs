@@ -411,7 +411,7 @@ impl Referee {
 
 #[cfg(test)]
 mod tests {
-    use std::{collections::VecDeque, ffi::FromVecWithNulError, sync::Arc};
+    use std::{collections::VecDeque, sync::Arc};
 
     use common::{
         board::{Board, DefaultBoard},
@@ -431,7 +431,6 @@ mod tests {
 
     use crate::{
         config::Config,
-        observer,
         referee::{GameResult, Player, PrivatePlayerInfo, Referee},
     };
 
