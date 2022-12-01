@@ -306,13 +306,16 @@ impl Referee {
 
         const ROUNDS: usize = 1000;
 
+        let mut ended_early = false;
+
         for _ in 0..ROUNDS {
             if self.run_round(state, observers, &mut kicked, &mut remaining_goals) {
+                ended_early = true;
                 break;
             }
         }
         self.broadcast_game_over_to_observers(observers);
-        let (mut winners, losers) = Referee::calculate_winners(state);
+        let (mut winners, losers) = Referee::calculate_winners(state, ended_early);
         Referee::broadcast_winners(&mut winners, losers, &mut kicked);
         GameResult { winners, kicked }
     }
@@ -320,8 +323,14 @@ impl Referee {
     /// Returns a tuple of two `Vec<Box<dyn Player>>`. The first of these vectors contains all
     /// `Box<dyn Player>`s who won the game, and the second vector contains all the losers.
     #[allow(clippy::type_complexity)]
-    pub fn calculate_winners(state: &State<Player>) -> (Vec<Player>, Vec<Player>) {
+    pub fn calculate_winners(
+        state: &State<Player>,
+        ended_early: bool,
+    ) -> (Vec<Player>, Vec<Player>) {
         let mut losers = vec![];
+
+        // the current player in `state` is the player who made a move and ended the game.
+        let game_ender = state.current_player_info();
 
         let players_to_check = {
             let max_goals = state
@@ -343,6 +352,18 @@ impl Referee {
                     acc
                 })
         };
+
+        // If the game ended early, check if the `game_ender` has the highest number of goals
+        // reached. If they do, they are the sole winner and everyone else loses
+        if players_to_check.contains(game_ender) && ended_early {
+            let losers = state
+                .player_info
+                .iter()
+                .cloned()
+                .filter(|pi| pi.color() != game_ender.color())
+                .collect();
+            return (vec![game_ender.clone()], losers);
+        }
 
         let min_dist = players_to_check
             .iter()
@@ -625,7 +646,7 @@ mod tests {
         state.add_player(jill);
 
         // as is, jill wins because it is closer to 1, 1
-        let (winners, losers) = Referee::calculate_winners(&state);
+        let (winners, losers) = Referee::calculate_winners(&state, false);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "jill");
         assert_eq!(losers.len(), 1);
@@ -646,7 +667,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // if bob has collected a goal, bob wins
-        let (winners, losers) = Referee::calculate_winners(&state);
+        let (winners, losers) = Referee::calculate_winners(&state, true);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
@@ -670,7 +691,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // bob wins because it is closer
-        let (winners, losers) = Referee::calculate_winners(&state);
+        let (winners, losers) = Referee::calculate_winners(&state, false);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
@@ -692,7 +713,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // both players win
-        let (winners, losers) = Referee::calculate_winners(&state);
+        let (winners, losers) = Referee::calculate_winners(&state, false);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(winners.len(), 2);
         assert_eq!(losers.len(), 0);
@@ -852,7 +873,7 @@ mod tests {
             ..Default::default()
         };
         let GameResult { winners, kicked } = dbg!(referee.run_from_state(&mut state, &mut vec![]));
-        let (calculated_winners, losers) = dbg!(Referee::calculate_winners(&state));
+        let (calculated_winners, losers) = dbg!(Referee::calculate_winners(&state, true));
 
         assert_eq!(winners.len(), 1);
         assert_eq!(calculated_winners.len(), 1);
