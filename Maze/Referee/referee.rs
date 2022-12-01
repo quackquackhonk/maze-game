@@ -81,6 +81,11 @@ impl Referee {
         DefaultBoard::<7, 7>::default_board()
     }
 
+    /// Creates a vector of alternate goals based on `self.config.multiple_goals` and the given
+    /// State.
+    ///
+    /// If `multiple_goals` is `true`, returns a vector of all possible goals in the `State`, with
+    /// the goals assigned to the `Players` in the game removed.
     pub fn get_initial_goals(&self, state: &State<Player>) -> Vec<Position> {
         if self.config.multiple_goals {
             let assigned_goals: Vec<Position> =
