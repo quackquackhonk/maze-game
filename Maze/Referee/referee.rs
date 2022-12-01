@@ -224,6 +224,8 @@ impl Referee {
                         if state.player_reached_home()
                             && state.player_reached_goal()
                             && remaining_goals.is_empty()
+                            // TODO: This is hack awaiting spec clarification
+                            && state.current_player_info().get_goals_reached() > 0
                         {
                             self.broadcast_state_to_observers(state, observers);
                             // this player wins
@@ -231,9 +233,9 @@ impl Referee {
                         }
 
                         if state.to_full_state().player_reached_goal() {
-                            // player needs to go home
                             state.current_player_info_mut().inc_goals_reached();
                             if !remaining_goals.is_empty() {
+                                // player needs to go home
                                 let goal = remaining_goals
                                     .pop_front()
                                     .expect("We checked it is not empty");
