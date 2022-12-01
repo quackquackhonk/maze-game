@@ -27,7 +27,7 @@ fn main() -> anyhow::Result<()> {
 
     let players: Vec<PlayerSpec> = serde_json::from_reader(stdin())?;
     thread::scope(|s| {
-        for ps in players.into_iter() {
+        for ps in players.into_iter().rev() {
             s.spawn(|| {
                 let (player, name): (Box<dyn PlayerApi>, _) = match ps {
                     PlayerSpec::PS(ps) => {
