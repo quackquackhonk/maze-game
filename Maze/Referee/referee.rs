@@ -174,6 +174,7 @@ impl Referee {
         }
     }
 
+    /// Runs a single round. If the game ends during that round, return true.
     fn run_round(
         &mut self,
         state: &mut State<Player>,
@@ -410,7 +411,7 @@ impl Referee {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Arc;
+    use std::{collections::VecDeque, ffi::FromVecWithNulError, sync::Arc};
 
     use common::{
         board::{Board, DefaultBoard},
@@ -430,6 +431,7 @@ mod tests {
 
     use crate::{
         config::Config,
+        observer,
         referee::{GameResult, Player, PrivatePlayerInfo, Referee},
     };
 
@@ -852,5 +854,125 @@ mod tests {
         assert_eq!(kicked.len(), 0);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers[0].name().unwrap(), "joe");
+    }
+
+    #[test]
+    fn test_run_round() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config {
+                multiple_goals: false,
+            },
+        };
+        let players = vec![
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (5, 3), ColorName::Red.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("joe"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Blue.into()),
+            ),
+        ];
+        let mut state: State<Player> = State {
+            player_info: players.into(),
+            ..Default::default()
+        };
+
+        let mut kicked = vec![];
+
+        referee.broadcast_initial_state(&mut state, &mut kicked);
+
+        // the game does not end
+        assert!(!referee.run_round(
+            &mut state,
+            &mut vec![],
+            &mut kicked,
+            &mut VecDeque::default()
+        ));
+        assert_eq!(state.player_info[0].position(), (0, 0));
+        assert_eq!(state.player_info[0].goal(), (5, 3));
+        assert_eq!(state.player_info[1].position(), (3, 3));
+        assert_eq!(state.player_info[1].goal(), (1, 3));
+
+        // the game does end
+        assert!(referee.run_round(
+            &mut state,
+            &mut vec![],
+            &mut kicked,
+            &mut VecDeque::default()
+        ));
+        // joe is now the 0th player because it won
+        assert_eq!(state.player_info[0].position(), (1, 3));
+        assert_eq!(state.player_info[0].goal(), (1, 3));
+        assert_eq!(state.player_info[1].position(), (5, 3));
+        assert_eq!(state.player_info[1].goal(), (1, 3));
+    }
+
+    #[test]
+    fn test_run_round_multiple() {
+        let mut referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config {
+                multiple_goals: true,
+            },
+        };
+        let players = vec![
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 5), (1, 1), (5, 3), ColorName::Red.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("joe"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Blue.into()),
+            ),
+        ];
+        let mut state: State<Player> = State {
+            player_info: players.into(),
+            ..Default::default()
+        };
+
+        let mut kicked = vec![];
+        let mut remaining_goals: VecDeque<Position> = vec![(1, 1), (5, 5)].into();
+
+        referee.broadcast_initial_state(&mut state, &mut kicked);
+
+        // the game does not end
+        assert_eq!(remaining_goals.len(), 2);
+        assert!(!referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert_eq!(remaining_goals.len(), 1);
+        assert_eq!(state.player_info[0].position(), (0, 0));
+        assert_eq!(state.player_info[0].goal(), (5, 3));
+        assert_eq!(state.player_info[1].position(), (3, 3));
+        assert_eq!(state.player_info[1].goal(), (1, 1));
+
+        // the game does not end
+        assert!(!referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert_eq!(remaining_goals.len(), 0);
+        assert_eq!(state.player_info[0].position(), (5, 3));
+        assert_eq!(state.player_info[0].goal(), (5, 5));
+        assert_eq!(state.player_info[1].position(), (1, 1));
+        assert_eq!(state.player_info[1].goal(), (1, 3));
+
+        // the game does end
+        assert!(referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert_eq!(remaining_goals.len(), 0);
+        // joe is the first player bc it won
+        assert_eq!(state.player_info[0].position(), (1, 3));
+        assert_eq!(state.player_info[0].goal(), (1, 3));
+        assert_eq!(state.player_info[1].position(), (5, 5));
+        assert_eq!(state.player_info[1].goal(), (1, 5));
     }
 }
