@@ -89,7 +89,7 @@ impl Referee {
             state
                 .board
                 .possible_goals()
-                .filter(|g| assigned_goals.contains(g))
+                .filter(|g| !assigned_goals.contains(g))
                 .collect()
         } else {
             vec![]
@@ -490,6 +490,49 @@ mod tests {
         // TODO: fix this
         //  it should be a 3 by 3 board
         //assert_eq!(board, DefaultBoard::<7, 7>::default_board());
+    }
+
+    #[test]
+    fn test_get_initial_goals() {
+        let referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(0)),
+            config: Config::default(),
+        };
+
+        let state = State::default();
+
+        assert!(referee.get_initial_goals(&state).is_empty());
+    }
+
+    #[test]
+    fn test_get_initial_goals_multiple() {
+        let config = Config {
+            multiple_goals: true,
+        };
+
+        let mut state = State::default();
+        let bob = Player::new(
+            Box::new(MockPlayer::default()),
+            FullPlayerInfo::new((1, 1), (1, 1), (1, 5), Color::from(ColorName::Red)),
+        );
+        let jill = Player::new(
+            Box::new(LocalPlayer::new(
+                Name::from_static("jill"),
+                NaiveStrategy::Riemann,
+            )),
+            FullPlayerInfo::new((1, 3), (1, 3), (1, 3), Color::from(ColorName::Blue)),
+        );
+        state.add_player(bob);
+        state.add_player(jill);
+
+        let referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(0)),
+            config,
+        };
+
+        let init_goals = referee.get_initial_goals(&state);
+
+        assert_eq!(init_goals.len(), 7);
     }
 
     #[test]
