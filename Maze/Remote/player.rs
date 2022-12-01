@@ -23,16 +23,6 @@ pub struct PlayerProxy<In: Read + Send, Out: Write + Send> {
 }
 
 impl PlayerProxy<TcpStream, TcpStream> {
-    pub fn from_tcp(name: Name, stream: TcpStream) -> Self {
-        // TODO: what should this timeout actually be?
-        stream
-            .set_read_timeout(Some(Duration::from_secs(2)))
-            .expect("The timeout is not zero");
-        let out = RefCell::new(stream.try_clone().unwrap());
-        let r#in = RefCell::new(serde_json::Deserializer::from_reader(stream));
-        Self { name, out, r#in }
-    }
-
     pub fn try_from_tcp(stream: TcpStream) -> io::Result<Self> {
         stream.set_read_timeout(Some(Duration::from_secs(2)))?;
         let out = RefCell::new(stream.try_clone()?);
