@@ -37,7 +37,6 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
     }
 
     pub fn listen(&mut self) -> anyhow::Result<()> {
-        // TODO: Send name when connecting to the server + connecting to the server
         while let Ok(mut command) = JsonFunctionCall::deserialize(&mut self.r#in) {
             match command.0 {
                 JsonMName::Setup => {
