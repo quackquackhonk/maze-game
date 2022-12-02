@@ -30,6 +30,13 @@ pub struct GameResult {
 /// None -> The game ended without a single winner, the Referee will calculate winners another way.
 pub type GameWinner = Option<Player>;
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum GameStatus {
+    NoMoreRounds,
+    Tie,
+    Winner,
+}
+
 trait RefereeState {
     fn to_player_state(&self) -> State<PubPlayerInfo>;
     fn to_full_state(&self) -> State<FullPlayerInfo>;
@@ -186,7 +193,7 @@ impl Referee {
         observers: &mut Vec<Box<dyn Observer>>,
         kicked: &mut Vec<Player>,
         remaining_goals: &mut VecDeque<Position>,
-    ) -> bool {
+    ) -> Option<GameStatus> {
         let mut num_kicked = 0;
         let mut num_passed = 0;
         let players_in_round = state.player_info.len();
@@ -234,7 +241,7 @@ impl Referee {
                         {
                             self.broadcast_state_to_observers(state, observers);
                             // this player wins
-                            return true;
+                            return Some(GameStatus::Winner);
                         }
 
                         if state.to_full_state().player_reached_goal() {
@@ -271,7 +278,7 @@ impl Referee {
                 num_kicked += 1;
                 match state.remove_player() {
                     Ok(kicked_player) => kicked.push(kicked_player),
-                    Err(_) => return true,
+                    Err(_) => return Some(GameStatus::Tie),
                 };
             } else {
                 state.next_player();
@@ -285,10 +292,10 @@ impl Referee {
         }
 
         if num_passed == players_in_round - num_kicked {
-            return true;
+            return Some(GameStatus::Tie);
         }
 
-        false
+        None
     }
 
     pub fn run_from_state(
@@ -306,13 +313,15 @@ impl Referee {
 
         const ROUNDS: usize = 1000;
 
-        let mut ended_early = false;
+        let mut ended_early = GameStatus::NoMoreRounds;
 
         for _ in 0..ROUNDS {
-            if self.run_round(state, observers, &mut kicked, &mut remaining_goals) {
-                ended_early = true;
+            if let Some(status) =
+                self.run_round(state, observers, &mut kicked, &mut remaining_goals)
+            {
+                ended_early = status;
                 break;
-            }
+            };
         }
         self.broadcast_game_over_to_observers(observers);
         let (mut winners, losers) = Referee::calculate_winners(state, ended_early);
@@ -325,7 +334,7 @@ impl Referee {
     #[allow(clippy::type_complexity)]
     pub fn calculate_winners(
         state: &State<Player>,
-        ended_early: bool,
+        ended_early: GameStatus,
     ) -> (Vec<Player>, Vec<Player>) {
         let mut losers = vec![];
 
@@ -355,7 +364,7 @@ impl Referee {
 
         // If the game ended early, check if the `game_ender` has the highest number of goals
         // reached. If they do, they are the sole winner and everyone else loses
-        if players_to_check.contains(game_ender) && ended_early {
+        if players_to_check.contains(game_ender) && ended_early == GameStatus::Winner {
             let losers = state
                 .player_info
                 .iter()
@@ -459,7 +468,7 @@ mod tests {
 
     use crate::{
         config::Config,
-        referee::{GameResult, Player, PrivatePlayerInfo, Referee},
+        referee::{GameResult, GameStatus, Player, PrivatePlayerInfo, Referee},
     };
 
     #[derive(Debug, Default, Clone)]
@@ -646,7 +655,7 @@ mod tests {
         state.add_player(jill);
 
         // as is, jill wins because it is closer to 1, 1
-        let (winners, losers) = Referee::calculate_winners(&state, false);
+        let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "jill");
         assert_eq!(losers.len(), 1);
@@ -667,7 +676,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // if bob has collected a goal, bob wins
-        let (winners, losers) = Referee::calculate_winners(&state, true);
+        let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
@@ -691,7 +700,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // bob wins because it is closer
-        let (winners, losers) = Referee::calculate_winners(&state, false);
+        let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers.len(), 1);
@@ -713,7 +722,7 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
         // both players win
-        let (winners, losers) = Referee::calculate_winners(&state, false);
+        let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(winners.len(), 2);
         assert_eq!(losers.len(), 0);
@@ -873,7 +882,8 @@ mod tests {
             ..Default::default()
         };
         let GameResult { winners, kicked } = dbg!(referee.run_from_state(&mut state, &mut vec![]));
-        let (calculated_winners, losers) = dbg!(Referee::calculate_winners(&state, true));
+        let (calculated_winners, losers) =
+            dbg!(Referee::calculate_winners(&state, GameStatus::Tie));
 
         assert_eq!(winners.len(), 1);
         assert_eq!(calculated_winners.len(), 1);
@@ -917,24 +927,28 @@ mod tests {
         referee.broadcast_initial_state(&mut state, &mut kicked);
 
         // the game does not end
-        assert!(!referee.run_round(
-            &mut state,
-            &mut vec![],
-            &mut kicked,
-            &mut VecDeque::default()
-        ));
+        assert!(referee
+            .run_round(
+                &mut state,
+                &mut vec![],
+                &mut kicked,
+                &mut VecDeque::default()
+            )
+            .is_none());
         assert_eq!(state.player_info[0].position(), (0, 0));
         assert_eq!(state.player_info[0].goal(), (5, 3));
         assert_eq!(state.player_info[1].position(), (3, 3));
         assert_eq!(state.player_info[1].goal(), (1, 3));
 
         // the game does end
-        assert!(referee.run_round(
-            &mut state,
-            &mut vec![],
-            &mut kicked,
-            &mut VecDeque::default()
-        ));
+        assert!(referee
+            .run_round(
+                &mut state,
+                &mut vec![],
+                &mut kicked,
+                &mut VecDeque::default()
+            )
+            .is_some());
         // joe is now the 0th player because it won
         assert_eq!(state.player_info[0].position(), (1, 3));
         assert_eq!(state.player_info[0].goal(), (1, 3));
@@ -978,7 +992,9 @@ mod tests {
 
         // the game does not end
         assert_eq!(remaining_goals.len(), 2);
-        assert!(!referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert!(referee
+            .run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals)
+            .is_none());
         assert_eq!(remaining_goals.len(), 1);
         assert_eq!(state.player_info[0].position(), (0, 0));
         assert_eq!(state.player_info[0].goal(), (5, 3));
@@ -986,7 +1002,9 @@ mod tests {
         assert_eq!(state.player_info[1].goal(), (1, 1));
 
         // the game does not end
-        assert!(!referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert!(referee
+            .run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals)
+            .is_none());
         assert_eq!(remaining_goals.len(), 0);
         assert_eq!(state.player_info[0].position(), (5, 3));
         assert_eq!(state.player_info[0].goal(), (5, 5));
@@ -994,7 +1012,9 @@ mod tests {
         assert_eq!(state.player_info[1].goal(), (1, 3));
 
         // the game does end
-        assert!(referee.run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals));
+        assert!(referee
+            .run_round(&mut state, &mut vec![], &mut kicked, &mut remaining_goals)
+            .is_some());
         assert_eq!(remaining_goals.len(), 0);
         // joe is the first player bc it won
         assert_eq!(state.player_info[0].position(), (1, 3));
