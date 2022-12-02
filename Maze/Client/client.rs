@@ -9,12 +9,10 @@ use players::bad_player::{BadPlayer, BadPlayerLoop};
 use players::player::LocalPlayer;
 use players::player::PlayerApi;
 use referee::json::PlayerSpec;
-use remote::is_port;
 use remote::referee::RefereeProxy;
 
 #[derive(Parser)]
 struct Args {
-    #[clap(value_parser = is_port)]
     /// The port number the client should connect to
     port: u16,
 

@@ -5,7 +5,6 @@ use players::player::PlayerApi;
 use referee::json::JsonRefereeState;
 use referee::player::Player;
 use referee::referee::{GameResult, Referee};
-use remote::is_port;
 use remote::player::PlayerProxy;
 use serde::Deserialize;
 use std::io::{self, stdin};
@@ -20,7 +19,6 @@ const NUM_WAITING_PERIODS: u64 = 2;
 
 #[derive(Parser)]
 struct Args {
-    #[clap(value_parser = is_port)]
     port: u16,
 }
 
