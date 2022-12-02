@@ -338,6 +338,10 @@ impl Referee {
     ) -> (Vec<Player>, Vec<Player>) {
         let mut losers = vec![];
 
+        if state.player_info.is_empty() {
+            return (vec![], vec![]);
+        }
+
         // the current player in `state` is the player who made a move and ended the game.
         let game_ender = state.current_player_info();
 
