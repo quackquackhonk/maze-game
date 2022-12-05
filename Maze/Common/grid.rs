@@ -66,11 +66,11 @@ impl<T> From<Box<[Box<[T]>]>> for Grid<T> {
     }
 }
 
-impl<T: Clone, const COLS: usize, const ROWS: usize> From<[[T; COLS]; ROWS]> for Grid<T> {
+impl<T, const COLS: usize, const ROWS: usize> From<[[T; COLS]; ROWS]> for Grid<T> {
     fn from(from: [[T; COLS]; ROWS]) -> Self {
-        let grid: Box<[Box<[T]>]> = from[0..ROWS]
-            .iter()
-            .map(|row| row[0..COLS].iter().cloned().collect())
+        let grid: Box<[Box<[T]>]> = from
+            .into_iter()
+            .map(|row| row.into())
             .collect();
         Grid(grid)
     }
