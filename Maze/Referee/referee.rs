@@ -207,32 +207,8 @@ impl Referee {
                     rotations,
                     destination,
                 })) => {
-                    let valid_move =
-                        state
-                            .to_full_state()
-                            .is_valid_move(slide, rotations, destination);
-                    if !valid_move {
-                        eprintln!(
-                            "received invalid move from {}",
-                            state.current_player_info().name().unwrap()
-                        );
-                        true
-                    } else {
-                        // eprintln!(
-                        //     "received [{:?}, {:?}, {:?}] from {}",
-                        //     slide,
-                        //     rotations,
-                        //     destination,
-                        //     state.current_player_info().name().expect("valid")
-                        // );
-                        state.rotate_spare(rotations);
-                        state
-                            .slide_and_insert(slide)
-                            .expect("move has already been validated");
-                        state
-                            .move_player(destination)
-                            .expect("move has already been validated");
-
+                    if state.try_move(slide, rotations, destination).is_ok() {
+                        // check if the current player just won
                         if state.player_reached_home()
                             && state.player_reached_goal()
                             && remaining_goals.is_empty()
@@ -244,23 +220,14 @@ impl Referee {
                             return Some(GameStatus::Winner);
                         }
 
-                        if state.to_full_state().player_reached_goal() {
-                            state.current_player_info_mut().inc_goals_reached();
-                            if !remaining_goals.is_empty() {
-                                // player needs to go home
-                                let goal = remaining_goals
-                                    .pop_front()
-                                    .expect("We checked it is not empty");
-                                state.current_player_info_mut().set_goal(goal);
-                                state.current_player_info_mut().setup(None, goal).is_err()
-                            } else {
-                                let home = state.current_player_info().home();
-                                state.current_player_info_mut().set_goal(home);
-                                state.current_player_info_mut().setup(None, home).is_err()
-                            }
+                        if state.update_current_player_goal(remaining_goals) {
+                            let goal = state.current_player_info().goal();
+                            state.current_player_info_mut().setup(None, goal).is_err()
                         } else {
                             false
                         }
+                    } else {
+                        true
                     }
                 }
                 Ok(None) => {

@@ -25,6 +25,8 @@ pub enum StateError {
     PositionUnreachable(Position),
     #[error("No more players are in the game!")]
     NoPlayersLeft,
+    #[error("The provided move was invalid")]
+    InvalidMove,
     #[error(transparent)]
     BoardError(#[from] board::OutOfBounds),
 }
@@ -394,6 +396,25 @@ impl<Info: PlayerInfo + Clone> State<Info> {
         }
     }
 
+    /// If the given move is validated by `is_valid_move`, perform the move (mutating `self`).
+    /// Otherwise, errors without mutating `self`.
+    pub fn try_move(
+        &mut self,
+        slide: Slide,
+        rotations: usize,
+        destination: Position,
+    ) -> StateResult<()> {
+        if self.is_valid_move(slide, rotations, destination) {
+            self.rotate_spare(rotations);
+            self.slide_and_insert(slide)
+                .expect("validated by is_valid_move");
+            self.move_player(destination)
+                .expect("validated by is_valid_move");
+            return Ok(());
+        }
+        Err(StateError::InvalidMove)
+    }
+
     /// After sliding the row specified by `slide` and inserting the spare tile after rotating it
     /// `rotations` times, can the player go from `start` to `destination`
     pub fn reachable_after_move(
@@ -427,6 +448,29 @@ impl<Info: PrivatePlayerInfo + Clone> State<Info> {
     pub fn player_reached_goal(&self) -> bool {
         let player_info = &self.player_info[0];
         player_info.reached_goal()
+    }
+
+    /// Returns `true` if the current player has reached their goal, `false` otherwise
+    ///
+    /// If the current player has reached their goal:
+    /// - assigns a new goal to that player from `remaining_goals`
+    /// - increments the number of goals they reached
+    pub fn update_current_player_goal(&mut self, remaining_goals: &mut VecDeque<Position>) -> bool {
+        if self.player_reached_goal() {
+            self.current_player_info_mut().inc_goals_reached();
+            if !remaining_goals.is_empty() {
+                // player needs to another goal
+                let goal = remaining_goals
+                    .pop_front()
+                    .expect("We checked it is not empty");
+                self.current_player_info_mut().set_goal(goal);
+            } else {
+                let home = self.current_player_info().home();
+                self.current_player_info_mut().set_goal(home);
+            }
+            return true;
+        }
+        false
     }
 }
 
