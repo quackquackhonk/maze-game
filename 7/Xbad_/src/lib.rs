@@ -78,7 +78,7 @@ pub fn read_and_write_json(
         .next()
         .ok_or_else(|| anyhow!("Did not receive JSON"))?
     {
-        ValidJson::RefereeState(a) => a.into(),
+        ValidJson::RefereeState(a) => a.try_into()?,
         _ => bail!(""),
     };
 

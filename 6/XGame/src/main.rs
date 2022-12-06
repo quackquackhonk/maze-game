@@ -1,7 +1,7 @@
 use std::io::{stdin, stdout};
 use xgames::*;
 
-fn main() -> Result<(), String> {
+fn main() -> anyhow::Result<()> {
     read_and_write_json(stdin().lock(), &mut stdout().lock(), vec![])
 }
 

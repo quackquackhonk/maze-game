@@ -1,5 +1,5 @@
 use common::{
-    json::{Coordinate, JsonAction, JsonBoard, JsonColor, JsonTile, Name},
+    json::{Coordinate, JsonAction, JsonBoard, JsonColor, JsonError, JsonTile, Name},
     FullPlayerInfo, PlayerInfo, State,
 };
 use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
@@ -74,14 +74,19 @@ pub struct JsonRefereeState {
     last: JsonAction,
 }
 
-impl From<JsonRefereeState> for State<FullPlayerInfo> {
-    fn from(jrs: JsonRefereeState) -> Self {
-        //        r#ref.run_game(players);
-        State {
+impl TryFrom<JsonRefereeState> for State<FullPlayerInfo> {
+    type Error = JsonError;
+
+    fn try_from(jrs: JsonRefereeState) -> Result<Self, Self::Error> {
+        Ok(State {
             board: (jrs.board, jrs.spare).into(),
-            player_info: jrs.plmt.into_iter().map(|a| a.into()).collect(),
+            player_info: jrs
+                .plmt
+                .into_iter()
+                .map(|a| a.try_into())
+                .collect::<Result<_, _>>()?,
             previous_slide: jrs.last.into(),
-        }
+        })
     }
 }
 
@@ -97,7 +102,6 @@ impl From<State<FullPlayerInfo>> for JsonRefereeState {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct JsonRefereePlayer {
     current: Coordinate,
@@ -106,14 +110,16 @@ pub struct JsonRefereePlayer {
     color: JsonColor,
 }
 
-impl From<JsonRefereePlayer> for FullPlayerInfo {
-    fn from(jrp: JsonRefereePlayer) -> Self {
-        Self::new(
+impl TryFrom<JsonRefereePlayer> for FullPlayerInfo {
+    type Error = JsonError;
+
+    fn try_from(jrp: JsonRefereePlayer) -> Result<Self, Self::Error> {
+        Ok(Self::new(
             jrp.home.into(),
             jrp.current.into(),
             jrp.goto.into(),
-            jrp.color.try_into().expect("meh"),
-        )
+            jrp.color.try_into()?,
+        ))
     }
 }
 

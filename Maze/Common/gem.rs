@@ -123,13 +123,9 @@ pub enum Gem {
 impl Gem {
     /// Creates an unordered pair of distinct `Gem`s. This function will produce unique pairs of
     /// gems until `num >= NUM_GEMS.pow(2))`
-    ///
-    /// # Errors
-    ///
-    /// If (num / NUM_GEMS) % NUM_GEMS == num % NUM_GEMS, returns `Err(())`
     pub fn pair_from_num(num: usize) -> UnorderedPair<Gem> {
-        let left = Gem::from_num(num);
-        let right = Gem::from_num(num * 2 + 1);
+        let left = Gem::from_num(num / NUM_GEMS);
+        let right = Gem::from_num(num % NUM_GEMS);
         UnorderedPair(left, right)
     }
 

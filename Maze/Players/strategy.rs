@@ -3,8 +3,8 @@ use common::tile::CompassDirection;
 use common::PubPlayerInfo;
 use common::State;
 use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
+use itertools::Itertools;
 use std::cmp::Ordering;
-use std::iter::repeat;
 
 /// This trait represents getting a valid move from a given board state
 pub trait Strategy {
@@ -98,46 +98,29 @@ impl NaiveStrategy {
         };
 
         let mut possible_goals: Vec<Position> = (0..board_state.board.num_rows())
-            .flat_map(|row| (0..board_state.board.num_cols()).zip(repeat(row)))
+            .cartesian_product(0..board_state.board.num_cols())
             .collect();
         possible_goals.sort_by(alternative_goal_order);
         possible_goals
     }
 
-    fn find_move_to_reach(
+    fn find_move_to_reach_helper<const N: usize>(
         &self,
         state: &State<PubPlayerInfo>,
+        lines: impl Iterator<Item = usize>,
+        directions: [CompassDirection; N],
         start: Position,
         destination: Position,
     ) -> PlayerAction {
-        for row in state.board.slideable_rows() {
-            for direction in [CompassDirection::West, CompassDirection::East] {
+        for line in lines {
+            for direction in directions {
                 for rotations in 0..4 {
                     if let Some(lslide) = state.previous_slide {
-                        if lslide.index == row && lslide.direction.opposite() == direction {
+                        if lslide.index == line && lslide.direction.opposite() == direction {
                             continue;
                         }
                     }
-                    let slide = state.board.new_slide(row, direction).unwrap();
-                    if state.reachable_after_move(slide, rotations, destination, start) {
-                        return Some(PlayerMove {
-                            slide,
-                            rotations,
-                            destination,
-                        });
-                    }
-                }
-            }
-        }
-        for col in state.board.slideable_cols() {
-            for direction in [CompassDirection::North, CompassDirection::South] {
-                for rotations in 0..4 {
-                    if let Some(lslide) = state.previous_slide {
-                        if lslide.index == col && lslide.direction.opposite() == direction {
-                            continue;
-                        }
-                    }
-                    let slide = state.board.new_slide(col, direction).unwrap();
+                    let slide = state.board.new_slide(line, direction).unwrap();
                     if state.reachable_after_move(slide, rotations, destination, start) {
                         return Some(PlayerMove {
                             slide,
@@ -149,6 +132,30 @@ impl NaiveStrategy {
             }
         }
         None
+    }
+
+    fn find_move_to_reach(
+        &self,
+        state: &State<PubPlayerInfo>,
+        start: Position,
+        destination: Position,
+    ) -> PlayerAction {
+        self.find_move_to_reach_helper(
+            state,
+            state.board.slideable_rows(),
+            [CompassDirection::West, CompassDirection::East],
+            start,
+            destination,
+        )
+        .or_else(|| {
+            self.find_move_to_reach_helper(
+                state,
+                state.board.slideable_cols(),
+                [CompassDirection::North, CompassDirection::South],
+                start,
+                destination,
+            )
+        })
     }
 }
 

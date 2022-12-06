@@ -91,14 +91,14 @@ impl Serialize for JsonResult {
 #[test]
 fn test_parse_json_result() {
     use common::json::{Index, JsonDegree, JsonDirection};
-    let mut deserializer = serde_json::Deserializer::from_str("\"void\"").into_iter();
+    let mut deserializer = serde_json::Deserializer::from_str(r#""void""#).into_iter();
     assert!(matches!(
         deserializer.next().unwrap().unwrap(),
         JsonResult::Void
     ));
 
     let mut deserializer =
-        serde_json::Deserializer::from_str("[1, \"LEFT\", 90, { \"row#\": 0, \"column#\": 0 }]")
+        serde_json::Deserializer::from_str(r#"[1, "LEFT", 90, { "row#": 0, "column#": 0 }]"#)
             .into_iter();
     let r#move = deserializer.next().unwrap().unwrap();
     dbg!(&r#move);
@@ -115,17 +115,17 @@ fn test_parse_json_result() {
         ))
     ));
 
-    let mut deserializer = serde_json::Deserializer::from_str("\"PASS\"").into_iter();
+    let mut deserializer = serde_json::Deserializer::from_str(r#""PASS""#).into_iter();
     let r#move = deserializer.next().unwrap().unwrap();
     dbg!(&r#move);
     assert!(matches!(r#move, JsonResult::Choice(JsonChoice::Pass)));
 
     assert_eq!(
-        "\"void\"",
+        r#""void""#,
         &serde_json::to_string(&JsonResult::Void).unwrap()
     );
     assert_eq!(
-        "[1,\"LEFT\",90,{\"row#\":0,\"column#\":0}]",
+        r#"[1,"LEFT",90,{"row#":0,"column#":0}]"#,
         &serde_json::to_string(&JsonResult::Choice(JsonChoice::Move(
             Index(1),
             JsonDirection::LEFT,

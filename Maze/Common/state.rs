@@ -238,12 +238,8 @@ impl From<FullPlayerInfo> for PubPlayerInfo {
 pub struct State<PInfo: PlayerInfo> {
     pub board: Board,
     pub player_info: VecDeque<PInfo>,
-    /// Invariant: active_player must be < player_info.len();
-    /// its unsigned so it will always be <= 0.
     pub previous_slide: Option<Slide>,
 }
-
-pub const BOARD_SIZE: usize = 7;
 
 impl<PInfo: PlayerInfo> State<PInfo> {
     pub fn new(board: Board, player_info: Vec<PInfo>) -> Self {
@@ -452,8 +448,7 @@ impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
                 .player_info
                 .into_iter()
                 .map(PubPlayerInfo::from)
-                .collect::<Vec<_>>()
-                .into(),
+                .collect(),
             previous_slide: full_state.previous_slide,
         }
     }

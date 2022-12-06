@@ -116,11 +116,11 @@ mod tests {
         commands.push_str(&serde_json::to_string(&take_turn).unwrap());
         commands.push_str(&serde_json::to_string(&win_cmd).unwrap());
 
-        let referee_output = String::from("\"void\"")
-            + "[0,\"LEFT\",0,{\"row#\":1,\"column#\":3}]"
-            + "\"void\""
-            + "[0,\"LEFT\",0,{\"row#\":1,\"column#\":1}]"
-            + "\"void\"";
+        let referee_output = String::from(r#""void""#)
+            + r#"[0,"LEFT",0,{"row#":1,"column#":3}]"#
+            + r#""void""#
+            + r#"[0,"LEFT",0,{"row#":1,"column#":1}]"#
+            + r#""void""#;
         let mut ref_proxy = RefereeProxy::new(player, commands.as_bytes(), vec![]);
         assert!(ref_proxy.listen().is_ok());
         let ref_out = String::from_utf8(ref_proxy.out);
@@ -166,7 +166,7 @@ mod tests {
         // invalid setup call
         let mut ref_proxy = RefereeProxy::new(
             player,
-            "[\"setup\", [{\"row#\": 1, \"column#\": 0}]]".as_bytes(),
+            r#"["setup", [{"row#": 1, "column#": 0}]]"#.as_bytes(),
             vec![],
         );
         assert!(ref_proxy.listen().is_err());
@@ -178,7 +178,7 @@ mod tests {
         // invalid setup call again!
         let mut ref_proxy = RefereeProxy::new(
             player,
-            "[\"setup\", [{\"row#\": 1, \"column#\": 0}, false]]".as_bytes(),
+            r#"["setup", [{"row#": 1, "column#": 0}, false]]"#.as_bytes(),
             vec![],
         );
         assert!(ref_proxy.listen().is_err());

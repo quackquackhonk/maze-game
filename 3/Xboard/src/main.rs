@@ -5,8 +5,10 @@ use std::io::{stdin, stdout, Read, Write};
 
 use anyhow::anyhow;
 use common::board::Board;
+use common::gem::Gem;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonBoard};
+use common::tile::{ConnectorShape, Tile};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -24,7 +26,15 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
         .next()
         .ok_or_else(|| anyhow!("No valid Board JSON found"))?
     {
-        ValidJson::Board(board) => board.into(),
+        ValidJson::Board(board) => (
+            board,
+            Tile {
+                connector: ConnectorShape::Crossroads,
+                gems: (Gem::Alexandrite, Gem::Ammolite).into(),
+            }
+            .into(),
+        )
+            .into(),
         _ => Err(anyhow!("Board was not the first JSON object sent"))?,
     };
 

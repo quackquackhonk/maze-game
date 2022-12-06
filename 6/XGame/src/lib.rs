@@ -3,6 +3,7 @@ use std::{
     sync::Arc,
 };
 
+use anyhow::anyhow;
 use common::{json::Name, FullPlayerInfo, State};
 use parking_lot::Mutex;
 use players::player::{LocalPlayer, PlayerApi};
@@ -22,24 +23,17 @@ enum ValidJson {
 }
 
 /// Turn the `impl Read` into A `ValidJson` Stream
-fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<Item = ValidJson>> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<ValidJson>()
-        .map(|x| x.map_err(|e| e.to_string()))
-        .collect::<Result<Vec<_>, String>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter())
 }
 
 /// Writes the `impl Serialize` to the `impl Write`
-fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> Result<(), String> {
-    writer
-        .write(
-            serde_json::to_string(&output)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )
-        .map_err(|e| e.to_string())?;
+fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> anyhow::Result<()> {
+    writer.write(serde_json::to_string(&output)?.as_bytes())?;
     Ok(())
 }
 
@@ -47,10 +41,13 @@ pub fn read_and_write_json(
     reader: impl Read,
     writer: &mut impl Write,
     mut observers: Vec<Box<dyn Observer>>,
-) -> Result<(), String> {
+) -> anyhow::Result<()> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let players: Vec<Box<dyn PlayerApi + Send>> = match input.next().ok_or("asdasdas")? {
+    let players: Vec<Box<dyn PlayerApi + Send>> = match input
+        .next()
+        .ok_or_else(|| anyhow!("Did not recieve a PlayerSpec array"))?
+    {
         ValidJson::PlayerSpec(pss) => pss
             .into_iter()
             .map(|pss| -> Box<dyn PlayerApi + Send> {
@@ -58,12 +55,15 @@ pub fn read_and_write_json(
                 Box::new(LocalPlayer::new(name, strategy))
             })
             .collect(),
-        _ => Err("")?,
+        _ => Err(anyhow!("Recieved something other than a player spec array"))?,
     };
 
-    let state: State<FullPlayerInfo> = match input.next().ok_or("ehhhhhhh")? {
-        ValidJson::RefereeState(a) => a.into(),
-        _ => Err("")?,
+    let state: State<FullPlayerInfo> = match input
+        .next()
+        .ok_or_else(|| anyhow!("Didn't receive a State"))?
+    {
+        ValidJson::RefereeState(a) => a.try_into()?,
+        _ => Err(anyhow!("Recieved something other than a RefereeState"))?,
     };
 
     let mut state: State<Player> = State {

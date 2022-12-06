@@ -139,9 +139,9 @@ impl From<UnorderedPair<Gem>> for Treasure {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Coordinate {
-    #[serde(rename(deserialize = "row#", serialize = "row#"))]
+    #[serde(rename = "row#")]
     pub row: Index,
-    #[serde(rename(deserialize = "column#", serialize = "column#"))]
+    #[serde(rename = "column#")]
     pub column: Index,
 }
 
@@ -177,34 +177,6 @@ pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Index(pub usize);
-
-impl From<JsonBoard> for Board {
-    fn from(val: JsonBoard) -> Self {
-        let mut zipped_board = val
-            .treasures
-            .0
-            .into_iter()
-            .flat_map(|t| t.0)
-            .zip(val.connectors.0.into_iter().flat_map(|c| c.0));
-        let grid = [[(); 7]; 7].map(|list| {
-            list.map(|_| {
-                let tile_info = zipped_board.next().unwrap();
-                Tile {
-                    connector: tile_info.1.into(),
-                    gems: tile_info.0.into(),
-                }
-            })
-        });
-
-        Board::new(
-            grid,
-            Tile {
-                connector: ConnectorShape::Crossroads,
-                gems: (Gem::Amethyst, Gem::Garnet).into(),
-            },
-        )
-    }
-}
 
 impl From<Board> for (JsonBoard, JsonTile) {
     fn from(b: Board) -> Self {
@@ -391,7 +363,7 @@ pub type JsonColor = String;
 
 /// Conversion from `JsonColor`s into `common::Color`s
 impl TryFrom<JsonColor> for Color {
-    type Error = String;
+    type Error = JsonError;
 
     fn try_from(value: JsonColor) -> Result<Self, Self::Error> {
         use ColorName::*;
@@ -416,7 +388,9 @@ impl TryFrom<JsonColor> for Color {
                 })
             }
             // need to do a regex match for color codes
-            _ => Err(format!("Invalid Color code {}", value)),
+            _ => Err(JsonError {
+                msg: format!("Invalid Color code {}", value),
+            }),
         }
     }
 }

@@ -112,7 +112,7 @@ impl Board {
 
     /// Can you go from `from` to `to` in the given `dir`?
     fn connected_positions(&self, from: Position, to: Position, dir: CompassDirection) -> bool {
-        self.grid[from].connected(&self.grid[to], dir)
+        Tile::connected(&self.grid[from], &self.grid[to], dir)
     }
 
     /// Returns a Vector of Positions representing all cells directly reachable from `start`
@@ -190,7 +190,7 @@ pub trait DefaultBoard<const COLS: usize, const ROWS: usize> {
 }
 
 impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
-    /// Default Board<7> is:
+    /// Default Board<7,7> is:
     /// ─│└┌┐┘┴
     /// ├┬┤┼─│└
     /// ┌┐┘┴├┬┤
@@ -200,7 +200,7 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
     /// ┤┼─│└┌┐
     /// extra = ┼
     ///
-    /// Default Board<3> is:  
+    /// Default Board<3,3> is:  
     /// ─│└  
     /// ┌┐┘  
     /// ┴├┬  

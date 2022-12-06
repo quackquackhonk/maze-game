@@ -7,7 +7,7 @@ use referee::player::Player;
 use referee::referee::{GameResult, Referee};
 use remote::player::PlayerProxy;
 use serde::Deserialize;
-use std::io::{self, stdin};
+use std::io::stdin;
 use std::net::{SocketAddr, TcpStream};
 use std::time::Duration;
 use tokio::net::TcpListener;
@@ -55,13 +55,13 @@ async fn recieve_connections(
 }
 
 #[tokio::main]
-pub async fn main() -> io::Result<()> {
+pub async fn main() -> anyhow::Result<()> {
     let Args { port } = Args::parse();
 
     eprintln!("Parsing JsonRefereeState");
     let state_info: State<FullPlayerInfo> = {
         let jsonstate: JsonRefereeState = serde_json::from_reader(stdin())?;
-        jsonstate.into()
+        jsonstate.try_into()?
     };
     let num_players = state_info.player_info.len();
 
