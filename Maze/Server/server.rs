@@ -87,11 +87,11 @@ pub async fn main() -> anyhow::Result<()> {
     }
     let mut state = State {
         board: state_info.board,
-        player_info: state_info
-            .player_info
+        player_info: player_connections
             .into_iter()
-            .zip(player_connections)
-            .map(|(info, api)| Player::new(api, info))
+            .rev()
+            .zip(state_info.player_info)
+            .map(|(api, info)| Player::new(api, info))
             .collect(),
         previous_slide: state_info.previous_slide,
     };
