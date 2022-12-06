@@ -1,4 +1,5 @@
 use clap::Parser;
+use common::grid::Position;
 use common::json::Name;
 use common::{FullPlayerInfo, State};
 use players::player::PlayerApi;
@@ -59,7 +60,7 @@ pub async fn main() -> anyhow::Result<()> {
     let Args { port } = Args::parse();
 
     eprintln!("Parsing JsonRefereeState");
-    let state_info: State<FullPlayerInfo> = {
+    let (state_info, goals): (State<FullPlayerInfo>, Vec<Position>) = {
         let jsonstate: JsonRefereeState = serde_json::from_reader(stdin())?;
         jsonstate.try_into()?
     };
@@ -98,7 +99,7 @@ pub async fn main() -> anyhow::Result<()> {
 
     // we have enough players :)
     let mut referee = Referee::new(1);
-    let game_result = referee.run_from_state(&mut state, &mut vec![]);
+    let game_result = referee.run_from_state(&mut state, &mut vec![], goals.into());
     println!("{}", serde_json::to_string(&game_result).unwrap());
 
     Ok(())

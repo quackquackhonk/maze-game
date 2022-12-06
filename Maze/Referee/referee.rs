@@ -302,12 +302,12 @@ impl Referee {
         &mut self,
         state: &mut State<Player>,
         observers: &mut Vec<Box<dyn Observer>>,
+        mut remaining_goals: VecDeque<Position>,
     ) -> GameResult {
         let mut kicked = vec![];
         // loop until game is over
         // - ask each player for a turn
         // - check if that player won
-        let mut remaining_goals: VecDeque<Position> = self.get_initial_goals(state).into();
         self.broadcast_initial_state(state, &mut kicked);
         self.broadcast_state_to_observers(state, observers);
 
@@ -446,7 +446,8 @@ impl Referee {
         // communicate initial state to all players
         let mut state = self.make_initial_state(players, board);
 
-        self.run_from_state(&mut state, &mut observers)
+        let goals = self.get_initial_goals(&state).into();
+        self.run_from_state(&mut state, &mut observers, goals)
     }
 }
 
@@ -852,7 +853,8 @@ mod tests {
         state.board.extra.connector = corner;
         state.previous_slide = state.board.new_slide(0, CompassDirection::West);
 
-        let GameResult { winners, kicked } = referee.run_from_state(&mut state, &mut vec![]);
+        let GameResult { winners, kicked } =
+            referee.run_from_state(&mut state, &mut vec![], VecDeque::default());
         assert_eq!(winners.len(), 2);
         assert_eq!(kicked.len(), 0);
     }
@@ -885,7 +887,9 @@ mod tests {
             player_info: players.into(),
             ..Default::default()
         };
-        let GameResult { winners, kicked } = dbg!(referee.run_from_state(&mut state, &mut vec![]));
+        let goals = referee.get_initial_goals(&state);
+        let GameResult { winners, kicked } =
+            dbg!(referee.run_from_state(&mut state, &mut vec![], goals.into()));
         let (calculated_winners, losers) =
             dbg!(Referee::calculate_winners(&state, GameStatus::Tie));
 
