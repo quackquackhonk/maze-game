@@ -46,6 +46,8 @@ pub enum JsonError {
     HomeMoveableTile,
     #[error("A player's goal is on a moveable tile")]
     GoalMoveableTile,
+    #[error("The player has been assigned a goal that is in the list of remaining goals")]
+    DuplicateAssignedGoals,
     #[error("{0:?} is out of bounds on the given board")]
     PositionOutOfBounds(Position),
     #[error("{0:?} is not a valid slide for this board")]
@@ -238,15 +240,14 @@ impl TryFrom<(JsonBoard, JsonTile)> for Board {
         let grid: Box<[Box<_>]> = (0..num_rows)
             .map(|_| 0..num_cols)
             .map(|list| {
-                Ok(list
-                    .map(|_| {
-                        let tile_info = zipped_board.next().ok_or(JsonError::NotEnoughElements)?;
-                        Ok(Tile {
-                            connector: tile_info.1.into(),
-                            gems: tile_info.0.into(),
-                        })
+                list.map(|_| {
+                    let tile_info = zipped_board.next().ok_or(JsonError::NotEnoughElements)?;
+                    Ok(Tile {
+                        connector: tile_info.1.into(),
+                        gems: tile_info.0,
                     })
-                    .collect::<Result<_, JsonError>>()?)
+                })
+                .collect::<Result<_, JsonError>>()
             })
             .collect::<Result<_, JsonError>>()?;
 

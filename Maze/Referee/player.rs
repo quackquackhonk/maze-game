@@ -165,10 +165,7 @@ where
     let (tx, rx) = mpsc::channel();
     let _ = thread::spawn(move || {
         let result = f();
-        match tx.send(result) {
-            Ok(()) => {}
-            Err(_) => (),
-        }
+        tx.send(result)
     });
 
     match rx.recv_timeout(timeout) {
