@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::{anyhow, bail};
-use common::{json::Name, FullPlayerInfo, State};
+use common::{grid::Position, json::Name, FullPlayerInfo, State};
 use parking_lot::Mutex;
 use players::{
     bad_player::BadPlayer,
@@ -74,7 +74,7 @@ pub fn read_and_write_json(
         _ => bail!(""),
     };
 
-    let state: State<FullPlayerInfo> = match input
+    let (state, goals): (State<FullPlayerInfo>, Vec<Position>) = match input
         .next()
         .ok_or_else(|| anyhow!("Did not receive JSON"))?
     {
@@ -98,7 +98,7 @@ pub fn read_and_write_json(
 
     let mut r#ref = Referee::new(0);
 
-    let game_result = r#ref.run_from_state(&mut state, &mut observers);
+    let game_result = r#ref.run_from_state(&mut state, &mut observers, goals.into());
     let mut winner_names: Vec<Name> = game_result
         .winners
         .into_iter()

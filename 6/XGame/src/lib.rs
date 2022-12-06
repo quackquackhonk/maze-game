@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::anyhow;
-use common::{json::Name, FullPlayerInfo, State};
+use common::{grid::Position, json::Name, FullPlayerInfo, State};
 use parking_lot::Mutex;
 use players::player::{LocalPlayer, PlayerApi};
 use referee::{
@@ -33,7 +33,7 @@ fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<
 
 /// Writes the `impl Serialize` to the `impl Write`
 fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> anyhow::Result<()> {
-    writer.write(serde_json::to_string(&output)?.as_bytes())?;
+    writer.write_all(serde_json::to_string(&output)?.as_bytes())?;
     Ok(())
 }
 
@@ -58,7 +58,7 @@ pub fn read_and_write_json(
         _ => Err(anyhow!("Recieved something other than a player spec array"))?,
     };
 
-    let state: State<FullPlayerInfo> = match input
+    let (state, goals): (State<FullPlayerInfo>, Vec<Position>) = match input
         .next()
         .ok_or_else(|| anyhow!("Didn't receive a State"))?
     {
@@ -82,7 +82,7 @@ pub fn read_and_write_json(
 
     let mut r#ref = Referee::new(0);
 
-    let game_result = r#ref.run_from_state(&mut state, &mut observers);
+    let game_result = r#ref.run_from_state(&mut state, &mut observers, goals.into());
     let mut winner_names: Vec<Name> = game_result
         .winners
         .into_iter()

@@ -1,3 +1,4 @@
+use crate::referee::GameResult;
 use common::{
     board::Board,
     grid::Position,
@@ -9,8 +10,6 @@ use common::{
 };
 use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};
-
-use crate::referee::GameResult;
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct PS(Name, JsonStrategy);
@@ -77,6 +76,7 @@ pub struct JsonRefereeState {
     spare: JsonTile,
     plmt: Vec<JsonRefereePlayer>,
     last: JsonAction,
+    goals: Option<Vec<Position>>,
 }
 
 fn valid_positions(
@@ -101,13 +101,14 @@ fn valid_positions(
     Ok(())
 }
 
-impl<PI: PrivatePlayerInfo> TryFrom<JsonRefereeState> for State<PI>
+impl<PI: PrivatePlayerInfo> TryFrom<JsonRefereeState> for (State<PI>, Vec<Position>)
 where
     PI: TryFrom<JsonRefereePlayer, Error = JsonError>,
 {
     type Error = JsonError;
 
     fn try_from(jstate: JsonRefereeState) -> Result<Self, Self::Error> {
+        // TODO: needs to be validate given goals
         let board: Board = (jstate.board, jstate.spare).try_into()?;
 
         let player_info: Vec<PI> = jstate
@@ -135,6 +136,11 @@ where
 
         let goals = player_info.iter().map(|pi| pi.goal()).collect::<Vec<_>>();
 
+        let rem_goals = jstate.goals.unwrap_or_default();
+        if goals.iter().any(|goal| rem_goals.contains(goal)) {
+            return Err(JsonError::DuplicateAssignedGoals);
+        }
+
         valid_positions(
             goals,
             board.possible_goals().collect(),
@@ -149,11 +155,14 @@ where
             }
         }
 
-        Ok(Self {
-            board,
-            player_info: player_info.into(),
-            previous_slide,
-        })
+        Ok((
+            State {
+                board,
+                player_info: player_info.into(),
+                previous_slide,
+            },
+            rem_goals,
+        ))
     }
 }
 
@@ -165,6 +174,7 @@ impl From<State<FullPlayerInfo>> for JsonRefereeState {
             spare,
             plmt: st.player_info.into_iter().map(|pi| pi.into()).collect(),
             last: st.previous_slide.into(),
+            goals: None,
         }
     }
 }
