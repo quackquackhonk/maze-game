@@ -1,8 +1,8 @@
 //! Contains JSON definitions for data in the `player` module
 
 use common::board::Board;
+use common::board::Slide;
 use common::json::{Coordinate, Index, JsonDegree, JsonDirection, JsonError};
-use common::tile::CompassDirection;
 use serde::ser::SerializeTuple;
 use serde::{de, Deserialize, Deserializer, Serialize};
 
@@ -125,19 +125,17 @@ impl JsonChoice {
     pub fn into_action(self, board: &Board) -> Result<PlayerAction, JsonError> {
         match self {
             JsonChoice::Pass => Ok(None),
-            JsonChoice::Move(index, direction, rotations, destination) => Ok(Some(PlayerMove {
-                slide: board
-                    .new_slide(index.0, direction.into())
-                    .ok_or(JsonError {
-                        msg: format!(
-                            "Slide row/col {} with direction {:?} is not a slidable row/col",
-                            index.0,
-                            CompassDirection::from(direction),
-                        ),
-                    })?,
-                rotations: rotations.try_into()?,
-                destination: destination.into(),
-            })),
+            JsonChoice::Move(index, direction, rotations, destination) => {
+                let slide = Slide::new_unchecked(index.0, direction.into());
+                if !board.valid_slide(slide) {
+                    return Err(JsonError::InvalidSlide(slide));
+                }
+                Ok(Some(PlayerMove {
+                    slide,
+                    rotations: rotations.try_into()?,
+                    destination: destination.into(),
+                }))
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ impl Board {
     }
 
     pub fn slideable_rows(&self) -> impl Iterator<Item = usize> {
-        (0..=self.num_rows()).step_by(2)
+        (0..self.num_rows()).step_by(2)
     }
 
     #[inline]
@@ -47,7 +47,12 @@ impl Board {
     }
 
     pub fn slideable_cols(&self) -> impl Iterator<Item = usize> {
-        (0..=self.num_cols()).step_by(2)
+        (0..self.num_cols()).step_by(2)
+    }
+
+    #[must_use]
+    pub fn in_bounds(&self, pos: &Position) -> bool {
+        (0..self.num_cols()).contains(&pos.0) && (0..self.num_rows()).contains(&pos.1)
     }
 
     pub fn possible_homes(&self) -> impl Iterator<Item = Position> {
@@ -256,18 +261,23 @@ impl Board {
     /// assert!(board.new_slide(4, CompassDirection::East).is_some());
     /// ```
     pub fn new_slide(&self, index: usize, direction: CompassDirection) -> Option<Slide> {
+        let slide = Slide::new_unchecked(index, direction);
+        self.valid_slide(slide).then_some(slide)
+    }
+
+    pub fn valid_slide(&self, Slide { index, direction }: Slide) -> bool {
         match direction {
             CompassDirection::North | CompassDirection::South
                 if self.slideable_rows().contains(&index) =>
             {
-                Some(Slide { index, direction })
+                true
             }
             CompassDirection::East | CompassDirection::West
                 if self.slideable_cols().contains(&index) =>
             {
-                Some(Slide { index, direction })
+                true
             }
-            _ => None,
+            _ => false,
         }
     }
 }

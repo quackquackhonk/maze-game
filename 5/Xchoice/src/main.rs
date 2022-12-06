@@ -1,5 +1,6 @@
 use std::io::{stdin, stdout, Read, Write};
 
+use anyhow::anyhow;
 use common::grid::Position;
 use common::json::{Coordinate, JsonState};
 use common::{PubPlayerInfo, State};
@@ -17,43 +18,46 @@ enum ValidJson {
 }
 
 /// Turn the `impl Read` into A `ValidJson` Stream
-fn get_json_iter_from_reader(reader: impl Read) -> Result<impl Iterator<Item = ValidJson>, String> {
+fn get_json_iter_from_reader(reader: impl Read) -> anyhow::Result<impl Iterator<Item = ValidJson>> {
     let deserializer = serde_json::Deserializer::from_reader(reader);
     Ok(deserializer
         .into_iter::<ValidJson>()
-        .map(|x| x.map_err(|e| e.to_string()))
-        .collect::<Result<Vec<_>, String>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter())
 }
 
 /// Writes the `impl Serialize` to the `impl Write`
-fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> Result<(), String> {
-    writer
-        .write(
-            serde_json::to_string(&output)
-                .map_err(|e| e.to_string())?
-                .as_bytes(),
-        )
-        .map_err(|e| e.to_string())?;
-    Ok(())
+fn write_json_out_to_writer(output: impl Serialize, writer: &mut impl Write) -> anyhow::Result<()> {
+    Ok(writer.write_all(serde_json::to_string(&output)?.as_bytes())?)
 }
 
-fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(), String> {
+fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Result<()> {
     let mut input = get_json_iter_from_reader(reader)?;
 
-    let strat: NaiveStrategy = match input.next().ok_or("No valid JSON Strategy found")? {
+    let strat: NaiveStrategy = match input
+        .next()
+        .ok_or_else(|| anyhow!("No valid JSON Strategy found"))?
+    {
         ValidJson::StrategyDesig(strat) => strat.into(),
-        _ => Err("StrategyDesignation was not the first json input found")?,
+        _ => Err(anyhow!(
+            "StrategyDesignation was not the first json input found"
+        ))?,
     };
 
-    let state: State<PubPlayerInfo> = match input.next().ok_or("No valid State JSON found")? {
-        ValidJson::State(state) => state.into(),
-        _ => Err("State was not the second json input found")?,
+    let state: State<PubPlayerInfo> = match input
+        .next()
+        .ok_or_else(|| anyhow!("No valid State JSON found"))?
+    {
+        ValidJson::State(state) => state.try_into()?,
+        _ => Err(anyhow!("State was not the second json input found"))?,
     };
 
-    let goal: Position = match input.next().ok_or("No valid State JSON found")? {
+    let goal: Position = match input
+        .next()
+        .ok_or_else(|| anyhow!("No valid State JSON found"))?
+    {
         ValidJson::Goal(state) => state.into(),
-        _ => Err("State was not the second json input found")?,
+        _ => Err(anyhow!("State was not the second json input found"))?,
     };
 
     let start = state.player_info[0].current;
@@ -65,7 +69,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> Result<(),
     Ok(())
 }
 
-fn main() -> Result<(), String> {
+fn main() -> anyhow::Result<()> {
     read_and_write_json(stdin().lock(), &mut stdout().lock())
 }
 

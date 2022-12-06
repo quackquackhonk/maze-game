@@ -7,7 +7,7 @@ use common::board::Slide;
 use common::grid::Position;
 use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
 use common::tile::CompassDirection;
-use common::{FullPlayerInfo, State};
+use common::{PubPlayerInfo, State};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -22,11 +22,11 @@ pub enum ValidJson {
 fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Result<()> {
     let mut test_input = get_json_iter_from_reader(reader)?;
 
-    let mut state: State<FullPlayerInfo> = match test_input
+    let mut state: State<PubPlayerInfo> = match test_input
         .next()
         .ok_or_else(|| anyhow!("No valid State JSON found"))?
     {
-        ValidJson::State(state) => state.into(),
+        ValidJson::State(state) => state.try_into()?,
         _ => Err(anyhow!("State was not the first JSON object sent"))?,
     };
 

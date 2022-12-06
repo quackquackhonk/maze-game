@@ -45,7 +45,7 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
                         _ => Err(anyhow!("Last argument was not a goal"))?,
                     };
                     let state = match command.1.pop() {
-                        Some(JsonArguments::State(state)) => Some(state.into()),
+                        Some(JsonArguments::State(state)) => Some(state.try_into()?),
                         Some(JsonArguments::Boolean(b)) if !b => None,
                         _ => Err(anyhow!("First argument was not an Option<State>"))?,
                     };
@@ -55,7 +55,7 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
                 }
                 JsonMName::TakeTurn => {
                     let state = match command.1.pop() {
-                        Some(JsonArguments::State(state)) => state.into(),
+                        Some(JsonArguments::State(state)) => state.try_into()?,
                         _ => Err(anyhow!("Did not recieve a state"))?,
                     };
                     let choice = self.player.take_turn(state)?;

@@ -1,6 +1,7 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, collections::HashSet, hash::Hash};
 
 use aliri_braid::braid;
+use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use unordered_pair::UnorderedPair;
@@ -8,8 +9,9 @@ use unordered_pair::UnorderedPair;
 use crate::{
     board::{Board, Slide},
     gem::Gem,
+    grid::Position,
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, ColorName, FullPlayerInfo, PubPlayerInfo, State,
+    Color, ColorName, PlayerInfo, PubPlayerInfo, State,
 };
 
 #[derive(Debug, Error)]
@@ -31,9 +33,25 @@ impl aliri_braid::Validator for Name {
 }
 
 #[derive(Debug, Error)]
-#[error("this json is formed incorrectly: {msg}")]
-pub struct JsonError {
-    pub msg: String,
+pub enum JsonError {
+    #[error("This board has not enough gems or connectors")]
+    NotEnoughElements,
+    #[error("This board has gem pairs that are not unique")]
+    NonUniqueGems,
+    #[error("Players in this state do not have unique colors")]
+    NonUniqueColors,
+    #[error("More than one player occupies a tile for a home")]
+    NonUniqueHomes,
+    #[error("A player's home is on a moveable tile")]
+    HomeMoveableTile,
+    #[error("A player's goal is on a moveable tile")]
+    GoalMoveableTile,
+    #[error("{0:?} is out of bounds on the given board")]
+    PositionOutOfBounds(Position),
+    #[error("{0:?} is not a valid slide for this board")]
+    InvalidSlide(Slide),
+    #[error(transparent)]
+    Other(#[from] anyhow::Error),
 }
 
 impl PartialEq<&str> for Name {
@@ -54,6 +72,11 @@ pub struct Matrix<T>(Vec<Row<T>>);
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Row<T>(Vec<T>);
 
+impl<T: Clone> Clone for Row<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
 #[derive(Debug, Deserialize, Serialize)]
 pub enum Connector {
     #[serde(rename = "│")]
@@ -122,7 +145,7 @@ impl From<ConnectorShape> for Connector {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 pub struct Treasure(Gem, Gem);
 
 impl From<Treasure> for UnorderedPair<Gem> {
@@ -178,6 +201,59 @@ pub fn cmp_coordinates(c1: &Coordinate, c2: &Coordinate) -> Ordering {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Index(pub usize);
 
+pub fn has_unique_elements<T>(iter: T) -> bool
+where
+    T: IntoIterator,
+    T::Item: Eq + Hash,
+{
+    let mut unique = HashSet::new();
+    iter.into_iter().all(move |x| unique.insert(x))
+}
+
+impl TryFrom<(JsonBoard, JsonTile)> for Board {
+    type Error = JsonError;
+
+    fn try_from((jboard, jtile): (JsonBoard, JsonTile)) -> Result<Self, Self::Error> {
+        let num_rows = jboard.treasures.0.len();
+        let mut gems = jboard
+            .treasures
+            .0
+            .into_iter()
+            .flat_map(|t| t.0)
+            .map(UnorderedPair::from)
+            .collect::<Vec<_>>();
+        let num_cols = gems.len() / num_rows;
+
+        gems.push((jtile.image1, jtile.image2).into());
+
+        if !has_unique_elements(&gems) {
+            return Err(JsonError::NonUniqueGems);
+        }
+        gems.pop();
+
+        let mut zipped_board = gems
+            .into_iter()
+            .zip(jboard.connectors.0.into_iter().flat_map(|c| c.0));
+
+        let grid: Box<[Box<_>]> = (0..num_rows)
+            .map(|_| 0..num_cols)
+            .map(|list| {
+                Ok(list
+                    .map(|_| {
+                        let tile_info = zipped_board.next().ok_or(JsonError::NotEnoughElements)?;
+                        Ok(Tile {
+                            connector: tile_info.1.into(),
+                            gems: tile_info.0.into(),
+                        })
+                    })
+                    .collect::<Result<_, JsonError>>()?)
+            })
+            .collect::<Result<_, JsonError>>()?;
+
+        Ok(Board::new(grid, jtile.into()))
+    }
+}
+
 impl From<Board> for (JsonBoard, JsonTile) {
     fn from(b: Board) -> Self {
         let rows = b.num_rows();
@@ -206,28 +282,6 @@ impl From<Board> for (JsonBoard, JsonTile) {
     }
 }
 
-impl From<(JsonBoard, JsonTile)> for Board {
-    fn from((jboard, jtile): (JsonBoard, JsonTile)) -> Self {
-        let mut zipped_board = jboard
-            .treasures
-            .0
-            .into_iter()
-            .flat_map(|t| t.0)
-            .zip(jboard.connectors.0.into_iter().flat_map(|c| c.0));
-        let grid = [[(); 7]; 7].map(|list| {
-            list.map(|_| {
-                let tile_info = zipped_board.next().unwrap();
-                Tile {
-                    connector: tile_info.1.into(),
-                    gems: tile_info.0.into(),
-                }
-            })
-        });
-
-        Board::new(grid, jtile.into())
-    }
-}
-
 /// Describes the current state of the board; the spare tile; the
 /// players and in what order they take turns (left to right); and the last
 /// sliding action performed (if any). The first item in "plmt" is the
@@ -246,31 +300,66 @@ pub struct JsonState {
     pub last: JsonAction,
 }
 
-impl From<JsonState> for State<FullPlayerInfo> {
-    fn from(jstate: JsonState) -> Self {
-        let player_info: Vec<FullPlayerInfo> =
-            jstate.plmt.into_iter().map(|pi| pi.into()).collect();
-        State {
-            board: (jstate.board, jstate.spare).into(),
-            player_info: player_info.into(),
-            previous_slide: jstate.last.into(),
+impl<PI: PlayerInfo> TryFrom<JsonState> for State<PI>
+where
+    PI: TryFrom<JsonPlayer, Error = JsonError>,
+{
+    type Error = JsonError;
+
+    fn try_from(jstate: JsonState) -> Result<Self, Self::Error> {
+        let board: Board = (jstate.board, jstate.spare).try_into()?;
+
+        let player_info: Vec<PI> = jstate
+            .plmt
+            .into_iter()
+            .map(|pi| pi.try_into())
+            .collect::<Result<_, JsonError>>()?;
+
+        let colors = player_info.iter().map(|pi| pi.color());
+        if !has_unique_elements(colors) {
+            return Err(JsonError::NonUniqueColors);
         }
+
+        let homes = player_info.iter().map(|pi| pi.home()).collect::<Vec<_>>();
+        if !has_unique_elements(&homes) {
+            return Err(JsonError::NonUniqueHomes);
+        }
+
+        let possible_homes = board.possible_homes().collect::<Vec<_>>();
+        if homes.iter().any(|home| !possible_homes.contains(home)) {
+            return Err(JsonError::HomeMoveableTile);
+        }
+
+        homes
+            .iter()
+            .fold(Ok(()), |acc: Result<(), JsonError>, home| {
+                board
+                    .in_bounds(home)
+                    .then_some(())
+                    .ok_or(JsonError::PositionOutOfBounds(*home))?;
+                acc
+            })?;
+
+        let previous_slide = jstate.last.into();
+        if let Some(slide) = previous_slide {
+            if !board.valid_slide(slide) {
+                return Err(JsonError::InvalidSlide(slide));
+            }
+        }
+
+        Ok(Self {
+            board,
+            player_info: player_info.into(),
+            previous_slide,
+        })
     }
 }
 
-impl From<JsonState> for State<PubPlayerInfo> {
-    fn from(jstate: JsonState) -> Self {
-        let player_info: Vec<PubPlayerInfo> = jstate.plmt.into_iter().map(|pi| pi.into()).collect();
-        State {
-            board: (jstate.board, jstate.spare).into(),
-            player_info: player_info.into(),
-            previous_slide: jstate.last.into(),
-        }
-    }
-}
-
-impl From<State<PubPlayerInfo>> for JsonState {
-    fn from(state: State<PubPlayerInfo>) -> Self {
+impl<PI: PlayerInfo> From<State<PI>> for JsonState
+where
+    JsonPlayer: From<PI>,
+{
+    fn from(state: State<PI>) -> Self {
         let (board, spare) = state.board.into();
         JsonState {
             board,
@@ -320,30 +409,15 @@ pub struct JsonPlayer {
     pub color: JsonColor,
 }
 
-impl From<JsonPlayer> for FullPlayerInfo {
-    fn from(jp: JsonPlayer) -> Self {
-        FullPlayerInfo::new(
-            jp.home.into(),
-            jp.current.into(),
-            // FIXME: this should not always be (1, 1)
-            (1, 1),
-            jp.color
-                .try_into()
-                .expect("Json Color values are always valid"),
-        )
-    }
-}
+impl TryFrom<JsonPlayer> for PubPlayerInfo {
+    type Error = JsonError;
 
-impl From<JsonPlayer> for PubPlayerInfo {
-    fn from(jp: JsonPlayer) -> Self {
-        Self {
+    fn try_from(jp: JsonPlayer) -> Result<Self, Self::Error> {
+        Ok(Self {
             current: jp.current.into(),
             home: jp.home.into(),
-            color: jp
-                .color
-                .try_into()
-                .expect("Json Color values are always valid"),
-        }
+            color: jp.color.try_into()?,
+        })
     }
 }
 
@@ -388,9 +462,7 @@ impl TryFrom<JsonColor> for Color {
                 })
             }
             // need to do a regex match for color codes
-            _ => Err(JsonError {
-                msg: format!("Invalid Color code {}", value),
-            }),
+            _ => Err(anyhow!("Invalid Color code {}", value))?,
         }
     }
 }
@@ -477,9 +549,7 @@ impl TryFrom<JsonDegree> for usize {
             90 => Ok(1),
             180 => Ok(2),
             270 => Ok(3),
-            _ => Err(JsonError {
-                msg: format!("Invalid JsonDegree {}", d.0),
-            }),
+            _ => Err(anyhow!("Invalid JsonDegree {}", d.0))?,
         }
     }
 }

@@ -34,7 +34,7 @@ fn read_json_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyho
             }
             .into(),
         )
-            .into(),
+            .try_into()?,
         _ => Err(anyhow!("Board was not the first JSON object sent"))?,
     };
 

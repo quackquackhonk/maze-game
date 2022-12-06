@@ -479,6 +479,7 @@ name = "common"
 version = "0.1.0"
 dependencies = [
  "aliri_braid",
+ "anyhow",
  "convert_case",
  "egui_extras",
  "hex",
@@ -2942,6 +2943,7 @@ dependencies = [
 name = "xchoice"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "common",
  "players",
  "serde",
