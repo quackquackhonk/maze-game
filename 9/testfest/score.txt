@@ -3,4 +3,4 @@ Functionality
 0/100 pts: Passed 0 tests (including two extra bonus tests) (see student-server-staff-clients.txt)
 Inspection
 64/100 pts: See inspection.md
-Total: 64/340 pts
+Total: 64/300 pts
