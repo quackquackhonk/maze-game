@@ -143,6 +143,18 @@ impl PartialEq<Player> for Color {
     }
 }
 
+impl PartialOrd<Player> for Player {
+    fn partial_cmp(&self, other: &Player) -> Option<std::cmp::Ordering> {
+        self.name().ok()?.partial_cmp(&other.name().ok()?)
+    }
+}
+
+impl Ord for Player {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
 impl Eq for Player {}
 #[derive(Debug, Error)]
 #[error("Timed Out!")]

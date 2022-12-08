@@ -24,9 +24,9 @@ fn main() -> anyhow::Result<()> {
     let Args { port, address } = Args::parse();
 
     let players: Vec<PlayerSpec> = serde_json::from_reader(stdin())?;
-    thread::scope(|s| {
+    crossbeam::scope(|s| {
         for ps in players {
-            s.spawn(|| {
+            s.spawn(|_| {
                 let (player, name): (Box<dyn PlayerApi>, _) = match ps {
                     PlayerSpec::PS(ps) => {
                         let (name, strategy) = ps.into();
@@ -69,7 +69,8 @@ fn main() -> anyhow::Result<()> {
             });
             thread::sleep(Duration::from_secs(3));
         }
-    });
+    })
+    .unwrap();
 
     Ok(())
 }
