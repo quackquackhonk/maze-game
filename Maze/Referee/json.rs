@@ -6,7 +6,7 @@ use common::{
         has_unique_elements, Coordinate, JsonAction, JsonBoard, JsonColor, JsonError, JsonTile,
         Name,
     },
-    FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, State,
+    Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, State,
 };
 use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};
@@ -80,22 +80,28 @@ pub struct JsonRefereeState {
 }
 
 fn valid_positions(
-    positions: Vec<Position>,
-    valid: Vec<Position>,
+    player_info: Vec<(Color, Position)>,
+    valid: impl AsRef<Vec<Position>>,
     board: &Board,
-    unique_error: JsonError,
+    unique_error: impl FnOnce(Vec<Color>) -> JsonError,
 ) -> Result<(), JsonError> {
-    if positions.iter().any(|home| !valid.contains(home)) {
-        return Err(unique_error);
+    let valid = valid.as_ref();
+    let invalid = player_info
+        .iter()
+        .filter(|(_, position)| !valid.contains(position))
+        .map(|(color, _)| color)
+        .collect::<Vec<_>>();
+    if !invalid.is_empty() {
+        return Err(unique_error(invalid.into_iter().cloned().collect()));
     }
 
-    positions
+    player_info
         .iter()
-        .fold(Ok(()), |acc: Result<(), JsonError>, home| {
+        .fold(Ok(()), |acc: Result<(), JsonError>, (_, position)| {
             board
-                .in_bounds(home)
+                .in_bounds(position)
                 .then_some(())
-                .ok_or(JsonError::PositionOutOfBounds(*home))?;
+                .ok_or_else(|| JsonError::PositionOutOfBounds(vec![*position]))?;
             acc
         })?;
     Ok(())
@@ -108,7 +114,6 @@ where
     type Error = JsonError;
 
     fn try_from(jstate: JsonRefereeState) -> Result<Self, Self::Error> {
-        // TODO: needs to be validate given goals
         let board: Board = (jstate.board, jstate.spare).try_into()?;
 
         let player_info: Vec<PI> = jstate
@@ -116,6 +121,15 @@ where
             .into_iter()
             .map(|pi| pi.try_into())
             .collect::<Result<_, JsonError>>()?;
+
+        let out_of_bounds = player_info
+            .iter()
+            .map(|pi| pi.position())
+            .filter(|pos| !board.in_bounds(pos))
+            .collect::<Vec<_>>();
+        if !out_of_bounds.is_empty() {
+            return Err(JsonError::PositionOutOfBounds(out_of_bounds));
+        }
 
         let colors = player_info.iter().map(|pi| pi.color());
         if !has_unique_elements(colors) {
@@ -132,9 +146,14 @@ where
             return Err(JsonError::NotEnoughHomes);
         }
 
+        let homes_and_colors = player_info
+            .iter()
+            .map(|pi| (pi.color(), pi.home()))
+            .collect();
+
         valid_positions(
-            homes,
-            board.possible_homes().collect(),
+            homes_and_colors,
+            board.possible_homes().collect::<Vec<_>>(),
             &board,
             JsonError::HomeMoveableTile,
         )?;
@@ -146,11 +165,27 @@ where
             return Err(JsonError::DuplicateAssignedGoals);
         }
 
+        let possible_goals = board.possible_goals().collect::<Vec<_>>();
+        let invalid_alt_goals = rem_goals
+            .iter()
+            .filter(|goal| !possible_goals.contains(goal))
+            .collect::<Vec<_>>();
+        if !invalid_alt_goals.is_empty() {
+            return Err(JsonError::GoalMoveableTile(
+                invalid_alt_goals.into_iter().cloned().collect(),
+            ));
+        }
+
+        let goals_and_colors = player_info
+            .iter()
+            .map(|pi| (pi.color(), pi.goal()))
+            .collect();
+
         valid_positions(
-            goals,
-            board.possible_goals().collect(),
+            goals_and_colors,
+            possible_goals,
             &board,
-            JsonError::GoalMoveableTile,
+            JsonError::PlayerGoalMoveableTile,
         )?;
 
         let previous_slide = jstate.last.into();

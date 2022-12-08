@@ -44,14 +44,16 @@ pub enum JsonError {
     NonUniqueHomes,
     #[error("Not enough homes for amount of players in the state")]
     NotEnoughHomes,
-    #[error("A player's home is on a moveable tile")]
-    HomeMoveableTile,
-    #[error("A player's goal is on a moveable tile")]
-    GoalMoveableTile,
+    #[error("Player(s) {0:?} have homes on a moveable tile")]
+    HomeMoveableTile(Vec<Color>),
+    #[error("Player(s) {0:?} have goals on a moveable tile")]
+    PlayerGoalMoveableTile(Vec<Color>),
+    #[error("Alternate Goals {0:?} are on moveable tiles")]
+    GoalMoveableTile(Vec<Position>),
     #[error("The player has been assigned a goal that is in the list of remaining goals")]
     DuplicateAssignedGoals,
-    #[error("{0:?} is out of bounds on the given board")]
-    PositionOutOfBounds(Position),
+    #[error("{0:?} is/are out of bounds on the given board")]
+    PositionOutOfBounds(Vec<Position>),
     #[error("{0:?} is not a valid slide for this board")]
     InvalidSlide(Slide),
     #[error(transparent)]
@@ -329,8 +331,14 @@ where
         }
 
         let possible_homes = board.possible_homes().collect::<Vec<_>>();
-        if homes.iter().any(|home| !possible_homes.contains(home)) {
-            return Err(JsonError::HomeMoveableTile);
+        let invalid_homes = player_info
+            .iter()
+            .filter(|pi| !possible_homes.contains(&pi.home()))
+            .map(|pi| pi.color())
+            .collect::<Vec<_>>();
+
+        if !invalid_homes.is_empty() {
+            return Err(JsonError::HomeMoveableTile(invalid_homes));
         }
 
         homes
@@ -339,7 +347,7 @@ where
                 board
                     .in_bounds(home)
                     .then_some(())
-                    .ok_or(JsonError::PositionOutOfBounds(*home))?;
+                    .ok_or_else(|| JsonError::PositionOutOfBounds(vec![*home]))?;
                 acc
             })?;
 
