@@ -37,6 +37,14 @@ pub enum GameStatus {
     Winner,
 }
 
+/// Represents the effect of a `player::PlayerMove` on a State.
+#[derive(Debug, PartialEq, Eq)]
+enum MoveEffect {
+    Won,
+    Cheated,
+    Moved,
+}
+
 trait RefereeState {
     fn to_player_state(&self) -> State<PubPlayerInfo>;
     fn to_full_state(&self) -> State<FullPlayerInfo>;
@@ -186,7 +194,74 @@ impl Referee {
         }
     }
 
-    /// Runs a single round. If the game ends during that round, return true.
+    /// Attempts to execute the given `player_move`, and returns the `MoveEffect` of that move.
+    /// This will not change the current player.
+    ///
+    /// - If the player wins the game from their move, returns `MoveEffect::Won`
+    /// - If the player doesn't win the game, but their move was valid, returns `MoveEffect::Moved`
+    /// - If the player doesn't submit a valid move, or doesn't communicate correctly, returns `MoveEffect::Cheated`
+    fn process_move(
+        &self,
+        state: &mut State<Player>,
+        observers: &mut Vec<Box<dyn Observer>>,
+        remaining_goals: &mut VecDeque<Position>,
+        PlayerMove {
+            slide,
+            rotations,
+            destination,
+        }: PlayerMove,
+    ) -> MoveEffect {
+        if state.try_move(slide, rotations, destination).is_err() {
+            return MoveEffect::Cheated;
+        }
+
+        // check if the current player just won
+        if state.player_reached_home()
+            && state.player_reached_goal()
+            && remaining_goals.is_empty()
+            // DONE: (This is hack awaiting spec clarification).await
+            && state.current_player_info().get_goals_reached() > 0
+        {
+            self.broadcast_state_to_observers(state, observers);
+            // this player wins
+            return MoveEffect::Won;
+        }
+
+        // If the player moved and did not reach a goal, return `Moved`
+        if !state.update_current_player_goal(remaining_goals) {
+            return MoveEffect::Moved;
+        }
+
+        // setup the player with their new goal
+        let goal = state.current_player_info().goal();
+        if state.current_player_info_mut().setup(None, goal).is_ok() {
+            MoveEffect::Moved
+        } else {
+            MoveEffect::Cheated
+        }
+    }
+
+    // Returns `true` if moving to the next player succeeded, `false` if there are no more players
+    fn next_player(
+        &self,
+        state: &mut State<Player>,
+        kicked: &mut Vec<Player>,
+        should_kick: bool,
+    ) -> bool {
+        if should_kick {
+            match state.remove_player() {
+                Ok(kicked_player) => kicked.push(kicked_player),
+                Err(_) => return false,
+            };
+        } else {
+            state.next_player();
+        }
+        true
+    }
+
+    /// Runs a single round. If the game does not end after this round, returns `None`.
+    /// If the game does end after this round, returns a `Some(status)`, where `status` is a
+    /// `GameStatus` describing how the Game ended.
     fn run_round(
         &mut self,
         state: &mut State<Player>,
@@ -197,73 +272,19 @@ impl Referee {
         let mut num_kicked = 0;
         let mut num_passed = 0;
         let players_in_round = state.player_info.len();
+
         for idx in 0..players_in_round {
-            let should_kick = match state
+            let should_kick = if let Ok(player_action) = state
                 .current_player_info()
                 .take_turn(state.to_player_state())
             {
-                Ok(Some(PlayerMove {
-                    slide,
-                    rotations,
-                    destination,
-                })) => {
-                    let valid_move =
-                        state
-                            .to_full_state()
-                            .is_valid_move(slide, rotations, destination);
-                    if !valid_move {
-                        eprintln!(
-                            "received invalid move from {}",
-                            state.current_player_info().name().unwrap()
-                        );
-                        true
-                    } else {
-                        // eprintln!(
-                        //     "received [{:?}, {:?}, {:?}] from {}",
-                        //     slide,
-                        //     rotations,
-                        //     destination,
-                        //     state.current_player_info().name().expect("valid")
-                        // );
-                        state.rotate_spare(rotations);
-                        state
-                            .slide_and_insert(slide)
-                            .expect("move has already been validated");
-                        state
-                            .move_player(destination)
-                            .expect("move has already been validated");
-
-                        if state.player_reached_home()
-                            && state.player_reached_goal()
-                            && remaining_goals.is_empty()
-                            // TODO: This is hack awaiting spec clarification
-                            && state.current_player_info().get_goals_reached() > 0
-                        {
-                            self.broadcast_state_to_observers(state, observers);
-                            // this player wins
-                            return Some(GameStatus::Winner);
-                        }
-
-                        if state.to_full_state().player_reached_goal() {
-                            state.current_player_info_mut().inc_goals_reached();
-                            if !remaining_goals.is_empty() {
-                                // player needs to go home
-                                let goal = remaining_goals
-                                    .pop_front()
-                                    .expect("We checked it is not empty");
-                                state.current_player_info_mut().set_goal(goal);
-                                state.current_player_info_mut().setup(None, goal).is_err()
-                            } else {
-                                let home = state.current_player_info().home();
-                                state.current_player_info_mut().set_goal(home);
-                                state.current_player_info_mut().setup(None, home).is_err()
-                            }
-                        } else {
-                            false
-                        }
+                if let Some(player_move) = player_action {
+                    match self.process_move(state, observers, remaining_goals, player_move) {
+                        MoveEffect::Won => return Some(GameStatus::Winner),
+                        MoveEffect::Cheated => true,
+                        MoveEffect::Moved => false,
                     }
-                }
-                Ok(None) => {
+                } else {
                     eprintln!(
                         "received PASS from {}",
                         state.current_player_info().name().expect("valid")
@@ -271,17 +292,16 @@ impl Referee {
                     num_passed += 1;
                     false
                 }
-                Err(_) => true,
+            } else {
+                true
             };
 
             if should_kick {
                 num_kicked += 1;
-                match state.remove_player() {
-                    Ok(kicked_player) => kicked.push(kicked_player),
-                    Err(_) => return Some(GameStatus::Tie),
-                };
-            } else {
-                state.next_player();
+            }
+
+            if !self.next_player(state, kicked, should_kick) {
+                return Some(GameStatus::Tie);
             }
 
             self.broadcast_state_to_observers(state, observers);
@@ -291,6 +311,7 @@ impl Referee {
             }
         }
 
+        // If everyone in the round passed, the game ends
         if num_passed == players_in_round - num_kicked {
             return Some(GameStatus::Tie);
         }
@@ -456,7 +477,7 @@ mod tests {
     use std::{collections::VecDeque, sync::Arc};
 
     use common::{
-        board::{Board, DefaultBoard},
+        board::{Board, DefaultBoard, Slide},
         gem::Gem,
         grid::{Grid, Position},
         json::Name,
@@ -466,14 +487,14 @@ mod tests {
     use parking_lot::Mutex;
     use players::{
         player::{LocalPlayer, PlayerApi, PlayerApiResult},
-        strategy::{NaiveStrategy, PlayerAction},
+        strategy::{NaiveStrategy, PlayerAction, PlayerMove},
     };
     use rand::SeedableRng;
     use rand_chacha::ChaChaRng;
 
     use crate::{
         config::Config,
-        referee::{GameResult, GameStatus, Player, PrivatePlayerInfo, Referee},
+        referee::{GameResult, GameStatus, MoveEffect, Player, PrivatePlayerInfo, Referee},
     };
 
     #[derive(Debug, Default, Clone)]
@@ -900,6 +921,134 @@ mod tests {
         assert_eq!(winners[0].name().unwrap(), "bob");
         assert_eq!(losers[0].name().unwrap(), "joe");
     }
+
+    #[test]
+    fn test_process_move() {
+        let referee = Referee {
+            rand: Box::new(ChaChaRng::seed_from_u64(1)),
+            config: Config {
+                multiple_goals: false,
+            },
+        };
+        let players = vec![
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("bob"),
+                    NaiveStrategy::Riemann,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (5, 3), ColorName::Red.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("joe"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((1, 3), (1, 1), (3, 3), ColorName::Blue.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("sahana"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((1, 5), (1, 4), (3, 5), ColorName::Yellow.into()),
+            ),
+            Player::new(
+                Box::new(LocalPlayer::new(
+                    Name::from_static("luis"),
+                    NaiveStrategy::Euclid,
+                )),
+                FullPlayerInfo::new((5, 3), (4, 3), (5, 3), ColorName::Green.into()),
+            ),
+        ];
+        let mut state: State<Player> = State {
+            player_info: players.into(),
+            previous_slide: Some(Slide::new_unchecked(0, CompassDirection::East)),
+            ..Default::default()
+        };
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // The Red player attempts an invalid move
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Red));
+        assert_eq!(state.current_player_info().position(), (1, 1));
+        assert_eq!(state.current_player_info().goal(), (5, 3));
+        let red_move = PlayerMove {
+            slide: Slide::new_unchecked(0, CompassDirection::West),
+            rotations: 0,
+            destination: (2, 1),
+        };
+        let effect = referee.process_move(&mut state, &mut vec![], &mut VecDeque::new(), red_move);
+        assert_eq!(effect, MoveEffect::Cheated);
+        assert_eq!(state.current_player_info().position(), (1, 1));
+        assert_eq!(state.current_player_info().goal(), (5, 3));
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Red));
+
+        state.next_player();
+
+        // The Blue player attempts an invalid move
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Blue));
+        assert_eq!(state.current_player_info().position(), (1, 1));
+        assert_eq!(state.current_player_info().goal(), (3, 3));
+        let blue_move = PlayerMove {
+            slide: Slide::new_unchecked(0, CompassDirection::North),
+            rotations: 0,
+            destination: (0, 3),
+        };
+        let effect = referee.process_move(&mut state, &mut vec![], &mut VecDeque::new(), blue_move);
+        assert_eq!(effect, MoveEffect::Moved);
+        assert_eq!(state.current_player_info().position(), (0, 3));
+        assert_eq!(state.current_player_info().goal(), (3, 3));
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Blue));
+
+        state.next_player();
+        // The Yellow player makes a move that changes their goal
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Yellow));
+        assert_eq!(state.current_player_info().position(), (1, 4));
+        assert_eq!(state.current_player_info().goal(), (3, 5));
+        let yellow_move = PlayerMove {
+            slide: Slide::new_unchecked(0, CompassDirection::North),
+            rotations: 0,
+            destination: (3, 5),
+        };
+        let mut remaining = VecDeque::from(vec![(1, 1)]);
+        let effect = referee.process_move(&mut state, &mut vec![], &mut remaining, yellow_move);
+        assert_eq!(effect, MoveEffect::Moved);
+        assert_eq!(state.current_player_info().position(), (3, 5));
+        assert_eq!(state.current_player_info().goal(), (1, 1));
+        assert!(remaining.is_empty());
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Yellow));
+
+        state.next_player();
+
+        // increment Green's number of goals
+        state.current_player_info_mut().inc_goals_reached();
+        // The Green player makes a move that changes their goal
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Green));
+        assert_eq!(state.current_player_info().position(), (4, 3));
+        assert_eq!(state.current_player_info().goal(), (5, 3));
+        let green_move = PlayerMove {
+            slide: Slide::new_unchecked(0, CompassDirection::East),
+            rotations: 0,
+            destination: (5, 3),
+        };
+        let effect = referee.process_move(&mut state, &mut vec![], &mut vec![].into(), green_move);
+        assert_eq!(effect, MoveEffect::Won);
+        assert_eq!(state.current_player_info().position(), (5, 3));
+        assert_eq!(state.current_player_info().goal(), (5, 3));
+        assert_eq!(state.current_player_info(), &Color::from(ColorName::Green));
+    }
+
+    #[test]
+    fn next_player() {}
 
     #[test]
     fn test_run_round() {

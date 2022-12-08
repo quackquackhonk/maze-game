@@ -42,6 +42,8 @@ pub enum JsonError {
     NonUniqueColors,
     #[error("More than one player occupies a tile for a home")]
     NonUniqueHomes,
+    #[error("Not enough homes for amount of players in the state")]
+    NotEnoughHomes,
     #[error("A player's home is on a moveable tile")]
     HomeMoveableTile,
     #[error("A player's goal is on a moveable tile")]
