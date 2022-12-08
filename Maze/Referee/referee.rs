@@ -155,24 +155,15 @@ impl Referee {
     /// to all `Player`s in `players`.
     pub fn broadcast_initial_state(&self, state: &mut State<Player>, kicked: &mut Vec<Player>) {
         let mut player_state = state.to_player_state();
-        let mut kicked_idx = 0;
         let total_players = state.player_info.len();
-        for idx in 0..total_players {
+        for _ in 0..total_players {
             let player = state.current_player_info_mut();
             let goal = player.goal();
             match player.setup(Some(player_state.clone()), goal) {
-                Ok(_) => {
-                    state.next_player();
-                    player_state.next_player()
-                }
-                Err(_) => {
-                    kicked_idx += 1;
-                    kicked.push(state.remove_player().unwrap())
-                }
+                Ok(_) => state.next_player(),
+                Err(_) => kicked.push(state.remove_player().unwrap()),
             }
-            if idx + kicked_idx >= total_players {
-                break;
-            }
+            player_state.next_player();
         }
     }
 
@@ -273,7 +264,7 @@ impl Referee {
         let mut num_passed = 0;
         let players_in_round = state.player_info.len();
 
-        for idx in 0..players_in_round {
+        for _idx in 0..players_in_round {
             let should_kick = if let Ok(player_action) = state
                 .current_player_info()
                 .take_turn(state.to_player_state())
@@ -305,10 +296,6 @@ impl Referee {
             }
 
             self.broadcast_state_to_observers(state, observers);
-
-            if idx + num_kicked >= players_in_round {
-                break;
-            }
         }
 
         // If everyone in the round passed, the game ends

@@ -86,8 +86,12 @@ impl<S: Strategy + Send> PlayerApi for LocalPlayer<S> {
         Ok(self.strategy.get_move(
             state,
             start,
-            self.goal
-                .expect("setup() needs to be called before take_turn()"),
+            self.goal.unwrap_or_else(|| {
+                panic!(
+                    "{} :setup() needs to be called before take_turn()",
+                    self.name
+                )
+            }),
         ))
     }
 
