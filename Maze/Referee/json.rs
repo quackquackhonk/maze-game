@@ -136,7 +136,7 @@ where
             homes,
             board.possible_homes().collect(),
             &board,
-            JsonError::GoalMoveableTile,
+            JsonError::HomeMoveableTile,
         )?;
 
         let goals = player_info.iter().map(|pi| pi.goal()).collect::<Vec<_>>();
