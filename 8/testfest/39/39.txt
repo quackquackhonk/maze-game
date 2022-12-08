@@ -1,4 +1,5 @@
 (testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
+(testing /course/cs4500f22/ta/github/8/39/Tests/0-in.json /course/cs4500f22/ta/github/8/39/Tests/0-out.json)
 (testing /course/cs4500f22/ta/github/8/39/Tests/1-in.json /course/cs4500f22/ta/github/8/39/Tests/1-out.json)
 thread '<unnamed>' panicked at 'setup() needs to be called before take_turn()', /course/cs4500f22/ta/github/tankalav-lsoto/Maze/Players/player.rs:90:18
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
@@ -195,6 +196,177 @@ thread 'main' panicked at 'internal error: entered unreachable code', Maze/Refer
 
 
 (testing /course/cs4500f22/ta/github/8/39/Tests/2-in.json /course/cs4500f22/ta/github/8/39/Tests/2-out.json)
-((/course/cs4500f22/ta/github/8/39/Tests/2-in.json /course/cs4500f22/ta/github/8/39/Tests/2-out.json))
-((passed 1) (total 2) (partial-score 1))
+(testing /course/cs4500f22/ta/github/8/39/Tests/3-in.json /course/cs4500f22/ta/github/8/39/Tests/3-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("AA" "Riemann" "win" 1) ("BB" "Euclid" "win" 2))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┌" "─" "─") ("┴" "┴" "┼") ("│" "┼" "┴") ("│" "┼" "─")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "blue-spinel-heart")
+                      ("raw-citrine" "white-square")
+                      ("padparadscha-oval" "yellow-jasper"))
+                     (("apatite" "almandine-garnet")
+                      ("morganite-oval" "prehnite")
+                      ("purple-cabochon" "white-square"))
+                     (("iolite-emerald-cut" "super-seven")
+                      ("australian-marquise" "black-obsidian")
+                      ("color-change-oval" "cordierite"))
+                     (("labradorite" "lapis-lazuli")
+                      ("lemon-quartz-briolette" "magnesite")
+                      ("mexican-opal" "moonstone"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "06DCD1")
+                    (current . #hasheq((column# . 0) (row# . 0)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "yellow")
+                    (current . #hasheq((column# . 2) (row# . 2)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "tourmaline-laser-cut")
+                   (2-image . "color-change-oval")
+                   (tilekey . "┌")))))
+(*** expected)
+'((() ("AA")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/39/Tests/4-in.json /course/cs4500f22/ta/github/8/39/Tests/4-out.json)
+thread '<unnamed>' panicked at 'setup() needs to be called before take_turn()', /course/cs4500f22/ta/github/tankalav-lsoto/Maze/Players/player.rs:90:18
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+thread 'main' panicked at 'internal error: entered unreachable code', Maze/Referee/referee.rs:53:48
+---------------------------------
+(*** score 0)
+(*** on)
+'((("AA" "Riemann")
+   ("BB" "Riemann" "setUp" 1)
+   ("CC" "Euclid" "takeTurn" 1)
+   ("DD" "Euclid" "win" 1)
+   ("Bromas" "Riemann" "setUp")
+   ("FF" "Riemann" "takeTurn" 2)
+   ("GG" "Riemann" "setUp")
+   ("II" "Euclid" "takeTurn" 2))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┌" "─" "─" "─" "─" "─" "┐")
+                     ("┴" "┴" "┼" "┼" "─" "┴" "│")
+                     ("│" "┼" "┴" "─" "┼" "┼" "│")
+                     ("│" "┼" "─" "┴" "┌" "┤" "│")
+                     ("│" "┴" "┤" "┼" "┼" "┤" "│")
+                     ("│" "─" "┌" "┌" "┴" "─" "│")
+                     ("└" "─" "─" "─" "─" "─" "┘")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "blue-spinel-heart")
+                      ("raw-citrine" "white-square")
+                      ("padparadscha-oval" "yellow-jasper")
+                      ("green-aventurine" "chrysoberyl-cushion")
+                      ("australian-marquise" "cordierite")
+                      ("hackmanite" "kunzite")
+                      ("ruby-diamond-profile" "tigers-eye"))
+                     (("bulls-eye" "lemon-quartz-briolette")
+                      ("tanzanite-trillion" "zoisite")
+                      ("ruby-diamond-profile" "labradorite")
+                      ("fancy-spinel-marquise" "australian-marquise")
+                      ("apatite" "almandine-garnet")
+                      ("morganite-oval" "prehnite")
+                      ("purple-cabochon" "white-square"))
+                     (("yellow-beryl-oval" "morganite-oval")
+                      ("tourmaline-laser-cut" "red-diamond")
+                      ("raw-citrine" "purple-square-cushion")
+                      ("orange-radiant" "kunzite-oval")
+                      ("iolite-emerald-cut" "super-seven")
+                      ("australian-marquise" "black-obsidian")
+                      ("color-change-oval" "cordierite"))
+                     (("hackmanite" "heliotrope")
+                      ("hematite" "iolite-emerald-cut")
+                      ("jasper" "jaspilite")
+                      ("kunzite-oval" "kunzite")
+                      ("labradorite" "lapis-lazuli")
+                      ("lemon-quartz-briolette" "magnesite")
+                      ("mexican-opal" "moonstone"))
+                     (("morganite-oval" "moss-agate")
+                      ("orange-radiant" "padparadscha-oval")
+                      ("padparadscha-sapphire" "peridot")
+                      ("pink-emerald-cut" "pink-opal")
+                      ("pink-round" "pink-spinel-cushion")
+                      ("prasiolite" "prehnite")
+                      ("purple-cabochon" "purple-oval"))
+                     (("purple-spinel-trillion" "purple-square-cushion")
+                      ("raw-beryl" "raw-citrine")
+                      ("red-diamond" "red-spinel-square-emerald-cut")
+                      ("fancy-spinel-marquise" "labradorite")
+                      ("rhodonite" "rock-quartz")
+                      ("rose-quartz" "ruby-diamond-profile")
+                      ("ruby" "sphalerite"))
+                     (("spinel" "star-cabochon")
+                      ("stilbite" "sunstone")
+                      ("super-seven" "tanzanite-trillion")
+                      ("tigers-eye" "tourmaline-laser-cut")
+                      ("tourmaline" "unakite")
+                      ("white-square" "yellow-baguette")
+                      ("yellow-beryl-oval" "yellow-heart"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "06DCD1")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 3) (row# . 3)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "yellow")
+                    (current . #hasheq((column# . 5) (row# . 5)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 5) (row# . 5))))
+            #hasheq((color . "green")
+                    (current . #hasheq((column# . 5) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 5)))
+                    (home . #hasheq((column# . 5) (row# . 1))))
+            #hasheq((color . "purple")
+                    (current . #hasheq((column# . 3) (row# . 3)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 3) (row# . 3))))
+            #hasheq((color . "DD00FF")
+                    (current . #hasheq((column# . 1) (row# . 5)))
+                    (goto . #hasheq((column# . 5) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 5))))
+            #hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 3)))
+                    (goto . #hasheq((column# . 3) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 3))))
+            #hasheq((color . "pink")
+                    (current . #hasheq((column# . 3) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 3)))
+                    (home . #hasheq((column# . 3) (row# . 1))))
+            #hasheq((color . "FF00DD")
+                    (current . #hasheq((column# . 5) (row# . 3)))
+                    (goto . #hasheq((column# . 3) (row# . 5)))
+                    (home . #hasheq((column# . 5) (row# . 3))))))
+          (spare
+           .
+           #hasheq((1-image . "tourmaline-laser-cut")
+                   (2-image . "color-change-oval")
+                   (tilekey . "┌")))))
+(*** expected)
+'((("AA") ("BB" "Bromas" "CC" "DD" "GG")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+((/course/cs4500f22/ta/github/8/39/Tests/0-in.json /course/cs4500f22/ta/github/8/39/Tests/0-out.json) (/course/cs4500f22/ta/github/8/39/Tests/2-in.json /course/cs4500f22/ta/github/8/39/Tests/2-out.json))
+((passed 2) (total 5) (partial-score 2))
 

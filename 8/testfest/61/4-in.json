@@ -1,0 +1,56 @@
+[["a1ic3", "Riemann", "win", 2], ["Bob2121", "Euclid", "setUp", 1]]
+
+
+{
+    "board": {
+        "connectors": [
+            ["┼", "─", "┐", "┬"],
+            ["┌", "┼", "┐", "─"],
+            ["┐", "┌", "┼", "┬"],
+            ["─", "└", "┌", "└"]
+        ],
+        "treasures": [
+            [
+                ["alexandrite-pear-shape", "alexandrite"],
+                ["alexandrite-pear-shape", "almandine-garnet"],
+                ["alexandrite-pear-shape", "amethyst"],
+                ["alexandrite-pear-shape", "beryl"]
+            ],
+            [
+                ["alexandrite-pear-shape", "black-obsidian"],
+                ["alexandrite-pear-shape", "black-onyx"],
+                ["alexandrite-pear-shape", "chrysolite"],
+                ["alexandrite-pear-shape", "citrine-checkerboard"]
+            ],
+            [
+                ["alexandrite-pear-shape", "citrine"],
+                ["alexandrite-pear-shape", "goldstone"],
+                ["alexandrite-pear-shape", "grandidierite"],
+                ["alexandrite-pear-shape", "gray-agate"]
+            ],
+            [  
+                ["alexandrite-pear-shape", "jasper"],
+                ["alexandrite-pear-shape", "jaspilite"],
+                ["alexandrite-pear-shape", "kunzite-oval"],
+                ["alexandrite-pear-shape", "orange-radiant"]
+            ]
+        ]
+    },
+    "spare": {"tilekey": "┼", "1-image": "super-seven", "2-image": "white-square"},
+    "plmt": [
+        {
+            "current": {"row#": 1, "column#": 1},
+            "home": {"row#": 1, "column#": 1},
+            "color": "orange",
+            "goto": {"row#": 1, "column#": 3}
+        },
+        {
+            "current": {"row#": 3, "column#": 1},
+            "home": {"row#": 3, "column#": 1},
+            "color": "blue",
+            "goto": {"row#": 3, "column#": 3}
+        }
+    ],
+    "last": null
+}
+

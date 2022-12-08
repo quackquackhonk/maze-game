@@ -1,5 +1,6 @@
 (testing /course/cs4500f22/ta/github/tankalav-lsoto/8/xbad2)
 (testing /course/cs4500f22/ta/github/8/4/Tests/0-in.json /course/cs4500f22/ta/github/8/4/Tests/0-out.json)
+(testing /course/cs4500f22/ta/github/8/4/Tests/1-in.json /course/cs4500f22/ta/github/8/4/Tests/1-out.json)
 (testing /course/cs4500f22/ta/github/8/4/Tests/4-in.json /course/cs4500f22/ta/github/8/4/Tests/4-out.json)
 ---------------------------------
 (*** score 0)
@@ -89,6 +90,6 @@
 '(((plain fast with-newline plain-unicode) ((() ("Harry")))))
 
 
-((/course/cs4500f22/ta/github/8/4/Tests/0-in.json /course/cs4500f22/ta/github/8/4/Tests/0-out.json))
-((passed 1) (total 2) (partial-score 1))
+((/course/cs4500f22/ta/github/8/4/Tests/0-in.json /course/cs4500f22/ta/github/8/4/Tests/0-out.json) (/course/cs4500f22/ta/github/8/4/Tests/1-in.json /course/cs4500f22/ta/github/8/4/Tests/1-out.json))
+((passed 2) (total 3) (partial-score 2))
 

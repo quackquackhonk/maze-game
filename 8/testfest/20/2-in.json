@@ -1,0 +1,96 @@
+
+[
+ 
+    ["A","Riemann", "takeTurn",2],
+    ["B","Euclid", "setUp"],
+    ["C","Euclid", "takeTurn", 3]
+]
+
+
+{
+    "board": {
+        "connectors" :  [   ["│", "└", "└", "┴", "┘", "┬"],
+                            ["└", "┼", "┼", "┤", "┘", "┼"],
+                            ["│", "┼", "┼", "┌", "┘", "┬"],
+                            ["│", "┼", "┼", "┼", "┼", "┼"],
+                            ["│", "┼", "┼", "┼", "┼", "┼"],
+                            ["│", "─", "│", "┼", "┼", "┼"]
+                        ],
+        "treasures" :  [
+                            [
+                                [ "pink-emerald-cut", "mexican-opal" ],
+                                [ "green-aventurine", "ruby-diamond-profile" ],
+                                [ "rose-quartz", "labradorite" ],
+                                [ "color-change-oval", "star-cabochon" ],
+                                [ "green-princess-cut", "dumortierite" ],
+                                [ "diamond", "chrome-diopside" ]
+                            ],
+                            [
+                                [ "ammolite", "hematite" ],
+                                [ "jasper", "sphalerite" ],
+                                [ "super-seven", "green-beryl" ],
+                                [ "green-beryl-antique", "aventurine" ],
+                                [ "diamond", "moonstone" ],
+                                [ "unakite", "dumortierite" ]
+                            ],
+                            [
+                                [ "chrysoberyl-cushion", "goldstone" ],
+                                [ "kunzite", "goldstone" ],
+                                [ "garnet", "jasper" ],
+                                [ "australian-marquise", "sphalerite" ],
+                                [ "green-beryl-antique", "black-onyx" ],
+                                [ "ruby-diamond-profile", "pink-round" ]
+                            ],
+                            [
+                                [ "cordierite", "bulls-eye" ],
+                                [ "jaspilite", "padparadscha-oval" ],
+                                [ "rose-quartz", "dumortierite" ],
+                                [ "prehnite", "pink-spinel-cushion" ],
+                                [ "purple-square-cushion", "carnelian" ],
+                                [ "black-spinel-cushion", "zoisite" ]
+                            ],
+                            [
+                                [ "citrine", "black-spinel-cushion" ],
+                                [ "chrysoberyl-cushion", "moss-agate" ],
+                                [ "heliotrope", "blue-ceylon-sapphire" ],
+                                [ "tourmaline", "lapis-lazuli" ],
+                                [ "green-princess-cut", "gray-agate" ],
+                                [ "almandine-garnet", "citrine-checkerboard" ]
+                            ],
+                            [
+                                [ "ametrine", "yellow-beryl-oval" ],
+                                [ "prasiolite", "green-aventurine" ],
+                                [ "lapis-lazuli", "blue-spinel-heart" ],
+                                [ "pink-round", "beryl" ],
+                                [ "red-diamond", "red-diamond" ],
+                                [ "citrine-checkerboard", "grandidierite" ]
+                            ]
+                        ]
+    },
+    "spare": {
+        "tilekey": "│",
+        "1-image": "cordierite",
+        "2-image": "green-aventurine"
+    },
+    "plmt": [
+        {
+            "current": { "row#": 1, "column#": 1 },
+            "home": { "row#": 3, "column#": 1 },
+            "goto": { "row#": 5, "column#": 5 },
+            "color": "red"
+        },
+        {
+            "current": { "row#": 1, "column#": 1 },
+            "home": { "row#": 5, "column#": 1 },
+            "goto": { "row#": 5, "column#": 5 },
+            "color": "green"
+        },
+        {
+            "current": { "row#": 1, "column#": 1 },
+            "home": { "row#": 3, "column#": 5 },
+            "goto": { "row#": 5, "column#": 5 },
+            "color": "blue"
+        }
+    ],
+    "last": null
+}

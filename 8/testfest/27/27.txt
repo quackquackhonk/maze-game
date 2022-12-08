@@ -198,6 +198,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 '(((plain fast with-newline plain-unicode) ()))
 
 
-((/course/cs4500f22/ta/github/8/27/Tests/0-in.json /course/cs4500f22/ta/github/8/27/Tests/0-out.json) (/course/cs4500f22/ta/github/8/27/Tests/1-in.json /course/cs4500f22/ta/github/8/27/Tests/1-out.json))
-((passed 2) (total 4) (partial-score 2))
+(testing /course/cs4500f22/ta/github/8/27/Tests/4-in.json /course/cs4500f22/ta/github/8/27/Tests/4-out.json)
+((/course/cs4500f22/ta/github/8/27/Tests/0-in.json /course/cs4500f22/ta/github/8/27/Tests/0-out.json) (/course/cs4500f22/ta/github/8/27/Tests/1-in.json /course/cs4500f22/ta/github/8/27/Tests/1-out.json) (/course/cs4500f22/ta/github/8/27/Tests/4-in.json /course/cs4500f22/ta/github/8/27/Tests/4-out.json))
+((passed 3) (total 5) (partial-score 3))
 

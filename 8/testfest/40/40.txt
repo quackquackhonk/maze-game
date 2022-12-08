@@ -48,6 +48,102 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
 (testing /course/cs4500f22/ta/github/8/40/Tests/2-in.json /course/cs4500f22/ta/github/8/40/Tests/2-out.json)
+(testing /course/cs4500f22/ta/github/8/40/Tests/3-in.json /course/cs4500f22/ta/github/8/40/Tests/3-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("60513zA" "Euclid" "takeTurn" 2) ("Larry" "Riemann" "win" 2))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┼" "┼" "┼" "┼") ("┼" "┼" "┼" "┼") ("┼" "┼" "┼" "┼")))
+                   (treasures
+                    .
+                    ((("alexandrite" "almandine-garnet")
+                      ("alexandrite" "amethyst")
+                      ("alexandrite" "ametrine")
+                      ("alexandrite" "ammolite"))
+                     (("alexandrite" "aquamarine")
+                      ("alexandrite" "australian-marquise")
+                      ("alexandrite" "aventurine")
+                      ("alexandrite" "azurite"))
+                     (("alexandrite" "black-spinel-cushion")
+                      ("alexandrite" "blue-ceylon-sapphire")
+                      ("alexandrite" "blue-cushion")
+                      ("alexandrite" "blue-pear-shape"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 3) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "A3C909")
+                    (current . #hasheq((column# . 3) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "alexandrite")
+                   (2-image . "kunzite-oval")
+                   (tilekey . "┼")))))
+(*** expected)
+'((("Larry") ("60513zA")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
+(testing /course/cs4500f22/ta/github/8/40/Tests/4-in.json /course/cs4500f22/ta/github/8/40/Tests/4-out.json)
+thread 'main' panicked at 'called `Option::unwrap()` on a `None` value', Maze/Common/json.rs:247:53
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+---------------------------------
+(*** score 0)
+(*** on)
+'((("Larry" "Riemann" "setUp" 2) ("60513zA" "Euclid" "takeTurn" 3))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("┼" "┼" "┼" "┼") ("┼" "┼" "┼" "┼") ("┼" "┼" "┼" "┼")))
+                   (treasures
+                    .
+                    ((("alexandrite" "almandine-garnet")
+                      ("alexandrite" "amethyst")
+                      ("alexandrite" "ametrine")
+                      ("alexandrite" "ammolite"))
+                     (("alexandrite" "aquamarine")
+                      ("alexandrite" "australian-marquise")
+                      ("alexandrite" "aventurine")
+                      ("alexandrite" "azurite"))
+                     (("alexandrite" "black-spinel-cushion")
+                      ("alexandrite" "blue-ceylon-sapphire")
+                      ("alexandrite" "blue-cushion")
+                      ("alexandrite" "blue-pear-shape"))))))
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "orange")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 3) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "A3C909")
+                    (current . #hasheq((column# . 3) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 3) (row# . 1))))))
+          (spare
+           .
+           #hasheq((1-image . "alexandrite")
+                   (2-image . "kunzite-oval")
+                   (tilekey . "┼")))))
+(*** expected)
+'((("60513zA") ("Larry")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ()))
+
+
 ((/course/cs4500f22/ta/github/8/40/Tests/2-in.json /course/cs4500f22/ta/github/8/40/Tests/2-out.json))
-((passed 1) (total 2) (partial-score 1))
+((passed 1) (total 4) (partial-score 1))
 

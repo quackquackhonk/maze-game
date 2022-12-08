@@ -1,0 +1,138 @@
+[
+  [
+    "AA",
+    "Riemann",
+    "win",
+    1
+  ],
+  [
+    "BB",
+    "Euclid",
+    "win",
+    2
+  ]
+]
+
+{
+  "board": {
+    "connectors": [
+      [
+        "┌",
+        "─",
+        "─"
+      ],
+      [
+        "┴",
+        "┴",
+        "┼"
+      ],
+      [
+        "│",
+        "┼",
+        "┴"
+      ],
+      [
+        "│",
+        "┼",
+        "─"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "alexandrite-pear-shape",
+          "blue-spinel-heart"
+        ],
+        [
+          "raw-citrine",
+          "white-square"
+        ],
+        [
+          "padparadscha-oval",
+          "yellow-jasper"
+        ]
+      ],
+      [
+        [  "apatite",
+          "almandine-garnet"
+        ],
+        [
+          "morganite-oval",
+          "prehnite"
+        ],
+        [
+          "purple-cabochon",
+          "white-square"
+        ]
+      ],
+      [
+        [
+          "iolite-emerald-cut",
+          "super-seven"
+        ],
+        [
+          "australian-marquise",
+          "black-obsidian"
+        ],
+        [
+          "color-change-oval",
+          "cordierite"
+        ]
+      ],
+      [
+        [
+          "labradorite",
+          "lapis-lazuli"
+        ],
+        [
+          "lemon-quartz-briolette",
+          "magnesite"
+        ],
+        [
+          "mexican-opal",
+          "moonstone"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "┌",
+    "1-image": "tourmaline-laser-cut",
+    "2-image": "color-change-oval"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 0,
+        "column#": 0
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "06DCD1"
+    },
+    {
+      "current": {
+        "row#": 2,
+        "column#": 2
+      },
+      "home": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 1
+      },
+      "color": "yellow"
+    }
+    ],
+
+"last": null
+
+}

@@ -6,9 +6,9 @@ Delivery
 5/5 pts: Deliverable 8/xbad2 exists with the right permissions
 5/5 pts: Delivery of test files
 Functionality
-100/100 pts: Passed 5 out of 5 tests (see test-results.txt)
-40/100 pts: 2 valid tests (see test-audit-results.txt)
-40/60 bonus pts (other teams failing your tests)
+80/100 pts: Passed 4 out of 5 tests (see test-results.txt)
+80/100 pts: 4 valid tests (see test-audit-results.txt)
+60/60 bonus pts (other teams failing your tests)
 Inspection
 110/110 pts: See inspection.md
-Total: 320/340 pts
+Total: 360/340 pts
