@@ -76,7 +76,7 @@ pub struct JsonRefereeState {
     spare: JsonTile,
     plmt: Vec<JsonRefereePlayer>,
     last: JsonAction,
-    goals: Option<Vec<Position>>,
+    goals: Option<Vec<Coordinate>>,
 }
 
 fn valid_positions(
@@ -160,7 +160,13 @@ where
 
         let goals = player_info.iter().map(|pi| pi.goal()).collect::<Vec<_>>();
 
-        let rem_goals = jstate.goals.unwrap_or_default();
+        let rem_goals: Vec<Position> = jstate
+            .goals
+            .unwrap_or_default()
+            .into_iter()
+            .map(|c| c.into())
+            .collect();
+
         if goals.iter().any(|goal| rem_goals.contains(goal)) {
             return Err(JsonError::DuplicateAssignedGoals);
         }
