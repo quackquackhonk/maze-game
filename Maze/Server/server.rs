@@ -80,12 +80,13 @@ pub async fn main() -> anyhow::Result<()> {
         }
     }
 
-    if player_connections.len() < num_players {
+    if player_connections.len() < num_players || player_connections.len() < 2 {
         // We waited twice and there is not enough players
         let game_result = GameResult::default();
         println!("{}", serde_json::to_string(&game_result).unwrap());
         return Ok(());
     }
+
     let mut state = State {
         board: state_info.board,
         player_info: player_connections

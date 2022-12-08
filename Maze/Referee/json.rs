@@ -127,6 +127,11 @@ where
             return Err(JsonError::NonUniqueHomes);
         }
 
+        if board.possible_homes().count() < player_info.len() {
+            // not enough homes for players
+            return Err(JsonError::NotEnoughHomes);
+        }
+
         valid_positions(
             homes,
             board.possible_homes().collect(),

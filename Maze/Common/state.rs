@@ -398,6 +398,8 @@ impl<Info: PlayerInfo + Clone> State<Info> {
 
     /// If the given move is validated by `is_valid_move`, perform the move (mutating `self`).
     /// Otherwise, errors without mutating `self`.
+    ///
+    /// `try_move` does not advance the current player
     pub fn try_move(
         &mut self,
         slide: Slide,
@@ -455,6 +457,20 @@ impl<Info: PrivatePlayerInfo + Clone> State<Info> {
     /// If the current player has reached their goal:
     /// - assigns a new goal to that player from `remaining_goals`
     /// - increments the number of goals they reached
+    ///
+    /// # Panics
+    ///
+    /// This method panics is `self.player_info` is empty
+    ///
+    /// ```should_panic
+    /// # use crate::common::State;
+    /// # use crate::common::FullPlayerInfo;
+    /// # use std::collections::VecDeque;
+    ///
+    /// let mut state: State<FullPlayerInfo> = State::default();
+    /// state.update_current_player_goal(&mut VecDeque::new());
+    ///
+    /// ```
     pub fn update_current_player_goal(&mut self, remaining_goals: &mut VecDeque<Position>) -> bool {
         if self.player_reached_goal() {
             self.current_player_info_mut().inc_goals_reached();
@@ -500,7 +516,11 @@ impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
 
 #[cfg(test)]
 mod state_tests {
-    use crate::tile::{CompassDirection::*, ConnectorShape::*, PathOrientation::*};
+    use crate::tile::{
+        CompassDirection::{self, *},
+        ConnectorShape::*,
+        PathOrientation::*,
+    };
 
     use super::*;
 
@@ -762,6 +782,198 @@ mod state_tests {
         assert!(!state.can_reach_position((2, 1)));
         assert!(state.can_reach_position((2, 2)));
     }
+
+    #[test]
+    fn test_is_valid_move() {
+        let mut state = State::default();
+        state.player_info.push_back(FullPlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: (1, 1),
+            color: ColorName::Yellow.into(),
+            goals_reached: 0,
+        });
+        state.player_info.push_back(FullPlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: (1, 1),
+            color: ColorName::Red.into(),
+            goals_reached: 0,
+        });
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        assert!(state.is_valid_move(Slide::new_unchecked(0, CompassDirection::West), 0, (2, 1)));
+        assert!(!state.is_valid_move(Slide::new_unchecked(0, CompassDirection::South), 1, (1, 1)));
+        assert!(!state.is_valid_move(Slide::new_unchecked(1, CompassDirection::North), 2, (2, 1)));
+
+        state.previous_slide = state.board.new_slide(0, CompassDirection::East);
+
+        assert!(!state.is_valid_move(Slide::new_unchecked(0, CompassDirection::West), 0, (2, 1)));
+    }
+
+    #[test]
+    fn test_try_move() {
+        let mut state = State::default();
+        state.player_info.push_back(FullPlayerInfo {
+            home: (1, 1),
+            position: (1, 1),
+            goal: (1, 1),
+            color: ColorName::Yellow.into(),
+            goals_reached: 0,
+        });
+        state.player_info.push_back(FullPlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: (1, 1),
+            color: ColorName::Red.into(),
+            goals_reached: 0,
+        });
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // check information about the state
+        assert!(state.previous_slide.is_none());
+        assert_eq!(state.player_info[0].color(), ColorName::Yellow.into());
+        assert_eq!(state.player_info[0].position(), (1, 1));
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
+        assert_eq!(state.player_info[1].position(), (1, 3));
+
+        // try an invalid move
+        assert!(state
+            .try_move(Slide::new_unchecked(0, CompassDirection::South), 1, (1, 1))
+            .is_err());
+
+        // nothing about the state changes
+        assert!(state.previous_slide.is_none());
+        assert_eq!(state.player_info[0].color(), ColorName::Yellow.into());
+        assert_eq!(state.player_info[0].position(), (1, 1));
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
+        assert_eq!(state.player_info[1].position(), (1, 3));
+
+        assert!(state
+            .try_move(Slide::new_unchecked(1, CompassDirection::North), 2, (2, 1))
+            .is_err());
+
+        // nothing about the state changes
+        assert!(state.previous_slide.is_none());
+        assert_eq!(state.player_info[0].color(), ColorName::Yellow.into());
+        assert_eq!(state.player_info[0].position(), (1, 1));
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
+        assert_eq!(state.player_info[1].position(), (1, 3));
+
+        assert!(state
+            .try_move(Slide::new_unchecked(0, CompassDirection::West), 0, (2, 1))
+            .is_ok());
+
+        // the state changes!
+        assert_eq!(
+            state.previous_slide,
+            Some(Slide::new_unchecked(0, CompassDirection::West))
+        );
+        assert_eq!(state.player_info[0].color(), ColorName::Yellow.into());
+        assert_eq!(state.player_info[0].position(), (2, 1));
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
+        assert_eq!(state.player_info[1].position(), (1, 3));
+
+        // attempting to undo the previous slide does not change the state
+        assert!(!state.is_valid_move(Slide::new_unchecked(0, CompassDirection::East), 0, (2, 1)));
+        assert_eq!(state.player_info[0].color(), ColorName::Yellow.into());
+        assert_eq!(state.player_info[0].position(), (2, 1));
+        assert_eq!(state.player_info[1].color(), ColorName::Red.into());
+        assert_eq!(state.player_info[1].position(), (1, 3));
+    }
+
+    #[test]
+    fn test_update_current_player_goal() {
+        let mut state = State::default();
+        state.player_info.push_back(FullPlayerInfo {
+            home: (3, 3),
+            position: (1, 1),
+            goal: (1, 1),
+            color: ColorName::Yellow.into(),
+            goals_reached: 0,
+        });
+        state.player_info.push_back(FullPlayerInfo {
+            home: (3, 1),
+            position: (1, 3),
+            goal: (1, 1),
+            color: ColorName::Red.into(),
+            goals_reached: 0,
+        });
+        state.player_info.push_back(FullPlayerInfo {
+            home: (3, 1),
+            position: (3, 3),
+            goal: (3, 3),
+            color: ColorName::Green.into(),
+            goals_reached: 0,
+        });
+        // Default Board<7> is:
+        //   0123456
+        // 0 ─│└┌┐┘┴
+        // 1 ├┬┤┼─│└
+        // 2 ┌┐┘┴├┬┤
+        // 3 ┼─│└┌┐┘
+        // 4 ┴├┬┤┼─│
+        // 5 └┌┐┘┴├┬
+        // 6 ┤┼─│└┌┐
+        //
+        // extra = ┼
+
+        // the first player reached their goal
+        assert_eq!(
+            state.current_player_info().color(),
+            ColorName::Yellow.into()
+        );
+        assert_eq!(state.current_player_info().goal(), (1, 1));
+        assert_eq!(state.current_player_info().goals_reached, 0);
+        assert!(state.update_current_player_goal(&mut VecDeque::new()));
+        assert_eq!(state.current_player_info().goal(), (3, 3));
+        assert_eq!(state.current_player_info().goals_reached, 1);
+
+        state.next_player();
+        assert_eq!(state.current_player_info().color(), ColorName::Red.into());
+        assert_eq!(state.current_player_info().goal(), (1, 1));
+        assert_eq!(state.current_player_info().goals_reached, 0);
+        assert!(!state.update_current_player_goal(&mut VecDeque::new()));
+        assert_eq!(state.current_player_info().goal(), (1, 1));
+        assert_eq!(state.current_player_info().goals_reached, 0);
+
+        state.next_player();
+        let mut remaining_goals = VecDeque::from(vec![(5, 5)]);
+        assert_eq!(state.current_player_info().color(), ColorName::Green.into());
+        assert_eq!(state.current_player_info().goal(), (3, 3));
+        assert_eq!(state.current_player_info().goals_reached, 0);
+        assert!(state.update_current_player_goal(&mut remaining_goals));
+        assert_eq!(state.current_player_info().goal(), (5, 5));
+        assert_eq!(state.current_player_info().goals_reached, 1);
+        assert!(remaining_goals.is_empty());
+    }
+
+    // #[test]
+    // #[should_panic]
+    // fn test_update_current_player_goal_empty() {
+    //     let mut state: State<FullPlayerInfo> = State::default();
+    //     state.update_current_player_goal(&mut VecDeque::new());
+    // }
 
     #[test]
     fn test_reachable_by_player() {
