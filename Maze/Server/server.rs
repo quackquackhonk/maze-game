@@ -100,7 +100,9 @@ pub async fn main() -> anyhow::Result<()> {
 
     // we have enough players :)
     let mut referee = Referee::new(1);
-    let game_result = referee.run_from_state(&mut state, &mut vec![], goals.into());
+    let mut game_result = referee.run_from_state(&mut state, &mut vec![], goals.into());
+    game_result.winners.sort();
+    game_result.kicked.sort();
     println!("{}", serde_json::to_string(&game_result).unwrap());
 
     Ok(())
