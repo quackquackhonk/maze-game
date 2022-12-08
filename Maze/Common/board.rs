@@ -75,7 +75,7 @@ impl Board {
         use CompassDirection::*;
         match direction {
             North => {
-                if index > self.grid.len() {
+                if index > self.num_cols() {
                     return Err(OutOfBounds::Index(index));
                 }
                 let col_num = index;
@@ -85,7 +85,7 @@ impl Board {
                 Ok(())
             }
             South => {
-                if index > self.grid.len() {
+                if index > self.num_cols() {
                     return Err(OutOfBounds::Index(index));
                 }
                 let col_num = index;
@@ -94,7 +94,7 @@ impl Board {
                 Ok(())
             }
             East => {
-                if index > self.grid[0].len() {
+                if index > self.num_rows() {
                     return Err(OutOfBounds::Index(index));
                 }
                 let row_num = index;
@@ -103,7 +103,7 @@ impl Board {
                 Ok(())
             }
             West => {
-                if index > self.grid[0].len() {
+                if index > self.num_rows() {
                     return Err(OutOfBounds::Index(index));
                 }
                 let row_num = index;
@@ -268,12 +268,12 @@ impl Board {
     pub fn valid_slide(&self, Slide { index, direction }: Slide) -> bool {
         match direction {
             CompassDirection::North | CompassDirection::South
-                if self.slideable_rows().contains(&index) =>
+                if self.slideable_cols().contains(&index) =>
             {
                 true
             }
             CompassDirection::East | CompassDirection::West
-                if self.slideable_cols().contains(&index) =>
+                if self.slideable_rows().contains(&index) =>
             {
                 true
             }
