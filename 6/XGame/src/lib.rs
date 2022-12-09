@@ -1,7 +1,4 @@
-use std::{
-    io::{Read, Write},
-    sync::Arc,
-};
+use std::io::{Read, Write};
 
 use anyhow::anyhow;
 use common::{
@@ -9,7 +6,6 @@ use common::{
     json::Name,
     state::{FullPlayerInfo, State},
 };
-use parking_lot::Mutex;
 use players::player::{LocalPlayer, PlayerApi};
 use referee::{
     json::{JsonRefereeState, PS},
@@ -76,10 +72,7 @@ pub fn read_and_write_json(
             .player_info
             .into_iter()
             .zip(players)
-            .map(|(info, api)| Player {
-                api: Arc::new(Mutex::new(api)),
-                info,
-            })
+            .map(|(info, api)| Player::new(api, info))
             .collect(),
         previous_slide: state.previous_slide,
     };
@@ -87,11 +80,7 @@ pub fn read_and_write_json(
     let mut r#ref = Referee::new(0);
 
     let game_result = r#ref.run_from_state(&mut state, &mut observers, goals.into());
-    let mut winner_names: Vec<Name> = game_result
-        .winners
-        .into_iter()
-        .flat_map(|w| w.name())
-        .collect();
+    let mut winner_names: Vec<Name> = game_result.winners.into_iter().map(|w| w.name()).collect();
     winner_names.sort();
 
     write_json_out_to_writer(winner_names, writer)?;

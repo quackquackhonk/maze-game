@@ -1,7 +1,4 @@
-use std::{
-    io::{Read, Write},
-    sync::Arc,
-};
+use std::io::{Read, Write};
 
 use anyhow::{anyhow, bail};
 use common::{
@@ -9,7 +6,6 @@ use common::{
     json::Name,
     state::{FullPlayerInfo, State},
 };
-use parking_lot::Mutex;
 use players::{
     bad_player::{BadPlayer, BadPlayerLoop},
     player::{LocalPlayer, PlayerApi},
@@ -94,10 +90,7 @@ pub fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow
             .player_info
             .into_iter()
             .zip(players)
-            .map(|(info, api)| Player {
-                api: Arc::new(Mutex::new(api)),
-                info,
-            })
+            .map(|(info, api)| Player::new(api, info))
             .collect(),
         previous_slide: state.previous_slide,
     };
@@ -105,18 +98,10 @@ pub fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow
     let mut r#ref = Referee::new(0);
 
     let game_result = r#ref.run_from_state(&mut state, &mut vec![], goals.into());
-    let mut winner_names: Vec<Name> = game_result
-        .winners
-        .into_iter()
-        .flat_map(|w| w.name())
-        .collect();
+    let mut winner_names: Vec<Name> = game_result.winners.into_iter().map(|w| w.name()).collect();
     winner_names.sort();
 
-    let mut kicked_names: Vec<Name> = game_result
-        .kicked
-        .into_iter()
-        .flat_map(|k| k.name())
-        .collect();
+    let mut kicked_names: Vec<Name> = game_result.kicked.into_iter().map(|k| k.name()).collect();
     kicked_names.sort();
 
     write_json_out_to_writer((winner_names, kicked_names), writer)?;

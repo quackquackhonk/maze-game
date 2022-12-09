@@ -26,17 +26,22 @@ use thiserror::Error;
 pub struct Player {
     pub api: Arc<Mutex<Box<dyn PlayerApi>>>,
     pub info: FullPlayerInfo,
+    name: Name,
 }
 
 impl Debug for Player {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("Player").field("info", &self.info).finish()
+        f.debug_struct("Player")
+            .field("name", &self.name)
+            .field("info", &self.info)
+            .finish()
     }
 }
 
 impl Player {
     pub fn new(api: Box<dyn PlayerApi>, info: FullPlayerInfo) -> Self {
         Player {
+            name: api.name(),
             api: Arc::new(Mutex::new(api)),
             info,
         }
@@ -90,17 +95,8 @@ impl PrivatePlayerInfo for Player {
 const TIMEOUT: Duration = Duration::from_secs(4);
 
 impl PlayerApi for Player {
-    fn name(&self) -> PlayerApiResult<Name> {
-        let api = self.api.clone();
-        run_with_timeout(
-            move || {
-                if api.is_locked() {
-                    unsafe { api.force_unlock() }
-                };
-                api.lock().name()
-            },
-            TIMEOUT,
-        )?
+    fn name(&self) -> Name {
+        self.name.clone()
     }
 
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board> {
@@ -148,7 +144,7 @@ impl PartialEq<Player> for Color {
 
 impl PartialOrd<Player> for Player {
     fn partial_cmp(&self, other: &Player) -> Option<std::cmp::Ordering> {
-        self.name().ok()?.partial_cmp(&other.name().ok()?)
+        self.name().partial_cmp(&other.name())
     }
 }
 

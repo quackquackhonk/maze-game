@@ -68,8 +68,8 @@ impl<In: Read + Send, Out: Write + Send> PlayerProxy<In, Out> {
 }
 
 impl<In: Read + Send, Out: Write + Send> PlayerApi for PlayerProxy<In, Out> {
-    fn name(&self) -> PlayerApiResult<Name> {
-        Ok(self.name.clone())
+    fn name(&self) -> Name {
+        self.name.clone()
     }
 
     fn propose_board0(&self, _cols: u32, _rows: u32) -> PlayerApiResult<Board> {
@@ -139,7 +139,7 @@ mod tests {
     fn test_name() {
         let player = PlayerProxy::new(Name::from_static("john"), "".as_bytes(), Vec::new());
 
-        assert_eq!(player.name().unwrap(), Name::from_static("john"));
+        assert_eq!(player.name(), Name::from_static("john"));
     }
 
     #[test]

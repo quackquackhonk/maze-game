@@ -275,10 +275,7 @@ impl Referee {
                         MoveEffect::Moved => false,
                     }
                 } else {
-                    eprintln!(
-                        "received PASS from {}",
-                        state.current_player_info().name().expect("valid")
-                    );
+                    eprintln!("received PASS from {}", state.current_player_info().name());
                     num_passed += 1;
                     false
                 }
@@ -491,8 +488,8 @@ mod tests {
     }
 
     impl PlayerApi for MockPlayer {
-        fn name(&self) -> PlayerApiResult<Name> {
-            Ok(Name::from_static("bob"))
+        fn name(&self) -> Name {
+            Name::from_static("bob")
         }
 
         fn propose_board0(&self, _cols: u32, _rows: u32) -> PlayerApiResult<Board> {
@@ -637,24 +634,24 @@ mod tests {
         state.add_player(bob);
         state.add_player(jill);
 
-        assert_eq!(state.player_info[0].name().unwrap(), "bob");
+        assert_eq!(state.player_info[0].name(), "bob");
         assert_eq!(state.player_info[0].color(), Color::from(ColorName::Red));
-        assert_eq!(state.player_info[1].name().unwrap(), "jill");
+        assert_eq!(state.player_info[1].name(), "jill");
         assert_eq!(state.player_info[1].color(), Color::from(ColorName::Blue));
         state.next_player();
-        assert_eq!(state.player_info[1].name().unwrap(), "bob");
+        assert_eq!(state.player_info[1].name(), "bob");
         assert_eq!(state.player_info[1].color(), Color::from(ColorName::Red));
-        assert_eq!(state.player_info[0].name().unwrap(), "jill");
+        assert_eq!(state.player_info[0].name(), "jill");
         assert_eq!(state.player_info[0].color(), Color::from(ColorName::Blue));
     }
 
     #[test]
     fn test_calculate_winners() {
         let mut state = State::default();
-        let bob = Player {
-            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
-            info: FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
-        };
+        let bob = Player::new(
+            Box::new(MockPlayer::default()),
+            FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
+        );
         let jill = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
@@ -668,14 +665,14 @@ mod tests {
         // as is, jill wins because it is closer to 1, 1
         let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
-        assert_eq!(winners[0].name().unwrap(), "jill");
+        assert_eq!(winners[0].name(), "jill");
         assert_eq!(losers.len(), 1);
 
         let mut state = State::default();
-        let mut bob = Player {
-            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
-            info: FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
-        };
+        let mut bob = Player::new(
+            Box::new(MockPlayer::default()),
+            FullPlayerInfo::new((1, 1), (0, 0), (1, 5), Color::from(ColorName::Red)),
+        );
         let jill = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
@@ -689,14 +686,14 @@ mod tests {
         // if bob has collected a goal, bob wins
         let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
-        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(winners[0].name(), "bob");
         assert_eq!(losers.len(), 1);
 
         let mut state = State::default();
-        let mut bob = Player {
-            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
-            info: FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
-        };
+        let mut bob = Player::new(
+            Box::new(MockPlayer::default()),
+            FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
+        );
         let mut jill = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
@@ -713,14 +710,14 @@ mod tests {
         // bob wins because it is closer
         let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
         assert_eq!(winners.len(), 1);
-        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(winners[0].name(), "bob");
         assert_eq!(losers.len(), 1);
 
         let mut state = State::default();
-        let mut bob = Player {
-            api: Arc::new(Mutex::new(Box::new(MockPlayer::default()))),
-            info: FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
-        };
+        let mut bob = Player::new(
+            Box::new(MockPlayer::default()),
+            FullPlayerInfo::new((1, 1), (1, 1), (3, 3), Color::from(ColorName::Red)),
+        );
         let mut jill = Player::new(
             Box::new(LocalPlayer::new(
                 Name::from_static("jill"),
@@ -734,7 +731,7 @@ mod tests {
         state.add_player(jill);
         // both players win
         let (winners, losers) = Referee::calculate_winners(&state, GameStatus::Tie);
-        assert_eq!(winners[0].name().unwrap(), "bob");
+        assert_eq!(winners[0].name(), "bob");
         assert_eq!(winners.len(), 2);
         assert_eq!(losers.len(), 0);
     }
@@ -775,7 +772,7 @@ mod tests {
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
-        assert_eq!(winners[0].name().unwrap(), player.name().unwrap());
+        assert_eq!(winners[0].name(), player.name());
         assert_eq!(*player.turns_taken.lock(), 1);
         assert!(kicked.is_empty());
 
@@ -788,7 +785,7 @@ mod tests {
             player,
         ];
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
-        assert_eq!(winners[0].name().unwrap(), Name::from_static("joe"));
+        assert_eq!(winners[0].name(), Name::from_static("joe"));
         assert_eq!(winners.len(), 1);
         assert!(kicked.is_empty());
 
@@ -814,7 +811,7 @@ mod tests {
         );
         let GameResult { winners, kicked } = referee.run_game(players, vec![]);
         assert_eq!(winners.len(), 1);
-        assert_eq!(winners[0].name().unwrap(), Name::from_static("jill"));
+        assert_eq!(winners[0].name(), Name::from_static("jill"));
         assert!(kicked.is_empty());
     }
 
@@ -903,8 +900,8 @@ mod tests {
         assert_eq!(calculated_winners.len(), 1);
         assert_eq!(losers.len(), 1);
         assert_eq!(kicked.len(), 0);
-        assert_eq!(winners[0].name().unwrap(), "bob");
-        assert_eq!(losers[0].name().unwrap(), "joe");
+        assert_eq!(winners[0].name(), "bob");
+        assert_eq!(losers[0].name(), "joe");
     }
 
     #[test]

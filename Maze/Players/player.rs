@@ -28,7 +28,7 @@ pub enum PlayerApiError {
 /// Trait describing the methods that `Player`s must implement
 pub trait PlayerApi: Send {
     /// Returns the name of this Player
-    fn name(&self) -> PlayerApiResult<Name>;
+    fn name(&self) -> Name;
     /// Returns a `Board` with at least `cols` columns and `rows` rows
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board>;
     /// The player receives a `PlayerBoardState`, which is all the publicly available information
@@ -63,8 +63,8 @@ impl<S: Strategy + Send> LocalPlayer<S> {
 }
 
 impl<S: Strategy + Send> PlayerApi for LocalPlayer<S> {
-    fn name(&self) -> PlayerApiResult<Name> {
-        Ok(self.name.clone())
+    fn name(&self) -> Name {
+        self.name.clone()
     }
 
     fn propose_board0(&self, _cols: u32, _rows: u32) -> PlayerApiResult<Board> {
@@ -124,7 +124,7 @@ mod tests {
             goal: None,
         };
 
-        assert_eq!(player.name().unwrap(), Name::from_static("bill"));
+        assert_eq!(player.name(), Name::from_static("bill"));
     }
 
     #[test]

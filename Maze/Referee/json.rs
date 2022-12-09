@@ -264,8 +264,8 @@ pub struct JsonGameResult(Vec<Name>, Vec<Name>);
 impl From<GameResult> for JsonGameResult {
     fn from(gr: GameResult) -> Self {
         JsonGameResult(
-            gr.winners.into_iter().flat_map(|p| p.name()).collect(),
-            gr.kicked.into_iter().flat_map(|p| p.name()).collect(),
+            gr.winners.into_iter().map(|p| p.name()).collect(),
+            gr.kicked.into_iter().map(|p| p.name()).collect(),
         )
     }
 }

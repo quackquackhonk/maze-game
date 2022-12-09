@@ -34,7 +34,7 @@ impl BadPlayer {
 }
 
 impl PlayerApi for BadPlayer {
-    fn name(&self) -> PlayerApiResult<Name> {
+    fn name(&self) -> Name {
         self.player.name()
     }
 
@@ -103,7 +103,7 @@ impl BadPlayerLoop {
 }
 
 impl PlayerApi for BadPlayerLoop {
-    fn name(&self) -> PlayerApiResult<Name> {
+    fn name(&self) -> Name {
         self.api.name()
     }
 
