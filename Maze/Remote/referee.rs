@@ -83,7 +83,7 @@ mod tests {
     use common::{
         color::ColorName,
         json::Name,
-        state::{PubPlayerInfo, State},
+        state::{PlayerInfo, State},
     };
     use players::{player::LocalPlayer, strategy::NaiveStrategy};
 
@@ -98,7 +98,7 @@ mod tests {
             NaiveStrategy::Riemann,
         ));
         let state = State {
-            player_info: vec![PubPlayerInfo {
+            player_info: vec![PlayerInfo {
                 current: (0, 1),
                 home: (1, 1),
                 color: ColorName::Red.into(),

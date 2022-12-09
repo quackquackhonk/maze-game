@@ -1,7 +1,7 @@
 use common::{
     grid::Position,
     json::{Coordinate, JsonState},
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use players::json::JsonChoice;
 use serde::{de, Deserialize, Serialize};
@@ -23,8 +23,8 @@ pub enum JsonArguments {
     Boolean(bool),
 }
 
-impl From<Option<State<PubPlayerInfo>>> for JsonArguments {
-    fn from(st: Option<State<PubPlayerInfo>>) -> Self {
+impl From<Option<State<PlayerInfo>>> for JsonArguments {
+    fn from(st: Option<State<PlayerInfo>>) -> Self {
         match st {
             Some(state) => JsonArguments::State(state.into()),
             None => JsonArguments::Boolean(false),
@@ -32,8 +32,8 @@ impl From<Option<State<PubPlayerInfo>>> for JsonArguments {
     }
 }
 
-impl From<State<PubPlayerInfo>> for JsonArguments {
-    fn from(st: State<PubPlayerInfo>) -> Self {
+impl From<State<PlayerInfo>> for JsonArguments {
+    fn from(st: State<PlayerInfo>) -> Self {
         JsonArguments::State(st.into())
     }
 }
@@ -145,11 +145,11 @@ fn test_parse_json_result() {
 pub struct JsonFunctionCall(pub JsonMName, pub Vec<JsonArguments>);
 
 impl JsonFunctionCall {
-    pub fn setup(state: Option<State<PubPlayerInfo>>, goal: Position) -> Self {
+    pub fn setup(state: Option<State<PlayerInfo>>, goal: Position) -> Self {
         Self(JsonMName::Setup, vec![state.into(), goal.into()])
     }
 
-    pub fn take_turn(state: State<PubPlayerInfo>) -> Self {
+    pub fn take_turn(state: State<PlayerInfo>) -> Self {
         Self(JsonMName::TakeTurn, vec![Some(state).into()])
     }
 

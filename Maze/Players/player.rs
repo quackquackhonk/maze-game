@@ -5,7 +5,7 @@ use common::{
     board::{Board, DefaultBoard},
     grid::Position,
     json::{JsonError, Name},
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use thiserror::Error;
 
@@ -33,10 +33,9 @@ pub trait PlayerApi: Send {
     fn propose_board0(&self, cols: u32, rows: u32) -> PlayerApiResult<Board>;
     /// The player receives a `PlayerBoardState`, which is all the publicly available information
     /// in the game, and its own private goal tile.
-    fn setup(&mut self, state: Option<State<PubPlayerInfo>>, goal: Position)
-        -> PlayerApiResult<()>;
+    fn setup(&mut self, state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()>;
     /// Returns a `PlayerAction` based on the given `PlayerBoardState`
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction>;
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction>;
     /// The player is informed if they won or not.
     fn won(&mut self, did_win: bool) -> PlayerApiResult<()>;
 }
@@ -74,16 +73,12 @@ impl<S: Strategy + Send> PlayerApi for LocalPlayer<S> {
 
     /// # Effect
     /// Sets `self.goal = Some(goal)`.
-    fn setup(
-        &mut self,
-        _state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
+    fn setup(&mut self, _state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()> {
         self.goal = Some(goal);
         Ok(())
     }
 
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         let start = state.player_info[0].current;
         Ok(self.strategy.get_move(
             state,
@@ -178,7 +173,7 @@ mod tests {
             .expect("LocalPlayers are infallible");
 
         let state = State {
-            player_info: vec![PubPlayerInfo {
+            player_info: vec![PlayerInfo {
                 current: (0, 0),
                 home: (0, 0),
                 color: ColorName::Red.into(),

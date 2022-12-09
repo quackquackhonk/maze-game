@@ -25,7 +25,7 @@ pub enum StateError {
 pub type StateResult<T> = Result<T, StateError>;
 
 /// Describes types that can be used as the information a `State` stores on its `Player`s
-pub trait PlayerInfo {
+pub trait PublicPlayerInfo {
     fn position(&self) -> Position;
     fn set_position(&mut self, dest: Position);
     fn home(&self) -> Position;
@@ -34,7 +34,7 @@ pub trait PlayerInfo {
     fn color(&self) -> Color;
 }
 
-pub trait PrivatePlayerInfo: PlayerInfo {
+pub trait PrivatePlayerInfo: PublicPlayerInfo {
     fn reached_goal(&self) -> bool;
     fn set_goal(&mut self, goal: Position);
     fn goal(&self) -> Position;
@@ -67,7 +67,7 @@ impl FullPlayerInfo {
     }
 }
 
-impl PlayerInfo for FullPlayerInfo {
+impl PublicPlayerInfo for FullPlayerInfo {
     fn position(&self) -> Position {
         self.position
     }
@@ -112,13 +112,13 @@ impl PrivatePlayerInfo for FullPlayerInfo {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct PubPlayerInfo {
+pub struct PlayerInfo {
     pub current: Position,
     pub home: Position,
     pub color: Color,
 }
 
-impl PlayerInfo for PubPlayerInfo {
+impl PublicPlayerInfo for PlayerInfo {
     fn position(&self) -> Position {
         self.current
     }
@@ -140,9 +140,9 @@ impl PlayerInfo for PubPlayerInfo {
     }
 }
 
-impl From<FullPlayerInfo> for PubPlayerInfo {
+impl From<FullPlayerInfo> for PlayerInfo {
     fn from(pi: FullPlayerInfo) -> Self {
-        PubPlayerInfo {
+        PlayerInfo {
             current: pi.position(),
             home: pi.home(),
             color: pi.color(),
@@ -152,13 +152,13 @@ impl From<FullPlayerInfo> for PubPlayerInfo {
 
 /// Represents the State of a single Maze Game.
 #[derive(Debug, PartialEq, Eq)]
-pub struct State<PInfo: PlayerInfo> {
+pub struct State<PInfo: PublicPlayerInfo> {
     pub board: Board,
     pub player_info: VecDeque<PInfo>,
     pub previous_slide: Option<Slide>,
 }
 
-impl<PInfo: PlayerInfo> State<PInfo> {
+impl<PInfo: PublicPlayerInfo> State<PInfo> {
     pub fn new(board: Board, player_info: Vec<PInfo>) -> Self {
         State {
             board,
@@ -287,7 +287,7 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     }
 }
 
-impl<Info: PlayerInfo + Clone> Clone for State<Info> {
+impl<Info: PublicPlayerInfo + Clone> Clone for State<Info> {
     fn clone(&self) -> Self {
         Self {
             board: self.board.clone(),
@@ -297,7 +297,7 @@ impl<Info: PlayerInfo + Clone> Clone for State<Info> {
     }
 }
 
-impl<Info: PlayerInfo + Clone> State<Info> {
+impl<Info: PublicPlayerInfo + Clone> State<Info> {
     /// Can the active player make the move represented by these arguments?
     pub fn is_valid_move(&self, slide: Slide, rotations: usize, destination: Position) -> bool {
         let rows = self.board.grid.len();
@@ -405,7 +405,7 @@ impl<Info: PrivatePlayerInfo + Clone> State<Info> {
     }
 }
 
-impl<PInfo: PlayerInfo + Clone> Default for State<PInfo> {
+impl<PInfo: PublicPlayerInfo + Clone> Default for State<PInfo> {
     fn default() -> Self {
         Self {
             board: Default::default(),
@@ -415,14 +415,14 @@ impl<PInfo: PlayerInfo + Clone> Default for State<PInfo> {
     }
 }
 
-impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
+impl From<State<FullPlayerInfo>> for State<PlayerInfo> {
     fn from(full_state: State<FullPlayerInfo>) -> Self {
         Self {
             board: full_state.board,
             player_info: full_state
                 .player_info
                 .into_iter()
-                .map(PubPlayerInfo::from)
+                .map(PlayerInfo::from)
                 .collect(),
             previous_slide: full_state.previous_slide,
         }
@@ -969,12 +969,12 @@ mod state_tests {
     fn test_reachable_after_move() {
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (1, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),

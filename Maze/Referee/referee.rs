@@ -4,7 +4,7 @@ use crate::{config::Config, json::JsonGameResult, player::Player};
 use common::{
     board::{Board, DefaultBoard},
     grid::{squared_euclidian_distance, Position},
-    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State},
+    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PublicPlayerInfo, State},
 };
 use players::{player::PlayerApi, strategy::PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
@@ -45,12 +45,12 @@ enum MoveEffect {
 }
 
 trait RefereeState {
-    fn to_player_state(&self) -> State<PubPlayerInfo>;
+    fn to_player_state(&self) -> State<PlayerInfo>;
     fn to_full_state(&self) -> State<FullPlayerInfo>;
 }
 
 impl RefereeState for State<Player> {
-    fn to_player_state(&self) -> State<PubPlayerInfo> {
+    fn to_player_state(&self) -> State<PlayerInfo> {
         State {
             board: self.board.clone(),
             player_info: self
@@ -482,7 +482,7 @@ mod tests {
     #[derive(Debug, Default, Clone)]
     struct MockPlayer {
         turns_taken: Arc<Mutex<usize>>,
-        state: Arc<Mutex<Option<State<PubPlayerInfo>>>>,
+        state: Arc<Mutex<Option<State<PlayerInfo>>>>,
         goal: Arc<Mutex<Option<Position>>>,
         won: Arc<Mutex<Option<bool>>>,
     }
@@ -498,7 +498,7 @@ mod tests {
 
         fn setup(
             &mut self,
-            state: Option<State<PubPlayerInfo>>,
+            state: Option<State<PlayerInfo>>,
             goal: Position,
         ) -> PlayerApiResult<()> {
             *self.goal.lock() = Some(goal);
@@ -506,7 +506,7 @@ mod tests {
             Ok(())
         }
 
-        fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+        fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
             *self.turns_taken.lock() += 1;
             *self.state.lock() = Some(state);
             Ok(None)

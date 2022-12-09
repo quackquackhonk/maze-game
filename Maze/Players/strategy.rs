@@ -2,7 +2,7 @@ use clap::ValueEnum;
 use common::{
     board::Slide,
     grid::{squared_euclidian_distance, Position},
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
     tile::CompassDirection,
 };
 use itertools::Itertools;
@@ -13,7 +13,7 @@ pub trait Strategy {
     /// This returns a valid move given the game state
     fn get_move(
         &self,
-        state: State<PubPlayerInfo>,
+        state: State<PlayerInfo>,
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction;
@@ -66,7 +66,7 @@ impl NaiveStrategy {
     /// and returns a player action with the move if it found one or a pass if it couldn't
     fn find_move_to_reach_alt_goal(
         &self,
-        state: &State<PubPlayerInfo>,
+        state: &State<PlayerInfo>,
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
@@ -80,11 +80,7 @@ impl NaiveStrategy {
     /// - `NaiveStrategy::Euclid` sorts alt goals by ascending `euclidian_distance` to the
     /// `goal_tile`
     /// - `NaiveStrategy::Reimann` sorts alt goals in row-column order.
-    fn get_alt_goals(
-        &self,
-        goal_tile: Position,
-        board_state: &State<PubPlayerInfo>,
-    ) -> Vec<Position> {
+    fn get_alt_goals(&self, goal_tile: Position, board_state: &State<PlayerInfo>) -> Vec<Position> {
         //! alternative_goal_order is a Comparator<Position> function.
         #[allow(clippy::type_complexity)]
         let alternative_goal_order: Box<dyn Fn(&Position, &Position) -> Ordering> = match self {
@@ -108,7 +104,7 @@ impl NaiveStrategy {
 
     fn find_move_to_reach_helper<const N: usize>(
         &self,
-        state: &State<PubPlayerInfo>,
+        state: &State<PlayerInfo>,
         lines: impl Iterator<Item = usize>,
         directions: [CompassDirection; N],
         start: Position,
@@ -138,7 +134,7 @@ impl NaiveStrategy {
 
     fn find_move_to_reach(
         &self,
-        state: &State<PubPlayerInfo>,
+        state: &State<PlayerInfo>,
         start: Position,
         destination: Position,
     ) -> PlayerAction {
@@ -164,7 +160,7 @@ impl NaiveStrategy {
 impl Strategy for NaiveStrategy {
     fn get_move(
         &self,
-        state: State<PubPlayerInfo>,
+        state: State<PlayerInfo>,
         start: Position,
         goal_tile: Position,
     ) -> PlayerAction {
@@ -187,12 +183,12 @@ mod strategy_tests {
     fn test_get_move_euclid() {
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (1, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -232,12 +228,12 @@ mod strategy_tests {
         // what will Euclid do to go from (0, 0) to (2, 3)?
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (0, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -263,12 +259,12 @@ mod strategy_tests {
         // what will Euclid do to go from (6, 4) to (2, 0)?
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (6, 4),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -294,12 +290,12 @@ mod strategy_tests {
         // there are no moves that will pass starting from (0, 0) on this board
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (1, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -327,8 +323,8 @@ mod strategy_tests {
     fn test_get_move_pass() {
         let euclid = NaiveStrategy::Euclid;
         let riemann = NaiveStrategy::Riemann;
-        let mut state: State<PubPlayerInfo> = State {
-            player_info: vec![PubPlayerInfo {
+        let mut state: State<PlayerInfo> = State {
+            player_info: vec![PlayerInfo {
                 current: (0, 2),
                 home: (3, 3),
                 color: ColorName::Red.into(),
@@ -381,12 +377,12 @@ mod strategy_tests {
     fn test_get_move_reimann() {
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (1, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -426,12 +422,12 @@ mod strategy_tests {
         // what will Reimann do to go from (0, 0) to (2, 3)?
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (0, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -457,12 +453,12 @@ mod strategy_tests {
         // what will Reimann do to go from (6, 4) to (2, 0)?
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (6, 4),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -494,14 +490,14 @@ mod strategy_tests {
 
     #[test]
     fn test_find_move_to_reach_alt_goal() {
-        let state: State<PubPlayerInfo> = State {
+        let state: State<PlayerInfo> = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (0, 2),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -606,7 +602,7 @@ mod strategy_tests {
 
     #[test]
     fn test_get_alt_goals_reimann() {
-        let state: State<PubPlayerInfo> = State::default();
+        let state: State<PlayerInfo> = State::default();
         let reimann_alt_goals = NaiveStrategy::Riemann.get_alt_goals((1, 1), &state);
         let max_cells = state.board.num_rows() * state.board.num_cols();
         assert_eq!(reimann_alt_goals.len(), max_cells);
@@ -619,7 +615,7 @@ mod strategy_tests {
 
     #[test]
     fn test_get_alt_goals_euclid() {
-        let state = State::<PubPlayerInfo>::default();
+        let state = State::<PlayerInfo>::default();
         let euclid_alt_goals = NaiveStrategy::Euclid.get_alt_goals((1, 1), &state);
         let max_cells = state.board.num_rows() * state.board.num_cols();
         assert_eq!(euclid_alt_goals.len(), max_cells);
@@ -636,12 +632,12 @@ mod strategy_tests {
     fn test_find_move_to_reach() {
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (4, 1),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),
@@ -689,12 +685,12 @@ mod strategy_tests {
 
         let state = State {
             player_info: vec![
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (6, 0),
                     home: (1, 1),
                     color: ColorName::Red.into(),
                 },
-                PubPlayerInfo {
+                PlayerInfo {
                     current: (2, 2),
                     home: (3, 1),
                     color: ColorName::Purple.into(),

@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use common::{
     grid::Position,
     json::{Coordinate, JsonState},
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use players::{
     json::{JsonChoice, JsonStrategyDesignation},
@@ -48,7 +48,7 @@ fn read_and_write_json(reader: impl Read, writer: &mut impl Write) -> anyhow::Re
         ))?,
     };
 
-    let state: State<PubPlayerInfo> = match input
+    let state: State<PlayerInfo> = match input
         .next()
         .ok_or_else(|| anyhow!("No valid State JSON found"))?
     {

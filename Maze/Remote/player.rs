@@ -3,7 +3,7 @@ use common::{
     board::Board,
     grid::Position,
     json::Name,
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use players::{
     player::{PlayerApi, PlayerApiError, PlayerApiResult},
@@ -77,11 +77,7 @@ impl<In: Read + Send, Out: Write + Send> PlayerApi for PlayerProxy<In, Out> {
         todo!()
     }
 
-    fn setup(
-        &mut self,
-        state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
+    fn setup(&mut self, state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()> {
         // create function call message
         self.send_function_call(&JsonFunctionCall::setup(state, goal))?;
         match self.read_result()? {
@@ -92,7 +88,7 @@ impl<In: Read + Send, Out: Write + Send> PlayerApi for PlayerProxy<In, Out> {
         }
     }
 
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         self.send_function_call(&JsonFunctionCall::take_turn(state.clone()))?;
         match self.read_result()? {
             JsonResult::Choice(ch) => Ok(ch.into_action(&state.board)?),
@@ -160,7 +156,7 @@ mod tests {
 
         let mut player = PlayerProxy::new(Name::from_static("joe"), "\"void\"".as_bytes(), vec![]);
         let state = State {
-            player_info: vec![PubPlayerInfo {
+            player_info: vec![PlayerInfo {
                 current: (0, 0),
                 home: (1, 1),
                 color: ColorName::Red.into(),

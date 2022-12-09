@@ -9,7 +9,7 @@ use common::{
     color::Color,
     gem::GEM_IMGS,
     grid::Grid as CGrid,
-    state::{FullPlayerInfo, PlayerInfo, State},
+    state::{FullPlayerInfo, PublicPlayerInfo, State},
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
 };
 use egui::{Align, Color32, Grid, Image, Layout, RichText, Ui, Vec2};

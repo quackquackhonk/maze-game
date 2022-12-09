@@ -13,7 +13,7 @@ use common::{
     color::Color,
     grid::Position,
     json::Name,
-    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State},
+    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PublicPlayerInfo, State},
 };
 use parking_lot::Mutex;
 use players::{
@@ -48,7 +48,7 @@ impl Player {
     }
 }
 
-impl PlayerInfo for Player {
+impl PublicPlayerInfo for Player {
     fn position(&self) -> Position {
         self.info.position()
     }
@@ -104,16 +104,12 @@ impl PlayerApi for Player {
         run_with_timeout(move || api.lock().propose_board0(cols, rows), TIMEOUT)?
     }
 
-    fn setup(
-        &mut self,
-        state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
+    fn setup(&mut self, state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()> {
         let api = self.api.clone();
         run_with_timeout(move || api.lock().setup(state, goal), TIMEOUT)?
     }
 
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         let api = self.api.clone();
         run_with_timeout(move || api.lock().take_turn(state), TIMEOUT)?
     }

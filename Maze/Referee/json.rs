@@ -7,7 +7,7 @@ use common::{
         has_unique_elements, Coordinate, JsonAction, JsonBoard, JsonColor, JsonError, JsonTile,
         Name,
     },
-    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, State},
+    state::{FullPlayerInfo, PrivatePlayerInfo, PublicPlayerInfo, State},
 };
 use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};

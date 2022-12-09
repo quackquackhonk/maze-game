@@ -11,7 +11,7 @@ use crate::{
     color::{Color, ColorName},
     gem::Gem,
     grid::Position,
-    state::{PlayerInfo, PubPlayerInfo, State},
+    state::{PlayerInfo, PublicPlayerInfo, State},
     tile::{CompassDirection, ConnectorShape, Tile},
 };
 
@@ -306,7 +306,7 @@ pub struct JsonState {
     pub last: JsonAction,
 }
 
-impl<PI: PlayerInfo> TryFrom<JsonState> for State<PI>
+impl<PI: PublicPlayerInfo> TryFrom<JsonState> for State<PI>
 where
     PI: TryFrom<JsonPlayer, Error = JsonError>,
 {
@@ -367,7 +367,7 @@ where
     }
 }
 
-impl<PI: PlayerInfo> From<State<PI>> for JsonState
+impl<PI: PublicPlayerInfo> From<State<PI>> for JsonState
 where
     JsonPlayer: From<PI>,
 {
@@ -421,7 +421,7 @@ pub struct JsonPlayer {
     pub color: JsonColor,
 }
 
-impl TryFrom<JsonPlayer> for PubPlayerInfo {
+impl TryFrom<JsonPlayer> for PlayerInfo {
     type Error = JsonError;
 
     fn try_from(jp: JsonPlayer) -> Result<Self, Self::Error> {
@@ -433,8 +433,8 @@ impl TryFrom<JsonPlayer> for PubPlayerInfo {
     }
 }
 
-impl From<PubPlayerInfo> for JsonPlayer {
-    fn from(ppi: PubPlayerInfo) -> Self {
+impl From<PlayerInfo> for JsonPlayer {
+    fn from(ppi: PlayerInfo) -> Self {
         JsonPlayer {
             current: ppi.current.into(),
             home: ppi.home.into(),

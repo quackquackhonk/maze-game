@@ -5,7 +5,7 @@ use common::{
     board::Board,
     grid::Position,
     json::Name,
-    state::{PubPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use serde::Deserialize;
 
@@ -42,11 +42,7 @@ impl PlayerApi for BadPlayer {
         self.player.propose_board0(cols, rows)
     }
 
-    fn setup(
-        &mut self,
-        state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
+    fn setup(&mut self, state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()> {
         if let BadFM::SetUp = self.bad_fm {
             let _ = 1_i32
                 .checked_div(0)
@@ -55,7 +51,7 @@ impl PlayerApi for BadPlayer {
         self.player.setup(state, goal)
     }
 
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         if let BadFM::TakeTurn = self.bad_fm {
             let _ = 1_i32
                 .checked_div(0)
@@ -111,18 +107,14 @@ impl PlayerApi for BadPlayerLoop {
         self.api.propose_board0(cols, rows)
     }
 
-    fn setup(
-        &mut self,
-        state: Option<State<PubPlayerInfo>>,
-        goal: Position,
-    ) -> PlayerApiResult<()> {
+    fn setup(&mut self, state: Option<State<PlayerInfo>>, goal: Position) -> PlayerApiResult<()> {
         if let BadFM::SetUp = self.badfm {
             self.inc_or_loop();
         }
         self.api.setup(state, goal)
     }
 
-    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         if let BadFM::TakeTurn = self.badfm {
             self.inc_or_loop();
         }
