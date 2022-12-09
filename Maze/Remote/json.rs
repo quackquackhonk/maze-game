@@ -1,7 +1,8 @@
+use anyhow::anyhow;
 use common::{
     grid::Position,
     json::{Coordinate, JsonState},
-    state::{PlayerInfo, State},
+    state::{PlayerInfo, PublicPlayerInfo, State},
 };
 use players::json::JsonChoice;
 use serde::{de, Deserialize, Serialize};
@@ -145,6 +146,41 @@ fn test_parse_json_result() {
 pub struct JsonFunctionCall(pub JsonMName, pub Vec<JsonArguments>);
 
 impl JsonFunctionCall {
+    pub fn get_state(&mut self) -> anyhow::Result<State<PlayerInfo>> {
+        if let JsonArguments::State(s) =
+            self.1.pop().ok_or_else(|| anyhow!("No more arguments!"))?
+        {
+            Ok(s.try_into()?)
+        } else {
+            Err(anyhow!("Last argument is not a State!"))
+        }
+    }
+    pub fn get_option_state(&mut self) -> anyhow::Result<Option<State<PlayerInfo>>> {
+        match self.1.pop().ok_or_else(|| anyhow!("No more arguments!"))? {
+            JsonArguments::State(s) => Ok(Some(s.try_into()?)),
+            JsonArguments::Boolean(b) if !b => Ok(None),
+            _ => Err(anyhow!("Last argument is not a Option<State>")),
+        }
+    }
+    pub fn get_goal(&mut self) -> anyhow::Result<Position> {
+        if let JsonArguments::Coordinate(c) =
+            self.1.pop().ok_or_else(|| anyhow!("No more arguments!"))?
+        {
+            Ok(c.into())
+        } else {
+            Err(anyhow!("Last argument is not a Coordinate!"))
+        }
+    }
+    pub fn get_won(&mut self) -> anyhow::Result<bool> {
+        if let JsonArguments::Boolean(b) =
+            self.1.pop().ok_or_else(|| anyhow!("No more arguments!"))?
+        {
+            Ok(b)
+        } else {
+            Err(anyhow!("Last argument is not a boolean!"))
+        }
+    }
+
     pub fn setup(state: Option<State<PlayerInfo>>, goal: Position) -> Self {
         Self(JsonMName::Setup, vec![state.into(), goal.into()])
     }

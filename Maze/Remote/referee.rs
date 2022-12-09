@@ -40,34 +40,30 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
         while let Ok(mut command) = JsonFunctionCall::deserialize(&mut self.r#in) {
             match command.0 {
                 JsonMName::Setup => {
-                    let goal = match command.1.pop() {
-                        Some(JsonArguments::Coordinate(coords)) => coords.into(),
-                        _ => Err(anyhow!("Last argument was not a goal"))?,
-                    };
-                    let state = match command.1.pop() {
-                        Some(JsonArguments::State(state)) => Some(state.try_into()?),
-                        Some(JsonArguments::Boolean(b)) if !b => None,
-                        _ => Err(anyhow!("First argument was not an Option<State>"))?,
-                    };
+                    if command.1.len() != 2 {
+                        return Err(anyhow!("Not enough arguments for `setup`!"));
+                    }
+                    let goal = command.get_goal()?;
+                    let state = command.get_option_state()?;
                     self.player.setup(state, goal)?;
                     self.out
                         .write_all(serde_json::to_string(&JsonResult::Void)?.as_bytes())?;
                 }
                 JsonMName::TakeTurn => {
-                    let state = match command.1.pop() {
-                        Some(JsonArguments::State(state)) => state.try_into()?,
-                        _ => Err(anyhow!("Did not recieve a state"))?,
-                    };
+                    if command.1.len() != 1 {
+                        return Err(anyhow!("Not enough arguments for `take_turn`!"));
+                    }
+                    let state = command.get_state()?;
                     let choice = self.player.take_turn(state)?;
                     self.out.write_all(
                         serde_json::to_string(&JsonResult::Choice(choice.into()))?.as_bytes(),
                     )?;
                 }
                 JsonMName::Win => {
-                    let did_win = match command.1.pop() {
-                        Some(JsonArguments::Boolean(bool)) => bool,
-                        _ => Err(anyhow!("Did not recieve win condition"))?,
-                    };
+                    if command.1.len() != 1 {
+                        return Err(anyhow!("Not enough arguments for `win`!"));
+                    }
+                    let did_win = command.get_won()?;
                     self.player.won(did_win)?;
                     self.out
                         .write_all(serde_json::to_string(&JsonResult::Void)?.as_bytes())?;
