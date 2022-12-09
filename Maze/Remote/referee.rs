@@ -80,10 +80,12 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
 
 #[cfg(test)]
 mod tests {
-    use common::json::Name;
-    use common::{ColorName, PubPlayerInfo, State};
-    use players::player::LocalPlayer;
-    use players::strategy::NaiveStrategy;
+    use common::{
+        color::ColorName,
+        json::Name,
+        state::{PubPlayerInfo, State},
+    };
+    use players::{player::LocalPlayer, strategy::NaiveStrategy};
 
     use crate::json::JsonFunctionCall;
 

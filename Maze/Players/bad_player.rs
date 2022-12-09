@@ -1,7 +1,12 @@
 use std::{cell::RefCell, thread, time::Duration};
 
 use anyhow::anyhow;
-use common::{board::Board, grid::Position, json::Name, PubPlayerInfo, State};
+use common::{
+    board::Board,
+    grid::Position,
+    json::Name,
+    state::{PubPlayerInfo, State},
+};
 use serde::Deserialize;
 
 use crate::{

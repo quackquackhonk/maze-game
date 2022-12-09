@@ -6,10 +6,11 @@ use std::{
 
 use common::{
     board::Slide,
+    color::Color,
     gem::GEM_IMGS,
     grid::Grid as CGrid,
+    state::{FullPlayerInfo, PlayerInfo, State},
     tile::{CompassDirection, ConnectorShape, PathOrientation, Tile},
-    Color, FullPlayerInfo, PlayerInfo, State,
 };
 use egui::{Align, Color32, Grid, Image, Layout, RichText, Ui, Vec2};
 use egui_extras::RetainedImage;

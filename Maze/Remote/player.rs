@@ -1,5 +1,10 @@
 use anyhow::anyhow;
-use common::{board::Board, grid::Position, json::Name, PubPlayerInfo, State};
+use common::{
+    board::Board,
+    grid::Position,
+    json::Name,
+    state::{PubPlayerInfo, State},
+};
 use players::{
     player::{PlayerApi, PlayerApiError, PlayerApiResult},
     strategy::PlayerAction,
@@ -115,9 +120,9 @@ mod tests {
 
     use common::{
         board::Slide,
+        color::ColorName,
         json::{Coordinate, Index, JsonDegree, JsonDirection},
         tile::CompassDirection,
-        ColorName,
     };
     use players::{json::JsonChoice, strategy::PlayerMove};
     use serde_json::json;

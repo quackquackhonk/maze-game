@@ -1,18 +1,23 @@
 use clap::Parser;
-use common::grid::Position;
-use common::json::Name;
-use common::{FullPlayerInfo, State};
+use common::{
+    grid::Position,
+    json::Name,
+    state::{FullPlayerInfo, State},
+};
 use players::player::PlayerApi;
-use referee::json::JsonRefereeState;
-use referee::player::Player;
-use referee::referee::{GameResult, Referee};
+use referee::{
+    json::JsonRefereeState,
+    player::Player,
+    referee::{GameResult, Referee},
+};
 use remote::player::PlayerProxy;
 use serde::Deserialize;
-use std::io::stdin;
-use std::net::{SocketAddr, TcpStream};
-use std::time::Duration;
-use tokio::net::TcpListener;
-use tokio::time::timeout;
+use std::{
+    io::stdin,
+    net::{SocketAddr, TcpStream},
+    time::Duration,
+};
+use tokio::{net::TcpListener, time::timeout};
 
 const TIMEOUT: Duration = Duration::from_secs(20);
 

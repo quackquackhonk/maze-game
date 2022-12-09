@@ -1,13 +1,12 @@
 use std::collections::VecDeque;
 
-use crate::config::Config;
-use crate::json::JsonGameResult;
-use crate::player::Player;
-use common::board::{Board, DefaultBoard};
-use common::grid::{squared_euclidian_distance, Position};
-use common::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State};
-use players::player::PlayerApi;
-use players::strategy::PlayerMove;
+use crate::{config::Config, json::JsonGameResult, player::Player};
+use common::{
+    board::{Board, DefaultBoard},
+    grid::{squared_euclidian_distance, Position},
+    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State},
+};
+use players::{player::PlayerApi, strategy::PlayerMove};
 use rand::{Rng, RngCore, SeedableRng};
 use rand_chacha::ChaChaRng;
 use serde::Serialize;
@@ -461,23 +460,22 @@ impl Referee {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use std::{collections::VecDeque, sync::Arc};
 
     use common::{
-        board::{Board, DefaultBoard, Slide},
+        board::Slide,
+        color::{Color, ColorName},
         gem::Gem,
-        grid::{Grid, Position},
+        grid::Grid,
         json::Name,
         tile::{CompassDirection, ConnectorShape, Tile},
-        Color, ColorName, FullPlayerInfo, PlayerInfo, PubPlayerInfo, State,
     };
     use parking_lot::Mutex;
     use players::{
         player::{LocalPlayer, PlayerApi, PlayerApiResult},
         strategy::{NaiveStrategy, PlayerAction, PlayerMove},
     };
-    use rand::SeedableRng;
-    use rand_chacha::ChaChaRng;
 
     use crate::{
         config::Config,

@@ -4,7 +4,11 @@ use std::{
 };
 
 use anyhow::anyhow;
-use common::{grid::Position, json::Name, FullPlayerInfo, State};
+use common::{
+    grid::Position,
+    json::Name,
+    state::{FullPlayerInfo, State},
+};
 use parking_lot::Mutex;
 use players::player::{LocalPlayer, PlayerApi};
 use referee::{

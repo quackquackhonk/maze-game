@@ -1,11 +1,15 @@
 use std::io::{stdin, stdout, Read, Write};
 
 use anyhow::anyhow;
-use common::grid::Position;
-use common::json::{Coordinate, JsonState};
-use common::{PubPlayerInfo, State};
-use players::json::{JsonChoice, JsonStrategyDesignation};
-use players::strategy::{NaiveStrategy, Strategy};
+use common::{
+    grid::Position,
+    json::{Coordinate, JsonState},
+    state::{PubPlayerInfo, State},
+};
+use players::{
+    json::{JsonChoice, JsonStrategyDesignation},
+    strategy::{NaiveStrategy, Strategy},
+};
 use serde::{Deserialize, Serialize};
 
 /// Enumerated Valid JSON input for `xchoice`

@@ -8,10 +8,11 @@ use unordered_pair::UnorderedPair;
 
 use crate::{
     board::{Board, Slide},
+    color::{Color, ColorName},
     gem::Gem,
     grid::Position,
+    state::{PlayerInfo, PubPlayerInfo, State},
     tile::{CompassDirection, ConnectorShape, Tile},
-    Color, ColorName, PlayerInfo, PubPlayerInfo, State,
 };
 
 #[derive(Debug, Error)]

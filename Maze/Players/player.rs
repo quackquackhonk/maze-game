@@ -1,10 +1,12 @@
 use std::io;
 
 use crate::strategy::{PlayerAction, Strategy};
-use common::board::{Board, DefaultBoard};
-use common::grid::Position;
-use common::json::{JsonError, Name};
-use common::{PubPlayerInfo, State};
+use common::{
+    board::{Board, DefaultBoard},
+    grid::Position,
+    json::{JsonError, Name},
+    state::{PubPlayerInfo, State},
+};
 use thiserror::Error;
 
 pub type PlayerApiResult<T> = Result<T, PlayerApiError>;
@@ -103,7 +105,9 @@ impl<S: Strategy + Send> PlayerApi for LocalPlayer<S> {
 
 #[cfg(test)]
 mod tests {
-    use common::{board::DefaultBoard, json::Name, ColorName, PubPlayerInfo, State};
+    use common::color::ColorName;
+
+    use super::*;
 
     use crate::{
         player::PlayerApi,

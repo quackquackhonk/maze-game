@@ -7,7 +7,7 @@ edition = "2021"
 
 [lib]
 name = "common"
-path = "state.rs"
+path = "lib.rs"
 
 [dependencies]
 aliri_braid = "0.2.4"

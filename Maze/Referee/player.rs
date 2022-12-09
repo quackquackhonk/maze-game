@@ -9,8 +9,11 @@ use std::{
 };
 
 use common::{
-    board::Board, grid::Position, json::Name, Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo,
-    PubPlayerInfo, State,
+    board::Board,
+    color::Color,
+    grid::Position,
+    json::Name,
+    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, PubPlayerInfo, State},
 };
 use parking_lot::Mutex;
 use players::{
@@ -114,7 +117,7 @@ impl PlayerApi for Player {
         run_with_timeout(move || api.lock().setup(state, goal), TIMEOUT)?
     }
 
-    fn take_turn(&self, state: common::State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
+    fn take_turn(&self, state: State<PubPlayerInfo>) -> PlayerApiResult<PlayerAction> {
         let api = self.api.clone();
         run_with_timeout(move || api.lock().take_turn(state), TIMEOUT)?
     }

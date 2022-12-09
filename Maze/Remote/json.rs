@@ -1,6 +1,8 @@
-use common::grid::Position;
-use common::json::{Coordinate, JsonState};
-use common::{PubPlayerInfo, State};
+use common::{
+    grid::Position,
+    json::{Coordinate, JsonState},
+    state::{PubPlayerInfo, State},
+};
 use players::json::JsonChoice;
 use serde::{de, Deserialize, Serialize};
 

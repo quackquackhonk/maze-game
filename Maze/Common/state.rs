@@ -1,21 +1,12 @@
 use std::collections::VecDeque;
 
-use board::Board;
-use board::Slide;
-use grid::Position;
-use hex::ToHex;
 use thiserror::Error;
 
-/// Contains all the types needed for the Board State and mutating the `Board`
-pub mod board;
-/// Contains the enum including all the possible Gems
-pub mod gem;
-/// Contains types for the `Grid` type and its `Position` type for indexing
-pub mod grid;
-/// Contains all the utilities for serializing and deserializing from JSON
-pub mod json;
-/// Contains the Tile type for use in the `Board`
-pub mod tile;
+use crate::{
+    board::{self, Board, Slide},
+    color::Color,
+    grid::Position,
+};
 
 #[derive(Debug, Error)]
 pub enum StateError {
@@ -32,82 +23,6 @@ pub enum StateError {
 }
 
 pub type StateResult<T> = Result<T, StateError>;
-
-#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
-pub struct Color {
-    /// The original name of the color.
-    /// Is either the name of a color, like "red", or the Hex Color code for that color
-    pub name: String,
-    /// Represents a Hex color value
-    /// contains values for (red, green, blue).
-    pub code: (u8, u8, u8),
-}
-
-impl From<(u8, u8, u8)> for Color {
-    fn from((r, g, b): (u8, u8, u8)) -> Self {
-        Color {
-            name: [r, g, b].encode_hex_upper::<String>(),
-            code: (r, g, b),
-        }
-    }
-}
-
-/// Convenience Enum for making named colors
-pub enum ColorName {
-    Purple,
-    Orange,
-    Pink,
-    Red,
-    Green,
-    Blue,
-    Yellow,
-    White,
-    Black,
-}
-
-/// Converts from a `ColorName` enum to the corresponding `Color`
-impl From<ColorName> for Color {
-    fn from(cn: ColorName) -> Self {
-        match cn {
-            ColorName::Purple => Color {
-                name: "purple".to_string(),
-                code: (128, 0, 128),
-            },
-            ColorName::Orange => Color {
-                name: "orange".to_string(),
-                code: (255, 165, 0),
-            },
-            ColorName::Pink => Color {
-                name: "pink".to_string(),
-                code: (255, 192, 203),
-            },
-            ColorName::Red => Color {
-                name: "red".to_string(),
-                code: (255, 0, 0),
-            },
-            ColorName::Green => Color {
-                name: "green".to_string(),
-                code: (0, 255, 0),
-            },
-            ColorName::Blue => Color {
-                name: "blue".to_string(),
-                code: (0, 0, 255),
-            },
-            ColorName::Yellow => Color {
-                name: "yellow".to_string(),
-                code: (255, 255, 0),
-            },
-            ColorName::White => Color {
-                name: "white".to_string(),
-                code: (255, 255, 255),
-            },
-            ColorName::Black => Color {
-                name: "black".to_string(),
-                code: (0, 0, 0),
-            },
-        }
-    }
-}
 
 /// Describes types that can be used as the information a `State` stores on its `Player`s
 pub trait PlayerInfo {
@@ -275,10 +190,10 @@ impl<PInfo: PlayerInfo> State<PInfo> {
     /// # Errors
     /// Errors if the given slide action would nullify the previous slide action
     /// ```
-    /// # use common::State;
+    /// # use common::state::State;
     /// # use common::board::Slide;
     /// # use common::tile::CompassDirection;
-    /// # use common::FullPlayerInfo;
+    /// # use common::state::FullPlayerInfo;
     /// let mut state = State::<FullPlayerInfo>::default();
     ///
     /// // This is fine
@@ -463,8 +378,8 @@ impl<Info: PrivatePlayerInfo + Clone> State<Info> {
     /// This method panics is `self.player_info` is empty
     ///
     /// ```should_panic
-    /// # use crate::common::State;
-    /// # use crate::common::FullPlayerInfo;
+    /// # use crate::common::state::State;
+    /// # use crate::common::state::FullPlayerInfo;
     /// # use std::collections::VecDeque;
     ///
     /// let mut state: State<FullPlayerInfo> = State::default();
@@ -516,10 +431,13 @@ impl From<State<FullPlayerInfo>> for State<PubPlayerInfo> {
 
 #[cfg(test)]
 mod state_tests {
-    use crate::tile::{
-        CompassDirection::{self, *},
-        ConnectorShape::*,
-        PathOrientation::*,
+    use crate::{
+        color::ColorName,
+        tile::{
+            CompassDirection::{self, *},
+            ConnectorShape::*,
+            PathOrientation::*,
+        },
     };
 
     use super::*;

@@ -1,8 +1,10 @@
 use clap::ValueEnum;
-use common::tile::CompassDirection;
-use common::PubPlayerInfo;
-use common::State;
-use common::{board::Slide, grid::squared_euclidian_distance, grid::Position};
+use common::{
+    board::Slide,
+    grid::{squared_euclidian_distance, Position},
+    state::{PubPlayerInfo, State},
+    tile::CompassDirection,
+};
 use itertools::Itertools;
 use std::cmp::Ordering;
 
@@ -173,14 +175,12 @@ impl Strategy for NaiveStrategy {
 
 #[cfg(test)]
 mod strategy_tests {
-    use self::itertools::Itertools;
-
     use super::*;
+
+    use common::color::ColorName;
     use common::gem::Gem;
     use common::grid::Grid;
     use common::tile::{ConnectorShape, PathOrientation, Tile};
-    use common::ColorName;
-    use itertools;
     use CompassDirection::*;
 
     #[test]

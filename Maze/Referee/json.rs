@@ -1,12 +1,13 @@
 use crate::referee::GameResult;
 use common::{
     board::Board,
+    color::Color,
     grid::Position,
     json::{
         has_unique_elements, Coordinate, JsonAction, JsonBoard, JsonColor, JsonError, JsonTile,
         Name,
     },
-    Color, FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, State,
+    state::{FullPlayerInfo, PlayerInfo, PrivatePlayerInfo, State},
 };
 use players::{bad_player::BadFM, player::PlayerApi, strategy::NaiveStrategy};
 use serde::{Deserialize, Serialize};

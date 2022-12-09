@@ -3,11 +3,13 @@
 use std::io::{stdin, stdout, Read, Write};
 
 use anyhow::anyhow;
-use common::board::Slide;
-use common::grid::Position;
-use common::json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState};
-use common::tile::CompassDirection;
-use common::{PubPlayerInfo, State};
+use common::{
+    board::Slide,
+    grid::Position,
+    json::{cmp_coordinates, Coordinate, JsonDegree, JsonDirection, JsonState},
+    state::{PubPlayerInfo, State},
+    tile::CompassDirection,
+};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
