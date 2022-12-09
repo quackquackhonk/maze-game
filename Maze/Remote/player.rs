@@ -91,7 +91,7 @@ impl<In: Read + Send, Out: Write + Send> PlayerApi for PlayerProxy<In, Out> {
     fn take_turn(&self, state: State<PlayerInfo>) -> PlayerApiResult<PlayerAction> {
         self.send_function_call(&JsonFunctionCall::take_turn(state.clone()))?;
         match self.read_result()? {
-            JsonResult::Choice(ch) => Ok(ch.into_action(&state.board)?),
+            JsonResult::Choice(ch) => Ok(ch.try_into_action(&state.board)?),
             _ => Err(PlayerApiError::Other(anyhow!(
                 "Got something other than a JsonChoice when calling `take_turn`!"
             ))),

@@ -122,19 +122,20 @@ fn test_json_choice() {
 }
 
 impl JsonChoice {
-    pub fn into_action(self, board: &Board) -> Result<PlayerAction, JsonError> {
+    pub fn try_into_action(self, board: &Board) -> Result<PlayerAction, JsonError> {
         match self {
             JsonChoice::Pass => Ok(None),
             JsonChoice::Move(index, direction, rotations, destination) => {
                 let slide = Slide::new_unchecked(index.0, direction.into());
                 if !board.valid_slide(slide) {
-                    return Err(JsonError::InvalidSlide(slide));
+                    Err(JsonError::InvalidSlide(slide))
+                } else {
+                    Ok(Some(PlayerMove {
+                        slide,
+                        rotations: rotations.try_into()?,
+                        destination: destination.into(),
+                    }))
                 }
-                Ok(Some(PlayerMove {
-                    slide,
-                    rotations: rotations.try_into()?,
-                    destination: destination.into(),
-                }))
             }
         }
     }
