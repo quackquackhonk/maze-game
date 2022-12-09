@@ -175,9 +175,9 @@ where
         tx.send(result)
     });
 
-    match rx.recv_timeout(timeout) {
-        Ok(result) => Ok(result),
-        Err(RecvTimeoutError::Timeout) => Err(TimeoutError),
-        Err(RecvTimeoutError::Disconnected) => unreachable!(),
+    if let Ok(result) = rx.recv_timeout(timeout) {
+        Ok(result)
+    } else {
+        Err(TimeoutError)
     }
 }
