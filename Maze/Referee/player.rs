@@ -1,9 +1,6 @@
 use std::{
     fmt::Debug,
-    sync::{
-        mpsc::{self, RecvTimeoutError},
-        Arc,
-    },
+    sync::{mpsc, Arc},
     thread,
     time::Duration,
 };

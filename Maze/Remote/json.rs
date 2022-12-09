@@ -2,7 +2,7 @@ use anyhow::anyhow;
 use common::{
     grid::Position,
     json::{Coordinate, JsonState},
-    state::{PlayerInfo, PublicPlayerInfo, State},
+    state::{PlayerInfo, State},
 };
 use players::json::JsonChoice;
 use serde::{de, Deserialize, Serialize};

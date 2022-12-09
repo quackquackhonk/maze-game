@@ -9,7 +9,7 @@ use players::player::PlayerApi;
 use serde::Deserialize;
 use serde_json::de::IoRead;
 
-use crate::json::{JsonArguments, JsonFunctionCall, JsonMName, JsonResult};
+use crate::json::{JsonFunctionCall, JsonMName, JsonResult};
 
 pub struct RefereeProxy<In: Read, Out: Write> {
     player: Box<dyn PlayerApi>,
