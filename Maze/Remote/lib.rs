@@ -1,3 +1,9 @@
+//! # Remote Interactions
+//!
+//! # Library Layout
+//!
+//!
+
 /// contains data defintions for remote messages
 pub mod json;
 /// Contains the PlayerProxy
