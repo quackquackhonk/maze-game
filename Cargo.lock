@@ -2035,6 +2035,7 @@ dependencies = [
  "anyhow",
  "common",
  "players",
+ "referee",
  "serde",
  "serde_json",
 ]
