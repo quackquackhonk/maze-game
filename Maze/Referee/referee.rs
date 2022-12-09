@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::{config::Config, json::JsonGameResult, player::Player};
+use crate::{json::JsonGameResult, player::Player};
 use common::{
     board::{Board, DefaultBoard},
     grid::{squared_euclidian_distance, Position},
@@ -72,15 +72,15 @@ impl RefereeState for State<Player> {
 }
 
 pub struct Referee {
-    config: Config,
     rand: Box<dyn RngCore>,
+    multiple_goals: bool,
 }
 
 impl Referee {
     pub fn new(seed: u64) -> Self {
         Self {
             rand: Box::new(ChaChaRng::seed_from_u64(seed)),
-            config: Config::default(),
+            multiple_goals: false,
         }
     }
 
@@ -101,7 +101,7 @@ impl Referee {
     /// If `multiple_goals` is `true`, returns a vector of all possible goals in the `State`, with
     /// the goals assigned to the `Players` in the game removed.
     pub fn get_initial_goals(&self, state: &State<Player>) -> Vec<Position> {
-        if self.config.multiple_goals {
+        if self.multiple_goals {
             let assigned_goals: Vec<Position> =
                 state.player_info.iter().map(|pi| pi.goal()).collect();
 
@@ -474,10 +474,7 @@ mod tests {
         strategy::{NaiveStrategy, PlayerAction, PlayerMove},
     };
 
-    use crate::{
-        config::Config,
-        referee::{GameResult, GameStatus, MoveEffect, Player, PrivatePlayerInfo, Referee},
-    };
+    use crate::referee::{GameResult, GameStatus, MoveEffect, Player, PrivatePlayerInfo, Referee};
 
     #[derive(Debug, Default, Clone)]
     struct MockPlayer {
@@ -522,7 +519,7 @@ mod tests {
     fn test_get_player_boards() {
         let referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
-            config: Config::default(),
+            multiple_goals: false,
         };
         let mut players: Vec<Box<dyn PlayerApi>> = vec![Box::new(LocalPlayer::new(
             Name::from_static("bill"),
@@ -542,7 +539,7 @@ mod tests {
     fn test_get_initial_goals() {
         let referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
-            config: Config::default(),
+            multiple_goals: false,
         };
 
         let state = State::default();
@@ -552,10 +549,6 @@ mod tests {
 
     #[test]
     fn test_get_initial_goals_multiple() {
-        let config = Config {
-            multiple_goals: true,
-        };
-
         let mut state = State::default();
         let bob = Player::new(
             Box::new(MockPlayer::default()),
@@ -573,7 +566,7 @@ mod tests {
 
         let referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
-            config,
+            multiple_goals: true,
         };
 
         let init_goals = referee.get_initial_goals(&state);
@@ -585,7 +578,7 @@ mod tests {
     fn test_make_initial_state() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)), // Seed 0 makes the first player have the
-            config: Config::default(),
+            multiple_goals: true,
             // same home and goal tile
         };
         let player = Box::new(MockPlayer::default());
@@ -603,8 +596,8 @@ mod tests {
     #[test]
     fn test_broadcast_inital_state() {
         let mut referee = Referee {
+            multiple_goals: false,
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
-            config: Config::default(),
         };
         let player = Box::new(MockPlayer::default());
         let players: Vec<Box<dyn PlayerApi>> = vec![player.clone()];
@@ -740,7 +733,7 @@ mod tests {
     fn test_broadcast_winners() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(0)),
-            config: Config::default(),
+            multiple_goals: false,
         };
 
         let player = Box::new(MockPlayer::default());
@@ -766,7 +759,7 @@ mod tests {
     fn test_run_game() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config::default(),
+            multiple_goals: false,
         };
 
         let player = Box::new(MockPlayer::default());
@@ -819,7 +812,7 @@ mod tests {
     fn test_run_from_state() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config::default(),
+            multiple_goals: false,
         };
         let players = vec![
             Player::new(
@@ -866,9 +859,7 @@ mod tests {
     fn test_run_from_state_multiple_goals() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config {
-                multiple_goals: true,
-            },
+            multiple_goals: true,
         };
         let players = vec![
             Player::new(
@@ -908,9 +899,7 @@ mod tests {
     fn test_process_move() {
         let referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config {
-                multiple_goals: false,
-            },
+            multiple_goals: false,
         };
         let players = vec![
             Player::new(
@@ -1036,9 +1025,7 @@ mod tests {
     fn test_run_round() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config {
-                multiple_goals: false,
-            },
+            multiple_goals: false,
         };
         let players = vec![
             Player::new(
@@ -1099,9 +1086,7 @@ mod tests {
     fn test_run_round_multiple() {
         let mut referee = Referee {
             rand: Box::new(ChaChaRng::seed_from_u64(1)),
-            config: Config {
-                multiple_goals: true,
-            },
+            multiple_goals: true,
         };
         let players = vec![
             Player::new(
