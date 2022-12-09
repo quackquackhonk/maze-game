@@ -1,7 +1,6 @@
 use std::{cmp::Ordering, collections::HashSet, hash::Hash};
 
 use aliri_braid::braid;
-use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use unordered_pair::UnorderedPair;
@@ -33,6 +32,12 @@ impl aliri_braid::Validator for Name {
     }
 }
 
+impl PartialEq<&str> for Name {
+    fn eq(&self, &other: &&str) -> bool {
+        self.0 == other
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum JsonError {
     #[error("This board has not enough gems or connectors")]
@@ -57,14 +62,10 @@ pub enum JsonError {
     PositionOutOfBounds(Vec<Position>),
     #[error("{0:?} is not a valid slide for this board")]
     InvalidSlide(Slide),
-    #[error(transparent)]
-    Other(#[from] anyhow::Error),
-}
-
-impl PartialEq<&str> for Name {
-    fn eq(&self, &other: &&str) -> bool {
-        self.0 == other
-    }
+    #[error("Invalid Color code {0}")]
+    InvalidColor(String),
+    #[error("Invalid JsonDegreee {0}")]
+    InvalidDegree(usize),
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -474,7 +475,7 @@ impl TryFrom<JsonColor> for Color {
                 })
             }
             // need to do a regex match for color codes
-            _ => Err(anyhow!("Invalid Color code {}", value))?,
+            _ => Err(JsonError::InvalidColor(value))?,
         }
     }
 }
@@ -561,7 +562,7 @@ impl TryFrom<JsonDegree> for usize {
             90 => Ok(1),
             180 => Ok(2),
             270 => Ok(3),
-            _ => Err(anyhow!("Invalid JsonDegree {}", d.0))?,
+            _ => Err(JsonError::InvalidDegree(d.0))?,
         }
     }
 }
