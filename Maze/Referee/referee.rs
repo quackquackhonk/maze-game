@@ -380,9 +380,6 @@ impl Referee {
             return (vec![], vec![]);
         }
 
-        // the current player in `state` is the player who made a move and ended the game.
-        let game_ender = state.current_player_info();
-
         let players_to_check = {
             let max_goals = state
                 .player_info
@@ -406,12 +403,15 @@ impl Referee {
 
         // If the game ended early, check if the `game_ender` has the highest number of goals
         // reached. If they do, they are the sole winner and everyone else loses
-        if players_to_check.contains(game_ender) && ended_early == GameStatus::Winner {
+        if ended_early == GameStatus::Winner
+            && players_to_check.contains(state.current_player_info())
+        {
+            let game_ender = state.current_player_info();
             let losers = state
                 .player_info
                 .iter()
                 .cloned()
-                .filter(|pi| pi.color() != game_ender.color())
+                .filter(|pi| pi != game_ender)
                 .collect();
             return (vec![game_ender.clone()], losers);
         }
