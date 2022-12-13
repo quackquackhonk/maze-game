@@ -345,7 +345,7 @@ mod strategy_tests {
                 tile
             })
         }));
-        state.board.extra = Tile {
+        state.board.spare = Tile {
             connector: vertical,
             gems: (Gem::Zircon, Gem::Zoisite).into(),
         };

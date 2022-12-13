@@ -603,27 +603,27 @@ mod state_tests {
     fn test_rotate_spare() {
         let mut state: State<FullPlayerInfo> = State::default();
 
-        assert_eq!(state.board.extra.connector, Crossroads);
+        assert_eq!(state.board.spare.connector, Crossroads);
         state.rotate_spare(1);
-        assert_eq!(state.board.extra.connector, Crossroads);
+        assert_eq!(state.board.spare.connector, Crossroads);
 
         let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
-        assert_eq!(state.board.extra.connector, Path(Horizontal));
+        assert_eq!(state.board.spare.connector, Path(Horizontal));
         state.rotate_spare(1);
-        assert_eq!(state.board.extra.connector, Path(Vertical));
+        assert_eq!(state.board.spare.connector, Path(Vertical));
 
         let res = state.slide_and_insert(state.board.new_slide(0, North).unwrap());
         assert!(res.is_ok());
 
-        assert_eq!(state.board.extra.connector, Fork(East));
+        assert_eq!(state.board.spare.connector, Fork(East));
         state.rotate_spare(1);
-        assert_eq!(state.board.extra.connector, Fork(North));
+        assert_eq!(state.board.spare.connector, Fork(North));
         state.rotate_spare(3);
-        assert_eq!(state.board.extra.connector, Fork(East));
+        assert_eq!(state.board.spare.connector, Fork(East));
         state.rotate_spare(8);
-        assert_eq!(state.board.extra.connector, Fork(East));
+        assert_eq!(state.board.spare.connector, Fork(East));
     }
 
     #[test]

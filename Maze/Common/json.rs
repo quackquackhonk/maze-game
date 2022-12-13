@@ -284,7 +284,7 @@ impl From<Board> for (JsonBoard, JsonTile) {
                 connectors: Matrix(connectors),
                 treasures: Matrix(treasures),
             },
-            b.extra.into(),
+            b.spare.into(),
         )
     }
 }

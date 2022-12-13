@@ -297,7 +297,7 @@ fn render_slide(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
 /// Renders the spare tile and the last slide onto the `ui`
 fn render_state_info(ui: &mut egui::Ui, state: &State<FullPlayerInfo>) {
     let spare_tile_widget = TileWidget {
-        tile: state.board.extra.clone(),
+        tile: state.board.spare.clone(),
         player_colors: vec![],
         home_color: None,
     };

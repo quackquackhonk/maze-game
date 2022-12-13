@@ -880,7 +880,7 @@ mod tests {
                 tile
             })
         }));
-        state.board.extra.connector = corner;
+        state.board.spare.connector = corner;
         state.previous_slide = state.board.new_slide(0, CompassDirection::West);
 
         let GameResult { winners, kicked } =

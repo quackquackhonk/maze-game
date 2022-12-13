@@ -21,14 +21,14 @@ pub type BoardResult<T> = Result<T, OutOfBounds>;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Board {
     pub grid: Grid<Tile>,
-    pub extra: Tile,
+    pub spare: Tile,
 }
 
 impl Board {
-    pub fn new(grid: impl Into<Grid<Tile>>, extra: Tile) -> Self {
+    pub fn new(grid: impl Into<Grid<Tile>>, spare: Tile) -> Self {
         Board {
             grid: grid.into(),
-            extra,
+            spare,
         }
     }
 
@@ -81,7 +81,7 @@ impl Board {
                 let col_num = index;
                 let row_num = self.grid.len() - 1;
                 self.grid.rotate_up(col_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
+                std::mem::swap(&mut self.spare, &mut self.grid[(col_num, row_num)]);
                 Ok(())
             }
             South => {
@@ -90,7 +90,7 @@ impl Board {
                 }
                 let col_num = index;
                 self.grid.rotate_down(col_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, 0)]);
+                std::mem::swap(&mut self.spare, &mut self.grid[(col_num, 0)]);
                 Ok(())
             }
             East => {
@@ -99,7 +99,7 @@ impl Board {
                 }
                 let row_num = index;
                 self.grid.rotate_right(row_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(0, row_num)]);
+                std::mem::swap(&mut self.spare, &mut self.grid[(0, row_num)]);
                 Ok(())
             }
             West => {
@@ -109,7 +109,7 @@ impl Board {
                 let row_num = index;
                 let col_num = self.grid[0].len() - 1;
                 self.grid.rotate_left(row_num);
-                std::mem::swap(&mut self.extra, &mut self.grid[(col_num, row_num)]);
+                std::mem::swap(&mut self.spare, &mut self.grid[(col_num, row_num)]);
                 Ok(())
             }
         }
@@ -178,7 +178,7 @@ impl Board {
     }
 
     pub fn rotate_spare(&mut self) {
-        self.extra.rotate();
+        self.spare.rotate();
     }
 }
 
@@ -222,7 +222,7 @@ impl<const COLS: usize, const ROWS: usize> DefaultBoard<COLS, ROWS> for Board {
         });
         Self {
             grid: Grid::from(grid),
-            extra: Tile {
+            spare: Tile {
                 connector: Crossroads,
                 gems: (Gem::from_num(idx * 2), Gem::from_num(idx * 2 + 1)).into(),
             },
@@ -384,7 +384,7 @@ mod board_tests {
         // extra = ┼
         let mut b: Board = DefaultBoard::<3, 3>::default_board();
         dbg!(&b.grid);
-        assert_eq!(b.extra.connector, Crossroads);
+        assert_eq!(b.spare.connector, Crossroads);
 
         b.slide_and_insert(b.new_slide(0, South).unwrap()).unwrap();
         // Board after slide + insert
@@ -394,7 +394,7 @@ mod board_tests {
         // extra = ┴
         assert_eq!(b.grid[(0, 0)].connector, Crossroads);
         dbg!(&b.grid);
-        assert_eq!(b.extra.connector, Fork(North));
+        assert_eq!(b.spare.connector, Fork(North));
 
         b.slide_and_insert(b.new_slide(0, East).unwrap()).unwrap();
         // Board after insert
@@ -403,7 +403,7 @@ mod board_tests {
         // ┌├┬
         // extra = └
         assert_eq!(b.grid[(0, 0)].connector, Fork(North));
-        assert_eq!(b.extra.connector, Corner(North));
+        assert_eq!(b.spare.connector, Corner(North));
 
         b.slide_and_insert(b.new_slide(2, West).unwrap()).unwrap();
         dbg!(&b);
@@ -413,7 +413,7 @@ mod board_tests {
         // ├┬└
         // extra = ┌
         assert_eq!(b.grid[(2, 2)].connector, Corner(North));
-        assert_eq!(b.extra.connector, Corner(East));
+        assert_eq!(b.spare.connector, Corner(East));
     }
 
     #[test]
