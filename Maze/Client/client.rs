@@ -65,7 +65,7 @@ fn main() -> anyhow::Result<()> {
                 };
                 stream.write_all(serde_json::to_string(&name)?.as_bytes())?;
                 let mut referee = RefereeProxy::from_tcp(player, stream);
-                referee.listen()
+                referee.receive_commands()
             });
             thread::sleep(Duration::from_secs(3));
         }

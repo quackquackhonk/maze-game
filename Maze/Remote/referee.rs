@@ -36,7 +36,11 @@ impl<In: Read, Out: Write> RefereeProxy<In, Out> {
         }
     }
 
-    pub fn listen(&mut self) -> anyhow::Result<()> {
+    /// Listens for `JsonFunctionCall`s on `self.r#in` until `self.r#in` is closed.
+    ///
+    /// When the RefereeProxy gets a `JsonFunctionCall`, it calls the corresponding method on
+    /// `self.player`, and writes the result of the that call to `self.out`
+    pub fn receive_commands(&mut self) -> anyhow::Result<()> {
         while let Ok(mut command) = JsonFunctionCall::deserialize(&mut self.r#in) {
             match command.0 {
                 JsonMName::Setup => {
@@ -120,7 +124,7 @@ mod tests {
             + r#"[0,"LEFT",0,{"row#":1,"column#":1}]"#
             + r#""void""#;
         let mut ref_proxy = RefereeProxy::new(player, commands.as_bytes(), vec![]);
-        assert!(ref_proxy.listen().is_ok());
+        assert!(ref_proxy.receive_commands().is_ok());
         let ref_out = String::from_utf8(ref_proxy.out);
         assert!(ref_out.is_ok());
         assert_eq!(ref_out.unwrap(), referee_output);
@@ -133,7 +137,7 @@ mod tests {
             NaiveStrategy::Riemann,
         ));
         let mut ref_proxy = RefereeProxy::new(player, "".as_bytes(), vec![]);
-        assert!(ref_proxy.listen().is_ok());
+        assert!(ref_proxy.receive_commands().is_ok());
         assert!(ref_proxy.out.is_empty());
         assert!(ref_proxy.r#in.end().is_ok());
     }
@@ -147,7 +151,7 @@ mod tests {
 
         // invalid win call
         let mut ref_proxy = RefereeProxy::new(player, "[\"win\", []]".as_bytes(), vec![]);
-        assert!(ref_proxy.listen().is_err());
+        assert!(ref_proxy.receive_commands().is_err());
 
         let player = Box::new(LocalPlayer::new(
             Name::from_static("bob"),
@@ -155,7 +159,7 @@ mod tests {
         ));
         // invalid take-turn call
         let mut ref_proxy = RefereeProxy::new(player, "[\"take-turn\", []]".as_bytes(), vec![]);
-        assert!(ref_proxy.listen().is_err());
+        assert!(ref_proxy.receive_commands().is_err());
 
         let player = Box::new(LocalPlayer::new(
             Name::from_static("bob"),
@@ -167,7 +171,7 @@ mod tests {
             r#"["setup", [{"row#": 1, "column#": 0}]]"#.as_bytes(),
             vec![],
         );
-        assert!(ref_proxy.listen().is_err());
+        assert!(ref_proxy.receive_commands().is_err());
 
         let player = Box::new(LocalPlayer::new(
             Name::from_static("bob"),
@@ -179,6 +183,6 @@ mod tests {
             r#"["setup", [{"row#": 1, "column#": 0}, false]]"#.as_bytes(),
             vec![],
         );
-        assert!(ref_proxy.listen().is_err());
+        assert!(ref_proxy.receive_commands().is_err());
     }
 }
