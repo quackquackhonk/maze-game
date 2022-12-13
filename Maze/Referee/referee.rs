@@ -29,23 +29,34 @@ pub struct GameResult {
 /// None -> The game ended without a single winner, the Referee will calculate winners another way.
 pub type GameWinner = Option<Player>;
 
+/// Describes the way the game ended.
 #[derive(Debug, PartialEq, Eq)]
 pub enum GameStatus {
+    /// The game ended after 1000 rounds without a winner
     NoMoreRounds,
+    /// All players passed in a single round, resulting in a tie game
     Tie,
+    /// A single player won, causing the game to end
     Winner,
 }
 
 /// Represents the effect of a `player::PlayerMove` on a State.
 #[derive(Debug, PartialEq, Eq)]
 enum MoveEffect {
+    /// The player's move made it win the game.
     Won,
+    /// The player's move was invalid
     Cheated,
+    /// The player's move was valid, but did not make them win the game.
     Moved,
 }
 
+/// Describes types that are able to be used as a `State` representation for the `Referee`.
 trait RefereeState {
+    /// Converts `self` into a `State<PlayerInfo>`, which only contains public information about
+    /// its players.
     fn to_player_state(&self) -> State<PlayerInfo>;
+    /// Converts `self` into a `State<FullPlayerInfo>`, containing all information known
     fn to_full_state(&self) -> State<FullPlayerInfo>;
 }
 
@@ -71,12 +82,19 @@ impl RefereeState for State<Player> {
     }
 }
 
+/// The `Referee` has all information necessary to run a game to completion. This struct itself
+/// contains very little, while its methods take in more interesting data (the current state,
+/// kicked players, etc.) as arguments.
 pub struct Referee {
+    /// Random number generation used for creating the lists of possible home and goal tiles to
+    /// assign to players.
     rand: Box<dyn RngCore>,
+    /// Does this Referee run games with multiple goals?
     multiple_goals: bool,
 }
 
 impl Referee {
+    /// Constructs a new non-multiple-goal `Referee` with the given `seed`.
     pub fn new(seed: u64) -> Self {
         Self {
             rand: Box::new(ChaChaRng::seed_from_u64(seed)),
@@ -139,7 +157,7 @@ impl Referee {
                     .expect("Did not have enough goals");
                 let info = FullPlayerInfo::new(
                     home,
-                    home, /* players start on their home tile */
+                    home, // players start on their home tile
                     goal,
                     (self.rand.gen(), self.rand.gen(), self.rand.gen()).into(),
                 );
@@ -151,7 +169,10 @@ impl Referee {
     }
 
     /// Communicates all public information of the current `state` and each `Player`'s private goal
-    /// to all `Player`s in `players`.
+    /// to all `Player`s in `state`.
+    ///
+    /// If a `setup` call on any `Player` fails, that `Player` is removed from `state` and added to
+    /// `kicked`.
     pub fn broadcast_initial_state(&self, state: &mut State<Player>, kicked: &mut Vec<Player>) {
         let mut player_state = state.to_player_state();
         let total_players = state.player_info.len();
@@ -231,7 +252,9 @@ impl Referee {
         }
     }
 
-    // Returns `true` if moving to the next player succeeded, `false` if there are no more players
+    /// Advances the current player in `state`.
+    ///
+    /// Returns `true` if moving to the next player succeeded, `false` if there are no more players
     fn next_player(
         &self,
         state: &mut State<Player>,
@@ -302,6 +325,9 @@ impl Referee {
         None
     }
 
+    /// Runs an entire game from the given `state` and `remaining_goals`.
+    ///
+    /// Returns a `GameResult` containing the `winners` and `kicked` Players.
     pub fn run_from_state(
         &mut self,
         state: &mut State<Player>,
@@ -335,6 +361,14 @@ impl Referee {
 
     /// Returns a tuple of two `Vec<Box<dyn Player>>`. The first of these vectors contains all
     /// `Box<dyn Player>`s who won the game, and the second vector contains all the losers.
+    ///
+    /// Winners are calculated based on `ended_early` (describing how the game ended)
+    /// - If ended_early is `GameStatus::Won` and the current_player_info is one of the players
+    /// with the max number of goals collected, it is the sole winner.
+    /// - Otherwise, winners are calculated by getting the players who collected the maximum number
+    /// of goals, and finding all players who share a minimum distance to their next goal.
+    ///
+    /// The losers are calculated as all `Player`s in `state` that did not win.
     #[allow(clippy::type_complexity)]
     pub fn calculate_winners(
         state: &State<Player>,
