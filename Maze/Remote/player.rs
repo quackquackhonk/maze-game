@@ -31,7 +31,9 @@ const TIMEOUT: Duration = Duration::from_secs(4);
 
 impl PlayerProxy<TcpStream, TcpStream> {
     pub fn try_from_tcp(name: Name, stream: TcpStream) -> io::Result<Self> {
-        stream.set_read_timeout(Some(TIMEOUT))?;
+        stream
+            .set_read_timeout(Some(TIMEOUT))
+            .expect("Timeout is non-zero");
         let out = RefCell::new(stream.try_clone()?);
         let deser = serde_json::Deserializer::from_reader(stream);
         let r#in = RefCell::new(deser);
