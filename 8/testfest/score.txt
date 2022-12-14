@@ -11,4 +11,6 @@ Functionality
 60/60 bonus pts (other teams failing your tests)
 Inspection
 110/110 pts: See inspection.md
-Total: 360/340 pts
+Bonus
+40 bonus pts: finding a bug in the assignment
+Total: 400/340 pts
