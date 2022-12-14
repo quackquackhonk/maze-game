@@ -1,0 +1,16 @@
+cargo build --release --bin server --bin client
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded crossbeam v0.8.2
+  Downloaded crossbeam-queue v0.3.8
+   Compiling crossbeam-queue v0.3.8
+   Compiling common v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Common)
+   Compiling crossbeam v0.8.2
+   Compiling players v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Players)
+   Compiling referee v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Referee)
+   Compiling remote v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Remote)
+   Compiling Client v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Client)
+   Compiling Server v0.1.0 (/course/cs4500f22/ta/github2/tankalav-lsoto/Maze/Server)
+    Finished release [optimized] target(s) in 4m 26s
+cp ../target/release/server xserver
+cp ../target/release/client xclients

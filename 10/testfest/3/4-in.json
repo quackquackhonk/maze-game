@@ -1,0 +1,30 @@
+[["Andre","Riemann", "setUp", 2],["Shashwat","Euclid", "win", 2]]
+{"board":{"connectors":[
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│"]],
+  "treasures":[
+    [["alexandrite","amethyst"],["alexandrite","ametrine"],["alexandrite","ammolite"],["purple-cabochon","apatite"],["alexandrite","aplite"],["alexandrite","aquamarine"],["alexandrite","aventurine"]],
+    [["alexandrite","azurite"],["alexandrite","beryl"],["alexandrite","black-obsidian"],["alexandrite","black-onyx"],["alexandrite","black-spinel-cushion"],["alexandrite","blue-ceylon-sapphire"],["alexandrite","blue-cushion"]],
+    [["alexandrite","blue-pear-shape"],["alexandrite","blue-spinel-heart"],["alexandrite","bulls-eye"],["alexandrite","carnelian"],["alexandrite","chrome-diopside"],["alexandrite","chrysoberyl-cushion"],["alexandrite","chrysolite"]],
+    [["alexandrite","citrine-checkerboard"],["alexandrite","citrine"],["alexandrite","clinohumite"],["alexandrite","color-change-oval"],["alexandrite","cordierite"],["alexandrite","diamond"],["alexandrite","dumortierite"]],
+    [["alexandrite","emerald"],["alexandrite","fancy-spinel-marquise"],["alexandrite","garnet"],["alexandrite","golden-diamond-cut"],["alexandrite","goldstone"],["alexandrite","grandidierite"],["alexandrite","gray-agate"]],
+    [["alexandrite","green-aventurine"],["alexandrite","green-beryl-antique"],["alexandrite","green-beryl"],["alexandrite","green-princess-cut"],["alexandrite","grossular-garnet"],["alexandrite","hackmanite"],["alexandrite","heliotrope"]],
+    [["alexandrite","hematite"],["alexandrite","iolite-emerald-cut"],["alexandrite","jasper"],["alexandrite","jaspilite"],["alexandrite","kunzite-oval"],["alexandrite","kunzite"],["alexandrite","labradorite"]]]},
+  "last":null,
+  "plmt":[
+    {"color":"green",
+      "current":{"column#":5,"row#":5},
+      "goto":{"column#":5,"row#":3},
+      "home":{"column#":5,"row#":5}},
+    {"color":"red",
+      "current":{"column#":1,"row#":1},
+      "goto":{"column#":1,"row#":3},
+      "home":{"column#":1,"row#":1}}],
+  "goals": [{"column#":5,"row#":1}, {"column#":1,"row#":5}],
+  "spare":{"1-image":"alexandrite","2-image":"lapis-lazuli","tilekey":"│"}}
+

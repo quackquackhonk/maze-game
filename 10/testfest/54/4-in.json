@@ -1,0 +1,19 @@
+[["eapple", "Riemann", "setUp", 1], ["ebanana", "Euclid", "takeTurn", 2], ["rclementine", "Riemann"], ["edurian", "Euclid", "takeTurn"], ["rfruit", "Riemann", "setUp"]]
+{"board":{"connectors":
+[["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"]],
+"treasures":[[["labradorite","yellow-baguette"],["australian-marquise","citrine-checkerboard"],["padparadscha-oval","apricot-square-radiant"],["color-change-oval","pink-emerald-cut"],["sunstone","morganite-oval"],["apatite","jaspilite"],["emerald","citrine"]],[["rhodonite","aventurine"],["chrysoberyl-cushion","yellow-baguette"],["citrine-checkerboard","labradorite"],["ametrine","apatite"],["tanzanite-trillion","purple-oval"],["purple-oval","purple-square-cushion"],["yellow-heart","emerald"]],[["tanzanite-trillion","padparadscha-oval"],["amethyst","purple-oval"],["alexandrite-pear-shape","chrome-diopside"],["goldstone","raw-citrine"],["azurite","rose-quartz"],["raw-beryl","red-diamond"],["green-aventurine","purple-square-cushion"]],[["chrysolite","pink-spinel-cushion"],["pink-round","iolite-emerald-cut"],["unakite","purple-cabochon"],["ruby-diamond-profile","labradorite"],["moonstone","cordierite"],["star-cabochon","spinel"],["cordierite","ruby"]],[["zoisite","bulls-eye"],["pink-emerald-cut","pink-emerald-cut"],["sunstone","orange-radiant"],["blue-ceylon-sapphire","super-seven"],["citrine","grossular-garnet"],["color-change-oval","blue-cushion"],["heliotrope","carnelian"]],[["australian-marquise","gray-agate"],["jasper","mexican-opal"],["blue-pear-shape","emerald"],["unakite","carnelian"],["iolite-emerald-cut","blue-ceylon-sapphire"],["clinohumite","aplite"],["alexandrite","purple-spinel-trillion"]],[["white-square","hackmanite"],["padparadscha-oval","sphalerite"],["aquamarine","prehnite"],["heliotrope","hackmanite"],["lemon-quartz-briolette","yellow-heart"],["black-onyx","rose-quartz"],["magnesite","emerald"]]]
+},
+"last":null,
+"goals":[{"row#":3, "column#":5}, {"row#":5, "column#":1}, {"row#":5, "column#":3}, {"row#":5, "column#":5}],
+"plmt":[{"color":"blue","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":1,"row#":1}}, 
+{"color":"white","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":3},"home":{"column#":3,"row#":1}},
+{"color":"orange","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":5},"home":{"column#":5,"row#":1}}, 
+{"color":"pink","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":1},"home":{"column#":1,"row#":3}},
+{"color":"black","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":3},"home":{"column#":3,"row#":3}}],
+"spare":{"1-image":"fancy-spinel-marquise","2-image":"alexandrite","tilekey":"┼"}}

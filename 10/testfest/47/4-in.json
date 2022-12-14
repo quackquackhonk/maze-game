@@ -1,0 +1,184 @@
+[["Jim","Riemann", "setUp", 1], ["Tom", "Euclid"]]
+{
+  "board": {
+    "connectors": [
+      [
+        "┬",
+        "┼",
+        "└"
+      ],
+      [
+        "┼",
+        "┌",
+        "┼"
+      ],
+      [
+        "┬",
+        "│",
+        "├"
+      ],
+      [
+        "┤",
+        "┤",
+        "┌"
+      ],
+      [
+        "│",
+        "└",
+        "┌"
+      ],
+      [
+        "┌",
+        "┌",
+        "┴"
+      ],
+      [
+        "┴",
+        "─",
+        "└"
+      ]
+    ],
+    "treasures": [
+      [
+        [
+          "ruby-diamond-profile",
+          "chrysolite"
+        ],
+        [
+          "sunstone",
+          "citrine-checkerboard"
+        ],
+        [
+          "aquamarine",
+          "stilbite"
+        ]
+      ],
+      [
+        [
+          "australian-marquise",
+          "almandine-garnet"
+        ],
+        [
+          "blue-spinel-heart",
+          "green-beryl-antique"
+        ],
+        [
+          "padparadscha-sapphire",
+          "stilbite"
+        ]
+      ],
+      [
+        [
+          "almandine-garnet",
+          "black-spinel-cushion"
+        ],
+        [
+          "aventurine",
+          "purple-oval"
+        ],
+        [
+          "fancy-spinel-marquise",
+          "tourmaline"
+        ]
+      ],
+      [
+        [
+          "jaspilite",
+          "black-onyx"
+        ],
+        [
+          "alexandrite",
+          "ruby"
+        ],
+        [
+          "aplite",
+          "black-onyx"
+        ]
+      ],
+      [
+        [
+          "heliotrope",
+          "blue-spinel-heart"
+        ],
+        [
+          "emerald",
+          "gray-agate"
+        ],
+        [
+          "pink-spinel-cushion",
+          "beryl"
+        ]
+      ],
+      [
+        [
+          "magnesite",
+          "aventurine"
+        ],
+        [
+          "tanzanite-trillion",
+          "spinel"
+        ],
+        [
+          "red-diamond",
+          "azurite"
+        ]
+      ],
+      [
+        [
+          "apricot-square-radiant",
+          "golden-diamond-cut"
+        ],
+        [
+          "magnesite",
+          "super-seven"
+        ],
+        [
+          "padparadscha-oval",
+          "pink-round"
+        ]
+      ]
+    ]
+  },
+  "spare": {
+    "tilekey": "─",
+    "1-image": "labradorite",
+    "2-image": "rock-quartz"
+  },
+  "plmt": [
+    {
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "0000A4"
+    },
+    {
+      "current": {
+        "row#": 2,
+        "column#": 2
+      },
+      "home": {
+        "row#": 5,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "color": "000024"
+    }
+  ],
+  "last": [
+    2,
+    "DOWN"
+  ], 
+  "goals":[{"column#":1,"row#":3},{"column#":1,"row#":1},{"column#":1,"row#":3},{"column#":1,"row#":3}]
+}

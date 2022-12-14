@@ -1,0 +1,18 @@
+[["rmaeve", "Riemann"], ["ejoey", "Euclid"], ["eandrew", "Euclid", "setUp"]]
+{"board":{"connectors":
+[["─","─","─","─","─","─","─"],
+["─","─","─","─","─","─","─"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["┼","┼","┼","┼","┼","┼","┼"],
+["─","─","─","─","─","─","─"],
+["─","─","─","─","─","─","─"]],
+"treasures":[[["grandidierite","yellow-beryl-oval"],["purple-square-cushion","citrine"],["yellow-beryl-oval","blue-cushion"],["aventurine","star-cabochon"],["prasiolite","tigers-eye"],["pink-spinel-cushion","chrysoberyl-cushion"],["chrysoberyl-cushion","purple-square-cushion"]],[["hematite","rhodonite"],["ruby","ruby"],["pink-emerald-cut","pink-spinel-cushion"],["raw-beryl","super-seven"],["super-seven","almandine-garnet"],["rhodonite","rock-quartz"],["sphalerite","iolite-emerald-cut"]],[["black-onyx","amethyst"],["peridot","spinel"],["purple-spinel-trillion","purple-square-cushion"],["magnesite","cordierite"],["purple-oval","lapis-lazuli"],["red-diamond","raw-citrine"],["azurite","lapis-lazuli"]],[["aventurine","pink-spinel-cushion"],["moss-agate","moonstone"],["cordierite","alexandrite"],["golden-diamond-cut","lapis-lazuli"],["stilbite","apricot-square-radiant"],["fancy-spinel-marquise","purple-square-cushion"],["grandidierite","purple-cabochon"]],[["green-beryl-antique","yellow-beryl-oval"],["red-diamond","raw-beryl"],["tanzanite-trillion","blue-cushion"],["jasper","green-beryl"],["yellow-heart","sunstone"],["pink-spinel-cushion","black-obsidian"],["prasiolite","stilbite"]],[["grandidierite","chrysolite"],["aventurine","heliotrope"],["clinohumite","lemon-quartz-briolette"],["purple-oval","lemon-quartz-briolette"],["hackmanite","green-beryl-antique"],["carnelian","black-spinel-cushion"],["rhodonite","alexandrite"]],[["sphalerite","hackmanite"],["tigers-eye","chrome-diopside"],["gray-agate","black-spinel-cushion"],["morganite-oval","tanzanite-trillion"],["beryl","green-beryl"],["zircon","ruby"],["spinel","morganite-oval"]]]
+},
+"last":null,
+"goals": [{"row#":3, "column#":3}, {"row#":3, "column#":1}],
+"plmt":[{"color":"red","current":{"column#":3,"row#":0},"goto":{"column#":1,"row#":6},"home":{"column#":3,"row#":5}}, 
+{"color":"purple","current":{"column#":3,"row#":3},"goto":{"column#":3,"row#":5},"home":{"column#":3,"row#":3}},
+{"color":"yellow","current":{"column#":0,"row#":6},"goto":{"column#":1,"row#":1},"home":{"column#":0,"row#":0}}],
+"spare":{"1-image":"red-spinel-square-emerald-cut","2-image":"ammolite","tilekey":"─"}}
+

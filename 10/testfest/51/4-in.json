@@ -1,0 +1,191 @@
+[["borat", "Euclid", "win"], ["asamat", "Riemann"], ["Hueylewis", "Euclid"], ["sacha", "Euclid"], ["jacob", "Riemann"]]
+{
+    "board" : {
+        "connectors" :
+        [
+            ["└", "┘", "├", "│", "┌", "┤", "┤"],
+            ["┬", "│", "┘", "└", "└", "┐", "┬"],
+            ["┼", "┘", "┐", "┼", "└", "├", "┬"],
+            ["┐", "─", "└", "│", "─", "┐", "└"],
+            ["├", "│", "┼", "┴", "┤", "┼", "┬"],
+            ["└", "┐", "┐", "└", "┼", "┘", "┼"],
+            ["└", "┐", "┐", "└", "┼", "┘", "┼"]
+        ],
+	"treasures": [
+            [
+		["black-spinel-cushion", "blue-ceylon-sapphire"],
+		["blue-cushion", "blue-pear-shape"],
+		["blue-spinel-heart", "bulls-eye"],
+		["carnelian", "chrome-diopside"],
+		["chrysoberyl-cushion", "chrysolite"],
+		["citrine-checkerboard", "citrine"],
+		["azurite", "aventurine"]
+            ],
+            [
+		["cordierite", "diamond"],
+		["dumortierite", "emerald"],
+		["fancy-spinel-marquise", "garnet"],
+		["golden-diamond-cut", "goldstone"],
+		["grandidierite", "gray-agate"],
+		["green-aventurine", "green-beryl-antique"],
+		["diamond", "diamond"]
+            ],
+            [
+		["grossular-garnet", "hackmanite"],
+		["heliotrope", "hematite"],
+		["iolite-emerald-cut", "jasper"],
+		["jaspilite", "kunzite-oval"],
+		["kunzite", "labradorite"],
+		["lapis-lazuli", "lemon-quartz-briolette"],
+		["jasper", "jasper"]
+            ],
+            [
+		["moonstone", "morganite-oval"],
+		["moss-agate", "orange-radiant"],
+		["padparadscha-oval", "padparadscha-sapphire"],
+		["peridot", "pink-emerald-cut"],
+		["pink-opal", "pink-round"],
+		["pink-spinel-cushion", "prasiolite"],
+		["peridot", "peridot"]
+            ],
+            [
+		["purple-oval", "purple-spinel-trillion"],
+		["purple-square-cushion", "raw-beryl"],
+		["raw-citrine", "red-diamond"],
+		["red-spinel-square-emerald-cut", "rhodonite"],
+		["rock-quartz", "rose-quartz"],
+		["ruby-diamond-profile", "ruby"],
+		["ruby", "ruby"]
+            ],
+            [
+		["star-cabochon", "stilbite"],
+		["sunstone", "super-seven"],
+		["tanzanite-trillion", "tigers-eye"],
+		["tourmaline-laser-cut", "tourmaline"],
+		["unakite", "white-square"],
+		["yellow-baguette", "yellow-beryl-oval"],
+		["sunstone", "sunstone"]
+            ],
+            [
+		["unakite", "apatite"],
+		["unakite", "sunstone"],
+		["unakite", "super-seven"],
+		["unakite", "yellow-baguette"],
+		["unakite", "rock-quartz"],
+		["unakite", "kunzite"],
+        ["unakite", "morganite-oval"]
+            ]
+        ]
+    },
+    "spare" : {
+        "tilekey" : "┴",
+        "1-image" : "peridot",
+        "2-image" : "aquamarine"
+    },
+    "goals":[
+        {
+            "row#"    : 1,
+            "column#" : 1
+        },
+        {
+            "row#"    : 5,
+            "column#" : 1
+        },
+        {
+            "row#"    : 3,
+            "column#" : 3
+        },
+        {
+            "row#"    : 3,
+            "column#" : 3
+        },
+        {
+            "row#"    : 5,
+            "column#" : 1
+        },
+        {
+            "row#"    : 3,
+            "column#" : 5
+        }
+    ],
+    "plmt" :
+    [
+        {
+            "current" : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "home"    : {
+                "row#"    : 5,
+                "column#" : 1
+            },
+            "goto"    : {
+                "row#"    : 3,
+                "column#" : 5
+            },
+            "color"   : "A5B4C1"
+        },
+        {
+            "current" : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "home"    : {
+                "row#"    : 3,
+                "column#" : 1
+            },
+            "goto"    : {
+                "row#"    : 1,
+                "column#" : 3
+            },
+            "color"   : "A9F4B1"
+        },
+        {
+            "current" : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "home"    : {
+                "row#"    : 5,
+                "column#" : 3
+            },
+            "goto"    : {
+                "row#"    : 1,
+                "column#" : 1
+            },
+            "color"   : "D6B1E4"
+        },
+        {
+            "current" : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "home"    : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "goto"    : {
+                "row#"    : 5,
+                "column#" : 5
+            },
+            "color"   : "F1E4B1"
+        },
+	       {
+            "current" : {
+                "row#"    : 3,
+                "column#" : 3
+            },
+            "home"    : {
+                "row#"    : 1,
+                "column#" : 1
+            },
+            "goto"    : {
+                "row#"    : 1,
+                "column#" : 5
+            },
+            "color"   : "F5D4C1"
+        }
+    ],
+    "last": [2, "RIGHT"]
+}
+

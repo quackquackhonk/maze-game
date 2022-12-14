@@ -1,0 +1,10 @@
+[["ealone","Euclid"]]
+{"board":{"connectors":
+[["┼","┼"],
+["┼","┼"]],
+"treasures":[[["iolite-emerald-cut","yellow-baguette"],["moonstone","padparadscha-sapphire"]],[["jaspilite","heliotrope"],["spinel","pink-round"]]]},
+"last":null,
+"plmt":[{"color":"blue","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":1,"row#":1}}],
+"spare":{"1-image":"raw-citrine","2-image":"purple-spinel-trillion","tilekey":"┼"}}
+
+

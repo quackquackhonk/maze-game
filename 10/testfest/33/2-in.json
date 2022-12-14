@@ -1,0 +1,56 @@
+[["bob","Euclid"],["alice","Euclid"]]
+{
+  "board": {
+    "connectors": [
+      [ "┼", "┼", "┼", "┼", "┼" ],
+      [ "┼", "┼", "┼", "┼", "┼" ],
+      [ "┼", "┼", "┼", "┼", "┼" ],
+      [ "┼", "┼", "┼", "┼", "┼" ],
+      [ "┼", "┼", "┼", "┼", "┼" ]
+    ],
+    "treasures": [[["zircon", "red-spinel-square-emerald-cut"], ["zircon", "red-diamond"], ["zircon", "raw-citrine"], ["yellow-heart", "pink-spinel-cushion"], ["yellow-heart", "pink-emerald-cut"]], [["zircon", "raw-beryl"], ["zircon", "purple-square-cushion"], ["zircon", "purple-spinel-trillion"], ["yellow-heart", "pink-round"], ["yellow-heart", "padparadscha-oval"]], [["yellow-heart", "purple-cabochon"], ["yellow-heart", "prehnite"], ["yellow-heart", "prasiolite"], ["yellow-heart", "pink-opal"], ["yellow-heart", "morganite-oval"]], [["yellow-heart", "magnesite"], ["yellow-heart", "lemon-quartz-briolette"], ["yellow-heart", "lapis-lazuli"], ["yellow-heart", "labradorite"], ["yellow-heart", "kunzite"]], [["yellow-heart", "jasper"], ["yellow-heart", "iolite-emerald-cut"], ["yellow-heart", "hematite"], ["yellow-heart", "heliotrope"], ["yellow-heart", "hackmanite"]]]
+  },
+  "last": null,
+  "plmt": [
+    {
+      "color": "orange",
+      "current": {
+        "row#": 1,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 1,
+        "column#": 1
+      },
+      "home": {
+        "row#": 1,
+        "column#": 3
+      }
+    },
+    {
+      "color": "CCFFFF",
+      "current": {
+        "row#": 3,
+        "column#": 1
+      },
+      "goto": {
+        "row#": 3,
+        "column#": 1
+      },
+      "home": {
+        "row#": 3,
+        "column#": 3
+      }
+    }
+  ],
+  "spare": {
+    "1-image": "prehnite",
+    "2-image": "rose-quartz",
+    "tilekey": "┼"
+  },
+  "goals": [
+    { "row#": 3, "column#": 1 },
+    { "row#": 3, "column#": 3 }
+  ]
+}
+

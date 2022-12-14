@@ -1,0 +1,19 @@
+[["Jimmy", "Euclid"], ["Robert", "Euclid"], ["John", "Euclid"]]
+{"board":
+{"connectors" : [["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","│"],
+  ["│","│","│","│","│","│","│","─"],
+  ["│","│","│","│","│","│","│","│"]],
+  "treasures" :   [[["citrine-checkerboard","aplite"],["purple-square-cushion","moss-agate"],["cordierite","morganite-oval"],["moss-agate","prasiolite"],["ruby-diamond-profile","golden-diamond-cut"],["yellow-heart","tigers-eye"],["green-beryl-antique","purple-square-cushion"],["azurite","rock-quartz"]],[["yellow-baguette","yellow-beryl-oval"],["alexandrite","green-aventurine"],["aquamarine","iolite-emerald-cut"],["green-princess-cut","ruby-diamond-profile"],["tourmaline","kunzite"],["orange-radiant","star-cabochon"],["spinel","hematite"],["tourmaline-laser-cut","blue-ceylon-sapphire"]],[["moss-agate","apricot-square-radiant"],["unakite","tourmaline-laser-cut"],["alexandrite-pear-shape","green-aventurine"],["hematite","black-obsidian"],["apatite","super-seven"],["tourmaline","black-onyx"],["moonstone","citrine"],["ammolite","ammolite"]],[["moonstone","green-beryl"],["sunstone","padparadscha-sapphire"],["fancy-spinel-marquise","orange-radiant"],["padparadscha-sapphire","green-aventurine"],["apricot-square-radiant","mexican-opal"],["ruby","pink-opal"],["iolite-emerald-cut","pink-emerald-cut"],["kunzite","black-onyx"]],[["green-beryl","blue-cushion"],["raw-beryl","black-spinel-cushion"],["gray-agate","diamond"],["diamond","emerald"],["raw-citrine","golden-diamond-cut"],["tanzanite-trillion","prehnite"],["emerald","ruby-diamond-profile"],["yellow-baguette","super-seven"]],[["purple-cabochon","red-diamond"],["diamond","jaspilite"],["magnesite","ametrine"],["kunzite","black-obsidian"],["tigers-eye","emerald"],["unakite","color-change-oval"],["sphalerite","ruby-diamond-profile"],["blue-ceylon-sapphire","fancy-spinel-marquise"]],[["kunzite-oval","black-spinel-cushion"],["dumortierite","sunstone"],["aquamarine","grandidierite"],["goldstone","heliotrope"],["blue-cushion","bulls-eye"],["yellow-heart","aventurine"],["azurite","ruby"],["citrine","green-princess-cut"]],[["azurite","aventurine"],["green-aventurine","apricot-square-radiant"],["goldstone","prasiolite"],["ruby-diamond-profile","padparadscha-oval"],["emerald","dumortierite"],["black-spinel-cushion","purple-cabochon"],["amethyst","yellow-beryl-oval"],["ruby-diamond-profile","apricot-square-radiant"]],[["jaspilite","magnesite"],["labradorite","kunzite-oval"],["red-spinel-square-emerald-cut","chrome-diopside"],["prasiolite","chrysoberyl-cushion"],["yellow-beryl-oval","jaspilite"],["green-aventurine","blue-cushion"],["gray-agate","carnelian"],["super-seven","ametrine"]]]},
+  "last" : null,
+  "plmt" : [{"color":"red", "current":{"row#":3, "column#":3}, "goto":{"row#":3, "column#":5}, "home":{"row#":5, "column#":5}},
+    {"color":"green", "current":{"row#":6, "column#":7}, "goto":{"row#":3, "column#":5}, "home":{"row#":3, "column#":7}},
+           {"color":"blue", "current":{"row#":7, "column#":7}, "goto":{"row#":3, "column#":5}, "home":{"row#":1, "column#":1}}],
+  "spare" :{"1-image":"unakite","2-image":"amethyst","tilekey":"│"},
+"goals" :  [{"row#":7,"column#":3},{"row#":7,"column#":1},{"row#":7,"column#":7}]}
+

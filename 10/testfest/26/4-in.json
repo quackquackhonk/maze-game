@@ -1,0 +1,11 @@
+[["Potter","Euclid"],["Harry","Euclid"]]
+{"board":{"connectors":[["┼","┼","┼","┼"],
+			["┼","┼","┼","┼"],
+			["┼","┼","┼","┼"],
+			["┼","┼","┼","┼"]],
+"treasures":[[["tanzanite-trillion","green-princess-cut"],["ruby","pink-emerald-cut"],["hackmanite","tourmaline-laser-cut"],["kunzite-oval","tourmaline-laser-cut"]],[["ruby-diamond-profile","green-beryl"],["moss-agate","purple-spinel-trillion"],["green-princess-cut","amethyst"],["prasiolite","hematite"]],[["blue-spinel-heart","purple-square-cushion"],["purple-spinel-trillion","aquamarine"],["green-beryl","rock-quartz"],["australian-marquise","padparadscha-sapphire"]],[["kunzite-oval","sunstone"],["lemon-quartz-briolette","labradorite"],["black-onyx","gray-agate"],["rose-quartz","padparadscha-sapphire"]]]},
+"last":null,
+"plmt":[
+{"color":"green","current":{"column#":0,"row#":0},"goto":{"column#":3,"row#":1},"home":{"column#":3,"row#":3}},
+{"color":"yellow","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":1,"row#":1}}],
+"spare":{"1-image":"australian-marquise","2-image":"yellow-heart","tilekey":"┼"}}

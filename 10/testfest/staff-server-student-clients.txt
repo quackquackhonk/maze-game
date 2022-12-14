@@ -1,0 +1,286 @@
+(testing /course/cs4500f22/ta/github2/tankalav-lsoto/10/xclients /home/samc/sw-dev/22SwDev/Code/10/xserver)
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/0-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/1-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/2-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/3-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/4-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+((/home/samc/sw-dev/22SwDev/Code/10/Tests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/0-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/1-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/2-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/3-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/4-out.json))
+((passed 5) (total 5) (partial-score 5))
+(testing /course/cs4500f22/ta/github2/tankalav-lsoto/10/xclients /home/samc/sw-dev/22SwDev/Code/10/xserver)
+(testing /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/0-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/0-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+---------------------------------
+(*** score 0)
+(*** on)
+'((("luis" "Euclid")
+   ("sahana" "Euclid" "win")
+   ("joe" "Euclid" "setUp" 1)
+   ("bob" "Riemann"))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("─" "│" "└" "┌" "┐" "┘" "┴")
+                     ("├" "┬" "┤" "┼" "─" "│" "└")
+                     ("┌" "┐" "┘" "┴" "├" "┬" "┤")
+                     ("┼" "─" "│" "└" "┌" "┐" "┘")
+                     ("┴" "├" "┬" "┤" "┼" "─" "│")
+                     ("└" "┌" "┐" "┘" "┴" "├" "┬")
+                     ("┤" "┼" "─" "│" "└" "┌" "┐")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "alexandrite")
+                      ("almandine-garnet" "amethyst")
+                      ("ametrine" "ammolite")
+                      ("apatite" "aplite")
+                      ("apricot-square-radiant" "aquamarine")
+                      ("australian-marquise" "aventurine")
+                      ("azurite" "beryl"))
+                     (("black-obsidian" "black-onyx")
+                      ("black-spinel-cushion" "blue-ceylon-sapphire")
+                      ("blue-cushion" "blue-pear-shape")
+                      ("blue-spinel-heart" "bulls-eye")
+                      ("carnelian" "chrome-diopside")
+                      ("chrysoberyl-cushion" "chrysolite")
+                      ("citrine-checkerboard" "citrine"))
+                     (("clinohumite" "color-change-oval")
+                      ("cordierite" "diamond")
+                      ("dumortierite" "emerald")
+                      ("fancy-spinel-marquise" "garnet")
+                      ("golden-diamond-cut" "goldstone")
+                      ("grandidierite" "gray-agate")
+                      ("green-aventurine" "green-beryl-antique"))
+                     (("green-beryl" "green-princess-cut")
+                      ("grossular-garnet" "hackmanite")
+                      ("heliotrope" "hematite")
+                      ("iolite-emerald-cut" "jasper")
+                      ("jaspilite" "kunzite-oval")
+                      ("kunzite" "labradorite")
+                      ("lapis-lazuli" "lemon-quartz-briolette"))
+                     (("magnesite" "mexican-opal")
+                      ("moonstone" "morganite-oval")
+                      ("moss-agate" "orange-radiant")
+                      ("padparadscha-oval" "padparadscha-sapphire")
+                      ("peridot" "pink-emerald-cut")
+                      ("pink-opal" "pink-round")
+                      ("pink-spinel-cushion" "prasiolite"))
+                     (("prehnite" "purple-cabochon")
+                      ("purple-oval" "purple-spinel-trillion")
+                      ("purple-square-cushion" "raw-beryl")
+                      ("raw-citrine" "red-diamond")
+                      ("red-spinel-square-emerald-cut" "rhodonite")
+                      ("rock-quartz" "rose-quartz")
+                      ("ruby-diamond-profile" "ruby"))
+                     (("sphalerite" "spinel")
+                      ("star-cabochon" "stilbite")
+                      ("sunstone" "super-seven")
+                      ("tanzanite-trillion" "tigers-eye")
+                      ("tourmaline-laser-cut" "tourmaline")
+                      ("unakite" "white-square")
+                      ("yellow-baguette" "yellow-beryl-oval"))))))
+          (goals . ())
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 5) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 5)))
+                    (home . #hasheq((column# . 5) (row# . 1))))
+            #hasheq((color . "pink")
+                    (current . #hasheq((column# . 1) (row# . 5)))
+                    (goto . #hasheq((column# . 5) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 5))))
+            #hasheq((color . "purple")
+                    (current . #hasheq((column# . 5) (row# . 5)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 5) (row# . 5))))))
+          (spare
+           .
+           #hasheq((1-image . "yellow-heart")
+                   (2-image . "yellow-jasper")
+                   (tilekey . "┼")))))
+(*** expected)
+'((() ("joe" "sahana")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ((("luis") ("joe" "sahana")))))
+
+
+(testing /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/1-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/1-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+(testing /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/2-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/2-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+(testing /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/3-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/3-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+(testing /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/4-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/4-out.json)
+Started client
+Started client
+Connected to server
+Connected to server
+Started client
+Connected to server
+Started client
+Connected to server
+---------------------------------
+(*** score 0)
+(*** on)
+'((("luis" "Euclid")
+   ("sahana" "Euclid" "win")
+   ("joe" "Euclid")
+   ("bob" "Riemann" "setUp" 2))
+  #hasheq((board
+           .
+           #hasheq((connectors
+                    .
+                    (("─" "│" "└" "┌" "┐" "┘" "┴")
+                     ("├" "┬" "┤" "┼" "─" "│" "└")
+                     ("┌" "┐" "┘" "┴" "├" "┬" "┤")
+                     ("┼" "─" "│" "└" "┌" "┐" "┘")
+                     ("┴" "├" "┬" "┤" "┼" "─" "│")
+                     ("└" "┌" "┐" "┘" "┴" "├" "┬")
+                     ("┤" "┼" "─" "│" "└" "┌" "┐")))
+                   (treasures
+                    .
+                    ((("alexandrite-pear-shape" "alexandrite")
+                      ("almandine-garnet" "amethyst")
+                      ("ametrine" "ammolite")
+                      ("apatite" "aplite")
+                      ("apricot-square-radiant" "aquamarine")
+                      ("australian-marquise" "aventurine")
+                      ("azurite" "beryl"))
+                     (("black-obsidian" "black-onyx")
+                      ("black-spinel-cushion" "blue-ceylon-sapphire")
+                      ("blue-cushion" "blue-pear-shape")
+                      ("blue-spinel-heart" "bulls-eye")
+                      ("carnelian" "chrome-diopside")
+                      ("chrysoberyl-cushion" "chrysolite")
+                      ("citrine-checkerboard" "citrine"))
+                     (("clinohumite" "color-change-oval")
+                      ("cordierite" "diamond")
+                      ("dumortierite" "emerald")
+                      ("fancy-spinel-marquise" "garnet")
+                      ("golden-diamond-cut" "goldstone")
+                      ("grandidierite" "gray-agate")
+                      ("green-aventurine" "green-beryl-antique"))
+                     (("green-beryl" "green-princess-cut")
+                      ("grossular-garnet" "hackmanite")
+                      ("heliotrope" "hematite")
+                      ("iolite-emerald-cut" "jasper")
+                      ("jaspilite" "kunzite-oval")
+                      ("kunzite" "labradorite")
+                      ("lapis-lazuli" "lemon-quartz-briolette"))
+                     (("magnesite" "mexican-opal")
+                      ("moonstone" "morganite-oval")
+                      ("moss-agate" "orange-radiant")
+                      ("padparadscha-oval" "padparadscha-sapphire")
+                      ("peridot" "pink-emerald-cut")
+                      ("pink-opal" "pink-round")
+                      ("pink-spinel-cushion" "prasiolite"))
+                     (("prehnite" "purple-cabochon")
+                      ("purple-oval" "purple-spinel-trillion")
+                      ("purple-square-cushion" "raw-beryl")
+                      ("raw-citrine" "red-diamond")
+                      ("red-spinel-square-emerald-cut" "rhodonite")
+                      ("rock-quartz" "rose-quartz")
+                      ("ruby-diamond-profile" "ruby"))
+                     (("sphalerite" "spinel")
+                      ("star-cabochon" "stilbite")
+                      ("sunstone" "super-seven")
+                      ("tanzanite-trillion" "tigers-eye")
+                      ("tourmaline-laser-cut" "tourmaline")
+                      ("unakite" "white-square")
+                      ("yellow-baguette" "yellow-beryl-oval"))))))
+          (goals . ())
+          (last . null)
+          (plmt
+           .
+           (#hasheq((color . "red")
+                    (current . #hasheq((column# . 1) (row# . 1)))
+                    (goto . #hasheq((column# . 5) (row# . 5)))
+                    (home . #hasheq((column# . 1) (row# . 1))))
+            #hasheq((color . "blue")
+                    (current . #hasheq((column# . 5) (row# . 1)))
+                    (goto . #hasheq((column# . 1) (row# . 5)))
+                    (home . #hasheq((column# . 5) (row# . 1))))
+            #hasheq((color . "pink")
+                    (current . #hasheq((column# . 1) (row# . 5)))
+                    (goto . #hasheq((column# . 5) (row# . 1)))
+                    (home . #hasheq((column# . 1) (row# . 5))))
+            #hasheq((color . "purple")
+                    (current . #hasheq((column# . 5) (row# . 5)))
+                    (goto . #hasheq((column# . 1) (row# . 1)))
+                    (home . #hasheq((column# . 5) (row# . 5))))))
+          (spare
+           .
+           #hasheq((1-image . "yellow-heart")
+                   (2-image . "yellow-jasper")
+                   (tilekey . "┼")))))
+(*** expected)
+'((("luis") ("bob" "sahana")))
+(*** but received)
+'(((plain fast with-newline plain-unicode) ((() ("bob" "sahana")))))
+
+
+((/course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/1-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/1-out.json) (/course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/2-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/2-out.json) (/course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/3-in.json /course/cs4500f22/ta/github2/10/tankalav-lsoto/Tests/3-out.json))
+((passed 3) (total 5) (partial-score 3))

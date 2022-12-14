@@ -1,0 +1,12 @@
+[["ebrent","Euclid","takeTurn"], ["eben", "Euclid"]]
+{"board":{"connectors":
+[["┌","─","─","┐"],
+["├","─","─","┘"],
+["└","─","─","┤"],
+["└","─","─","┘"]],
+"treasures":[[["prehnite","green-princess-cut"],["grandidierite","grandidierite"],["hematite","apatite"],["unakite","yellow-heart"]],[["carnelian","yellow-heart"],["bulls-eye","blue-cushion"],["yellow-heart","ammolite"],["padparadscha-oval","rose-quartz"]],[["rose-quartz","prehnite"],["citrine","padparadscha-oval"],["grossular-garnet","chrome-diopside"],["blue-cushion","unakite"]],[["beryl","tanzanite-trillion"],["yellow-baguette","garnet"],["star-cabochon","tigers-eye"],["jasper","dumortierite"]]]
+},
+"last":null,
+"plmt":[{"color":"pink","current":{"column#":3,"row#":3},"goto":{"column#":1,"row#":1},"home":{"column#":3,"row#":3}}, 
+{"color":"black","current":{"column#":0,"row#":0},"goto":{"column#":1,"row#":1},"home":{"column#":0,"row#":0}}],
+"spare":{"1-image":"apricot-square-radiant","2-image":"stilbite","tilekey":"│"}}

@@ -1,0 +1,4 @@
+Functionality
+160/100 pts: Passed 8 tests (including five extra bonus tests) (see staff-server-student-clients.txt)
+320/220 pts: Passed 16 tests (including five extra bonus tests) (see student-server-staff-clients.txt)
+Total: 480/320 pts

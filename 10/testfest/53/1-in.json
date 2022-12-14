@@ -1,0 +1,47 @@
+[["adam", "Riemann", "win"], ["mada", "Riemann", "win"]]
+{
+  "board": {"connectors": [["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"],
+                           ["┼", "┼", "┼", "┼", "┼", "┼", "┼"]],
+            "treasures": [
+            [["citrine", "ruby-diamond-profile"], ["citrine", "rose-quartz"], ["carnelian", "yellow-jasper"],
+             ["carnelian", "yellow-baguette"], ["carnelian", "white-square"], ["carnelian", "unakite"],
+             ["carnelian", "tourmaline"]],
+            [["citrine", "rock-quartz"], ["citrine", "rhodonite"], ["carnelian", "yellow-heart"],
+             ["carnelian", "tourmaline-laser-cut"], ["carnelian", "tigers-eye"], ["carnelian", "tanzanite-trillion"],
+             ["carnelian", "super-seven"]],
+            [["carnelian", "carnelian"], ["carnelian", "citrine"], ["carnelian", "yellow-beryl-oval"], ["carnelian", "sunstone"],
+             ["carnelian", "stilbite"], ["carnelian", "star-cabochon"], ["carnelian", "spinel"]],
+            [["carnelian", "sphalerite"], ["carnelian", "ruby"], ["carnelian", "ruby-diamond-profile"],
+             ["carnelian", "rose-quartz"], ["carnelian", "rock-quartz"], ["carnelian", "rhodonite"],
+             ["carnelian", "red-spinel-square-emerald-cut"]],
+            [["carnelian", "red-diamond"], ["carnelian", "raw-citrine"], ["carnelian", "raw-beryl"],
+             ["carnelian", "purple-square-cushion"], ["carnelian", "purple-spinel-trillion"], ["carnelian", "purple-oval"],
+             ["carnelian", "purple-cabochon"]],
+            [["carnelian", "prehnite"], ["carnelian", "prasiolite"], ["carnelian", "pink-spinel-cushion"],
+             ["carnelian", "pink-round"], ["carnelian", "pink-opal"], ["carnelian", "pink-emerald-cut"],
+             ["carnelian", "peridot"]],
+            [["carnelian", "padparadscha-sapphire"], ["carnelian", "padparadscha-oval"], ["carnelian", "orange-radiant"],
+             ["carnelian", "moss-agate"], ["carnelian", "morganite-oval"], ["carnelian", "moonstone"],
+             ["carnelian", "mexican-opal"]]]
+            },
+  "spare": {"tilekey": "┼", "1-image": "emerald", "2-image":  "diamond"},
+  "goals": [
+    {"row#": 5, "column#": 1},
+    {"row#": 3, "column#": 5},
+    {"row#": 3, "column#": 3},
+    {"row#": 3, "column#": 1},
+    {"row#": 1, "column#": 5},
+    {"row#": 1, "column#": 3},
+    {"row#": 1, "column#": 1}
+  ],
+  "plmt": [{"current": {"row#": 1, "column#": 3}, "home": {"row#": 1, "column#": 3},
+             "goto": {"row#": 5, "column#": 5}, "color": "purple"},
+           {"current": {"row#": 1, "column#": 1}, "home": {"row#": 1, "column#": 1},
+             "goto": {"row#": 5, "column#": 3}, "color": "orange"}],
+  "last": null
+}

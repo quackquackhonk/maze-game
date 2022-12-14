@@ -1,0 +1,116 @@
+(testing /home/samc/sw-dev/22SwDev/Code/10/xclients /course/cs4500f22/ta/github2/tankalav-lsoto/10/xserver)
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/0-out.json)
+Parsing JsonRefereeState
+Bound to port: 25243
+Player #1 connected
+Player #2 connected
+Player #3 connected
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/1-out.json)
+Parsing JsonRefereeState
+Bound to port: 25245
+Player #1 connected
+Player #2 connected
+Player #3 connected
+Player #4 connected
+[Maze/Referee/referee.rs:390] min_dist = 9
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 9
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/2-out.json)
+Parsing JsonRefereeState
+Bound to port: 25246
+Player #1 connected
+Player #2 connected
+Player #3 connected
+Player #4 connected
+[Maze/Referee/referee.rs:390] min_dist = 2
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 2
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/3-out.json)
+Parsing JsonRefereeState
+Bound to port: 25248
+Player #1 connected
+Player #2 connected
+Player #3 connected
+Player #4 connected
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/4-out.json)
+Parsing JsonRefereeState
+Bound to port: 25249
+Player #1 connected
+Player #2 connected
+Player #3 connected
+Player #4 connected
+((/home/samc/sw-dev/22SwDev/Code/10/Tests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/0-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/1-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/2-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/3-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/4-out.json))
+((passed 5) (total 5) (partial-score 5))
+(testing /home/samc/sw-dev/22SwDev/Code/10/xclients /course/cs4500f22/ta/github2/tankalav-lsoto/10/xserver)
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/0-out.json)
+Parsing JsonRefereeState
+Bound to port: 25251
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/1-out.json)
+Parsing JsonRefereeState
+Bound to port: 25254
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/2-out.json)
+Parsing JsonRefereeState
+Bound to port: 25257
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/3-out.json)
+Parsing JsonRefereeState
+Bound to port: 25260
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/4-out.json)
+Parsing JsonRefereeState
+Bound to port: 25263
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/5-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/5-out.json)
+Parsing JsonRefereeState
+Bound to port: 25267
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 49
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 49
+((/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/0-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/1-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/2-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/3-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/4-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/5-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../BonusTests/5-out.json))
+((passed 6) (total 6) (partial-score 6))
+(testing /home/samc/sw-dev/22SwDev/Code/10/xclients /course/cs4500f22/ta/github2/tankalav-lsoto/10/xserver)
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/0-out.json)
+Parsing JsonRefereeState
+Bound to port: 25270
+Player #1 connected
+Player #2 connected
+[Maze/Referee/referee.rs:390] min_dist = 1
+[Maze/Referee/referee.rs:398] squared_euclidian_distance(&player.position(), &goal_to_measure) = 1
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/1-out.json)
+Parsing JsonRefereeState
+Bound to port: 25273
+Player #1 connected
+Player #2 connected
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/2-out.json)
+Parsing JsonRefereeState
+Bound to port: 25274
+Player #1 connected
+Player #2 connected
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/3-out.json)
+Parsing JsonRefereeState
+Bound to port: 25275
+Player #1 connected
+Player #2 connected
+(testing /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/4-out.json)
+Parsing JsonRefereeState
+Bound to port: 25277
+Player #1 connected
+Player #2 connected
+((/home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/0-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/0-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/1-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/1-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/2-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/2-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/3-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/3-out.json) (/home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/4-in.json /home/samc/sw-dev/22SwDev/Code/10/Tests/../JBonusTests/4-out.json))
+((passed 5) (total 5) (partial-score 5))
